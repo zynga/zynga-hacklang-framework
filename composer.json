@@ -12,7 +12,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Zynga\Framework\Exception\V1": "src/Zynga/Framework/Exception/V1"
+      "Zynga\\Framework\\Exception\\V1": "src/Zynga/Framework/Exception/V1/"
     }
   }
 }

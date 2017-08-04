@@ -1,0 +1,17 @@
+{
+  "name": "zynga/exception",
+  "description": "Zynga base exception class that all framework code reuses.",
+  "type": "library",
+  "keywords": [
+    "hhvm",
+    "exception"
+  ],
+  "require": {
+    "hhvm": "^3.12"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zynga": "src/"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 <?hh // strict
 
-namespace Zynga;
+namespace Zynga\Framework\Exception\V1;
 
 use \Exception as BaseException;
 

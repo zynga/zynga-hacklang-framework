@@ -1,10 +1,11 @@
 {
-  "name": "zynga/exception",
+  "name": "zynga/framework/exception",
   "description": "Zynga base exception class that all framework code reuses.",
   "type": "library",
   "keywords": [
     "hhvm",
-    "exception"
+    "exception",
+    "framework"
   ],
   "require": {
     "hhvm": "^3.12"

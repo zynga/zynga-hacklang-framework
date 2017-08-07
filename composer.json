@@ -1,0 +1,18 @@
+{
+  "name": "zynga/framework/autoloader",
+  "description": "Zynga autoloader, handles class loading for the framework.",
+  "type": "library",
+  "keywords": [
+    "hhvm",
+    "framework",
+    "autoloader"
+  ],
+  "require": {
+    "hhvm": "^3.12"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zynga\\Framework\\AutoLoader\\V1\\": "src/Zynga/Framework/AutoLoader/V1/"
+    }
+  }
+}

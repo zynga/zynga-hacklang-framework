@@ -1,11 +1,12 @@
 {
-  "name": "zynga/framework/autoloader",
+  "name": "zynga/framework/environment/command/finder",
   "description": "Zynga environmental command finder, used for finding pesky binaries.",
   "type": "library",
   "keywords": [
     "hhvm",
     "framework",
-    "autoloader"
+    "command",
+    "finder"
   ],
   "require": {
     "hhvm": "^3.12"

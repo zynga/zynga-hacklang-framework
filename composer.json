@@ -1,0 +1,25 @@
+{
+  "name": "zynga/framework/environment/superglobals",
+  "description": "Zynga superglobal wrapper, we encapsulate all superglobal usage here.",
+  "type": "library",
+  "keywords": [
+    "hhvm",
+    "framework",
+    "environment",
+    "superglobals"
+  ],
+  "require": {
+    "hhvm": "^3.12",
+    "zynga/zynga-hhvm-moduledev": "v1.0.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zynga\\Framework\\Environment\\SuperGlobals\\V1\\": "src/Zynga/Framework/Environment/SuperGlobals/V1/"
+    }
+  },
+  "repositories": [
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git" }
+  ]
+}

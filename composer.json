@@ -1,0 +1,24 @@
+{
+  "name": "zynga/framework/environment/developmentmode",
+  "description": "Zynga developmentmode, light scaffold for marking a host as dev|staging|production.",
+  "type": "library",
+  "keywords": [
+    "hhvm",
+    "framework",
+    "commandline"
+  ],
+  "require": {
+    "hhvm": "^3.12",
+    "zynga/zynga-hhvm-moduledev": "v1.0.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zynga\\Framework\\Environment\\DevelopmentMode\\V1\\": "src/Zynga/Framework/Environment/DevelopmentMode/V1/"
+    }
+  },
+  "repositories": [
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git" }
+  ]
+}

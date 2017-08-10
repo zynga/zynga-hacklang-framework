@@ -7,7 +7,7 @@ use Zynga\Framework\Cache\V2\Interfaces\DriverConfigInterface;
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 use Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject;
 
-use Zynga\Exception;
+use Zynga\Framework\Exception\V1\Exception;
 
 class Staging implements DriverConfigInterface {
 

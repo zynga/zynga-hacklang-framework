@@ -26,7 +26,7 @@ class StagingTest extends TestCase {
   }
 
   /**
-   * @expectedException Zynga\Exception
+   * @expectedException Zynga\Framework\Exception\V1\Exception
    */
   public function testCreateKeyFromStorableObject_NotTheRightStorable(): void {
 
@@ -38,7 +38,7 @@ class StagingTest extends TestCase {
   }
 
   /**
-   * @expectedException Zynga\Exception
+   * @expectedException Zynga\Framework\Exception\V1\Exception
    */
   public function testCreateKeyFromStorableObject_DefaultDataProvided(): void {
 

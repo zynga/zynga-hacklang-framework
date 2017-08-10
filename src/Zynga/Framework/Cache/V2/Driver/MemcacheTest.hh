@@ -124,7 +124,7 @@ class MemcacheTest extends TestCase {
   }
 
   /**
-   * @expectedException Zynga\Exception
+   * @expectedException Zynga\Framework\Exception\V1\Exception
    */
   public function testGet_InvalidKeyCondition(): void {
 
@@ -136,7 +136,7 @@ class MemcacheTest extends TestCase {
   }
 
   /**
-   * @expectedException Zynga\Exception
+   * @expectedException Zynga\Framework\Exception\V1\Exception
    */
   public function testSet_InvalidKeyCondition(): void {
 
@@ -148,7 +148,7 @@ class MemcacheTest extends TestCase {
   }
 
   /**
-   * @expectedException Zynga\Exception
+   * @expectedException Zynga\Framework\Exception\V1\Exception
    */
   public function testDelete_InvalidKeyCondition(): void {
 

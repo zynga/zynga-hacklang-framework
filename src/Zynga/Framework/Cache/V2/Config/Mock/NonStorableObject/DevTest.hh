@@ -38,7 +38,7 @@ class DevTest extends TestCase {
   }
 
   /**
-   * @expectedException Zynga\Exception
+   * @expectedException Zynga\Framework\Exception\V1\Exception
    */
   public function testCreateKeyFromStorableObject_ExceptionWired(): void {
 

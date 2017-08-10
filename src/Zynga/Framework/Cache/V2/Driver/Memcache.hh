@@ -13,7 +13,7 @@ use Zynga\Framework\Cache\V2\Exceptions\NoServerPairsProvidedException;
 use Zynga\Framework\Cache\V2\Exceptions\NoConnectionException;
 use Zynga\Framework\Cache\V2\Exceptions\StorableObjectRequiredException;
 
-use Zynga\Exception;
+use Zynga\Framework\Exception\V1\Exception;
 
 use \Memcache as NativeMemcacheDriver;
 

@@ -1,0 +1,25 @@
+{
+  "name": "zynga/framework/testing/testcase",
+  "description": "Zynga TestCase Base, encapsulates the bridge from phpunit to strict hhvm.",
+  "type": "library",
+  "keywords": [
+    "hhvm",
+    "framework",
+    "testing",
+    "testcase"
+  ],
+  "require": {
+    "hhvm": "^3.12",
+    "zynga/zynga-hhvm-moduledev": "v1.0.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zynga\\Framework\\Testing\\TestCase\\V2\\": "src/Zynga/Framework/Testing/TestCase/V2/"
+    }
+  },
+  "repositories": [
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git" }
+  ]
+}

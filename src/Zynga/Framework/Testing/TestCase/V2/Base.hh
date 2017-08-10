@@ -4,7 +4,6 @@ namespace Zynga\Framework\Testing\TestCase\V2;
 
 use Zynga\Framework\Environment\CodePath\V1\CodePath;
 use Zynga\Framework\Performance\V1\Tracker as PerformanceTracker;
-use Zynga\Framework\Environment\TemporaryDirectory\V1\TemporaryDirectory;
 use Zynga\Framework\Environment\DevelopmentMode\V1\DevelopmentMode;
 use Zynga\Framework\Testing\TestCase\V2\Config\Manager as TestManager;
 use Zynga\Framework\Testing\MockState\V2\MockState;
@@ -190,15 +189,6 @@ abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDe
 
     $this->assertTrue($isExpectedInArray, 'expected=' . $expected . ' is not within implementaiton list=' . implode(',', $implements));
 
-  }
-
-  public function dumpIncludeChain(): void {
-    $incFiles = get_included_files();
-    $incFiles = var_export($incFiles, true);
-    file_put_contents(
-      TemporaryDirectory::get().'/included-files.php',
-      "<?php\n \$fileStack = ".$incFiles.";",
-    );
   }
 
   public function perf(): PerformanceTracker {

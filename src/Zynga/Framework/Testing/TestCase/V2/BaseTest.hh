@@ -124,11 +124,4 @@ class TestCaseTest extends ZyngaTestCase {
 
   }
 
-  public function testDumpIncludeChain(): void {
-    $this->dumpIncludeChain();
-    $this->assertTrue(
-      is_file(TemporaryDirectory::get().'/included-files.php'),
-    );
-  }
-
 }

@@ -38,7 +38,7 @@ use \PHPUnit_Framework_Test;
 use \PHPUnit_Framework_SelfDescribing;
 use \PHPUnit_Framework_Assert;
 use \PHPUnit_Framework_TestResult;
-use Zynga\Exception;
+use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Legacy\V1\Log as LegacyLogger;
 
 abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDescribing {

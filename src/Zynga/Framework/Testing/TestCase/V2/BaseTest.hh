@@ -6,7 +6,7 @@ use Zynga\Framework\Testing\TestCase\V2\Base as ZyngaTestCase;
 use Zynga\Framework\Testing\TestCase\V2\Config\Manager as TestManager;
 
 use Zynga\Framework\Environment\TemporaryDirectory\V1\TemporaryDirectory;
-use Zynga\Exception;
+use Zynga\Framework\Exception\V1\Exception;
 
 // mock interface for testing
 interface TestCaseTest_Interface {}

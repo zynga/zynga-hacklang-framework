@@ -1,0 +1,27 @@
+{
+  "name": "zynga/zynga-hhvm-moduledev",
+  "description": "Zynga composer module development environment",
+  "type": "library",
+  "keywords": [
+    "hack",
+    "composer"
+  ],
+  "bin": [
+    "bin/something",
+  ],
+  "require": {
+    "hhvm": "^3.12",
+    "zynga/zynga-hhvm-phpunit-hhi": "v1.0.1",
+    "zynga/zynga-hhvm-phpunit": "v1.0.13"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url":  "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git"
+    },
+    {
+      "type": "vcs",
+      "url":  "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git"
+    }
+  ]
+}

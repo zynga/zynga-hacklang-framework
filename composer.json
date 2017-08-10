@@ -12,13 +12,7 @@
     "zynga/zynga-hhvm-phpunit": "v1.0.13"
   },
   "repositories": [
-    {
-      "type": "vcs",
-      "url":  "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git"
-    },
-    {
-      "type": "vcs",
-      "url":  "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git"
-    }
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git" }
   ]
 }

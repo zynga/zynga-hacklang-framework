@@ -27,7 +27,7 @@ checksum_file()
 
   if [ ! -f $targetFile ]; then
     return "";
-  }
+  fi
 
   checksum=`md5sum $targetFile | awk '{print $1'}`
 

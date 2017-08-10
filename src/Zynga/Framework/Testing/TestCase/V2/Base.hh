@@ -9,14 +9,6 @@ use Zynga\Framework\Environment\DevelopmentMode\V1\DevelopmentMode;
 use Zynga\Framework\Testing\TestCase\V2\Config\Manager as TestManager;
 use Zynga\Framework\Testing\MockState\V2\MockState;
 
-use Zynga\Framework\Database\V2\Factory as DatabaseFactory;
-use Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface;
-use Zynga\Framework\Database\V2\Driver\Mock as MockDatabaseDriver;
-
-use Zynga\Framework\Database\V2\UserSharded\Factory as UserShardedDatabaseFactory;
-use Zynga\Framework\Database\V2\UserSharded\Interfaces\DriverInterface as UserShardedDatabaseDriverInterface;
-use Zynga\Framework\Database\V2\UserSharded\Driver\Mock as UserShardedMockDatabaseDriver;
-
 use Zynga\Framework\Testing\TestCase\V2\TestCaseShim;
 
 // --
@@ -241,22 +233,6 @@ abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDe
     string $subject,
   ): void {
     $this->assertEquals(1, preg_match($pattern, $subject));
-  }
-
-  public function loadDatabaseResultsForTest(string $function): bool {
-    $dbh = DatabaseFactory::factory(DatabaseDriverInterface::class,'Mock');
-    if ( $dbh instanceof MockDatabaseDriver ) {
-      $this->assertTrue($dbh->loadResultsForTest(static::class, $function));
-    }
-    return true;
-  }
-
-  public function loadUserShardedDatabaseResultsForTest(string $function): bool {
-    $dbh = UserShardedDatabaseFactory::factory(UserShardedDatabaseDriverInterface::class,'Mock');
-    if ( $dbh instanceof UserShardedMockDatabaseDriver ) {
-      $this->assertTrue($dbh->loadResultsForTest(static::class, $function . '_UserSharded'));
-    }
-    return true;
   }
 
   // --

@@ -12,7 +12,7 @@ use
 ;
 
 use Zynga\Framework\Environment\SuperGlobals\V1\SuperGlobals;
-use Zynga\Exception;
+use Zynga\Framework\Exception\V1\Exception;
 
 class Container implements ArgumentContainerInterface {
 

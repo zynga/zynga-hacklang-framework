@@ -8,7 +8,7 @@ use Zynga\Framework\CommandLine\V1\Argument\Container as ArgumentContainer;
 use Zynga\Framework\CommandLine\V1\Usage;
 use Zynga\Framework\CommandLine\V1\Exceptions\MissingArgumentsException;
 
-use Zynga\Exception;
+use Zynga\Framework\Exception\V1\Exception;
 
 abstract class Base {
 

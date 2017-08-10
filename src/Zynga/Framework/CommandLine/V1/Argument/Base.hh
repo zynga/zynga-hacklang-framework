@@ -3,7 +3,7 @@
 namespace Zynga\Framework\CommandLine\V1\Argument;
 
 use Zynga\Framework\CommandLine\V1\Interfaces\ArgumentInterface;
-use Zynga\Exception;
+use Zynga\Framework\Exception\V1\Exception;
 
 abstract class Base implements ArgumentInterface {
 

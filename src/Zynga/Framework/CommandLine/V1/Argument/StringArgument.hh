@@ -3,7 +3,7 @@
 namespace Zynga\Framework\CommandLine\V1\Argument;
 
 use Zynga\Framework\CommandLine\V1\Argument\Base;
-use Zynga\Exception;
+use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Type\V1\StringBox;
 
 class StringArgument extends Base {

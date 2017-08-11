@@ -20,7 +20,7 @@ composer-update:
 	time composer update
 
 hack-restart:
-	time ./bin/hhvm-restart-wrapper
+	time ./vendor/bin/hhvm-restart-wrapper
 
 hack-lint:
 	time hh_client --lint
@@ -29,14 +29,14 @@ hack-format:
 	find ./include -type f -exec hh_format -i {} \;
 
 check-strict:
-	./bin/check-hack-strict
+	#./bin/check-hack-strict
 
 check-exceptions:
 	ack 'use \\Exception' include/ | grep -v 'Test.hh'
 	ack 'new Exception' include/ | grep -v 'Test.hh'
 
 test: composer-install hack-restart hack-lint check-strict
-	time ./bin/phpunit --testsuite tests
+	time ./vendor/bin/phpunit --testsuite tests
 
 test-xdebug: composer-install hack-restart hack-lint check-strict
-	time ./bin/phpunit-xdebug --testsuite regression
+	time ./vendor/bin/phpunit-xdebug --testsuite regression

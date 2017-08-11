@@ -1,0 +1,29 @@
+{
+  "name": "zynga/framework/commandline",
+  "description": "Zynga commandline framework, light scaffold for building commandline scripts.",
+  "type": "library",
+  "keywords": [
+    "hhvm",
+    "framework",
+    "commandline"
+  ],
+  "require": {
+    "hhvm": "^3.12",
+    "zynga/zynga-hhvm-moduledev": "v1.0.6",
+    "zynga/framework/testing/testcase": "v2.0.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zynga\\Framework\\Environment\\CodePath\\V1\\": "src/Zynga/Framework/Environment/CodePath/V1/"
+    }
+  },
+  "repositories": [
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-developmentmode.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-exception.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-performance.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-testing-testcase.git" }
+  ]
+}

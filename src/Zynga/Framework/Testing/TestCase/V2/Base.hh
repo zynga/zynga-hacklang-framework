@@ -14,11 +14,8 @@ use Zynga\Framework\Testing\TestCase\V2\TestCaseShim;
 // include legacy casino platform to get the old xhprofiler brought in.
 // TODO: port the legacy xhprofiler.
 // --
-require_once CodePath::getRoot().'/shared/casino-platform/include/path.php';
-
-use \zyCasino_App_Performance_XHProfiler;
-use \PHPUnit_Framework_TestCase;
-use \PHPUnit_Framework_AssertionFailedError;
+// require_once CodePath::getRoot().'/shared/casino-platform/include/path.php';
+// use \zyCasino_App_Performance_XHProfiler;
 
 // --
 // JEO: Bring in the phpunit interfaces.
@@ -29,8 +26,11 @@ use \PHPUnit_Framework_Test;
 use \PHPUnit_Framework_SelfDescribing;
 use \PHPUnit_Framework_Assert;
 use \PHPUnit_Framework_TestResult;
+use \PHPUnit_Framework_TestCase;
+use \PHPUnit_Framework_AssertionFailedError;
+
 use Zynga\Framework\Exception\V1\Exception;
-use Zynga\Legacy\V1\Log as LegacyLogger;
+// use Zynga\Legacy\V1\Log as LegacyLogger;
 
 abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDescribing {
 
@@ -83,7 +83,7 @@ abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDe
 
     // error_log('JEO doSetUpBeforeClass=RAN');
     DevelopmentMode::reset();
-    MockState::enableMocks();
+    // MockState::enableMocks();
 
     return true;
 
@@ -108,7 +108,7 @@ abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDe
     // error_log('doTearDownAfterClass=RAN');
 
     DevelopmentMode::reset();
-    MockState::enableMocks();
+    // MockState::enableMocks();
     return true;
   }
 
@@ -126,7 +126,7 @@ abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDe
   public function setUp(): void {
     if ($this->hideLogs() === true) {
       ob_start();
-      LegacyLogger::setHideAllLogs(true);
+      // LegacyLogger::setHideAllLogs(true);
     }
 
     if ($this->isEnabled() !== true) {
@@ -139,7 +139,7 @@ abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDe
   public function tearDown(): void {
     if ($this->hideLogs() === true) {
       ob_end_clean();
-      LegacyLogger::setHideAllLogs(false);
+      // LegacyLogger::setHideAllLogs(false);
     }
   }
 

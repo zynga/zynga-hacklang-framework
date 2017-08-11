@@ -1,11 +1,12 @@
 {
-  "name": "zynga/framework/commandline",
-  "description": "Zynga commandline framework, light scaffold for building commandline scripts.",
+  "name": "zynga/framework/environment/codepath",
+  "description": "Zynga codepath, light scaffold for giving the developer a reference to the root of the project.",
   "type": "library",
   "keywords": [
     "hhvm",
     "framework",
-    "commandline"
+    "environment",
+    "codepath"
   ],
   "require": {
     "hhvm": "^3.12",

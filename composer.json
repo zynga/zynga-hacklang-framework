@@ -1,12 +1,15 @@
 {
-  "name": "zynga/framework/testing/testcase",
-  "description": "Zynga TestCase Base, encapsulates the bridge from phpunit to strict hhvm.",
+  "name": "zynga/framework/testing",
+  "description": "Zynga Testing base classes, encapsulates the bridge from phpunit to strict hhvm.",
   "type": "library",
   "keywords": [
     "hhvm",
     "framework",
     "testing",
     "testcase"
+  ],
+  "bin": [
+    "src/bootstrap.hh"
   ],
   "require": {
     "hhvm": "^3.12",
@@ -17,6 +20,7 @@
   },
   "autoload": {
     "psr-4": {
+      "Zynga\\Framework\\Testing\\BootStrap\\V1\\": "src/Zynga/Framework/Testing/BootStrap/V1/",
       "Zynga\\Framework\\Testing\\TestCase\\V2\\": "src/Zynga/Framework/Testing/TestCase/V2/"
     }
   },

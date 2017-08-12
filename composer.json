@@ -7,8 +7,8 @@
     "composer"
   ],
   "require": {
-    "hhvm": "^3.12",
-    "zynga/zynga-hhvm-phpunit": "v1.0.16"
+    "hhvm": "^3.18",
+    "zynga/zynga-hhvm-phpunit": "@dev"
   },
   "repositories": [
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git" },

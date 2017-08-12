@@ -14,9 +14,9 @@
   "require": {
     "hhvm": "^3.12",
     "zynga/zynga-hhvm-moduledev": "*",
-    "zynga/framework/exception": "v1.0.5",
-    "zynga/framework/environment/developmentmode": "v1.0.1",
-    "zynga/framework/performance": "v1.0.1"
+    "zynga/framework/exception": "*",
+    "zynga/framework/environment/developmentmode": "*",
+    "zynga/framework/performance": "*"
   },
   "autoload": {
     "psr-4": {

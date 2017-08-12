@@ -13,10 +13,11 @@
   ],
   "require": {
     "hhvm": "^3.12",
-    "zynga/zynga-hhvm-moduledev": "*",
-    "zynga/framework/exception": "*",
-    "zynga/framework/environment/developmentmode": "*",
-    "zynga/framework/performance": "*"
+    "zynga/zynga-hhvm-moduledev": "^1.0",
+    "zynga/framework/exception": "^1.0",
+    "zynga/framework/environment/codepath": "^1.0",
+    "zynga/framework/environment/developmentmode": "^1.0",
+    "zynga/framework/performance": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -28,6 +29,7 @@
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-codepath.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-developmentmode.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-exception.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-performance.git" }

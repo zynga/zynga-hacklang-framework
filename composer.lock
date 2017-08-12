@@ -4,9 +4,35 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4fd935b6a2a56bd0a8e260add9e197f1",
-    "content-hash": "f7fa6e228dbe3812f369f097abcf6aa0",
+    "content-hash": "8c475ecfaa837fb7736301a4f13c9c13",
     "packages": [
+        {
+            "name": "zynga/framework/environment/codepath",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-codepath.git",
+                "reference": "7ecd6e71024f0aff530294abc24b754bdb443fc9"
+            },
+            "require": {
+                "hhvm": "^3.12",
+                "zynga/zynga-hhvm-moduledev": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zynga\\Framework\\Environment\\CodePath\\V1\\": "src/Zynga/Framework/Environment/CodePath/V1/"
+                }
+            },
+            "description": "Zynga codepath, light scaffold for giving the developer a reference to the root of the project.",
+            "keywords": [
+                "codepath",
+                "environment",
+                "framework",
+                "hhvm"
+            ],
+            "time": "2017-08-12T04:43:11+00:00"
+        },
         {
             "name": "zynga/framework/environment/developmentmode",
             "version": "v1.0.1",
@@ -31,7 +57,7 @@
                 "framework",
                 "hhvm"
             ],
-            "time": "2017-08-10 23:40:21"
+            "time": "2017-08-10T23:40:21+00:00"
         },
         {
             "name": "zynga/framework/exception",
@@ -56,7 +82,7 @@
                 "framework",
                 "hhvm"
             ],
-            "time": "2017-08-07 17:46:12"
+            "time": "2017-08-07T17:46:12+00:00"
         },
         {
             "name": "zynga/framework/performance",
@@ -82,7 +108,7 @@
                 "hhvm",
                 "performance"
             ],
-            "time": "2017-08-10 23:38:57"
+            "time": "2017-08-10T23:38:57+00:00"
         },
         {
             "name": "zynga/zynga-hhvm-moduledev",
@@ -103,7 +129,7 @@
                 "composer",
                 "hack"
             ],
-            "time": "2017-08-10 23:35:40"
+            "time": "2017-08-10T23:35:40+00:00"
         },
         {
             "name": "zynga/zynga-hhvm-phpunit",
@@ -129,7 +155,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-08-10 17:06:14"
+            "time": "2017-08-10T17:06:14+00:00"
         },
         {
             "name": "zynga/zynga-hhvm-phpunit-hhi",
@@ -182,7 +208,7 @@
                 "issues": "https://git.simon.geek.nz/91-carriage/phpunit-hhi/issues",
                 "source": "https://git.simon.geek.nz/91-carriage/phpunit-hhi/tree/master"
             },
-            "time": "2017-08-04 17:13:06"
+            "time": "2017-08-04T17:13:06+00:00"
         }
     ],
     "packages-dev": [],

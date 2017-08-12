@@ -9,7 +9,7 @@
   ],
   "require": {
     "hhvm": "^3.12",
-    "zynga/zynga-hhvm-moduledev": "v1.0.6"
+    "zynga/zynga-hhvm-moduledev": "v1.0.18"
   },
   "autoload": {
     "psr-4": {

@@ -20,8 +20,15 @@ class CodePathTest extends TestCase {
    * Do we return the right path for our code
    */
   public function testGetExistingRoot(): void {
-    $expected =
-      dirname(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))));
+
+    // --
+    // Code is expected to be within: vendor/zynga/framework/environment/codepath/...
+    // Walk up the dirtree to get our expected value
+    // --
+    $expected = __FILE__;
+    for ( $l = 0; $l < 12; $l++ ) {
+      $expected = dirname($expected);
+    }
     $value = CodePath::getRoot();
     $this->assertEquals($expected, $value);
   }

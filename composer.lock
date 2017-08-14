@@ -4,128 +4,19 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "29073392f4d26212cbc8732201273549",
-    "content-hash": "3e3810d046327545080da5b2cd23e906",
+    "content-hash": "e5f5ca8f2a26f7230b00c79e772500ea",
     "packages": [
         {
-            "name": "zynga/framework/environment/developmentmode",
-            "version": "v1.0.1",
-            "source": {
-                "type": "git",
-                "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-developmentmode.git",
-                "reference": "bb5089efd3cebdf0a8839e377d5af208de853651"
-            },
-            "require": {
-                "hhvm": "^3.12",
-                "zynga/zynga-hhvm-moduledev": "v1.0.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Zynga\\Framework\\Environment\\DevelopmentMode\\V1\\": "src/Zynga/Framework/Environment/DevelopmentMode/V1/"
-                }
-            },
-            "description": "Zynga developmentmode, light scaffold for marking a host as dev|staging|production.",
-            "keywords": [
-                "commandline",
-                "framework",
-                "hhvm"
-            ],
-            "time": "2017-08-10 23:40:21"
-        },
-        {
-            "name": "zynga/framework/exception",
-            "version": "v1.0.5",
-            "source": {
-                "type": "git",
-                "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-exception.git",
-                "reference": "d30f7e74d082764e27fcb032da31eded2a987f14"
-            },
-            "require": {
-                "hhvm": "^3.12"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Zynga\\Framework\\Exception\\V1\\": "src/Zynga/Framework/Exception/V1/"
-                }
-            },
-            "description": "Zynga base exception class that all framework code reuses.",
-            "keywords": [
-                "exception",
-                "framework",
-                "hhvm"
-            ],
-            "time": "2017-08-07 17:46:12"
-        },
-        {
-            "name": "zynga/framework/performance",
-            "version": "v1.0.1",
-            "source": {
-                "type": "git",
-                "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-performance.git",
-                "reference": "b6d39c015cb79ed516abd4576605436505764e3f"
-            },
-            "require": {
-                "hhvm": "^3.12",
-                "zynga/zynga-hhvm-moduledev": "v1.0.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Zynga\\Framework\\Performance\\V1\\": "src/Zynga/Framework/Performance/V1/"
-                }
-            },
-            "description": "Zynga performance, stopwatch timeres for hhvm.",
-            "keywords": [
-                "framework",
-                "hhvm",
-                "performance"
-            ],
-            "time": "2017-08-10 23:38:57"
-        },
-        {
-            "name": "zynga/framework/testing/testcase",
-            "version": "v2.0.2",
-            "source": {
-                "type": "git",
-                "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-testing-testcase.git",
-                "reference": "cf25025265e54fb68acc5937ac811c240fdff434"
-            },
-            "require": {
-                "hhvm": "^3.12",
-                "zynga/framework/environment/developmentmode": "v1.0.1",
-                "zynga/framework/exception": "v1.0.5",
-                "zynga/framework/performance": "v1.0.1",
-                "zynga/zynga-hhvm-moduledev": "v1.0.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Zynga\\Framework\\Testing\\TestCase\\V2\\": "src/Zynga/Framework/Testing/TestCase/V2/"
-                }
-            },
-            "description": "Zynga TestCase Base, encapsulates the bridge from phpunit to strict hhvm.",
-            "keywords": [
-                "framework",
-                "hhvm",
-                "testcase",
-                "testing"
-            ],
-            "time": "2017-08-11 19:58:52"
-        },
-        {
             "name": "zynga/zynga-hhvm-moduledev",
-            "version": "v1.0.6",
+            "version": "v1.0.11",
             "source": {
                 "type": "git",
                 "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git",
-                "reference": "a865b6aa6aed93a593184721e269cf49a5615647"
+                "reference": "a7d69d113d4c666ecf50ec566346336f76a3a81d"
             },
             "require": {
-                "hhvm": "^3.12",
-                "zynga/zynga-hhvm-phpunit": "v1.0.14",
-                "zynga/zynga-hhvm-phpunit-hhi": "v1.0.1"
+                "hhvm": "^3.18",
+                "zynga/zynga-hhvm-phpunit": "@dev"
             },
             "type": "library",
             "description": "Zynga composer module development environment",
@@ -133,7 +24,7 @@
                 "composer",
                 "hack"
             ],
-            "time": "2017-08-10 23:35:40"
+            "time": "2017-08-12T03:56:59+00:00"
         },
         {
             "name": "zynga/zynga-hhvm-phpunit",
@@ -159,7 +50,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-08-10 17:06:14"
+            "time": "2017-08-10T17:06:14+00:00"
         },
         {
             "name": "zynga/zynga-hhvm-phpunit-hhi",
@@ -212,7 +103,7 @@
                 "issues": "https://git.simon.geek.nz/91-carriage/phpunit-hhi/issues",
                 "source": "https://git.simon.geek.nz/91-carriage/phpunit-hhi/tree/master"
             },
-            "time": "2017-08-04 17:13:06"
+            "time": "2017-08-04T17:13:06+00:00"
         }
     ],
     "packages-dev": [],

@@ -2,6 +2,7 @@ default:
 	@echo "--------------------------------------------------------------------------------"
 	@echo "Development commands"
 	@echo "--------------------------------------------------------------------------------"
+	@echo " clean                                - purges the vendor folder, and composer.lock"
 	@echo " composer-install                     - Stands up composer and installs deps"
 	@echo " composer-update                      - Stands up composer and updates deps"
 	@echo " check-exceptions                     - Verifies the use of sub classed exceptions"
@@ -12,6 +13,10 @@ default:
 	@echo " test                                 - Runs phpunit"
 	@echo " test-raw                             - Runs phpunit.phar instead of our phpunit"
 	@echo "--------------------------------------------------------------------------------"
+
+clean:
+	rm -rf vendor
+	rm composer.lock
 
 composer-install:
 	time composer install

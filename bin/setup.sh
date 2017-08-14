@@ -82,6 +82,7 @@ setup_dir "$project_root/vendor"
 
 echo "Excluding top level directories from git"
 add_to_git_ignore $project_root "vendor";
+add_to_git_ignore $project_root "composer.lock";
 add_to_git_ignore $project_root "tmp";
 
 ##

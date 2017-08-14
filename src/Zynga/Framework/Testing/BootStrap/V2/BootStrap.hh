@@ -11,7 +11,7 @@ class BootStrap {
   }
 
   public static function getFileSystemRoot(): string {
-    return CodePath::getRoot().'/tests';
+    return CodePath::getRoot().'/tmp';
   }
 
   public static function getTestErrorLog(): string {

@@ -12,7 +12,7 @@ class BootStrapTest extends ZyngaTestCase {
    * Do we return the right base path for our error log
    */
   public function testValidFileSystemRoot(): void {
-    $expected = CodePath::getRoot().'/tests';
+    $expected = CodePath::getRoot().'/tmp';
     $value = BootStrap::getFileSystemRoot();
     $this->assertEquals($expected, $value);
   }
@@ -21,7 +21,7 @@ class BootStrapTest extends ZyngaTestCase {
    * Do we return the right path for our error log
    */
   public function testValidGetTestErrorLog(): void {
-    $expected = CodePath::getRoot().'/tests/php.log';
+    $expected = CodePath::getRoot().'/tmp/php.log';
     $value = BootStrap::getTestErrorLog();
     $this->assertEquals($expected, $value);
   }

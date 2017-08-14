@@ -6,6 +6,8 @@ use Zynga\Framework\Testing\TestCase\V2\Base as ZyngaTestCase;
 use Zynga\Framework\Testing\TestCase\V2\Config\Manager as TestManager;
 
 use Zynga\Framework\Environment\TemporaryDirectory\V1\TemporaryDirectory;
+use Zynga\Framework\Performance\V1\Tracker as PerformanceTracker;
+
 use Zynga\Framework\Exception\V1\Exception;
 
 // mock interface for testing
@@ -19,6 +21,37 @@ class TestCaseTestNoImplement {}
 class TestCaseMock extends ZyngaTestCase {}
 
 class TestCaseTest extends ZyngaTestCase {
+
+  public function test_perfFunction(): void {
+
+    // test once uncached.
+    $perf = $this->perf();
+    $this->assertTrue($perf instanceof PerformanceTracker);
+   
+    // should be cached on second pass.
+    $perf = $this->perf();
+    $this->assertTrue($perf instanceof PerformanceTracker);
+
+  }
+
+  public function test_assertPerf(): void {
+    $this->perf()->startTimer('testTimer');
+    sleep(2);
+    $this->perf()->endTimer('testTimer');
+    $this->assertionFailureExpected();
+    $this->assertPerf('testTimer', 1);
+  }
+
+  public function test_expectOutput(): void {
+    echo "some-content";
+    $this->expectOutput('some-content');
+  }
+  
+  public function test_expectOutputPregMatch(): void {
+    echo "some-content";
+    $this->expectOutputPregMatch('/some/', ob_get_contents());
+  }
+
 
   /**
    * Tests for a basic test case to instanciate with no issues.

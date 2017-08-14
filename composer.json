@@ -13,15 +13,16 @@
   ],
   "require": {
     "hhvm": "^3.12",
-    "zynga/zynga-hhvm-moduledev": "^2.1",
+    "zynga/zynga-hhvm-moduledev": "^2.3",
     "zynga/framework/exception": "1.0.5",
-    "zynga/framework/environment/codepath": "^1.1",
+    "zynga/framework/environment/codepath": "^1.2",
     "zynga/framework/environment/developmentmode": "^1.1",
-    "zynga/framework/performance": "^1.1"
+    "zynga/framework/performance": "^1.1",
+    "zynga/zynga-hhvm-phpunit": "^v2.1"
   },
   "autoload": {
     "psr-4": {
-      "Zynga\\Framework\\Testing\\BootStrap\\V1\\": "src/Zynga/Framework/Testing/BootStrap/V1/",
+      "Zynga\\Framework\\Testing\\BootStrap\\V2\\": "src/Zynga/Framework/Testing/BootStrap/V2/",
       "Zynga\\Framework\\Testing\\TestCase\\V2\\": "src/Zynga/Framework/Testing/TestCase/V2/"
     }
   },

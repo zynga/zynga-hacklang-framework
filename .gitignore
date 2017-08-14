@@ -2,3 +2,5 @@ vendor
 tmp
 Makefile
 composer.lock
+bootstrap.hh
+phpunit.xml

@@ -98,4 +98,20 @@ copy_from_skeleton \
 
 add_to_git_ignore $project_root "Makefile"
 
+# copy over the bootstrap file
+copy_from_skeleton \
+  $project_root \
+  "$project_root/vendor/zynga/zynga-hhvm-moduledev/src/skeleton/bootstrap.hh" \
+  "$project_root/bootstrap.hh"
+
+add_to_git_ignore $project_root "bootstrap.hh"
+
+# copy over the phpunit.xml config
+copy_from_skeleton \
+  $project_root \
+  "$project_root/vendor/zynga/zynga-hhvm-moduledev/src/skeleton/phpunit.xml" \
+  "$project_root/phpunit.xml"
+
+add_to_git_ignore $project_root "phpunit.xml"
+
 echo "DONE"

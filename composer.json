@@ -8,9 +8,6 @@
     "testing",
     "testcase"
   ],
-  "bin": [
-    "src/bootstrap.hh"
-  ],
   "require": {
     "hhvm": "^3.12",
     "zynga/zynga-hhvm-moduledev": "^2.3",

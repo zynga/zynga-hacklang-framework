@@ -13,11 +13,11 @@
   ],
   "require": {
     "hhvm": "^3.12",
-    "zynga/zynga-hhvm-moduledev": "*",
-    "zynga/framework/exception": "*",
-    "zynga/framework/environment/codepath": "*",
-    "zynga/framework/environment/developmentmode": "*",
-    "zynga/framework/performance": "*"
+    "zynga/zynga-hhvm-moduledev": "^2.1",
+    "zynga/framework/exception": "1.0.5",
+    "zynga/framework/environment/codepath": "^1.1",
+    "zynga/framework/environment/developmentmode": "^1.1",
+    "zynga/framework/performance": "^1.1"
   },
   "autoload": {
     "psr-4": {

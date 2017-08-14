@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c475ecfaa837fb7736301a4f13c9c13",
+    "content-hash": "a3fd0f24ce5eb9384158d401e9635a85",
     "packages": [
         {
             "name": "zynga/framework/environment/codepath",

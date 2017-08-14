@@ -13,11 +13,11 @@
   ],
   "require": {
     "hhvm": "^3.12",
-    "zynga/zynga-hhvm-moduledev": "^1.0",
-    "zynga/framework/exception": "^1.0",
-    "zynga/framework/environment/codepath": "^1.0",
-    "zynga/framework/environment/developmentmode": "^1.0",
-    "zynga/framework/performance": "^1.0"
+    "zynga/zynga-hhvm-moduledev": "*",
+    "zynga/framework/exception": "*",
+    "zynga/framework/environment/codepath": "*",
+    "zynga/framework/environment/developmentmode": "*",
+    "zynga/framework/performance": "*"
   },
   "autoload": {
     "psr-4": {
@@ -26,6 +26,7 @@
     }
   },
   "repositories": [
+    { "packagist.org": false },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git" },

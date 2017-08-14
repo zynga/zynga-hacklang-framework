@@ -9,7 +9,7 @@
   ],
   "require": {
     "hhvm": "^3.12",
-    "zynga/zynga-hhvm-moduledev": "v1.0.18"
+    "zynga/zynga-hhvm-moduledev": "^2.0"
   },
   "autoload": {
     "psr-4": {
@@ -19,6 +19,8 @@
   "repositories": [
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git" },
-    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git" }
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-exception.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-testing.git" }
   ]
 }

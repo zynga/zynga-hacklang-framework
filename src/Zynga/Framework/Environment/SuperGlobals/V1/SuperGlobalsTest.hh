@@ -4,6 +4,7 @@ namespace Zynga\Framework\Environment\SuperGlobals\V1;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\Environment\SuperGlobals\V1\SuperGlobals;
+use Zynga\Framework\Environment\CodePath\V1\CodePath;
 
 class SuperGlobalsTest extends TestCase {
   public string $_scriptName;
@@ -108,6 +109,32 @@ class SuperGlobalsTest extends TestCase {
     $this->assertTrue(SuperGlobals::clearScriptUri());
 
     $this->assertTrue(SuperGlobals::setScriptUri($currentUri));
+
+  }
+
+  public function test_clearRequest(): void {
+    $this->assertTrue(SuperGlobals::clearRequest());
+  }
+
+  public function test_getRequestBodyAsMap_Empty(): void {
+
+    $requestFile = CodePath::getRoot() . '/tests/empty_request_body.js';
+    
+    SuperGlobals::setBodyFilePath($requestFile);
+
+    $data = SuperGlobals::getRequestBodyAsMap();
+    $this->assertEquals(0, $data->count());
+
+  }
+
+  public function test_getRequestBodyAsMap_SomeData(): void {
+
+    $requestFile = CodePath::getRoot() . '/tests/some_data.js';
+    
+    SuperGlobals::setBodyFilePath($requestFile);
+    
+    $data = SuperGlobals::getRequestBodyAsMap();
+    $this->assertEquals(3, $data->count());
 
   }
 

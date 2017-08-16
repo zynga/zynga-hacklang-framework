@@ -3,10 +3,7 @@
 namespace Zynga\Framework\Dynamic\V1;
 
 use Zynga\Framework\Dynamic\V1\Exceptions\UnableToFindClassException;
-use
-  Zynga\Framework\Dynamic\V1\Exceptions\ConstructorMissingRequiredParametersException
-;
-
+use Zynga\Framework\Dynamic\V1\Exceptions\MissingRequiredParametersException;
 use Zynga\Framework\Exception\V1\Exception;
 
 use \ReflectionClass;
@@ -39,7 +36,7 @@ class DynamicClassCreation {
       }
 
       if ($constructorParamCount != $params->count()) {
-        throw new ConstructorMissingRequiredParametersException(
+        throw new MissingRequiredParametersException(
           'string='.
           $name.
           ' got='.

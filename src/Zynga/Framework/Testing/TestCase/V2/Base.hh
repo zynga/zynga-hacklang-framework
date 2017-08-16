@@ -30,6 +30,8 @@ use \PHPUnit_Framework_TestCase;
 use \PHPUnit_Framework_AssertionFailedError;
 
 use Zynga\Framework\Exception\V1\Exception;
+use Zynga\Framework\Dynamic\V1\DynamicMethodCall;
+
 // use Zynga\Legacy\V1\Log as LegacyLogger;
 
 abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDescribing {
@@ -83,7 +85,8 @@ abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDe
 
     // error_log('JEO doSetUpBeforeClass=RAN');
     DevelopmentMode::reset();
-    // MockState::enableMocks();
+
+    DynamicMethodCall::callMethod('Zynga\Framework\Testing\MockState\V2\MockState', 'enableMocks', true);
 
     return true;
 
@@ -108,8 +111,11 @@ abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDe
     // error_log('doTearDownAfterClass=RAN');
 
     DevelopmentMode::reset();
-    // MockState::enableMocks();
+
+    DynamicMethodCall::callMethod('Zynga\Framework\Testing\MockState\V2\MockState', 'enableMocks', true);
+
     return true;
+
   }
 
   /**

@@ -11,15 +11,17 @@
   "require": {
     "hhvm": "^3.12",
     "zynga/zynga-hhvm-moduledev": "^2.3",
+    "zynga/framework/dynamic": "^1.1",
     "zynga/framework/exception": "1.0.5",
     "zynga/framework/environment/codepath": "^1.2",
     "zynga/framework/environment/developmentmode": "^1.1",
     "zynga/framework/performance": "^1.1",
-    "zynga/zynga-hhvm-phpunit": "^v2.1"
+    "zynga/zynga-hhvm-phpunit": "^v2.2"
   },
   "autoload": {
     "psr-4": {
       "Zynga\\Framework\\Testing\\BootStrap\\V2\\": "src/Zynga/Framework/Testing/BootStrap/V2/",
+      "Zynga\\Framework\\Testing\\MockState\\V2\\": "src/Zynga/Framework/Testing/MockState/V2/",
       "Zynga\\Framework\\Testing\\TestCase\\V2\\": "src/Zynga/Framework/Testing/TestCase/V2/"
     }
   },
@@ -28,6 +30,7 @@
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-dynamic.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-codepath.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-developmentmode.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-exception.git" },

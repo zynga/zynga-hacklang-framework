@@ -25,6 +25,16 @@ class MockState {
 
   public static Vector<MockableClass> $_mockables = Vector {};
 
+  public static function addMockableClass(string $className): bool {
+    self::$_mockableClassConfig->add($className);
+    return true;
+  }
+
+  public static function clearMockables(): bool {
+    self::$_mockables->clear();
+    return true;
+  }
+
   public static function enableMocks(): bool {
 
     self::detectMockableClasses();

@@ -76,6 +76,7 @@ class MockableClass {
     $methodReturn = DynamicMethodCall::callMethod(
       $this->_className,
       $this->_enableFunction,
+      Vector {},
       false
     );
 
@@ -88,6 +89,7 @@ class MockableClass {
     $methodReturn = DynamicMethodCall::callMethod(
       $this->_className,
       $this->_disableFunction,
+      Vector {},
       false
     );
 

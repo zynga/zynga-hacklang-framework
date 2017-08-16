@@ -32,8 +32,6 @@ use \PHPUnit_Framework_AssertionFailedError;
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Dynamic\V1\DynamicMethodCall;
 
-// use Zynga\Legacy\V1\Log as LegacyLogger;
-
 abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDescribing {
 
   private static bool $_hasBeforeClassMethod = false;
@@ -86,7 +84,7 @@ abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDe
     // error_log('JEO doSetUpBeforeClass=RAN');
     DevelopmentMode::reset();
 
-    DynamicMethodCall::callMethod('Zynga\Framework\Testing\MockState\V2\MockState', 'enableMocks', true);
+    DynamicMethodCall::callMethod('Zynga\Framework\Testing\MockState\V2\MockState', 'enableMocks', Vector {}, true);
 
     return true;
 
@@ -112,7 +110,7 @@ abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDe
 
     DevelopmentMode::reset();
 
-    DynamicMethodCall::callMethod('Zynga\Framework\Testing\MockState\V2\MockState', 'enableMocks', true);
+    DynamicMethodCall::callMethod('Zynga\Framework\Testing\MockState\V2\MockState', 'enableMocks', Vector {}, true);
 
     return true;
 
@@ -132,7 +130,7 @@ abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDe
   public function setUp(): void {
     if ($this->hideLogs() === true) {
       ob_start();
-      // LegacyLogger::setHideAllLogs(true);
+      DynamicMethodCall::callMethod('Zynga\Legacy\V1\Log', 'setHideAllLogs', Vector {true}, true);
     }
 
     if ($this->isEnabled() !== true) {
@@ -145,7 +143,7 @@ abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDe
   public function tearDown(): void {
     if ($this->hideLogs() === true) {
       ob_end_clean();
-      // LegacyLogger::setHideAllLogs(false);
+      DynamicMethodCall::callMethod('Zynga\Legacy\V1\Log', 'setHideAllLogs', Vector {false}, true);
     }
   }
 

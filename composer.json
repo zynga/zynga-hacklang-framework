@@ -1,0 +1,31 @@
+{
+  "name": "zynga/framework/dynamic",
+  "description": "Zynga dynamic framework, light scaffold for handling dynamically creating objects, or calling dynamic code within strict context.",
+  "type": "library",
+  "keywords": [
+    "hhvm",
+    "framework",
+    "dynamic"
+  ],
+  "require": {
+    "hhvm": "^3.12",
+    "zynga/zynga-hhvm-moduledev": "^2.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zynga\\Framework\\Dynamic\\V1\\": "src/Zynga/Framework/Dynamic/V1/"
+    }
+  },
+  "repositories": [
+    { "packagist.org": false },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-codepath.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-developmentmode.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-superglobals.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-exception.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-performance.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-testing.git" }
+  ]
+}

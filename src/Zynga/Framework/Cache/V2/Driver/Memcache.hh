@@ -4,7 +4,7 @@ namespace Zynga\Framework\Cache\V2\Driver;
 
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
-use Zynga\Framework\DynamicClassCreation\V1\DynamicClassCreation;
+use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
 
 use Zynga\Framework\Cache\V2\Driver\Base as DriverBase;
 use Zynga\Framework\Cache\V2\Interfaces\DriverConfigInterface;

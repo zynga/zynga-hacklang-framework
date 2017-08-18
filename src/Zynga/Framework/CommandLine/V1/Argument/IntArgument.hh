@@ -4,7 +4,7 @@ namespace Zynga\Framework\CommandLine\V1\Argument;
 
 use Zynga\Framework\CommandLine\V1\Argument\Base;
 use Zynga\Framework\Exception\V1\Exception;
-use Zynga\Type\V1\Int64Box;
+use Zynga\Framework\Type\V1\Int64Box;
 
 class IntArgument extends Base {
   private Int64Box $_value;

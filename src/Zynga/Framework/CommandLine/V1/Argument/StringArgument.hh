@@ -4,7 +4,7 @@ namespace Zynga\Framework\CommandLine\V1\Argument;
 
 use Zynga\Framework\CommandLine\V1\Argument\Base;
 use Zynga\Framework\Exception\V1\Exception;
-use Zynga\Type\V1\StringBox;
+use Zynga\Framework\Type\V1\StringBox;
 
 class StringArgument extends Base {
   private StringBox $_value;

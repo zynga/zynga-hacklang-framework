@@ -5,25 +5,44 @@ namespace Zynga\Framework\Type\V1\Test;
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Testing\TestCase\V2\Base as ZyngaTestCase;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
+use Zynga\Framework\Type\V1\Test\ValidValue;
+use Zynga\Framework\Type\V1\Exceptions\UnSupportedTypeException;
 
 abstract class TestCase extends ZyngaTestCase {
+
   abstract public function getTypeObject(): TypeInterface;
 
-  abstract public function generateValidValues(): Vector<mixed>;
+  abstract public function generateValidValues(): Vector<ValidValue>;
 
   abstract public function generateInvalidValues(): Vector<mixed>;
 
-  /**
-   * @expectedException Zynga\Framework\Type\V1\Exceptions\UnSupportedTypeException
-   */
+  public function test_requiredToggle(): void {
+    $obj = $this->getTypeObject();
+
+    // Default is off
+    $this->assertFalse($obj->getIsRequired());
+
+    // Turn it on
+    $this->assertTrue($obj->setIsRequired(true));
+    $this->assertTrue($obj->getIsRequired());
+
+    // Turn it off
+    $this->assertTrue($obj->setIsRequired(false));
+    $this->assertFalse($obj->getIsRequired());
+    
+  }
+
   public function testInvalidType_Import(): void {
     $e = new Exception('BreakingStuff');
     $obj = $this->getTypeObject();
+    $this->expectException(UnSupportedTypeException::class);
     $obj->set($e);
   }
 
   public function testValidValues(): void {
+
     $validValues = $this->generateValidValues();
+
     // --
     // Every type check should have some version of a set of data that is good
     // for it.
@@ -34,19 +53,22 @@ abstract class TestCase extends ZyngaTestCase {
       // @codeCoverageIgnoreEnd
     }
 
-    foreach ($validValues as $validValue) {
+    foreach ( $validValues as $validValue ) {
       // do it in the native test type, if you need to test a string version
       // of a value add it to your valid values set.
       $obj = $this->getTypeObject();
-      $this->assertTrue($obj->set($validValue));
+      $this->assertTrue($obj->set($validValue->getInputValue()));
+      $this->assertEquals($validValue->getExpectedValue(), $obj->get());
     }
 
-    foreach ($validValues as $validValue) {
+    foreach ( $validValues as $validValue ) {
       $obj = $this->getTypeObject();
-      $this->assertTrue($obj->setDefaultValue($validValue));
+      $this->assertTrue($obj->setDefaultValue($validValue->getInputValue()));
       list($isDefaultValue, $messages) = $obj->isDefaultValue();
       $this->assertTrue($isDefaultValue);
+      $this->assertEquals($validValue->getExpectedValue(), $obj->get());
     }
+
   }
 
   public function testInvalidValues(): void {
@@ -106,32 +128,37 @@ abstract class TestCase extends ZyngaTestCase {
     }
   }
 
-  protected function injectionTestScaffold(Vector<string> $badData): void {
-    $testData = $this->generateValidValues();
-    foreach ($testData as $k => $testValue) {
-      foreach ($badData as $bad) {
-        // --
-        // If it isn't a string convert it if possible to a string value. so we
-        // can trap failures.
-        // --
-        if (is_int($testValue) || is_float($testValue)) {
-          $testValue = strval($testValue);
-        }
+  protected function createInjectedValues(Vector<string> $badData): Vector<string> {
 
-        if (is_string($testValue)) {
-          $testString = $testValue.$bad;
-          $obj = $this->getTypeObject();
-          try {
-            $obj->set($testString);
-            // @codeCoverageIgnoreStart
-            $this->fail('value='.$testString.' should of failed');
-            // @codeCoverageIgnoreEnd
-          } catch (Exception $e) {
-            $this->assertTrue(true);
-          }
-        }
+    $injectedData = Vector {};
+
+    $validValues = $this->generateValidValues();
+
+    foreach ( $validValues as $validValue ) {
+
+      $inputData = $validValue->getInputValue();
+
+      $testValue = strval($inputData);
+
+      foreach ($badData as $bad) {
+        $testString = $testValue . $bad;
+        $injectedData->add($testString);
       }
+
     }
+    return $injectedData;
+  }
+
+  protected function injectionTestScaffold(Vector<string> $badData): void {
+
+    $injectedData = $this->createInjectedValues($badData);
+
+    foreach ($injectedData as $injected ) {
+      $obj = $this->getTypeObject();
+      $this->expectException(Exception::class);
+      $obj->set($injected);
+    }
+
   }
 
   public function testFacebookTagInjection(): void {

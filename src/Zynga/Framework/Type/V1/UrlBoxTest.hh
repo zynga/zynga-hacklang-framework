@@ -5,6 +5,7 @@ namespace Zynga\Framework\Type\V1;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\Test\TestCase;
 use Zynga\Framework\Type\V1\UrlBox;
+use Zynga\Framework\Type\V1\Test\ValidValue;
 
 class UrlBoxTest extends TestCase {
   public function setUp(): void {
@@ -15,13 +16,22 @@ class UrlBoxTest extends TestCase {
     return new UrlBox();
   }
 
-  public function generateValidValues(): Vector<mixed> {
+  public function generateValidValues(): Vector<ValidValue> {
     $values = Vector {};
-    $values[] = 'http://www.zynga.com';
-    $values[] = 'https://poker.zynga.com';
-    $values[] = 'https://poker.zynga.com:8874';
-    $values[] =
+
+    $cnetUrl = 'http://www.zynga.com';
+    $values->add(new ValidValue($cnetUrl, $cnetUrl));
+
+    $pokerUrl = 'https://poker.zynga.com';
+    $values->add(new ValidValue($pokerUrl, $pokerUrl));
+
+    $pokerWithPortUrl = 'https://poker.zynga.com:8874';
+    $values->add(new ValidValue($pokerWithPortUrl, $pokerWithPortUrl));
+
+    $profilePicUrl =
       'https://scontent.xx.fbcdn.net/v/t1.0-1/s200x200/12074947_10152975537761923_4996569292942257821_n.jpg?oh=b5459da74187f52fd9068bc0b503d7c2&oe=59D6E9E0';
+    $values->add(new ValidValue($profilePicUrl, $profilePicUrl));
+
     return $values;
   }
 

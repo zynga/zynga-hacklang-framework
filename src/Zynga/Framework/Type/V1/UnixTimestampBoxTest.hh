@@ -5,6 +5,7 @@ namespace Zynga\Framework\Type\V1;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\UnixTimestampBox;
 use Zynga\Framework\Type\V1\Test\TestCase;
+use Zynga\Framework\Type\V1\Test\ValidValue;
 
 class UnixTimestampBoxTest extends TestCase {
 
@@ -24,11 +25,16 @@ class UnixTimestampBoxTest extends TestCase {
     }
   }
 
-  public function generateValidValues(): Vector<mixed> {
+  public function generateValidValues(): Vector<ValidValue> {
+
     $values = Vector {};
-    $values[] = time();
-    $values[] = '19770701-063000';
+
+    $currentTime = time();
+    $values->add(new ValidValue($currentTime, $currentTime));
+    $values->add(new ValidValue('19770701-063000', 623846092208790));
+
     return $values;
+    
   }
 
   public function generateInvalidValues(): Vector<mixed> {

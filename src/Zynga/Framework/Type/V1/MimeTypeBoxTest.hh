@@ -5,8 +5,10 @@ namespace Zynga\Framework\Type\V1;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\MimeTypeBox;
 use Zynga\Framework\Type\V1\Test\TestCase;
+use Zynga\Framework\Type\V1\Test\ValidValue;
 
 class MimeTypeBoxTest extends TestCase {
+
   public function getTypeObject(): TypeInterface {
     return new MimeTypeBox();
   }
@@ -19,9 +21,12 @@ class MimeTypeBoxTest extends TestCase {
     }
   }
 
-  public function generateValidValues(): Vector<mixed> {
+  public function generateValidValues(): Vector<ValidValue> {
     $values = Vector {};
-    $values[] = MimeTypeBox::JSON;
+    $values->add(new ValidValue(
+      MimeTypeBox::JSON,
+      MimeTypeBox::JSON
+    ));
     return $values;
   }
 

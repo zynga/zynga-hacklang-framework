@@ -5,6 +5,7 @@ namespace Zynga\Framework\Type\V1;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\StringBox;
 use Zynga\Framework\Type\V1\Test\TestCase;
+use Zynga\Framework\Type\V1\Test\ValidValue;
 
 class StringBoxTest extends TestCase {
 
@@ -21,19 +22,19 @@ class StringBoxTest extends TestCase {
     }
   }
 
-  public function generateValidValues(): Vector<mixed> {
+  public function generateValidValues(): Vector<ValidValue> {
     $values = Vector {};
-    $values[] = '0';
-    $values[] = '1';
-    $values[] = 'true';
-    $values[] = 'false';
-    $values[] = '';
-    $values[] = true;
-    $values[] = false;
-    $values[] = 0.0;
-    $values[] = 1.0;
-    $values[] = 0;
-    $values[] = 1;
+    $values->add(new ValidValue('0', '0'));
+    $values->add(new ValidValue('1', '1'));
+    $values->add(new ValidValue('true', 'true'));
+    $values->add(new ValidValue('false', 'false'));
+    $values->add(new ValidValue('', ''));
+    $values->add(new ValidValue(true, strval(true)));
+    $values->add(new ValidValue(false, strval(false)));
+    $values->add(new ValidValue(0.0, strval(0.0)));
+    $values->add(new ValidValue(1.0, strval(1.0)));
+    $values->add(new ValidValue(0, strval(0)));
+    $values->add(new ValidValue(1, strval(1)));
     return $values;
   }
 

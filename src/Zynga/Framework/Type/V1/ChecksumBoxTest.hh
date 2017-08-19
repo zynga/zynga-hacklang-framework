@@ -5,6 +5,7 @@ namespace Zynga\Framework\Type\V1;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\ChecksumBox;
 use Zynga\Framework\Type\V1\Test\TestCase;
+use Zynga\Framework\Type\V1\Test\ValidValue;
 
 class ChecksumBoxTest extends TestCase {
 
@@ -12,9 +13,9 @@ class ChecksumBoxTest extends TestCase {
     return new ChecksumBox();
   }
 
-  public function generateValidValues(): Vector<mixed> {
+  public function generateValidValues(): Vector<ValidValue> {
     $values = Vector {};
-    $values[] = '53c246c38703ca02e1c3f67af025cde7';
+    $values->add(new ValidValue('53c246c38703ca02e1c3f67af025cde7', '53c246c38703ca02e1c3f67af025cde7'));
     return $values;
   }
 

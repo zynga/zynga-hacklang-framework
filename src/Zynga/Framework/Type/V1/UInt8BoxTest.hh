@@ -5,6 +5,7 @@ namespace Zynga\Type\V1;
 use Zynga\Framework\Type\V1\Test\Ranged\TestCase;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\UInt8Box;
+use Zynga\Framework\Type\V1\Test\ValidValue;
 
 class UInt8BoxTest extends TestCase {
 
@@ -18,12 +19,12 @@ class UInt8BoxTest extends TestCase {
     return new UInt8Box();
   }
 
-  public function generateValidValues(): Vector<mixed> {
+  public function generateValidValues(): Vector<ValidValue> {
     $values = parent::generateValidValues();
-    $values[] = true;
-    $values[] = false;
-    $values[] = 4.0;
-    $values[] = 2.0;
+    $values->add(new ValidValue(true, intval(true)));
+    $values->add(new ValidValue(false, intval(false)));
+    $values->add(new ValidValue(4.0, intval(4.0)));
+    $values->add(new ValidValue(20.0, intval(20.0)));
     return $values;
   }
 

@@ -1,5 +1,5 @@
 {
-  "name": "zynga/framework/commandline",
+  "name": "zynga/framework/types",
   "description": "Zynga typebox framework, taking types further via boxed values.",
   "type": "library",
   "keywords": [

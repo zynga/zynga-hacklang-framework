@@ -5,6 +5,7 @@ namespace Zynga\Framework\Type\V1;
 use Zynga\Framework\Type\V1\BoolBox;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\Test\TestCase;
+use Zynga\Framework\Type\V1\Test\ValidValue;
 
 class BoolBoxTest extends TestCase {
   public function getTypeObject(): TypeInterface {
@@ -19,18 +20,18 @@ class BoolBoxTest extends TestCase {
     }
   }
 
-  public function generateValidValues(): Vector<mixed> {
+  public function generateValidValues(): Vector<ValidValue> {
     $values = Vector {};
-    $values[] = '0';
-    $values[] = '1';
-    $values[] = 'true';
-    $values[] = 'false';
-    $values[] = true;
-    $values[] = false;
-    $values[] = 0.0;
-    $values[] = 1.0;
-    $values[] = 0;
-    $values[] = 1;
+    $values->add(new ValidValue('0', false));
+    $values->add(new ValidValue('1', true));
+    $values->add(new ValidValue('true', true));
+    $values->add(new ValidValue('false', false));
+    $values->add(new ValidValue(true, true));
+    $values->add(new ValidValue(false, false));
+    $values->add(new ValidValue(0.0, false));
+    $values->add(new ValidValue(1.0, true));
+    $values->add(new ValidValue(0, false));
+    $values->add(new ValidValue(1, true));
     return $values;
   }
 

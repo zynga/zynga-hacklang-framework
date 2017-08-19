@@ -4,6 +4,7 @@ namespace Zynga\Framework\Type\V1\Test\Ranged;
 
 use Zynga\Framework\Type\V1\Test\TestCase as TypeTestCase;
 use Zynga\Framework\Exception\V1\Exception;
+use Zynga\Framework\Type\V1\Test\ValidValue;
 
 abstract class TestCase extends TypeTestCase {
   private int $_min;
@@ -34,13 +35,11 @@ abstract class TestCase extends TypeTestCase {
     return true;
   }
 
-  public function generateValidValues(): Vector<mixed> {
+  public function generateValidValues(): Vector<ValidValue> {
     $values = Vector {};
     for ($i = 0; $i < $this->getIterations(); $i++) {
       $value = mt_rand(0, $this->_max);
-      if (!in_array($value, $values)) {
-        $values[] = $value;
-      }
+      $values->add(new ValidValue($value, $value));
     }
     return $values;
   }

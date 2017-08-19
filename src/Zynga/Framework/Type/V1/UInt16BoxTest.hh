@@ -5,6 +5,7 @@ namespace Zynga\Framework\Type\V1;
 use Zynga\Framework\Type\V1\Test\Ranged\TestCase;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\UInt16Box;
+use Zynga\Framework\Type\V1\Test\ValidValue;
 
 class UInt16BoxTest extends TestCase {
 
@@ -18,12 +19,12 @@ class UInt16BoxTest extends TestCase {
     return new UInt16Box();
   }
 
-  public function generateValidValues(): Vector<mixed> {
+  public function generateValidValues(): Vector<ValidValue> {
     $values = parent::generateValidValues();
-    $values[] = true;
-    $values[] = false;
-    $values[] = 3.0;
-    $values[] = 6.0;
+    $values->add(new ValidValue(true, intval(true)));
+    $values->add(new ValidValue(false, intval(false)));
+    $values->add(new ValidValue(3.0, intval(3.0)));
+    $values->add(new ValidValue(6.0, intval(6.0)));
     return $values;
   }
 

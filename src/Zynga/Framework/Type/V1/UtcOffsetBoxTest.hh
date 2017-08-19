@@ -5,6 +5,7 @@ namespace Zynga\Framework\Type\V1;
 use Zynga\Framework\Type\V1\Test\Ranged\TestCase;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\UtcOffsetBox;
+use Zynga\Framework\Type\V1\Test\ValidValue;
 
 class UtcOffsetBoxTest extends TestCase {
 
@@ -18,7 +19,7 @@ class UtcOffsetBoxTest extends TestCase {
     return new UtcOffsetBox();
   }
 
-  public function generateValidValues(): Vector<mixed> {
+  public function generateValidValues(): Vector<ValidValue> {
     $values = parent::generateValidValues();
     return $values;
   }

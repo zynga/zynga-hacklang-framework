@@ -11,7 +11,7 @@
   "require": {
     "hhvm": "^3.12",
     "zynga/zynga-hhvm-moduledev": "^2.3",
-    "zynga/framework/dynamic": "^1.1",
+    "zynga/framework/dynamic": "^1.2",
     "zynga/framework/exception": "1.0.5",
     "zynga/framework/environment/codepath": "^1.2",
     "zynga/framework/environment/developmentmode": "^1.1",

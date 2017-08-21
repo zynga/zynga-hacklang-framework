@@ -11,6 +11,13 @@ use \ReflectionMethod;
 
 class DynamicClassCreation {
 
+  public static function doesClassExist(string $name): bool {
+    if (class_exists($name, true) === true) {
+      return true;
+    }
+    return false;
+  }
+
   public static function createClassByName(
     string $name,
     Vector<mixed> $params,

@@ -90,6 +90,14 @@ add_to_git_ignore $project_root "tmp";
 ##
 echo "Copying in files from project skeleton"
 
+# Copy over our hhconfig
+copy_from_skeleton \
+  $project_root \
+  "$project_root/vendor/zynga/zynga-hhvm-moduledev/src/skeleton/.hhconfig" \
+  "$project_root/.hhconfig"
+
+add_to_git_ignore $project_root ".hhconfig"
+
 # Copy over our makefile
 copy_from_skeleton \
   $project_root \

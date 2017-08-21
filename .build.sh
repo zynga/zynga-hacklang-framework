@@ -8,6 +8,9 @@ if [ $? -ne 0 ]; then
   exit $?
 fi
 
+# Dump the composer modules that were installed
+composer show
+
 # composer is available now run the vendor setup script
 ./vendor/zynga/zynga-hhvm-moduledev/bin/setup.sh
 

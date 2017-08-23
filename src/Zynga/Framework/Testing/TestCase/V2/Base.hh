@@ -85,7 +85,8 @@ abstract class Base implements PHPUnit_Framework_Test,  PHPUnit_Framework_SelfDe
     DevelopmentMode::reset();
 
     DynamicMethodCall::callMethod('Zynga\Framework\Testing\MockState\V2\MockState', 'enableMocks', Vector {}, true);
-
+    DynamicMethodCall::callMethod('Zynga\Legacy\Log', 'setHideAllLogs', Vector {true}, true);
+    
     return true;
 
   }

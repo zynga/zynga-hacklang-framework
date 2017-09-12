@@ -10,6 +10,7 @@ use Zynga\Framework\Factory\V2\Test\Factory as TestFactory;
 use Zynga\Framework\Factory\V2\Template as FactoryTemplate;
 use Zynga\Framework\Factory\V2\Test\Interfaces\DriverInterface as TestDriverInterface;
 use Zynga\Framework\Factory\V2\Test\Interfaces\ConfigInterface as TestDriverConfigInterface;
+use Zynga\Framework\Factory\V2\Exceptions\FailedToLoadDriverException;
 
 class BaseTest extends TestCase {
 
@@ -53,21 +54,29 @@ class BaseTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Factory\V2\Exceptions\FailedToLoadDriverException
-   */
   public function test_invalidConfigName(): void {
+    $this->expectException(FailedToLoadDriverException::class);
     TestFactory::factory(TestDriverInterface::class, 'Invalid-Config-Name');
   }
 
-  /**
-   * @expectedException Zynga\Framework\Factory\V2\Exceptions\FailedToLoadDriverException
-   */
   public function test_invalidDriverConfig(): void {
+    $this->expectException(FailedToLoadDriverException::class);
     TestFactory::factory(
       TestDriverInterface::class,
       'Mock_InvalidDriverConfig',
     );
+  }
+
+  public function test_configExceptionTrap(): void {
+    $this->expectException(FailedToLoadDriverException::class);
+    TestFactory::factory(TestDriverInterface::class, 'Mock_ConfigThrowsException');
+  }
+
+  public function test_mockDriverTriggers(): void {
+    $this->assertTrue(TestFactory::enableMockDrivers());
+    $this->assertTrue(TestFactory::getUseMockDrivers());
+    $this->assertTrue(TestFactory::disableMockDrivers());
+    $this->assertFalse(TestFactory::getUseMockDrivers());
   }
 
   public function test_loadEnvironmentalConfigs(): void {

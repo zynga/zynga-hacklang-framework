@@ -123,6 +123,8 @@ class Template implements FactoryTemplateInterface {
    */
   public function getConfigForName(string $name): ConfigInterface {
 
+    $classNames = Vector {};
+
     try {
 
       $config = null;
@@ -151,13 +153,6 @@ class Template implements FactoryTemplateInterface {
 
       }
 
-      throw new FailedToLoadDriverConfigException(
-         'name=' . $name . ' ' .
-         'noClassesFoundWithin=' . json_encode($classNames)
-      );
-
-    } catch ( FailedToLoadDriverConfigException $e ) {
-      throw $e;
     } catch ( BaseException $e ) {
 
       $configException = new FailedToLoadDriverConfigException(
@@ -173,6 +168,11 @@ class Template implements FactoryTemplateInterface {
 
     }
 
+    throw new FailedToLoadDriverConfigException(
+       'name=' . $name . ' ' .
+       'noClassesFoundWithin=' . json_encode($classNames)
+    );
+
   }
 
   /**
@@ -181,6 +181,8 @@ class Template implements FactoryTemplateInterface {
    * @return DriverInterface
    */
   public function getDriverForName(string $name): DriverInterface {
+
+    $classNames = Vector {};
 
     try {
 
@@ -207,14 +209,7 @@ class Template implements FactoryTemplateInterface {
         }
 
       }
-
-      throw new FailedToLoadDriverException(
-        'name='.$name . ' ' .
-        'classNames=' . json_encode($classNames)
-      );
-
-    } catch (FailedToLoadDriverException $e) {
-      throw $e;
+      
     } catch (BaseException $e) {
 
       $failure = new FailedToLoadDriverException(
@@ -226,6 +221,11 @@ class Template implements FactoryTemplateInterface {
       throw $failure;
 
     }
+
+    throw new FailedToLoadDriverException(
+      'name='.$name . ' ' .
+      'classNames=' . json_encode($classNames)
+    );
 
   }
 

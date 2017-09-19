@@ -1,0 +1,7 @@
+vendor
+composer.lock
+tmp
+.hhconfig
+Makefile
+bootstrap.hh
+phpunit.xml

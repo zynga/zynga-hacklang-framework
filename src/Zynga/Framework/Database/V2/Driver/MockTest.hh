@@ -39,14 +39,17 @@ class MockTest extends TestCase {
     $this->assertEquals('booga', $mock->nativeQuoteString('booga'));
     $this->assertClassImplements(QuoteInterface::class, $mock->quote());
     $this->assertClassImplements(TransactionInterface::class, $mock->transaction());
+
     if ($mock instanceof Mock) {
+
       $this->assertTrue($mock->resetResultsSets());
       $this->assertTrue($mock->addEmptyResultSet());
-      $this->assertTrue(
-        $mock->query('SELECT * FROM DUAL') instanceof ResultSetInterface,
-      );
 
-      $this->assertClassImplements(ErrorCaptureInterface::class, $mock->errorCapture());
+      $resultSet =  $mock->query('SELECT * FROM DUAL');
+
+      $this->assertTrue($resultSet instanceof ResultSetInterface);
+
+      $this->assertClassImplements(ErrorCaptureInterface::class, $resultSet->errorCapture());
       $this->assertTrue($mock->addResultSet(Vector {1,2,3}));
 
     }

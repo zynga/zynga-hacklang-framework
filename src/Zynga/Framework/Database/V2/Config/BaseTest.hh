@@ -46,6 +46,8 @@ class BaseTest extends TestCase {
 
   public function testDatabaseFunctions(): void {
     $expectedDatabase = 'oratest';
+    $expectedServer = '';
+    $expectedPort = 123;
 
     $conf = new MockValid();
 
@@ -54,6 +56,8 @@ class BaseTest extends TestCase {
     $conf->setCurrentDatabase($expectedDatabase);
 
     $this->assertEquals($expectedDatabase, $conf->getCurrentDatabase());
+    $this->assertEquals($expectedPort, $conf->getPort());
+    $this->assertEquals($expectedServer, $conf->getCurrentServer());
 
   }
 

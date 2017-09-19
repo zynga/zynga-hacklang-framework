@@ -1,6 +1,6 @@
 {
-  "name": "zynga/framework/database/driver/vertica",
-  "description": "Zynga database driver for PDO.",
+  "name": "zynga/framework/database/driver/genericpdo",
+  "description": "Zynga database framework driver for PDO.",
   "type": "library",
   "keywords": [
     "hhvm",

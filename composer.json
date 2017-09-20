@@ -16,7 +16,7 @@
     "zynga/framework/environment/codepath": "^1.2",
     "zynga/framework/environment/developmentmode": "^1.1",
     "zynga/framework/performance": "^1.1",
-    "zynga/zynga-hhvm-phpunit": "^v2.2"
+    "zynga/phpunit": "^v1.0"
   },
   "autoload": {
     "psr-4": {
@@ -29,7 +29,7 @@
     { "packagist.org": false },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git" },
-    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git" },
+    { "type": "vcs", "url": "git@github.com:Zynga/zynga-hhvm-phpunit.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-dynamic.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-codepath.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-developmentmode.git" },

@@ -1,0 +1,34 @@
+{
+  "name": "zynga/framework/elo",
+  "description": "Zynga elo abstraction framework, creates a way to iterate algorithms on top of the elo system.",
+  "type": "library",
+  "keywords": [
+    "hhvm",
+    "framework",
+    "elo"
+  ],
+  "require": {
+    "hhvm": "^3.12",
+    "zynga/zynga-hhvm-moduledev": "^2.4",
+    "zynga/framework/testing": "^2.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zynga\\Framework\\ELO\\V1\\": "src/Zynga/Framework/ELO/V1/"
+    }
+  },
+  "repositories": [
+    { "packagist.org": false },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git" },
+    { "type": "vcs", "url": "git@github.com:Zynga/zynga-hhvm-phpunit-hhi.git" },
+    { "type": "vcs", "url": "git@github.com:Zynga/zynga-hhvm-phpunit.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-dynamic.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-codepath.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-developmentmode.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-errorcapture.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-exception.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-factory.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-performance.git" },
+    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-testing.git" }
+  ]
+}

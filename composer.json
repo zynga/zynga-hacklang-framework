@@ -10,9 +10,8 @@
   "require": {
     "hhvm": "^3.12",
     "zynga/zynga-hhvm-moduledev": "^2.3",
-    "zynga/zynga-hhvm-phpunit": "^2.1",
-    "zynga/framework/testing": "^2.2",
-    "zynga/framework/environment/superglobals": "^1.1"
+    "zynga/framework/testing": "^2.7",
+    "zynga/framework/environment/superglobals": "^1.2"
   },
   "autoload": {
     "psr-4": {
@@ -22,8 +21,8 @@
   "repositories": [
     { "packagist.org": false },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git" },
-    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit-hhi.git" },
-    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-phpunit.git" },
+    { "type": "vcs", "url": "git@github.com:Zynga/zynga-hhvm-phpunit-hhi.git" },
+    { "type": "vcs", "url": "git@github.com:Zynga/zynga-hhvm-phpunit.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-codepath.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-developmentmode.git" },
     { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-superglobals.git" },

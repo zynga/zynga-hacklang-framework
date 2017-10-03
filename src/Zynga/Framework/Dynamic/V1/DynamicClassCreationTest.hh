@@ -12,6 +12,14 @@ use Zynga\Framework\Dynamic\V1\Mocks\ClassWithConstructorParams;
 
 class DynamicClassCreationTest extends TestCase {
 
+  public function test_DoesClassExist(): void {
+    $this->assertTrue(DynamicClassCreation::doesClassExist('Zynga\Framework\Dynamic\V1\Mocks\EmptyClass'));
+  }
+
+  public function test_NegativeDoesClassExist(): void {
+    $this->assertFalse(DynamicClassCreation::doesClassExist('Zynga\Framework\Dynamic\V1\Mocks\EmptyClassNeverExisted'));
+  }
+
   public function test_ClassExists(): void {
     $obj = DynamicClassCreation::createClassByName('Zynga\Framework\Dynamic\V1\Mocks\EmptyClass', Vector {});
     $this->assertTrue($obj instanceof EmptyClass);

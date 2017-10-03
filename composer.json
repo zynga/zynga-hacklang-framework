@@ -9,7 +9,6 @@
   ],
   "require": {
     "hhvm": "^3.12",
-    "zynga/zynga-hhvm-moduledev": "^2.4",
     "zynga/phpunit": "^v1.1"
   },
   "autoload": {
@@ -26,7 +25,6 @@
   },
   "repositories": [
     { "packagist.org": false },
-    { "type": "vcs", "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git" },
     { "type": "vcs", "url": "git@github.com:Zynga/zynga-hhvm-phpunit-hhi.git" },
     { "type": "vcs", "url": "git@github.com:Zynga/zynga-hhvm-phpunit.git" }
   ]

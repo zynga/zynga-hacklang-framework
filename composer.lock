@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "eb975290ce02b8a7052590966891a7f9",
+    "content-hash": "5acd49f6bb9772eca380b3f3f608534b",
     "packages": [
         {
             "name": "zynga/phpunit",
@@ -80,25 +80,6 @@
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/issues"
             },
             "time": "2017-09-21T17:57:25+00:00"
-        },
-        {
-            "name": "zynga/zynga-hhvm-moduledev",
-            "version": "v2.4.0",
-            "source": {
-                "type": "git",
-                "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git",
-                "reference": "d1e1c46fb4a84ec66f4c2e0441255bdd04cf5874"
-            },
-            "require": {
-                "hhvm": "^3.18"
-            },
-            "type": "library",
-            "description": "Zynga composer module development environment",
-            "keywords": [
-                "composer",
-                "hack"
-            ],
-            "time": "2017-08-21T19:03:45+00:00"
         }
     ],
     "packages-dev": [],

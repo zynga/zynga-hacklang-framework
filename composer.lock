@@ -4,33 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a1a36e94f8647545700affdf52f53184",
+    "content-hash": "dc82241bbc21aa19ab7e57db51f038be",
     "packages": [
-        {
-            "name": "zynga/framework/exception",
-            "version": "v1.0.5",
-            "source": {
-                "type": "git",
-                "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-exception.git",
-                "reference": "d30f7e74d082764e27fcb032da31eded2a987f14"
-            },
-            "require": {
-                "hhvm": "^3.12"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Zynga\\Framework\\Exception\\V1\\": "src/Zynga/Framework/Exception/V1/"
-                }
-            },
-            "description": "Zynga base exception class that all framework code reuses.",
-            "keywords": [
-                "exception",
-                "framework",
-                "hhvm"
-            ],
-            "time": "2017-08-07T17:46:12+00:00"
-        },
         {
             "name": "zynga/framework/performance",
             "version": "v1.1.0",

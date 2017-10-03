@@ -14,6 +14,7 @@
   "autoload": {
     "psr-4": {
       "Zynga\\Framework\\AutoLoader\\V1\\": "src/Zynga/Framework/AutoLoader/V1/",
+      "Zynga\\Framework\\CommandLine\\V1\\": "src/Zynga/Framework/CommandLine/V1/",
       "Zynga\\Framework\\Dynamic\\V1\\": "src/Zynga/Framework/Dynamic/V1/",
       "Zynga\\Framework\\Environment\\CodePath\\V1\\": "src/Zynga/Framework/Environment/CodePath/V1/",
       "Zynga\\Framework\\Environment\\DevelopmentMode\\V1\\": "src/Zynga/Framework/Environment/DevelopmentMode/V1/",

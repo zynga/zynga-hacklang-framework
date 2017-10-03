@@ -1,0 +1,191 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "79c84d651ad5d2ade660f1595a8637d9",
+    "packages": [
+        {
+            "name": "zynga/framework/environment/developmentmode",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-environment-developmentmode.git",
+                "reference": "c576df621b4666d58d9daaf9d95e3c63658a9f1f"
+            },
+            "require": {
+                "hhvm": "^3.12",
+                "zynga/zynga-hhvm-moduledev": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zynga\\Framework\\Environment\\DevelopmentMode\\V1\\": "src/Zynga/Framework/Environment/DevelopmentMode/V1/"
+                }
+            },
+            "description": "Zynga developmentmode, light scaffold for marking a host as dev|staging|production.",
+            "keywords": [
+                "commandline",
+                "framework",
+                "hhvm"
+            ],
+            "time": "2017-08-14T17:32:24+00:00"
+        },
+        {
+            "name": "zynga/framework/exception",
+            "version": "v1.0.5",
+            "source": {
+                "type": "git",
+                "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-exception.git",
+                "reference": "d30f7e74d082764e27fcb032da31eded2a987f14"
+            },
+            "require": {
+                "hhvm": "^3.12"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zynga\\Framework\\Exception\\V1\\": "src/Zynga/Framework/Exception/V1/"
+                }
+            },
+            "description": "Zynga base exception class that all framework code reuses.",
+            "keywords": [
+                "exception",
+                "framework",
+                "hhvm"
+            ],
+            "time": "2017-08-07T17:46:12+00:00"
+        },
+        {
+            "name": "zynga/framework/performance",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-performance.git",
+                "reference": "2d1fb0e510bc646f1535615d41fc9fbea1a1f735"
+            },
+            "require": {
+                "hhvm": "^3.12",
+                "zynga/zynga-hhvm-moduledev": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zynga\\Framework\\Performance\\V1\\": "src/Zynga/Framework/Performance/V1/"
+                }
+            },
+            "description": "Zynga performance, stopwatch timeres for hhvm.",
+            "keywords": [
+                "framework",
+                "hhvm",
+                "performance"
+            ],
+            "time": "2017-08-14T17:30:28+00:00"
+        },
+        {
+            "name": "zynga/phpunit",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zynga/zynga-hhvm-phpunit.git",
+                "reference": "d4377a534c780e864319400f4cbb28b0a056c4f3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/d4377a534c780e864319400f4cbb28b0a056c4f3",
+                "reference": "d4377a534c780e864319400f4cbb28b0a056c4f3",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm": "^3.18",
+                "zynga/phpunit-hhi": "@dev"
+            },
+            "bin": [
+                "bin/phpunit",
+                "vendor/bin/hhvm-restart-wrapper",
+                "vendor/phpunit/phpunit/phpunit-vendor",
+                "vendor/phpunit/phpunit/phpunit-vendor-xdebug"
+            ],
+            "type": "library",
+            "description": "Zynga modifications to the PHPUNIT framework.",
+            "keywords": [
+                "phpunit",
+                "testing",
+                "xunit"
+            ],
+            "support": {
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/master",
+                "issues": "https://github.com/zynga/zynga-hhvm-phpunit/issues"
+            },
+            "time": "2017-09-21T17:51:31+00:00"
+        },
+        {
+            "name": "zynga/phpunit-hhi",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zynga/zynga-hhvm-phpunit-hhi.git",
+                "reference": "254eab5d6655863df8056289d435a9b723691d89"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit-hhi/zipball/254eab5d6655863df8056289d435a9b723691d89",
+                "reference": "254eab5d6655863df8056289d435a9b723691d89",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm": ">=3.12.0"
+            },
+            "conflict": {
+                "91carriage/phpunit-hhi": "> 0",
+                "phpunit/phpunit": "<5.7.15"
+            },
+            "type": "library",
+            "license": [
+                "MIT"
+            ],
+            "description": "HHI definitions for PHPUnit",
+            "keywords": [
+                "hack",
+                "hhvm",
+                "phpunit",
+                "testing"
+            ],
+            "support": {
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/tree/v1.0.0",
+                "issues": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/issues"
+            },
+            "time": "2017-09-21T17:57:25+00:00"
+        },
+        {
+            "name": "zynga/zynga-hhvm-moduledev",
+            "version": "v2.4.0",
+            "source": {
+                "type": "git",
+                "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-moduledev.git",
+                "reference": "d1e1c46fb4a84ec66f4c2e0441255bdd04cf5874"
+            },
+            "require": {
+                "hhvm": "^3.18"
+            },
+            "type": "library",
+            "description": "Zynga composer module development environment",
+            "keywords": [
+                "composer",
+                "hack"
+            ],
+            "time": "2017-08-21T19:03:45+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "hhvm": "^3.12"
+    },
+    "platform-dev": []
+}

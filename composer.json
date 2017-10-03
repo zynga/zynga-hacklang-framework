@@ -13,14 +13,15 @@
   },
   "autoload": {
     "psr-4": {
-      "Zynga\\Framework\\Testing\\BootStrap\\V2\\": "src/Zynga/Framework/Testing/BootStrap/V2/",
-      "Zynga\\Framework\\Testing\\MockState\\V2\\": "src/Zynga/Framework/Testing/MockState/V2/",
-      "Zynga\\Framework\\Testing\\TestCase\\V2\\": "src/Zynga/Framework/Testing/TestCase/V2/",
+      "Zynga\\Framework\\AutoLoader\\V1\\": "src/Zynga/Framework/AutoLoader/V1/",
       "Zynga\\Framework\\Dynamic\\V1\\": "src/Zynga/Framework/Dynamic/V1/",
       "Zynga\\Framework\\Environment\\CodePath\\V1\\": "src/Zynga/Framework/Environment/CodePath/V1/",
       "Zynga\\Framework\\Environment\\DevelopmentMode\\V1\\": "src/Zynga/Framework/Environment/DevelopmentMode/V1/",
       "Zynga\\Framework\\Exception\\V1\\": "src/Zynga/Framework/Exception/V1/",
-      "Zynga\\Framework\\Performance\\V1\\": "src/Zynga/Framework/Performance/V1/"
+      "Zynga\\Framework\\Performance\\V1\\": "src/Zynga/Framework/Performance/V1/",
+      "Zynga\\Framework\\Testing\\BootStrap\\V2\\": "src/Zynga/Framework/Testing/BootStrap/V2/",
+      "Zynga\\Framework\\Testing\\MockState\\V2\\": "src/Zynga/Framework/Testing/MockState/V2/",
+      "Zynga\\Framework\\Testing\\TestCase\\V2\\": "src/Zynga/Framework/Testing/TestCase/V2/"
     }
   },
   "repositories": [

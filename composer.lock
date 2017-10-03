@@ -4,34 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc82241bbc21aa19ab7e57db51f038be",
+    "content-hash": "eb975290ce02b8a7052590966891a7f9",
     "packages": [
-        {
-            "name": "zynga/framework/performance",
-            "version": "v1.1.0",
-            "source": {
-                "type": "git",
-                "url": "git@github-ca.corp.zynga.com:Poker/zynga-hhvm-framework-performance.git",
-                "reference": "2d1fb0e510bc646f1535615d41fc9fbea1a1f735"
-            },
-            "require": {
-                "hhvm": "^3.12",
-                "zynga/zynga-hhvm-moduledev": "^2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Zynga\\Framework\\Performance\\V1\\": "src/Zynga/Framework/Performance/V1/"
-                }
-            },
-            "description": "Zynga performance, stopwatch timeres for hhvm.",
-            "keywords": [
-                "framework",
-                "hhvm",
-                "performance"
-            ],
-            "time": "2017-08-14T17:30:28+00:00"
-        },
         {
             "name": "zynga/phpunit",
             "version": "v1.1.0",

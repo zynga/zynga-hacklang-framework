@@ -21,7 +21,8 @@
       "Zynga\\Framework\\Performance\\V1\\": "src/Zynga/Framework/Performance/V1/",
       "Zynga\\Framework\\Testing\\BootStrap\\V2\\": "src/Zynga/Framework/Testing/BootStrap/V2/",
       "Zynga\\Framework\\Testing\\MockState\\V2\\": "src/Zynga/Framework/Testing/MockState/V2/",
-      "Zynga\\Framework\\Testing\\TestCase\\V2\\": "src/Zynga/Framework/Testing/TestCase/V2/"
+      "Zynga\\Framework\\Testing\\TestCase\\V2\\": "src/Zynga/Framework/Testing/TestCase/V2/",
+      "Zynga\\Framework\\Type\\V1\\": "src/Zynga/Framework/Type/V1/"
     }
   },
   "repositories": [

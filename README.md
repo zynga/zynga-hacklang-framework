@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # zynga-hacklang-framework
 
 This is a collection of libraries that the Zynga uses to enable hacklang strict usage.

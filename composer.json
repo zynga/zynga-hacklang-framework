@@ -16,6 +16,7 @@
       "Zynga\\Framework\\AutoLoader\\V1\\": "src/Zynga/Framework/AutoLoader/V1/",
       "Zynga\\Framework\\Cache\\V2\\": "src/Zynga/Framework/Cache/V2/",
       "Zynga\\Framework\\CommandLine\\V1\\": "src/Zynga/Framework/CommandLine/V1/",
+      "Zynga\\Framework\\Datadog\\V2\\": "src/Zynga/Framework/Datadog/V2/",
       "Zynga\\Framework\\Database\\V2\\": "src/Zynga/Framework/Database/V2/",
       "Zynga\\Framework\\Dynamic\\V1\\": "src/Zynga/Framework/Dynamic/V1/",
       "Zynga\\Framework\\ELO\\V1\\": "src/Zynga/Framework/ELO/V1/",

@@ -15,7 +15,7 @@ composer show
 ./bin/setup.sh
 
 if [ $? -ne 0 ]; then 
-  echo "Moduledev failed to configure properly"
+  echo "Dev environment failed to configure properly"
   exit $?
 fi
 

@@ -16,6 +16,7 @@ Zynga\Framework\ELO | Implmentation of the ELO algorithim for various game use. 
 Zynga\Framework\Environment\CodePath | Class for finding the root of the codebase | [CodePath](docs/Zynga_Framework_Environment_CodePath.md)
 Zynga\Framework\Environment\Command\Finder | Finder for binaries | [Command Finder](docs/Zynga_Framework_Environment_Command_Finder.md)
 Zynga\Framework\Environment\DevelopmentMode | Class for finding which environment your code is running within | [DevelopmentMode](docs/Zynga_Framework_Environment_DevelopmentMode.md)
+Zynga\Framework\Environment\ErrorCapture | Framework for capturing legacy php_notice messages. | [ErrorCapture](docs/Zynga_Framework_Environment_ErrorCapture.md)
 Zynga\Framework\Environment\SuperGlobals | Class for abstracting away accessing the legacy php super global variables in a safe manner | [SuperGlobals](docs/Zynga_Framework_Environment_SuperGlobals.md)
 Zynga\Framework\Exception | Exception class used throughout the codebase | [Exception](docs/Zynga_Framework_Exception.md)
 Zynga\Framework\Factory | Factory pattern infrastructure | [Factory](docs/Zynga_Framework_Factory.md)
@@ -46,6 +47,7 @@ Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Type
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\CodePath
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\Command\Finder
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\DevelopmentMode
+- [ ] Write doc/port internal docs: Zynga\Framework\Environment\ErrorCapture
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\SuperGlobals
 - [ ] Write doc/port internal docs: Zynga\Framework\Exception
 - [ ] Write doc/port internal docs: ZYnga\Framework\Factory

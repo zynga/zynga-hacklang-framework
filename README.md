@@ -12,10 +12,11 @@ Zynga\Framework\Dynamic | Encapsulation for dealing with dynamic class / method 
 Zynga\Framework\Environment\CodePath | Class for finding the root of the codebase | [CodePath](docs/Zynga_Framework_Environment_CodePath.md)
 Zynga\Framework\Environment\DevelopmentMode | Class for finding which environment your code is running within | [DevelopmentMode](docs/Zynga_Framework_Environment_DevelopmentMode.md)
 Zynga\Framework\Environment\SuperGlobals | Class for abstracting away accessing the legacy php super global variables in a safe manner | [SuperGlobals](docs/Zynga_Framework_Environment_SuperGlobals.md)
-Zynga\Framework\Exception | Exception class used throughout the codebase | [Exception] (docs/Zynga_Framework_Exception.md)
-Zynga\Framework\Performance | Time and memory checkpoint timers | [Performance] (docs/Zynga_Framework_Performance.md)
-Zynga\Framework\Testing | Testing implementation that abstracts phpUnit in a strict compatible way. | [Testing] (docs/Zynga_Framework_Testing.md)
-Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Types] (docs/Zynga_Framework_Type.md)
+Zynga\Framework\Exception | Exception class used throughout the codebase | [Exception](docs/Zynga_Framework_Exception.md)
+Zynga\Framework\Factory | Factory pattern infrastructure | [Factory](docs/Zynga_Framework_Factory.md)
+Zynga\Framework\Performance | Time and memory checkpoint timers | [Performance](docs/Zynga_Framework_Performance.md)
+Zynga\Framework\Testing | Testing implementation that abstracts phpUnit in a strict compatible way. | [Testing](docs/Zynga_Framework_Testing.md)
+Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Types](docs/Zynga_Framework_Type.md)
 
 # Setting up a development environment
 ./bin/setup.sh
@@ -37,6 +38,7 @@ Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Type
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\DevelopmentMode
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\SuperGlobals
 - [ ] Write doc/port internal docs: Zynga\Framework\Exception
+- [ ] Write doc/port internal docs: ZYnga\Framework\Factory
 - [ ] Write doc/port internal docs: Zynga\Framework\Performance
 - [ ] Write doc/port internal docs: Zynga\Framework\Testing
 - [ ] Write doc/port internal docs: Zynga\Framework\Type

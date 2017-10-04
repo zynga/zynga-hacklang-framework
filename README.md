@@ -11,6 +11,7 @@ Zynga\Framework\Cache | StorableObject cache | [Cache](docs/Zynga_Framework_Cach
 Zynga\Framework\CommandLine | Commandline script framework handling argument parsing | [CommandLine](docs/Zynga_Framework_CommandLine.md)
 Zynga\Framework\Database | Database abstraction | [Database](docs/Zynga_Framework_Database.md)
 Zynga\Framework\Dynamic | Encapsulation for dealing with dynamic class / method usage within a strict environment | [Dynamic](docs/Zynga_Framework_Dynamic.md)
+Zynga\Framework\ELO | Implmentation of the ELO algorithim for various game use. | [ELO](docs/Zynga_Framework_ELO.md)
 Zynga\Framework\Environment\CodePath | Class for finding the root of the codebase | [CodePath](docs/Zynga_Framework_Environment_CodePath.md)
 Zynga\Framework\Environment\DevelopmentMode | Class for finding which environment your code is running within | [DevelopmentMode](docs/Zynga_Framework_Environment_DevelopmentMode.md)
 Zynga\Framework\Environment\SuperGlobals | Class for abstracting away accessing the legacy php super global variables in a safe manner | [SuperGlobals](docs/Zynga_Framework_Environment_SuperGlobals.md)
@@ -38,6 +39,7 @@ Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Type
 - [ ] Write doc/port internal docs: Zynga\Framework\CommandLine
 - [ ] Write doc/port internal docs: Zynga\Framework\Database
 - [ ] Write doc/port internal docs: Zynga\Framework\Dynamic
+- [ ] Write doc/port internal docs: Zynga\Framework\ELO
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\CodePath
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\DevelopmentMode
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\SuperGlobals

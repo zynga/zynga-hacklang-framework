@@ -69,9 +69,13 @@ setup_dir()
 
 echo "STARTUP"
 
+SOURCE="${BASH_SOURCE[0]}"
+
 project_root="."
+skeleton_root="$(dirname $(dirname "$SOURCE"))/src/skeleton"
 
 echo "  projectRoot=$project_root"
+echo "  skeletonRoot=$skeleton_root"
 
 ##
 # Exclude our standard directories we care about.
@@ -93,7 +97,7 @@ echo "Copying in files from project skeleton"
 # Copy over our hhconfig
 copy_from_skeleton \
   $project_root \
-  "$project_root/src/skeleton/.hhconfig" \
+  "$skeleton_root/.hhconfig" \
   "$project_root/.hhconfig"
 
 add_to_git_ignore $project_root ".hhconfig"
@@ -101,7 +105,7 @@ add_to_git_ignore $project_root ".hhconfig"
 # Copy over our makefile
 copy_from_skeleton \
   $project_root \
-  "$project_root/src/skeleton/Makefile" \
+  "$skeleton_root/Makefile" \
   "$project_root/Makefile"
 
 add_to_git_ignore $project_root "Makefile"
@@ -109,7 +113,7 @@ add_to_git_ignore $project_root "Makefile"
 # copy over the bootstrap file
 copy_from_skeleton \
   $project_root \
-  "$project_root/src/skeleton/bootstrap" \
+  "$skeleton_root/bootstrap" \
   "$project_root/bootstrap.hh"
 
 add_to_git_ignore $project_root "bootstrap.hh"
@@ -117,7 +121,7 @@ add_to_git_ignore $project_root "bootstrap.hh"
 # copy over the phpunit.xml config
 copy_from_skeleton \
   $project_root \
-  "$project_root/src/skeleton/phpunit.xml" \
+  "$skeleton_root/phpunit.xml" \
   "$project_root/phpunit.xml"
 
 add_to_git_ignore $project_root "phpunit.xml"

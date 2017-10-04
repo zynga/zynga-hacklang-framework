@@ -21,6 +21,7 @@
       "Zynga\\Framework\\Dynamic\\V1\\": "src/Zynga/Framework/Dynamic/V1/",
       "Zynga\\Framework\\ELO\\V1\\": "src/Zynga/Framework/ELO/V1/",
       "Zynga\\Framework\\Environment\\CodePath\\V1\\": "src/Zynga/Framework/Environment/CodePath/V1/",
+      "Zynga\\Framework\\Environment\\Command\\Finder\\V1\\": "src/Zynga/Framework/Environment/Command/Finder/V1/",
       "Zynga\\Framework\\Environment\\DevelopmentMode\\V1\\": "src/Zynga/Framework/Environment/DevelopmentMode/V1/",
       "Zynga\\Framework\\Environment\\SuperGlobals\\V1\\": "src/Zynga/Framework/Environment/SuperGlobals/V1/",
       "Zynga\\Framework\\Exception\\V1\\": "src/Zynga/Framework/Exception/V1/",

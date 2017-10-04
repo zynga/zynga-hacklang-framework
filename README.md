@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # zynga-hacklang-framework
 
 This is a collection of libraries that the Zynga uses to enable hacklang strict usage.
@@ -15,6 +14,7 @@ Zynga\Framework\Datadog | Datadog native hack implementation | [Datadog](docs/Zy
 Zynga\Framework\Dynamic | Encapsulation for dealing with dynamic class / method usage within a strict environment | [Dynamic](docs/Zynga_Framework_Dynamic.md)
 Zynga\Framework\ELO | Implmentation of the ELO algorithim for various game use. | [ELO](docs/Zynga_Framework_ELO.md)
 Zynga\Framework\Environment\CodePath | Class for finding the root of the codebase | [CodePath](docs/Zynga_Framework_Environment_CodePath.md)
+Zynga\Framework\Environment\Command\Finder | Finder for binaries | [Command Finder](docs/Zynga_Framework_Environment_Command_Finder.md)
 Zynga\Framework\Environment\DevelopmentMode | Class for finding which environment your code is running within | [DevelopmentMode](docs/Zynga_Framework_Environment_DevelopmentMode.md)
 Zynga\Framework\Environment\SuperGlobals | Class for abstracting away accessing the legacy php super global variables in a safe manner | [SuperGlobals](docs/Zynga_Framework_Environment_SuperGlobals.md)
 Zynga\Framework\Exception | Exception class used throughout the codebase | [Exception](docs/Zynga_Framework_Exception.md)
@@ -44,6 +44,7 @@ Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Type
 - [ ] Write doc/port internal docs: Zynga\Framework\Dynamic
 - [ ] Write doc/port internal docs: Zynga\Framework\ELO
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\CodePath
+- [ ] Write doc/port internal docs: Zynga\Framework\Environment\Command\Finder
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\DevelopmentMode
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\SuperGlobals
 - [ ] Write doc/port internal docs: Zynga\Framework\Exception

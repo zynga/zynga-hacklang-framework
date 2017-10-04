@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # zynga-hacklang-framework
 
 This is a collection of libraries that the Zynga uses to enable hacklang strict usage.
@@ -9,6 +10,7 @@ Namespace | Description | Documentation
 Zynga\Framework\AutoLoader | Simple autoloader | [AutoLoader](docs/Zynga_Framework_AutoLoader.md)
 Zynga\Framework\Cache | StorableObject cache | [Cache](docs/Zynga_Framework_Cache.md)
 Zynga\Framework\CommandLine | Commandline script framework handling argument parsing | [CommandLine](docs/Zynga_Framework_CommandLine.md)
+Zynga\Framework\Database | Database abstraction | [Database](docs/Zynga_Framework_Database.md)
 Zynga\Framework\Dynamic | Encapsulation for dealing with dynamic class / method usage within a strict environment | [Dynamic](docs/Zynga_Framework_Dynamic.md)
 Zynga\Framework\Environment\CodePath | Class for finding the root of the codebase | [CodePath](docs/Zynga_Framework_Environment_CodePath.md)
 Zynga\Framework\Environment\DevelopmentMode | Class for finding which environment your code is running within | [DevelopmentMode](docs/Zynga_Framework_Environment_DevelopmentMode.md)
@@ -35,6 +37,7 @@ Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Type
 - [ ] Write doc/port internal docs: Zynga\Framework\AutoLoader
 - [ ] Write doc/port internal docs: Zynga\Framework\Cache
 - [ ] Write doc/port internal docs: Zynga\Framework\CommandLine
+- [ ] Write doc/port internal docs: Zynga\Framework\Database
 - [ ] Write doc/port internal docs: Zynga\Framework\Dynamic
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\CodePath
 - [ ] Write doc/port internal docs: Zynga\Framework\Environment\DevelopmentMode

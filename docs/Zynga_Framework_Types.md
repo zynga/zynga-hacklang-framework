@@ -107,7 +107,7 @@ public function testTypeConversion(): void {
 
 * Run the test and make sure it passes
 
-```shell
+```bash
 // In bash, under slice/poker-server
 ./bin/run-single-test.hh include/Zynga/Swagger/V2/Swagger/SwaggerTypeTest.hh
 ```
@@ -135,7 +135,7 @@ class Request extends RequestBase {
 
 Type | Description | Code Link
 ---- | ----------- | ---------
-BoolBox | Boolean box (0|1|true|false) | [BoolBox](../src/Zynga/Framework/Type/V1/BoolBox.hh)
+BoolBox | All things boolean: 0, 1, true, false | [BoolBox](../src/Zynga/Framework/Type/V1/BoolBox.hh)
 
 # Converted
 

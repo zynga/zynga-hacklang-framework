@@ -94,7 +94,7 @@ public function convertZyngaIntegerTypeToSwaggerType(string $type): bool {
 
 * Update Unit Tests for SwaggerType to include conversion of your new type.
 
-```
+```php
 // Zynga/Swagger/V2/Swagger/SwaggerTypeTest.hh
 
 public function testTypeConversion(): void {
@@ -135,7 +135,10 @@ class Request extends RequestBase {
 
 Type | Description | Code Link
 ---- | ----------- | ---------
-BoolBox | All things boolean: 0, 1, true, false | [BoolBox](../src/Zynga/Framework/Type/V1/BoolBox.hh)
+BoolBox | Booleans: 0, 1, true, false | [BoolBox](../src/Zynga/Framework/Type/V1/BoolBox.hh)
+ChecksumBox | Basic hex checksum box, 1-1024 hex values expected | [ChecksumBox](../src/Zynga/Framework/Type/V1/ChecksumBox.hh)
+EmailBox | Enforces rfc2822 compatibility for email addresses | [EmailBox](../src/Zynga/Framework/Type/V1/EmailBox.hh)
+FixedLengthStringBox | Enforcing string values that are fixed in length, by default MAX_LENGTH is unlimited. | [FixedLengthStringBox](../src/Zynga/Framework/Type/V1/FixedLengthStringBox.hh)
 
 # Converted
 

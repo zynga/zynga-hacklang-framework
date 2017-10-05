@@ -25,7 +25,7 @@ Wiki: [https://en.wikipedia.org/wiki/Object_type_(object-oriented_programming)]
 <a name="historical"></a>
 ## Historical
 
-Zynga poker had a security infrastructure called RV (short for request validator). The validator was built to try to prevent script and sql injection, and XSS attack prevention. This system was later generalized to be reused to validate all data fields within the game. We carried the concept forward into hacklang by creating type boxes that encapsulate the same logic. 
+Zynga poker had a security infrastructure called RV (short for request validator). The validator was built to try to prevent script and sql injection, and XSS attack prevention. This system was later generalized to be reused to validate all data fields within the game. We carried the concept forward into hacklang by creating type boxes that encapsulate the same logic.
 
 <a name="basic_contract"></a>
 ### Basic validator contract
@@ -55,22 +55,25 @@ $box->set(-1); // Throws a exception as this is below bounds of the box.
 
 ```
 <a name="add"></a>
+
 ## How do I add new types?
 
 New types should be added here if they span application domains. Integration of new types should include Swagger updates to make sure that contracts can be properly displayed.
 
 * Add any new type here. Changing type contracts should make a new version. See poker-server\README.md for more info on versioning.
-~~~
+
+```php
 // Add a new type: Zynga\Type\V*\
 namespace Zynga\Type\V1;
 
 class MyNewBox extends SInt64Box {
 
 }
-~~~
+```
+
 * Update SwaggerType\Base to allow conversion of the Zynga Type to Swagger Type.
 
-~~~
+```php
 // Under latest Swagger: /Zynga/Swagger/V*/Swagger/SwaggerType/Base.hh
 
 // Look for the convertZynga*TypeToSwaggerType function that lines up with your type
@@ -87,11 +90,11 @@ public function convertZyngaIntegerTypeToSwaggerType(string $type): bool {
    return true;
  }
 }
-~~~
+```
 
 * Update Unit Tests for SwaggerType to include conversion of your new type.
 
-~~~
+```
 // Zynga/Swagger/V2/Swagger/SwaggerTypeTest.hh
 
 public function testTypeConversion(): void {
@@ -100,18 +103,18 @@ public function testTypeConversion(): void {
   */
   $this->assertTrue($obj->convertZyngaTypeToSwaggerType('MyNewBox'));
 }
-~~~
+```
 
 * Run the test and make sure it passes
 
-~~~
+```shell
 // In bash, under slice/poker-server
 ./bin/run-single-test.hh include/Zynga/Swagger/V2/Swagger/SwaggerTypeTest.hh
-~~~
+```
 
 * Create or update a Noop request to make sure that your type can be viewed in Swagger.
 
-~~~
+```php
 // Here we are updating the 'Internal' Noop to include our new type Zynga/Internal/Services/Noop/V1/Request.hh
 
 use Zynga\Type\V1\MyNewBox;
@@ -124,13 +127,18 @@ class Request extends RequestBase {
     $this->foo = new MyNewBox();
   }
 }
-~~~
+```
 
 * Load up the Swagger docroot in your browser and make sure it all works. See the poker-server\docroots\README.md for more info.
 
+# Existing types
+
+Type | Description | Code Link
+---- | ----------- | ---------
+BoolBox | Boolean box (0|1|true|false) | [BoolBox](../src/Zynga/Framework/Type/V1/BoolBox.hh)
 
 # Converted
-1. BoolBox
+
 1. FloatBox
 1. HttpResponseCodeBox
 1. Int32Box

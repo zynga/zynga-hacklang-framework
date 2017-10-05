@@ -23,7 +23,7 @@ Zynga\Framework\Factory | Factory pattern infrastructure | [Factory](docs/Zynga_
 Zynga\Framework\Performance | Time and memory checkpoint timers | [Performance](docs/Zynga_Framework_Performance.md)
 Zynga\Framework\StorableObject | Structures that implement import and export functionality | [StorableObject](docs/Zynga_Framework_StorableObject.md)
 Zynga\Framework\Testing | Testing implementation that abstracts phpUnit in a strict compatible way. | [Testing](docs/Zynga_Framework_Testing.md)
-Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Types](docs/Zynga_Framework_Type.md)
+Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Types](docs/Zynga_Framework_Types.md)
 
 # Setting up a development environment
 ./bin/setup.sh

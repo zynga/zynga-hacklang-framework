@@ -21,6 +21,7 @@ Zynga\Framework\Environment\SuperGlobals | Class for abstracting away accessing 
 Zynga\Framework\Exception | Exception class used throughout the codebase | [Exception](docs/Zynga_Framework_Exception.md)
 Zynga\Framework\Factory | Factory pattern infrastructure | [Factory](docs/Zynga_Framework_Factory.md)
 Zynga\Framework\Performance | Time and memory checkpoint timers | [Performance](docs/Zynga_Framework_Performance.md)
+Zynga\Framework\StorableObject | Structures that implement import and export functionality | [StorableObject](docs/Zynga_Framework_StorableObject.md)
 Zynga\Framework\Testing | Testing implementation that abstracts phpUnit in a strict compatible way. | [Testing](docs/Zynga_Framework_Testing.md)
 Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Types](docs/Zynga_Framework_Type.md)
 
@@ -52,6 +53,7 @@ Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Type
 - [ ] Write doc/port internal docs: Zynga\Framework\Exception
 - [ ] Write doc/port internal docs: ZYnga\Framework\Factory
 - [ ] Write doc/port internal docs: Zynga\Framework\Performance
+- [ ] Write doc/port internal docs: Zynga\Framework\StorableObject
 - [ ] Write doc/port internal docs: Zynga\Framework\Testing
 - [ ] Write doc/port internal docs: Zynga\Framework\Type
 - [ ] Migrate the composer and project layout into something similar to what symfony is doing with multiple deps within a single master dep.

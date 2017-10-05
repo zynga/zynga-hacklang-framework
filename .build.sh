@@ -6,7 +6,7 @@ set -ex
 apt-get update -y
 
 # install modules we need to use to test with.
-apt-get install -y wget curl git
+apt-get install -y wget curl git make
 
 # Bring the latest composer into the environment
 curl https://getcomposer.org/installer | hhvm --php -- /dev/stdin --install-dir=/usr/local/bin --filename=composer

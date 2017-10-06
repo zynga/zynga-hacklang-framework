@@ -3,6 +3,7 @@ language: generic
 services:
   - docker
   - mysql
+  - postgresql
 env:
   - HHVM_VERSION=3.18-lts-latest
   - HHVM_VERSION=latest
@@ -10,6 +11,7 @@ before_install:
   - mysql < /var/source/tests/sql/mysql/create_test_database.sql
   - mysql -e 'SHOW DATABASES'
   - mysql -e 'SHOW TABLES' phpunit
+  - psql -U postgres < /var/source/tests/sql/postgres/create_test_database.sql
 install:
   - docker pull hhvm/hhvm:$HHVM_VERSION
 script:

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message ProtobufValid {
+  int32 example_int32 = 1;
+  int64 example_int64 = 2;
+  uint32 example_uint32 = 3;
+  uint64 example_uint64 = 4;
+  sint32 example_sint32 = 5;
+  sint64 example_sint64 = 6;
+  bool example_bool = 7;
+}

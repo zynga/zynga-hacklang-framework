@@ -10,7 +10,7 @@ setup_composer()
     curl https://getcomposer.org/installer | hhvm --php -- /dev/stdin --install-dir=/usr/local/bin --filename=composer
   fi
 
-  if [ -f $composerFile ]; then
+  if [ ! -f $composerFile ]; then
     echo "Failed to install composer to $composerFile";
     exit 255;
   fi

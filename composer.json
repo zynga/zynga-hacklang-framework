@@ -28,6 +28,7 @@
       "Zynga\\Framework\\Exception\\V1\\": "src/Zynga/Framework/Exception/V1/",
       "Zynga\\Framework\\Factory\\V2\\": "src/Zynga/Framework/Factory/V2/",
       "Zynga\\Framework\\Performance\\V1\\": "src/Zynga/Framework/Performance/V1/",
+      "Zynga\\Framework\\StorableObject\\V1\\": "src/Zynga/Framework/StorableObject/V1/",
       "Zynga\\Framework\\Testing\\BootStrap\\V2\\": "src/Zynga/Framework/Testing/BootStrap/V2/",
       "Zynga\\Framework\\Testing\\MockState\\V2\\": "src/Zynga/Framework/Testing/MockState/V2/",
       "Zynga\\Framework\\Testing\\TestCase\\V2\\": "src/Zynga/Framework/Testing/TestCase/V2/",

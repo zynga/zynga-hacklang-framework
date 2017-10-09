@@ -18,7 +18,7 @@ class FactoryTest extends TestCase {
 
   public function testValidExample(): void {
     $this->assertTrue(
-      CacheFactory::factory(DriverInterface::class, 'ValidExample') instanceof DriverInterface,
+      CacheFactory::factory(DriverInterface::class, 'Mock') instanceof DriverInterface,
     );
   }
 

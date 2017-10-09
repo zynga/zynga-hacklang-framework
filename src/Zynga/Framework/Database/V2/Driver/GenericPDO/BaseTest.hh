@@ -2,7 +2,7 @@
 
 namespace Zynga\Framework\Database\V2\Driver\GenericPDO;
 
-use Zynga\Poker\Framework\Database\V2\Config\Game\Slave\Dev as MockConfig;
+use Zynga\Framework\Database\V2\Config\Test\Mysql\Dev as MockConfig;
 use Zynga\Framework\Database\V2\Driver\GenericPDO\Base as BaseDriver;
 use Zynga\Framework\Database\V2\Interfaces\QuoteInterface;
 use Zynga\Framework\Database\V2\Interfaces\TransactionInterface;

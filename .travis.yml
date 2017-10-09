@@ -4,6 +4,7 @@ services:
   - docker
   - mysql
   - postgresql
+  - memcached
 env:
   - HHVM_VERSION=3.18-lts-latest
   - HHVM_VERSION=latest

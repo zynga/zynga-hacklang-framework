@@ -57,6 +57,9 @@ if [ $? -ne 0 ]; then
   exit $?
 fi
 
+echo "marking host as development"
+touch /opt/zynga/is_development
+
 make test
 
 if [ $? -ne 0 ]; then

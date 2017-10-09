@@ -13,6 +13,8 @@ before_install:
   - mysql -e 'SHOW DATABASES'
   - mysql -e 'SHOW TABLES' phpunit
   - psql -U postgres < tests/sql/postgresql/create_test_database.sql
+  - echo "localhost:5432:phpunit:zframework:i-am-a-walrus" > ~/.pgpass
+  - echo '\d' | psql --user=zframework --host=localhost phpunit
 install:
   - docker pull hhvm/hhvm:$HHVM_VERSION
 script:

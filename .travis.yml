@@ -16,4 +16,5 @@ before_install:
 install:
   - docker pull hhvm/hhvm:$HHVM_VERSION
 script:
+  - touch /opt/zynga/is_development
   - docker run -v $(pwd):/var/source hhvm/hhvm:$HHVM_VERSION /var/source/.build.sh

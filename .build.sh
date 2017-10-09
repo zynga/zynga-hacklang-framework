@@ -61,6 +61,8 @@ echo "marking host as development"
 mkdir -p /opt/zynga
 touch /opt/zynga/is_development
 
+echo '<?php if (!extension_loaded("pgsql")) { echo "no-pgsql\n"; exit(255); } echo "pgsql-available\n"; exit(0);' | hhvm --php
+
 make test
 
 if [ $? -ne 0 ]; then

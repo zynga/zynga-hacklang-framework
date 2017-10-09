@@ -46,6 +46,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Dump the composer modules that were installed
+echo "composer show"
 composer show
 
 # composer is available now run the vendor setup script

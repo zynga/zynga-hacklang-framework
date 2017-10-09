@@ -58,6 +58,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "marking host as development"
+mkdir -p /opt/zynga
 touch /opt/zynga/is_development
 
 make test

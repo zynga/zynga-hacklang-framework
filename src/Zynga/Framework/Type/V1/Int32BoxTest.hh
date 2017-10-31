@@ -7,7 +7,7 @@ use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\Test\Ranged\TestCase;
 use Zynga\Framework\Type\V1\Test\ValidValue;
 
-class Int32Test extends TestCase {
+class Int32BoxTest extends TestCase {
 
   public function setUp(): void {
     parent::setUp();

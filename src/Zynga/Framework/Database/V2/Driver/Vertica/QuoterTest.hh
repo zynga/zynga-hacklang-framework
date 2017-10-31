@@ -21,7 +21,7 @@ class QuoterTest extends TestCase {
 
   public function testFloatValues(): void {
 
-    $driver = DatabaseFactory::factory(DriverInterface::class, 'PHT_Loader');
+    $driver = DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
 
     $quoter = $driver->getQuoter();
 
@@ -41,7 +41,7 @@ class QuoterTest extends TestCase {
 
   public function testIntValues(): void {
 
-    $driver = DatabaseFactory::factory(DriverInterface::class, 'PHT_Loader');
+    $driver = DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
 
     $quoter = $driver->getQuoter();
 
@@ -63,7 +63,7 @@ class QuoterTest extends TestCase {
 
   public function testTextValues(): void {
 
-    $driver = DatabaseFactory::factory(DriverInterface::class, 'PHT_Loader');
+    $driver = DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
 
     $quoter = $driver->getQuoter();
 

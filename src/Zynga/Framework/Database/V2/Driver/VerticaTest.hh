@@ -2,7 +2,7 @@
 
 namespace Zynga\Framework\Database\V2\Driver;
 
-use Zynga\Poker\Framework\Database\V2\Config\PHT\Loader\Dev as MockConfig;
+use Zynga\Framework\Database\V2\Config\Test\Vertica\Dev as MockConfig;
 
 use Zynga\Framework\Database\V2\Driver\Vertica as BaseDriver;
 use Zynga\Framework\Database\V2\Exceptions\QueryFailedException;

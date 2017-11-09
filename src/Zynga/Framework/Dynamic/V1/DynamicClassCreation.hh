@@ -9,6 +9,12 @@ use Zynga\Framework\Exception\V1\Exception;
 use \ReflectionClass;
 use \ReflectionMethod;
 
+/**
+ * Do you need to instantiate an object dynamically at runtime?
+ * Are you trying to write good programming paradigms?
+ * Then this is the class for you! This is a helper factory intended
+ * to dynamically stand up objects at runtime where the type may change.
+ */
 class DynamicClassCreation {
 
   public static function doesClassExist(string $name): bool {
@@ -18,11 +24,10 @@ class DynamicClassCreation {
     return false;
   }
 
-  public static function createClassByName(
+  public static function createClassByNameGeneric<Tv>(
     string $name,
     Vector<mixed> $params,
-  ): mixed {
-
+  ): Tv {
     if (class_exists($name, true) !== true) {
       throw new UnableToFindClassException('class='.$name);
     }
@@ -66,7 +71,17 @@ class DynamicClassCreation {
     } catch (Exception $e) {
       throw $e;
     }
+  }
 
+  /**
+   * You should only use this if you have no idea what the runtime type
+   * being generated is. If you do, use @see DynamicClassCreation::createClassByName instead.
+   */
+  public static function createClassByName(
+    string $name,
+    Vector<mixed> $params,
+  ): mixed {
+    return static::createClassByNameGeneric($name, $params);
   }
 
 }

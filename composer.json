@@ -29,6 +29,10 @@
       "Zynga\\Framework\\Factory\\V2\\": "src/Zynga/Framework/Factory/V2/",
       "Zynga\\Framework\\Performance\\V1\\": "src/Zynga/Framework/Performance/V1/",
       "Zynga\\Framework\\StorableObject\\V1\\": "src/Zynga/Framework/StorableObject/V1/",
+      "Zynga\\Framework\\StorableObject\\Collections\\V1\\": "src/Zynga/Framework/StorableObject/Collections/V1/",
+      "Zynga\\Framework\\StorableObject\\Collections\\Vector\\V1\\": "src/Zynga/Framework/StorableObject/Collections/Vector/V1/",
+      "Zynga\\Framework\\StorableObject\\Collections\\Importers\\V1\\": "src/Zynga/Framework/StorableObject/Collections/Importers/V1/",
+      "Zynga\\Framework\\StorableObject\\Collections\\Exporters\\V1\\": "src/Zynga/Framework/StorableObject/Collections/Exporters/V1/",
       "Zynga\\Framework\\Testing\\BootStrap\\V2\\": "src/Zynga/Framework/Testing/BootStrap/V2/",
       "Zynga\\Framework\\Testing\\MockState\\V2\\": "src/Zynga/Framework/Testing/MockState/V2/",
       "Zynga\\Framework\\Testing\\TestCase\\V2\\": "src/Zynga/Framework/Testing/TestCase/V2/",
@@ -36,8 +40,16 @@
     }
   },
   "repositories": [
-    { "packagist.org": false },
-    { "type": "vcs", "url": "git@github.com:Zynga/zynga-hhvm-phpunit-hhi.git" },
-    { "type": "vcs", "url": "git@github.com:Zynga/zynga-hhvm-phpunit.git" }
+    {
+      "packagist.org": false
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:Zynga/zynga-hhvm-phpunit-hhi.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:Zynga/zynga-hhvm-phpunit.git"
+    }
   ]
 }

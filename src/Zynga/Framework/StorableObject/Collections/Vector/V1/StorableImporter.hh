@@ -3,8 +3,8 @@
 namespace Zynga\Framework\StorableObject\Collections\Vector\V1;
 
 use
-  Zynga\Framework\StorableObject\Collections\Exporters\V1\Base as CollectionExporter
+  Zynga\Framework\StorableObject\Collections\Importers\V1\Storable as CollectionImporter
 ;
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
-class Exporter<Tv> extends CollectionExporter<Tv> {}
+class StorableImporter<Tv> extends CollectionImporter<Tv> {}

@@ -23,8 +23,7 @@ use Zynga\Framework\Exception\V1\Exception;
  * Base class for collection exporters. This class should be inherited
  * and each collection should have their own concrete exporter.
  */
-abstract class Base<Tv as StorableObjectInterface>
-  implements ExportInterface {
+abstract class Base<Tv> implements ExportInterface {
 
   public function __construct(private StorableCollection<Tv> $collection) {}
 

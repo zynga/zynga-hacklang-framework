@@ -8,14 +8,13 @@ use
 ;
 use Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException;
 
-use Zynga\Framework\StorableObject\Co;
 use Zynga\Framework\StorableObject\V1\Test\Mock\Valid as ValidStorableObject;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use
   Zynga\Framework\StorableObject\V1\Exceptions\OperationNotSupportedException
 ;
 
-abstract class BaseTest extends TestCase {
+abstract class StorableTest extends TestCase {
   public function __construct(string $name) {
     parent::__construct($name);
   }

@@ -6,15 +6,14 @@ use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 /**
  * Do you want to create your own collection?
- * Do you want to also support serializing/deserializing storables?
+ * Do you want to also support serializing/deserializing storables/boxes?
  * Go ahead and implement this interface! Note that on purpose we do not
  * use the provided collection interfaces from HH\*. The reason is because
  * they are not strict mode safe on top of the language designers not intending them
  * to be extended for anything other than intrinsics.
  * @see https://github.com/facebook/hhvm/issues/8042#issuecomment-342976327
  */
-interface StorableCollection<Tv as StorableObjectInterface>
-  extends StorableObjectInterface {
+interface StorableCollection<Tv> extends StorableObjectInterface {
   /**
    * Removes all items from the collection.
    */
@@ -73,4 +72,10 @@ interface StorableCollection<Tv as StorableObjectInterface>
    * @throws OutOfBoundsException
    */
   public function at(int $key): Tv;
+
+  /**
+   * Converts collection to raw array
+   * Similar to @see https://docs.hhvm.com/hack/reference/class/HH.Vector/toArray/
+   */
+  public function toArray(): array<Tv>;
 }

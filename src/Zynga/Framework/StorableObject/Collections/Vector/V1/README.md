@@ -4,12 +4,11 @@ A importer/exporter vector collection for storable objects that is type safe.
 
 # Motivation
 ----
-We previously did not have a way of importing a storable object given a
+We previously did not have a way of importing a storable/box object given a
 collection. With this change, we introduce a type safe way of importing
 a type using dynamic class creation along with type hints to make allow
-us to import a list of storable objects. If the type hinted at does not
-match the collection constraint, the Hacklang runtime will generate an
-exception. See: https://docs.hhvm.com/hack/generics/erasure
+us to import a list of storable/box objects.
+See: https://docs.hhvm.com/hack/generics/erasure
 
 Check out the class docs for more info.
 

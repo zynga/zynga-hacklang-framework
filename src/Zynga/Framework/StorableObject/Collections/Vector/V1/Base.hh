@@ -17,6 +17,8 @@ use
   Zynga\Framework\StorableObject\Collections\V1\Interfaces\StorableCollection
 ;
 
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
+
 /**
  * This collection lets us be able to serialize/deserialize storables.
  * Note that you must give collections type hints in order for deserialization to work.
@@ -25,12 +27,23 @@ use
  * Check out this page for more info: https://docs.hhvm.com/hack/generics/erasure
  * @see Zynga\Framework\StorableObject\Collections\V1\Interfaces\StorableCollection for more info
  */
-class Base<Tv as StorableObjectInterface> implements StorableCollection<Tv> {
+class Base<Tv> implements StorableCollection<Tv> {
   private Vector<Tv> $vector;
   private bool $isRequired;
   private ?bool $isDefaultValue;
 
   public function __construct(private classname<Tv> $rawType) {
+    $interfaces = class_implements($rawType);
+    if (array_key_exists(StorableObjectInterface::class, $interfaces) === false &&
+        array_key_exists(TypeInterface::class, $interfaces) === false) {
+      throw new OperationNotSupportedException(
+        'Collection only support the following types:'.
+        StorableObjectInterface::class.
+        ', '.
+        TypeInterface::class,
+      );
+    }
+
     $this->isRequired = false;
     $this->isDefaultValue = null;
     $this->vector = Vector {};
@@ -83,13 +96,27 @@ class Base<Tv as StorableObjectInterface> implements StorableCollection<Tv> {
     return $this->vector->containsKey($key);
   }
 
+  /**
+   * BUG: There is a known issue where if this collection encapsulates a box AND
+   * the collection is required, this 'Fields' object will NOT return that we are missing
+   * data. This will be fixed at a later time.
+   * @see https://github.com/zynga/zynga-hacklang-framework/issues/1
+   */
   public function fields(): FieldsInterface {
     $fields = new Fields($this);
     return $fields;
   }
 
   public function import(): ImportInterface {
-    $importer = new Importer($this, $this->rawType);
+    $interfaces = class_implements($this->rawType);
+    $importer = null;
+    if (array_key_exists(StorableObjectInterface::class, $interfaces)) {
+      $importer = new StorableImporter($this, $this->rawType);
+    } else if (array_key_exists(TypeInterface::class, $interfaces)) {
+      $importer = new BoxImporter($this, $this->rawType);
+    } else {
+      throw new OperationNotSupportedException();
+    }
     return $importer;
   }
 
@@ -142,5 +169,9 @@ class Base<Tv as StorableObjectInterface> implements StorableCollection<Tv> {
     }
 
     return tuple($isDefaultValue, $defaultFields);
+  }
+
+  public function toArray(): array<Tv> {
+    return $this->vector->toArray();
   }
 }

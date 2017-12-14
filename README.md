@@ -26,7 +26,49 @@ Zynga\Framework\Testing | Testing implementation that abstracts phpUnit in a str
 Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Types](docs/Zynga_Framework_Types.md)
 
 # Setting up a development environment
+
+0) Start with your dependencies for running the project locally.
+0.0) mysql
+0.1) postgresql
+0.2) hhvm with postgresql enabled
+
+```bash
+# using brew
+brew install mysql
+brew install postgresql
+brew edit hhvm
+# manual work around for now, you will be adding the following postgresql definitions to the brew recipie
+## look for the following line
+# -DLIBSODIUM_LIBRARIES=#{Formula["libsodium"].opt_lib}/libsodium.dylib
+## Add the following
+#-DENABLE_EXTENSION_PGSQL=ON
+#-DPGSQL_INCLUDE_DIR=#{Formula["postgresql"].opt_include}
+#-DPGSQL_LIBRARY=#{Formula["postgresql"].opt_lib}/libpq.dylib
+brew reinstall --build-from-source hhvm
+```
+2) Run the setup process to get all the make files and symlinks available.
+```bash
 ./bin/setup.sh
+```
+3) Setup the mysql environment needed for the test harness
+```bash
+brew services start mysql
+mysql --user=root < tests/sql/mysql/create_test_database.sql
+mysql --user=root -e 'SHOW DATABASES'
+mysql --user=root -e 'SHOW TABLES' phpunit
+```
+4) Setup the postgresql environment needed for the test harness
+```bash
+brew services start postgresql
+createdb `whoami`
+psql < tests/sql/postgresql/create_test_database.sql
+##
+# caution the following commands will wipe out a existing .pgpass, so please
+# be careful if you already have the need for this setting file.
+##
+echo "localhost:5432:phpunit:zframework:i-am-a-walrus" > ~/.pgpass
+echo '\d' | psql --user=zframework --host=localhost phpunit
+```
 
 # Submitting code
 1) Run make test

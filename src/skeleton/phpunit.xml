@@ -19,12 +19,10 @@
   <filter>
     <whitelist addUncoveredFilesFromWhitelist="true">
       <directory suffix=".hh">./src/*</directory>
-      <directory suffix=".hh">./vendor/zynga/*</directory>
       <exclude>
         <file>./bootstrap.hh</file>
         <file>./vendor/zynga/zynga-hhvm-moduledev/src/skeleton/bootstrap.hh</file>
         <directory suffix="Test.hh">./src/*</directory>
-        <directory suffix="Test.hh">./vendor/zynga/*</directory>
       </exclude>
     </whitelist>
   </filter>

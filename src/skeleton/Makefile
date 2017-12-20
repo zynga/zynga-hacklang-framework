@@ -35,13 +35,14 @@ hack-format:
 
 check-strict:
 	#./bin/check-hack-strict
+	echo 'check-strict: disabled for now'
 
 check-exceptions:
 	ack 'use \\Exception' include/ | grep -v 'Test.hh'
 	ack 'new Exception' include/ | grep -v 'Test.hh'
 
-test: composer-install hack-restart hack-lint check-strict
+test: hack-restart hack-lint check-strict
 	time ./vendor/bin/phpunit --testsuite tests
 
-test-xdebug: composer-install hack-restart hack-lint check-strict
+test-xdebug: hack-restart hack-lint check-strict
 	time ./vendor/bin/phpunit-xdebug --testsuite regression

@@ -13,7 +13,7 @@ use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 class VerticaTest extends TestCase {
 
-    public function hideLogs(): bool { return true; }
+    //public function hideLogs(): bool { return false; }
 
     public function testGetQuoter(): void {
         $driver = new BaseDriver(new MockConfig());
@@ -56,8 +56,9 @@ class VerticaTest extends TestCase {
     }
 
     public function testConnect_BrokenData(): void {
-        $config = new MockConfig();
-        $config->setPassword('my-voice-is-my-password-verify-me');
+      $config = new MockConfig();
+        $config->setCurrentServer('not-a-real-server-' . mt_rand(1, 10000));
+        $config->setPassword('bad-password-' . mt_rand(1, 100000));
         $driver = new BaseDriver($config);
         $this->assertFalse($driver->connect());
         $this->assertTrue($driver->hadError());

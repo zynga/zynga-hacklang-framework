@@ -69,6 +69,19 @@ psql < tests/sql/postgresql/create_test_database.sql
 echo "localhost:5432:phpunit:zframework:i-am-a-walrus" > ~/.pgpass
 echo '\d' | psql --user=zframework --host=localhost phpunit
 ```
+5) Setup memcache locally
+```bash
+brew install memcached # it should already be installed due to hhvm
+brew services start memcached
+```
+
+6) Setup the environment you would like to emulate
+```bash
+# create the zynga directory on this host
+sudo mkdir -p /opt/zynga
+# create the environment indicator
+sudo touch /opt/zynga/is_development
+```
 
 # Submitting code
 1) Run make test

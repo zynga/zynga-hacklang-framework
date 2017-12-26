@@ -4,6 +4,7 @@ namespace Zynga\Framework\CommandLine\V1;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\CommandLine\V1\Test\Mock\Valid;
+use Zynga\Framework\CommandLine\V1\Test\Mock\TossedException;
 use Zynga\Framework\CommandLine\V1\Test\Mock\HasRequiredArguments;
 use Zynga\Framework\CommandLine\V1\Argument\Container as ArgumentContainer;
 
@@ -73,6 +74,13 @@ class BaseTest extends TestCase {
     $obj = new HasRequiredArguments();
     $this->assertEquals(0, $obj->handleRun());
     $this->assertEquals(236563200, $obj->getTime());
+    $this->assertEquals(255, $obj->run());
+  }
+
+  public function testHandleExceptionTrap(): void {
+    $testArgs = array();
+    $obj = new TossedException();
+    //$obj->handleRun();
     $this->assertEquals(255, $obj->run());
   }
 }

@@ -118,4 +118,11 @@ class StorableVectorTest extends TestCase {
         $vector = new StorableVector();
         $this->assertTrue($vector->reset());
     }
+
+    public function testValidNested(): void {
+      $vector = new ValidNestedVector();
+      $this->assertEquals(0, $vector->stringVec->count());
+      $this->assertEquals(0, $vector->validVec->count());
+    }
+
 }

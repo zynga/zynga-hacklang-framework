@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b8229daa57034b7e8bfc88e91164da31",
+    "content-hash": "9fcd3018761ac4bc7311218ef439a4eb",
     "packages": [
         {
             "name": "zynga/phpunit",
-            "version": "v1.3.0",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zynga/zynga-hhvm-phpunit.git",
-                "reference": "95edb2bbf63256b2413e217ad1d44d2064924894"
+                "reference": "3d04823fb27af5265ffc8df1783d2fc62b498883"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/95edb2bbf63256b2413e217ad1d44d2064924894",
-                "reference": "95edb2bbf63256b2413e217ad1d44d2064924894",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/3d04823fb27af5265ffc8df1783d2fc62b498883",
+                "reference": "3d04823fb27af5265ffc8df1783d2fc62b498883",
                 "shasum": ""
             },
             "require": {
@@ -26,6 +26,7 @@
             },
             "bin": [
                 "bin/phpunit",
+                "bin/run-single-test.hh",
                 "vendor/bin/hhvm-restart-wrapper",
                 "vendor/phpunit/phpunit/phpunit-vendor",
                 "vendor/phpunit/phpunit/phpunit-vendor-xdebug"
@@ -38,10 +39,10 @@
                 "xunit"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v1.3.0",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v1.5.0",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit/issues"
             },
-            "time": "2017-10-09T22:49:37+00:00"
+            "time": "2017-12-20T18:21:18+00:00"
         },
         {
             "name": "zynga/phpunit-hhi",

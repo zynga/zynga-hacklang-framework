@@ -55,21 +55,6 @@ abstract class Base extends ConfigBase {
      * @type string
      */
     public function getConnectionString(): string {
-      // Vertica doesn't care about sn
-      //
-      // --
-      // Pick a server randomly, and then sticky to it for the life of this connection.
-      // --
-      if ($this->getCurrentServer() == '') {
-
-        $server = $this->getInitialHostName();
-
-        if (is_string($server)) {
-          $this->setCurrentServer($server);
-        }
-
-      }
-
       $connectionString = '';
       $connectionString .= 'host='.$this->getCurrentServer().' ';
       $connectionString .= 'user='.$this->getUserName().' ';

@@ -9,6 +9,13 @@ use Zynga\Framework\Database\V2\Interfaces\TransactionInterface;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 class BaseTest extends TestCase {
+
+  public function testConfig(): void {
+    $config = new MockConfig();
+    $this->assertEquals(false, $config->isDatabaseReadOnly());
+    $this->assertEquals('GenericPDO', $config->getDriver());
+  }
+
     public function testGetQuoter(): void {
         $driver = new Base(new MockConfig());
         $this->assertTrue($driver->getQuoter() instanceof QuoteInterface);

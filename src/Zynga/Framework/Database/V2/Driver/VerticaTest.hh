@@ -15,6 +15,12 @@ class VerticaTest extends TestCase {
 
     //public function hideLogs(): bool { return false; }
 
+    public function testConfig(): void {
+      $config = new MockConfig();
+      $this->assertEquals(false, $config->isDatabaseReadOnly());
+      $this->assertEquals('host=localhost user=zframework password=i-am-a-walrus port=5432 dbname=phpunit connect_timeout=5', $config->getConnectionString());
+    }
+
     public function testGetQuoter(): void {
         $driver = new BaseDriver(new MockConfig());
         $this->assertTrue($driver->getQuoter() instanceof QuoteInterface);
@@ -67,6 +73,7 @@ class VerticaTest extends TestCase {
     public function testDisconnect(): void {
         $config = new MockConfig();
         $driver = new BaseDriver($config);
+        $this->assertTrue($driver->connect());
         $this->assertTrue($driver->disconnect());
     }
 

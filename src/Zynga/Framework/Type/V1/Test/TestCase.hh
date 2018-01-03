@@ -29,7 +29,7 @@ abstract class TestCase extends ZyngaTestCase {
     // Turn it off
     $this->assertTrue($obj->setIsRequired(false));
     $this->assertFalse($obj->getIsRequired());
-    
+
   }
 
   public function testInvalidType_Import(): void {
@@ -53,7 +53,7 @@ abstract class TestCase extends ZyngaTestCase {
       // @codeCoverageIgnoreEnd
     }
 
-    foreach ( $validValues as $validValue ) {
+    foreach ($validValues as $validValue) {
       // do it in the native test type, if you need to test a string version
       // of a value add it to your valid values set.
       $obj = $this->getTypeObject();
@@ -61,7 +61,7 @@ abstract class TestCase extends ZyngaTestCase {
       $this->assertEquals($validValue->getExpectedValue(), $obj->get());
     }
 
-    foreach ( $validValues as $validValue ) {
+    foreach ($validValues as $validValue) {
       $obj = $this->getTypeObject();
       $this->assertTrue($obj->setDefaultValue($validValue->getInputValue()));
       list($isDefaultValue, $messages) = $obj->isDefaultValue();
@@ -128,20 +128,22 @@ abstract class TestCase extends ZyngaTestCase {
     }
   }
 
-  protected function createInjectedValues(Vector<string> $badData): Vector<string> {
+  protected function createInjectedValues(
+    Vector<string> $badData,
+  ): Vector<string> {
 
     $injectedData = Vector {};
 
     $validValues = $this->generateValidValues();
 
-    foreach ( $validValues as $validValue ) {
+    foreach ($validValues as $validValue) {
 
       $inputData = $validValue->getInputValue();
 
       $testValue = strval($inputData);
 
       foreach ($badData as $bad) {
-        $testString = $testValue . $bad;
+        $testString = $testValue.$bad;
         $injectedData->add($testString);
       }
 
@@ -153,7 +155,7 @@ abstract class TestCase extends ZyngaTestCase {
 
     $injectedData = $this->createInjectedValues($badData);
 
-    foreach ($injectedData as $injected ) {
+    foreach ($injectedData as $injected) {
       $obj = $this->getTypeObject();
       $this->expectException(Exception::class);
       $obj->set($injected);

@@ -23,7 +23,7 @@ class ContainerTest extends TestCase {
 
   public function setUp(): void {
     $currentCommandLine = SuperGlobals::getScriptCommandLineArguments();
-    if ( $currentCommandLine !== null && is_array($currentCommandLine)) {
+    if ($currentCommandLine !== null && is_array($currentCommandLine)) {
       $this->_argv_copy->addAll($currentCommandLine);
     }
     $this->_argc_copy = $this->_argv_copy->count();
@@ -91,7 +91,7 @@ class ContainerTest extends TestCase {
 
     $args = array(
       '--'.$testIntArgName.'='.$testIntValue,
-      '--'.$testArgName.'='.$testArgValue
+      '--'.$testArgName.'='.$testArgValue,
     );
 
     SuperGlobals::setScriptCommandLineArguments($args);

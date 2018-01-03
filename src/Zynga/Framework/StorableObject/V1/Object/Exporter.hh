@@ -7,7 +7,9 @@ use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 use Zynga\Framework\StorableObject\V1\Fields\Generic as FieldsGeneric;
 use Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException;
-use Zynga\Framework\StorableObject\V1\Exceptions\MissingDataFromExportDataException;
+use
+  Zynga\Framework\StorableObject\V1\Exceptions\MissingDataFromExportDataException
+;
 
 use Zynga\Framework\StorableObject\V1\Exporter\Protobuf;
 
@@ -24,7 +26,10 @@ class Exporter implements ExportInterface {
     $this->_object = $object;
   }
 
-  public function asJSON(?string $parentFieldName = null, bool $sorted = false): string {
+  public function asJSON(
+    ?string $parentFieldName = null,
+    bool $sorted = false,
+  ): string {
     try {
       $fields = $this->_object->fields()->getForObject();
 
@@ -47,7 +52,7 @@ class Exporter implements ExportInterface {
       $firstField = true;
 
       if ($sorted) {
-          ksort($fields);
+        ksort($fields);
       }
 
       foreach ($fields as $fieldName => $field) {

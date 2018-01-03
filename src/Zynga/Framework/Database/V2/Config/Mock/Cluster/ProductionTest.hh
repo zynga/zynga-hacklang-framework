@@ -5,7 +5,9 @@ namespace Zynga\Framework\Database\V2\Config\Mock\Cluster;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 use Zynga\Framework\Database\V2\Factory as DatabaseFactory;
-use Zynga\Framework\Database\V2\Config\Mock\Cluster\Production as ConfigUnderTest;
+use
+  Zynga\Framework\Database\V2\Config\Mock\Cluster\Production as ConfigUnderTest
+;
 
 use Zynga\Framework\Database\V2\Interfaces\DriverInterface;
 use Zynga\Framework\Database\V2\Interfaces\QuoteInterface;
@@ -58,7 +60,8 @@ class ProductionTest extends TestCase {
     $this->assertEquals('Mock', $config->getDriver());
 
     // At this point we should be able to pull a native driver off
-    $driver = DatabaseFactory::factory(DriverInterface::class, 'Mock_Cluster');
+    $driver =
+      DatabaseFactory::factory(DriverInterface::class, 'Mock_Cluster');
     $this->assertClassImplements(DriverInterface::class, $driver);
     $this->assertTrue($driver->connect());
     $this->assertFalse($driver->hadError());
@@ -68,14 +71,14 @@ class ProductionTest extends TestCase {
     $quoter = $driver->getQuoter();
     $this->assertClassImplements(
       'Zynga\Framework\Database\V2\Interfaces\QuoteInterface',
-      $quoter
+      $quoter,
     );
 
     // Given a native driver we should be able to pull a transaction
     $transaction = $driver->getTransaction();
     $this->assertClassImplements(
       'Zynga\Framework\Database\V2\Interfaces\TransactionInterface',
-      $transaction
+      $transaction,
     );
     $this->assertFalse($config->isDatabaseReadOnly());
     $this->assertEquals(ConfigUnderTest::TEST_SCHEMA, $config->getSchema());

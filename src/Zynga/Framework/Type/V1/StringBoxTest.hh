@@ -69,7 +69,7 @@ class StringBoxTest extends TestCase {
 
     $allTestableData = $this->getStringAndLengths();
 
-    foreach ( $allTestableData as $testData ) {
+    foreach ($allTestableData as $testData) {
       $foo = new StringBox();
       $foo->set($testData->testString);
       $this->assertEquals($testData->testLength, $foo->getLength());

@@ -8,8 +8,11 @@ class StaticClass {
     return true;
   }
 
-  public static function testFunctionWithParams(string $param1, int $param2): string {
-    return $param1 . ":" . $param2;
+  public static function testFunctionWithParams(
+    string $param1,
+    int $param2,
+  ): string {
+    return $param1.":".$param2;
   }
 
 }

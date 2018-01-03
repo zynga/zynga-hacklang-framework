@@ -8,7 +8,9 @@ use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 use Zynga\Framework\Exception\V1\Exception;
 
-use Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject;
+use
+  Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject
+;
 
 class Dev implements DriverConfigInterface {
 

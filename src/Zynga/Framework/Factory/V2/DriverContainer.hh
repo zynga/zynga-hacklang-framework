@@ -5,7 +5,9 @@ namespace Zynga\Framework\Factory\V2;
 use
   Zynga\Framework\Factory\V2\Exceptions\DriverContainer\DriverAlreadyInCacheException
 ;
-use Zynga\Framework\Factory\V2\Exceptions\DriverContainer\DriverNotInCacheException;
+use
+  Zynga\Framework\Factory\V2\Exceptions\DriverContainer\DriverNotInCacheException
+;
 use Zynga\Framework\Factory\V2\Interfaces\DriverContainerInterface;
 use Zynga\Framework\Factory\V2\Interfaces\DriverInterface;
 

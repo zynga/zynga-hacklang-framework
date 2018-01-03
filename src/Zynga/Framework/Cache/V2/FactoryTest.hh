@@ -13,7 +13,10 @@ use Zynga\Framework\Cache\V2\Interfaces\DriverInterface;
 class FactoryTest extends TestCase {
 
   public function testGetClassRoot(): void {
-    $this->assertEquals('\Zynga\Framework\Cache\V2', CacheFactory::getClassRoot());
+    $this->assertEquals(
+      '\Zynga\Framework\Cache\V2',
+      CacheFactory::getClassRoot(),
+    );
   }
 
   public function testValidExample(): void {

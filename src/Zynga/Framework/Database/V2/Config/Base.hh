@@ -8,7 +8,8 @@ use Zynga\Framework\Database\V2\Exceptions\NoPortProvidedException;
 use Zynga\Framework\Database\V2\Interfaces\DriverConfigInterface;
 use Zynga\Framework\Factory\V2\Config\Base as FactoryBaseConfig;
 
-abstract class Base extends FactoryBaseConfig implements DriverConfigInterface {
+abstract class Base extends FactoryBaseConfig
+  implements DriverConfigInterface {
 
   private string $_currentServer;
   private string $_currentDatabase;

@@ -36,5 +36,5 @@ class UInt64BoxTest extends TestCase {
     $obj = new UInt64Box(123);
     $this->assertEquals($obj->get(), 123);
   }
-  
+
 }

@@ -12,7 +12,9 @@ use Zynga\Framework\StorableObject\V1\Test\Mock\ValidNested;
 
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
-use Zynga\Framework\StorableObject\V1\Exceptions\ExpectedFieldCountMismatchException;
+use
+  Zynga\Framework\StorableObject\V1\Exceptions\ExpectedFieldCountMismatchException
+;
 
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Environment\CodePath\V1\CodePath;

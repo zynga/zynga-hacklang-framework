@@ -20,7 +20,7 @@ class MockableClass {
     $this->_currentState = false;
 
     $this->_disableFunction = self::METHOD_UNKNOWN;
-    $this->_enableFunction  = self::METHOD_UNKNOWN;
+    $this->_enableFunction = self::METHOD_UNKNOWN;
     $this->_getStatusFunction = 'unknown';
     $this->_clearFunction = 'unknown';
 
@@ -28,41 +28,38 @@ class MockableClass {
 
   public function detect(): bool {
 
-    $this->_disableFunction = $this->detectFunctionName(Vector {
-      'disableMockDrivers', 'disableMocks'
-    });
+    $this->_disableFunction = $this->detectFunctionName(
+      Vector {'disableMockDrivers', 'disableMocks'},
+    );
 
-    $this->_enableFunction = $this->detectFunctionName(Vector {
-      'enableMockDrivers', 'enableMocks'
-    });
+    $this->_enableFunction =
+      $this->detectFunctionName(Vector {'enableMockDrivers', 'enableMocks'});
 
-    $this->_getStatusFunction = $this->detectFunctionName(Vector {
-      'getUseMockDrivers', 'getMockState'
-    });
+    $this->_getStatusFunction =
+      $this->detectFunctionName(Vector {'getUseMockDrivers', 'getMockState'});
 
-    $this->_clearFunction = $this->detectFunctionName(Vector {
-      'clear'
-    });
+    $this->_clearFunction = $this->detectFunctionName(Vector {'clear'});
 
-    if ( $this->_disableFunction != 'unknown' &&
-         $this->_enableFunction  != 'unknown' &&
-         $this->_getStatusFunction != 'unknown' ) {
-            return true;
-         }
+    if ($this->_disableFunction != 'unknown' &&
+        $this->_enableFunction != 'unknown' &&
+        $this->_getStatusFunction != 'unknown') {
+      return true;
+    }
 
     return false;
 
-
   }
 
-  public function detectFunctionName(Vector<string> $possibleFunctionNames): string {
+  public function detectFunctionName(
+    Vector<string> $possibleFunctionNames,
+  ): string {
 
-    if ( class_exists($this->_className, true) != true ) {
+    if (class_exists($this->_className, true) != true) {
       return 'unknown';
     }
 
-    foreach ( $possibleFunctionNames as $functionName ) {
-      if ( method_exists($this->_className, $functionName ) ) {
+    foreach ($possibleFunctionNames as $functionName) {
+      if (method_exists($this->_className, $functionName)) {
         return $functionName;
       }
     }
@@ -77,7 +74,7 @@ class MockableClass {
       $this->_className,
       $this->_enableFunction,
       Vector {},
-      false
+      false,
     );
 
     return boolval($methodReturn);
@@ -90,12 +87,11 @@ class MockableClass {
       $this->_className,
       $this->_disableFunction,
       Vector {},
-      false
+      false,
     );
 
     return boolval($methodReturn);
 
   }
-
 
 }

@@ -7,8 +7,12 @@ use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 use Zynga\Framework\StorableObject\V1\Fields;
 
-use Zynga\Framework\StorableObject\V1\Exceptions\ExpectedFieldCountMismatchException;
-use Zynga\Framework\StorableObject\V1\Exceptions\MissingKeyFromImportDataException;
+use
+  Zynga\Framework\StorableObject\V1\Exceptions\ExpectedFieldCountMismatchException
+;
+use
+  Zynga\Framework\StorableObject\V1\Exceptions\MissingKeyFromImportDataException
+;
 use Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException;
 use Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException;
 

@@ -7,8 +7,12 @@ use Zynga\Framework\Database\V2\Interfaces\DriverInterface;
 use Zynga\Framework\Database\V2\Interfaces\DriverConfigInterface;
 use Zynga\Framework\Database\V2\Interfaces\QuoteInterface;
 use Zynga\Framework\Database\V2\Interfaces\TransactionInterface;
-use Zynga\Framework\Environment\ErrorCapture\V1\Interfaces\ErrorCaptureInterface;
-use Zynga\Framework\Environment\ErrorCapture\V1\Handler\Noop as ErrorCaptureNoop;
+use
+  Zynga\Framework\Environment\ErrorCapture\V1\Interfaces\ErrorCaptureInterface
+;
+use
+  Zynga\Framework\Environment\ErrorCapture\V1\Handler\Noop as ErrorCaptureNoop
+;
 use Zynga\Framework\Factory\V2\Driver\Base as FactoryDriverBase;
 
 abstract class Base extends FactoryDriverBase implements DriverInterface {
@@ -73,7 +77,6 @@ abstract class Base extends FactoryDriverBase implements DriverInterface {
   public function errorCapture(): ErrorCaptureInterface {
     return $this->_errorCapture;
   }
-
 
   public function hadError(): bool {
     return $this->_hadError;

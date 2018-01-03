@@ -3,7 +3,9 @@
 namespace Zynga\Framework\Datadog\V2\Interfaces;
 
 use Zynga\Framework\Datadog\V2\Interfaces\DriverConfigInterface;
-use Zynga\Framework\Factory\V2\Interfaces\DriverInterface as BaseDriverInterface;
+use
+  Zynga\Framework\Factory\V2\Interfaces\DriverInterface as BaseDriverInterface
+;
 
 interface DriverInterface extends BaseDriverInterface {
   /**

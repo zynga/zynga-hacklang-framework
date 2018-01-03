@@ -4,7 +4,9 @@ namespace Zynga\Framework\Cache\V2\Config\ValidExample;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\Cache\V2\Config\Mock\Staging as ConfigUnderTest;
-use Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject;
+use
+  Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject
+;
 use
   Zynga\Framework\StorableObject\V1\Test\Mock\Valid as ValidExampleObjectRequiredFields
 ;

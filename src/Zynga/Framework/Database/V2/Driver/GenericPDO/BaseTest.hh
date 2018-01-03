@@ -16,78 +16,82 @@ class BaseTest extends TestCase {
     $this->assertEquals('GenericPDO', $config->getDriver());
   }
 
-    public function testGetQuoter(): void {
-        $driver = new Base(new MockConfig());
-        $this->assertTrue($driver->getQuoter() instanceof QuoteInterface);
-    }
+  public function testGetQuoter(): void {
+    $driver = new Base(new MockConfig());
+    $this->assertTrue($driver->getQuoter() instanceof QuoteInterface);
+  }
 
-    public function testGetTransaction(): void {
-        $driver = new Base(new MockConfig());
-        $this->assertTrue($driver->getTransaction() instanceof TransactionInterface);
-    }
+  public function testGetTransaction(): void {
+    $driver = new Base(new MockConfig());
+    $this->assertTrue(
+      $driver->getTransaction() instanceof TransactionInterface,
+    );
+  }
 
-    public function testSetIsConnected(): void {
-        $driver = new Base(new MockConfig());
-        $this->assertTrue($driver->setIsConnected(true));
-    }
+  public function testSetIsConnected(): void {
+    $driver = new Base(new MockConfig());
+    $this->assertTrue($driver->setIsConnected(true));
+  }
 
-    public function testGetIsConnected(): void {
-        $driver = new Base(new MockConfig());
-        $driver->setIsConnected(true);
-        $this->assertTrue($driver->getIsConnected());
-    }
+  public function testGetIsConnected(): void {
+    $driver = new Base(new MockConfig());
+    $driver->setIsConnected(true);
+    $this->assertTrue($driver->getIsConnected());
+  }
 
-    public function testConnectWithStringWhileConnected(): void {
-        $driver = new Base(new MockConfig());
-        $driver->setIsConnected(true);
-        $this->assertTrue($driver->connectWithString(''));
-    }
+  public function testConnectWithStringWhileConnected(): void {
+    $driver = new Base(new MockConfig());
+    $driver->setIsConnected(true);
+    $this->assertTrue($driver->connectWithString(''));
+  }
 
-    public function testConnectWithStringWhileDisconnected(): void {
-        $config = new MockConfig();
-        $driver = new Base($config);
-        $driver->setIsConnected(false);
-        $this->assertTrue($driver->connectWithString($config->getConnectionString()));
-    }
+  public function testConnectWithStringWhileDisconnected(): void {
+    $config = new MockConfig();
+    $driver = new Base($config);
+    $driver->setIsConnected(false);
+    $this->assertTrue(
+      $driver->connectWithString($config->getConnectionString()),
+    );
+  }
 
-    public function testConnect(): void {
-        $config = new MockConfig();
-        $driver = new Base($config);
-        $this->assertTrue($driver->connect());
-    }
+  public function testConnect(): void {
+    $config = new MockConfig();
+    $driver = new Base($config);
+    $this->assertTrue($driver->connect());
+  }
 
-    public function testConnect_BrokenData(): void {
-        $config = new MockConfig();
-        $config->setPassword('my-voice-is-my-password-verify-me');
-        $driver = new BaseDriver($config);
-        $this->assertFalse($driver->connect());
-        $this->assertTrue($driver->hadError());
-    }
+  public function testConnect_BrokenData(): void {
+    $config = new MockConfig();
+    $config->setPassword('my-voice-is-my-password-verify-me');
+    $driver = new BaseDriver($config);
+    $this->assertFalse($driver->connect());
+    $this->assertTrue($driver->hadError());
+  }
 
-    public function testDisconnect(): void {
-        $config = new MockConfig();
-        $driver = new Base($config);
-        $this->assertTrue($driver->disconnect());
-    }
+  public function testDisconnect(): void {
+    $config = new MockConfig();
+    $driver = new Base($config);
+    $this->assertTrue($driver->disconnect());
+  }
 
-    public function testOnDriverConnectionChangeDoesNotAlterConnected(): void {
-        $config = new MockConfig();
-        $driver = new Base($config);
-        $driver->setIsConnected(true);
-        $this->assertTrue($driver->getIsConnected());
-        $driver->onDriverConnectionChange(true, false);
-        $this->assertTrue($driver->getIsConnected());
-    }
+  public function testOnDriverConnectionChangeDoesNotAlterConnected(): void {
+    $config = new MockConfig();
+    $driver = new Base($config);
+    $driver->setIsConnected(true);
+    $this->assertTrue($driver->getIsConnected());
+    $driver->onDriverConnectionChange(true, false);
+    $this->assertTrue($driver->getIsConnected());
+  }
 
-    public function testDefaultHadError(): void {
-        $config = new MockConfig();
-        $driver = new Base($config);
-        $this->assertFalse($driver->hadError());
-    }
+  public function testDefaultHadError(): void {
+    $config = new MockConfig();
+    $driver = new Base($config);
+    $this->assertFalse($driver->hadError());
+  }
 
-    public function testDefaultGetLastError(): void {
-        $config = new MockConfig();
-        $driver = new Base($config);
-        $this->assertEquals(0, strlen($driver->getLastError()));
-    }
+  public function testDefaultGetLastError(): void {
+    $config = new MockConfig();
+    $driver = new Base($config);
+    $this->assertEquals(0, strlen($driver->getLastError()));
+  }
 }

@@ -25,9 +25,16 @@ class MockStateTest extends TestCaseBase {
     $this->assertFalse(FactoryExample::getUseMockDrivers());
     $this->assertFalse(SimpleClassExample::getMockState());
 
-
-    $this->assertTrue(MockState::addMockableClass('Zynga\Framework\Testing\MockState\V2\Mocks\FactoryExample'));
-    $this->assertTrue(MockState::addMockableClass('Zynga\Framework\Testing\MockState\V2\Mocks\SimpleClassExample'));
+    $this->assertTrue(
+      MockState::addMockableClass(
+        'Zynga\Framework\Testing\MockState\V2\Mocks\FactoryExample',
+      ),
+    );
+    $this->assertTrue(
+      MockState::addMockableClass(
+        'Zynga\Framework\Testing\MockState\V2\Mocks\SimpleClassExample',
+      ),
+    );
 
     // cleanup the mockables before we start this test.
     $this->assertTrue(MockState::clearMockables());
@@ -46,7 +53,7 @@ class MockStateTest extends TestCaseBase {
     $this->assertTrue(MockState::clearMockables());
     $this->assertTrue(FactoryExample::clear());
     $this->assertTrue(SimpleClassExample::clear());
-    
+
   }
 
 }

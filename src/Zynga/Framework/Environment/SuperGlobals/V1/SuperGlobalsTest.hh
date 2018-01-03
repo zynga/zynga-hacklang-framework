@@ -118,8 +118,8 @@ class SuperGlobalsTest extends TestCase {
 
   public function test_getRequestBodyAsMap_Empty(): void {
 
-    $requestFile = CodePath::getRoot() . '/tests/empty_request_body.js';
-    
+    $requestFile = CodePath::getRoot().'/tests/empty_request_body.js';
+
     SuperGlobals::setBodyFilePath($requestFile);
 
     $data = SuperGlobals::getRequestBodyAsMap();
@@ -129,10 +129,10 @@ class SuperGlobalsTest extends TestCase {
 
   public function test_getRequestBodyAsMap_SomeData(): void {
 
-    $requestFile = CodePath::getRoot() . '/tests/some_data.js';
-    
+    $requestFile = CodePath::getRoot().'/tests/some_data.js';
+
     SuperGlobals::setBodyFilePath($requestFile);
-    
+
     $data = SuperGlobals::getRequestBodyAsMap();
     $this->assertEquals(3, $data->count());
 

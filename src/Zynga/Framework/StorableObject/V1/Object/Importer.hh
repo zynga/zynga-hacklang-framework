@@ -7,8 +7,12 @@ use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 use Zynga\Framework\StorableObject\V1\Fields;
 
-use Zynga\Framework\StorableObject\V1\Exceptions\ExpectedFieldCountMismatchException;
-use Zynga\Framework\StorableObject\V1\Exceptions\MissingKeyFromImportDataException;
+use
+  Zynga\Framework\StorableObject\V1\Exceptions\ExpectedFieldCountMismatchException
+;
+use
+  Zynga\Framework\StorableObject\V1\Exceptions\MissingKeyFromImportDataException
+;
 use Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException;
 use Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException;
 
@@ -101,7 +105,7 @@ class Importer implements ImportInterface {
         } else if ($field instanceof StorableObjectInterface) {
           if (is_array($value)) {
             $field->import()->fromMap(new Map($value));
-          } else if ($value instanceof Map ) {
+          } else if ($value instanceof Map) {
             $field->import()->fromMap($value);
           } else if (is_string($value)) {
             $field->import()->fromJSON($value);
@@ -113,9 +117,10 @@ class Importer implements ImportInterface {
         $this->_object->fields()->getRequiredFieldsWithDefaultValues();
 
       if ($defaultValueRequiredFields->count() > 0) {
-        $message = 'Failed to import one or more fields. Make sure that '.
-                   'the data you\'re importing is of a supported type '.
-                   '(either string or JSON).';
+        $message =
+          'Failed to import one or more fields. Make sure that '.
+          'the data you\'re importing is of a supported type '.
+          '(either string or JSON).';
         $message .= ' fields='.json_encode($defaultValueRequiredFields);
         throw new MissingKeyFromImportDataException($message);
       }

@@ -16,13 +16,17 @@ use Zynga\Framework\Database\V2\Interfaces\TransactionInterface;
 
 use Zynga\Framework\Database\V2\Driver\Dummy as NativeDummyDriver;
 use Zynga\Framework\Database\V2\Driver\Dummy\Quoter as NativeDummyQuoter;
-use Zynga\Framework\Database\V2\Driver\Dummy\Transaction as NativeDummyTransaction;
+use
+  Zynga\Framework\Database\V2\Driver\Dummy\Transaction as NativeDummyTransaction
+;
 
 use Zynga\Framework\Database\V2\Config\Base as ConfigBase;
 
 use Zynga\Framework\Database\V2\Exceptions\FailedToLoadDriverException;
 use Zynga\Framework\Database\V2\Exceptions\FailedToLoadDriverConfigException;
-use Zynga\Framework\Database\V2\Exceptions\Mock\LoadTestDataNoFileFoundException;
+use
+  Zynga\Framework\Database\V2\Exceptions\Mock\LoadTestDataNoFileFoundException
+;
 
 class FactoryTest extends TestCase {
 

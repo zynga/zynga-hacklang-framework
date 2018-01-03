@@ -34,7 +34,8 @@ class TransactionTest extends TestCase {
 
   public function testNormal(): void {
 
-    $driver = DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
+    $driver =
+      DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
 
     $transaction = $driver->getTransaction();
 
@@ -49,7 +50,8 @@ class TransactionTest extends TestCase {
    * @expectedException Zynga\Framework\Exception\V1\Exception
    */
   public function testBadVerticaBegin(): void {
-    $driver = DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
+    $driver =
+      DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
     $mock = new BadVertica_Mock($driver->getConfig());
     $mock->getTransaction()->begin();
   }
@@ -58,7 +60,8 @@ class TransactionTest extends TestCase {
    * @expectedException Zynga\Framework\Exception\V1\Exception
    */
   public function testBadVerticaCommit(): void {
-    $driver = DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
+    $driver =
+      DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
     $mock = new BadVertica_Mock($driver->getConfig());
     $mock->getTransaction()->commit();
   }
@@ -67,7 +70,8 @@ class TransactionTest extends TestCase {
    * @expectedException Zynga\Framework\Exception\V1\Exception
    */
   public function testBadVerticaRollback(): void {
-    $driver = DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
+    $driver =
+      DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
     $mock = new BadVertica_Mock($driver->getConfig());
     $mock->getTransaction()->rollback();
   }

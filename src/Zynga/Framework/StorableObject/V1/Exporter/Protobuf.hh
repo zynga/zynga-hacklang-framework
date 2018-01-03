@@ -141,7 +141,8 @@ class Protobuf {
       if ($this->classExtends($type, SInt32Box::class) && is_int($value)) {
         //$this->debugMessage("VALUE addZigzag=" . sprintf('%d', $value));
         return $binConverter->addZigzag($value, 32);
-     } else if ($this->classExtends($type, SInt64Box::class) && is_int($value)) {
+      } else if ($this->classExtends($type, SInt64Box::class) &&
+                 is_int($value)) {
         //$this->debugMessage("VALUE addZigzag=" . sprintf('%d', $value));
         return $binConverter->addZigzag($value, 64);
       } else if ($wireType === WireType::VARINT && is_int($value)) {
@@ -160,7 +161,7 @@ class Protobuf {
   }
 
   private function classExtends(string $class, string $extends): bool {
-      return is_subclass_of($class, $extends) || $class === $extends;
+    return is_subclass_of($class, $extends) || $class === $extends;
   }
 
   /*

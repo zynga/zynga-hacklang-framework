@@ -15,15 +15,19 @@ class HttpResponseCodeBoxTest extends TestCase {
   public function generateValidValues(): Vector<ValidValue> {
     $values = Vector {};
 
-    $values->add(new ValidValue(
-      HttpResponseCodeBox::HTTP_OK,
-      HttpResponseCodeBox::HTTP_OK
-    ));
+    $values->add(
+      new ValidValue(
+        HttpResponseCodeBox::HTTP_OK,
+        HttpResponseCodeBox::HTTP_OK,
+      ),
+    );
 
-    $values->add(new ValidValue(
-      HttpResponseCodeBox::HTTP_FAILURE,
-      HttpResponseCodeBox::HTTP_FAILURE
-    ));
+    $values->add(
+      new ValidValue(
+        HttpResponseCodeBox::HTTP_FAILURE,
+        HttpResponseCodeBox::HTTP_FAILURE,
+      ),
+    );
 
     return $values;
   }

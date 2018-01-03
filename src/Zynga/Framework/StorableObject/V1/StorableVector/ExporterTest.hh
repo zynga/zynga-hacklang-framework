@@ -6,8 +6,12 @@ use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 use Zynga\Framework\StorableObject\V1\StorableVector;
 use Zynga\Framework\StorableObject\V1\Test\Mock\Valid as ValidStorableObject;
-use Zynga\Framework\StorableObject\V1\Test\Mock\Nofields as NofieldsStorableObject;
-use Zynga\Framework\StorableObject\V1\Test\Mock\Broken\ValidButBrokenExporter;
+use
+  Zynga\Framework\StorableObject\V1\Test\Mock\Nofields as NofieldsStorableObject
+;
+use
+  Zynga\Framework\StorableObject\V1\Test\Mock\Broken\ValidButBrokenExporter
+;
 
 use Zynga\Framework\Type\V1\UInt64Box;
 
@@ -126,7 +130,5 @@ class ExporterTest extends TestCase {
     $map->export()->asJSON();
 
   }
-
-
 
 }

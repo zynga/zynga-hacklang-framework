@@ -5,10 +5,16 @@ namespace Zynga\Framework\Database\V2\Config;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 use Zynga\Framework\Database\V2\Test\Config\Mock\Base\Valid as MockValid;
-use Zynga\Framework\Database\V2\Test\Config\Mock\Base\NoUserName as MockNoUserName;
-use Zynga\Framework\Database\V2\Test\Config\Mock\Base\NoPassword as MockNoPassword;
+use
+  Zynga\Framework\Database\V2\Test\Config\Mock\Base\NoUserName as MockNoUserName
+;
+use
+  Zynga\Framework\Database\V2\Test\Config\Mock\Base\NoPassword as MockNoPassword
+;
 use Zynga\Framework\Database\V2\Test\Config\Mock\Base\NoPort as MockNoPort;
-use Zynga\Framework\Database\V2\Test\Config\Mock\Base\EmptyConfig as MockEmptyConfig;
+use
+  Zynga\Framework\Database\V2\Test\Config\Mock\Base\EmptyConfig as MockEmptyConfig
+;
 
 class BaseTest extends TestCase {
 

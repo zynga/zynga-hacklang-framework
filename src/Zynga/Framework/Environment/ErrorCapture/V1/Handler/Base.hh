@@ -2,7 +2,9 @@
 
 namespace Zynga\Framework\Environment\ErrorCapture\V1\Handler;
 
-use Zynga\Framework\Environment\ErrorCapture\V1\Interfaces\ErrorCaptureInterface;
+use
+  Zynga\Framework\Environment\ErrorCapture\V1\Interfaces\ErrorCaptureInterface
+;
 
 abstract class Base implements ErrorCaptureInterface {
 

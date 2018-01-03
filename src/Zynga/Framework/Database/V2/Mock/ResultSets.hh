@@ -4,7 +4,9 @@ namespace Zynga\Framework\Database\V2\Mock;
 
 use Zynga\Framework\Environment\CodePath\V1\CodePath;
 use Zynga\Framework\Database\V2\Exceptions\Mock\BadResultOffsetException;
-use Zynga\Framework\Database\V2\Exceptions\Mock\LoadTestDataNoFileFoundException;
+use
+  Zynga\Framework\Database\V2\Exceptions\Mock\LoadTestDataNoFileFoundException
+;
 use Zynga\Framework\Exception\V1\Exception;
 
 class ResultSets {
@@ -20,7 +22,7 @@ class ResultSets {
   }
 
   public function getResultSets(): Vector<Vector<mixed>> {
-    if ( $this->_resultSets === null ) {
+    if ($this->_resultSets === null) {
       $this->_resultSets = Vector {};
     }
     return $this->_resultSets;
@@ -85,7 +87,6 @@ class ResultSets {
 
   }
 
-
   public function loadResultsFromFile(string $fileName): bool {
 
     // reset the results from to empty
@@ -141,8 +142,10 @@ class ResultSets {
               // TODO: JEO - Need a way to debug the datasets as they load.
               // var_dump($data);
 
-              if ( $data === null ) {
-                error_log('WARNING: mock data line failed to decode line=' . $line);
+              if ($data === null) {
+                error_log(
+                  'WARNING: mock data line failed to decode line='.$line,
+                );
                 continue;
               }
 

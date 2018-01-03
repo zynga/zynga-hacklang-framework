@@ -13,7 +13,10 @@ class Exporter implements ExportInterface {
 
   public function __construct(StorableObjectInterface $obj) {}
 
-  public function asJSON(?string $parentFieldName = null, bool $sorted = false): string {
+  public function asJSON(
+    ?string $parentFieldName = null,
+    bool $sorted = false,
+  ): string {
     throw new Exception('broken-as-map');
   }
   public function asMap(): Map<string, mixed> {

@@ -27,7 +27,7 @@ class TestCaseTest extends ZyngaTestCase {
     // test once uncached.
     $perf = $this->perf();
     $this->assertTrue($perf instanceof PerformanceTracker);
-   
+
     // should be cached on second pass.
     $perf = $this->perf();
     $this->assertTrue($perf instanceof PerformanceTracker);
@@ -46,12 +46,11 @@ class TestCaseTest extends ZyngaTestCase {
     echo "some-content";
     $this->expectOutput('some-content');
   }
-  
+
   public function test_expectOutputPregMatch(): void {
     echo "some-content";
     $this->expectOutputPregMatch('/some/', ob_get_contents());
   }
-
 
   /**
    * Tests for a basic test case to instanciate with no issues.
@@ -90,7 +89,10 @@ class TestCaseTest extends ZyngaTestCase {
 
     $obj = new TestCaseTest_Example();
 
-    $this->assertClassImplements('Zynga\\Framework\Testing\TestCase\V2\TestCaseTest_Interface', $obj);
+    $this->assertClassImplements(
+      'Zynga\\Framework\Testing\TestCase\V2\TestCaseTest_Interface',
+      $obj,
+    );
 
     $this->assertEquals(0, $this->getNumAssertions());
 
@@ -124,14 +126,20 @@ class TestCaseTest extends ZyngaTestCase {
   public function testNonImplementation(): void {
     $obj = new TestCaseTestNoImplement();
     $this->assertionFailureExpected();
-    $this->assertClassImplements('Zynga\Framework\Testing\TestCase\V2\TestCaseTest_Interface', $obj);
+    $this->assertClassImplements(
+      'Zynga\Framework\Testing\TestCase\V2\TestCaseTest_Interface',
+      $obj,
+    );
   }
 
   public function testDisabledTest(): void {
 
     $obj = new TestCaseTest_Example();
 
-    $this->assertClassImplements('Zynga\Framework\Testing\TestCase\V2\TestCaseTest_Interface', $obj);
+    $this->assertClassImplements(
+      'Zynga\Framework\Testing\TestCase\V2\TestCaseTest_Interface',
+      $obj,
+    );
     $this->assertEquals(0, $this->getNumAssertions());
 
   }

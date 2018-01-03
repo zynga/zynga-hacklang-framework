@@ -18,5 +18,5 @@ class ValidValue {
   public function getExpectedValue(): mixed {
     return $this->_expected;
   }
-  
+
 }

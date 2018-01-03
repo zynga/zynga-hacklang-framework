@@ -118,7 +118,6 @@ class ResultSetTest extends TestCase {
     $this->assertFalse($sth->next());
   }
 
-
   public function testFetchMapNoActiveCursorException(): void {
     $dbh = $this->getDriverForTest();
     $sth = $dbh->query('SELECT 1');

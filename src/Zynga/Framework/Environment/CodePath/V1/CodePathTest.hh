@@ -22,11 +22,11 @@ class CodePathTest extends TestCase {
   public function testGetExistingRoot(): void {
 
     // --
-    // Code is expected to be within: 
+    // Code is expected to be within:
     // Walk up the dirtree to get our expected value
     // --
     $expected = __FILE__;
-    for ( $l = 0; $l < 7; $l++ ) {
+    for ($l = 0; $l < 7; $l++) {
       $expected = dirname($expected);
     }
     $value = CodePath::getRoot();

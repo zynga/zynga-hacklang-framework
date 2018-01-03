@@ -6,8 +6,12 @@ use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 use Zynga\Framework\StorableObject\V1\StorableMap;
 use Zynga\Framework\StorableObject\V1\Test\Mock\Valid as ValidStorableObject;
-use Zynga\Framework\StorableObject\V1\Test\Mock\Nofields as NofieldsStorableObject;
-use Zynga\Framework\StorableObject\V1\Test\Mock\Broken\ValidButBrokenExporter;
+use
+  Zynga\Framework\StorableObject\V1\Test\Mock\Nofields as NofieldsStorableObject
+;
+use
+  Zynga\Framework\StorableObject\V1\Test\Mock\Broken\ValidButBrokenExporter
+;
 
 use Zynga\Framework\Type\V1\StringBox;
 use Zynga\Framework\Type\V1\Int64Box;
@@ -53,12 +57,11 @@ class ExporterTest extends TestCase {
     $map->set('testing-storing', $data1);
     $map->set('testing-storing-2', $data1);
 
-    $targetValue = '{"testing-storing":3248748755,"testing-storing-2":3248748755}';
+    $targetValue =
+      '{"testing-storing":3248748755,"testing-storing-2":3248748755}';
     $this->assertEquals($targetValue, $map->export()->asJSON());
 
-
   }
-
 
   /**
    * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException

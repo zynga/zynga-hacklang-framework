@@ -3,7 +3,9 @@
 namespace Zynga\Framework\Cache\V2\Interfaces;
 
 use Zynga\Framework\Cache\V2\Interfaces\DriverConfigInterface;
-use Zynga\Framework\Factory\V2\Interfaces\DriverInterface as BaseDriverInterface;
+use
+  Zynga\Framework\Factory\V2\Interfaces\DriverInterface as BaseDriverInterface
+;
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 interface DriverInterface extends BaseDriverInterface {

@@ -32,7 +32,7 @@ class Template implements FactoryTemplateInterface {
   private bool $_useMockDrivers;
 
   public function __construct(string $classRoot) {
-    $this->_classRoots = Vector { $classRoot };
+    $this->_classRoots = Vector {$classRoot};
     $this->_drivers = new DriverContainer();
     $this->_useMockDrivers = false;
   }
@@ -68,9 +68,9 @@ class Template implements FactoryTemplateInterface {
     // get the base path plus config path.
     $classRoots = $this->getClassRoots();
 
-    foreach ( $classRoots as $classRoot ) {
+    foreach ($classRoots as $classRoot) {
 
-      $path = $classRoot . '\\Config\\';
+      $path = $classRoot.'\\Config\\';
 
       // does this even have a underscore
       $pos = strpos($name, '_');
@@ -100,15 +100,17 @@ class Template implements FactoryTemplateInterface {
    * @param  string $name
    * @return string
    */
-  public function createDriverClassNames(ConfigInterface $config): Vector<string> {
+  public function createDriverClassNames(
+    ConfigInterface $config,
+  ): Vector<string> {
 
     $classNames = Vector {};
 
     // get the base path plus driver path.
     $classRoots = $this->getClassRoots();
 
-    foreach ( $classRoots as $classRoot ) {
-      $path = $classRoot .'\\Driver\\'.$config->getDriver();
+    foreach ($classRoots as $classRoot) {
+      $path = $classRoot.'\\Driver\\'.$config->getDriver();
       $classNames->add($path);
     }
 
@@ -131,9 +133,9 @@ class Template implements FactoryTemplateInterface {
 
       $classNames = $this->createConfigClassNames($name);
 
-      foreach ( $classNames as $className ) {
+      foreach ($classNames as $className) {
 
-        if (DynamicClassCreation::doesClassExist($className) === true ) {
+        if (DynamicClassCreation::doesClassExist($className) === true) {
 
           $config =
             DynamicClassCreation::createClassByName($className, Vector {});
@@ -153,13 +155,10 @@ class Template implements FactoryTemplateInterface {
 
       }
 
-    } catch ( BaseException $e ) {
+    } catch (BaseException $e) {
 
       $configException = new FailedToLoadDriverConfigException(
-        'Failed to load driver for name='.
-        $name.
-        ' message='.
-        $e->getMessage(),
+        'Failed to load driver for name='.$name.' message='.$e->getMessage(),
       );
 
       $configException->setPrevious($e);
@@ -169,8 +168,7 @@ class Template implements FactoryTemplateInterface {
     }
 
     throw new FailedToLoadDriverConfigException(
-       'name=' . $name . ' ' .
-       'noClassesFoundWithin=' . json_encode($classNames)
+      'name='.$name.' '.'noClassesFoundWithin='.json_encode($classNames),
     );
 
   }
@@ -192,24 +190,26 @@ class Template implements FactoryTemplateInterface {
 
       $classNames = $this->createDriverClassNames($config);
 
-      foreach ( $classNames as $className ) {
+      foreach ($classNames as $className) {
 
-        if ( DynamicClassCreation::doesClassExist($className) === true ) {
-          $driver =
-            DynamicClassCreation::createClassByName($className, Vector {$config});
+        if (DynamicClassCreation::doesClassExist($className) === true) {
+          $driver = DynamicClassCreation::createClassByName(
+            $className,
+            Vector {$config},
+          );
 
           invariant(
             $driver instanceof DriverInterface,
-              'invariant=Failed to load driver for name=%s driver=%s',
-              $name,
-              $className,
-            );
+            'invariant=Failed to load driver for name=%s driver=%s',
+            $name,
+            $className,
+          );
 
           return $driver;
         }
 
       }
-      
+
     } catch (BaseException $e) {
 
       $failure = new FailedToLoadDriverException(
@@ -223,8 +223,7 @@ class Template implements FactoryTemplateInterface {
     }
 
     throw new FailedToLoadDriverException(
-      'name='.$name . ' ' .
-      'classNames=' . json_encode($classNames)
+      'name='.$name.' '.'classNames='.json_encode($classNames),
     );
 
   }

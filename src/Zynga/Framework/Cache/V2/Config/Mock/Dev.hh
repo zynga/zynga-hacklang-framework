@@ -5,7 +5,9 @@ namespace Zynga\Framework\Cache\V2\Config\Mock;
 use Zynga\Framework\Cache\V2\Config\LocalMemcache\Base as LocalMemcacheBase;
 
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
-use Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject;
+use
+  Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject
+;
 
 use Zynga\Framework\Exception\V1\Exception;
 

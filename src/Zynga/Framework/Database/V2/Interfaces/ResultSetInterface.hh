@@ -2,7 +2,9 @@
 
 namespace Zynga\Framework\Database\V2\Interfaces;
 
-use Zynga\Framework\Environment\ErrorCapture\V1\Interfaces\ErrorCaptureInterface;
+use
+  Zynga\Framework\Environment\ErrorCapture\V1\Interfaces\ErrorCaptureInterface
+;
 
 interface ResultSetInterface {
 

@@ -7,7 +7,9 @@ use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 use Zynga\Framework\StorableObject\V1\Fields\Generic as FieldsGeneric;
 use Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException;
-use Zynga\Framework\StorableObject\V1\Exceptions\OperationNotSupportedException;
+use
+  Zynga\Framework\StorableObject\V1\Exceptions\OperationNotSupportedException
+;
 
 use Zynga\Framework\StorableObject\V1\Exporter\Protobuf;
 
@@ -27,7 +29,10 @@ class Exporter<Tv> implements ExportInterface {
     $this->_object = $object;
   }
 
-  public function asJSON(?string $parentFieldName = null, bool $sorted = false): string {
+  public function asJSON(
+    ?string $parentFieldName = null,
+    bool $sorted = false,
+  ): string {
     try {
 
       $vec = $this->_object->getVector();

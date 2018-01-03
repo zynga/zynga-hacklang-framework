@@ -58,7 +58,8 @@ class DevTest extends TestCase {
     $this->assertEquals('Mock', $config->getDriver());
 
     // At this point we should be able to pull a native driver off
-    $driver = DatabaseFactory::factory(DriverInterface::class, 'Mock_Cluster');
+    $driver =
+      DatabaseFactory::factory(DriverInterface::class, 'Mock_Cluster');
     $this->assertClassImplements(DriverInterface::class, $driver);
     $this->assertTrue($driver->connect());
     $this->assertFalse($driver->hadError());
@@ -68,14 +69,14 @@ class DevTest extends TestCase {
     $quoter = $driver->getQuoter();
     $this->assertClassImplements(
       'Zynga\Framework\Database\V2\Interfaces\QuoteInterface',
-      $quoter
+      $quoter,
     );
 
     // Given a native driver we should be able to pull a transaction
     $transaction = $driver->getTransaction();
     $this->assertClassImplements(
       'Zynga\Framework\Database\V2\Interfaces\TransactionInterface',
-      $transaction
+      $transaction,
     );
 
     $this->assertFalse($config->isDatabaseReadOnly());

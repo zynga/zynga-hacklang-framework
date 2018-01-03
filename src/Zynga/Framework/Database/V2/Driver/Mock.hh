@@ -38,14 +38,14 @@ class Mock extends Base {
   }
 
   public function getTransaction(): TransactionInterface {
-    if ( $this->_transaction === null ) {
+    if ($this->_transaction === null) {
       $this->_transaction = new Transaction($this);
     }
     return $this->_transaction;
   }
 
   public function getQuoter(): QuoteInterface {
-    if ( $this->_quoter === null ) {
+    if ($this->_quoter === null) {
       $this->_quoter = new Quoter($this);
     }
     return $this->_quoter;
@@ -130,7 +130,7 @@ class Mock extends Base {
     try {
       $this->resetResultsSets();
       return $this->_resultSets->loadResultsForTest($class, $functionName);
-    } catch ( Exception $e ) {
+    } catch (Exception $e) {
       throw $e;
     }
   }

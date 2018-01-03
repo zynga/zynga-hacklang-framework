@@ -34,7 +34,7 @@ class UnixTimestampBoxTest extends TestCase {
     $values->add(new ValidValue('19770701-063000', 623846092208790));
 
     return $values;
-    
+
   }
 
   public function generateInvalidValues(): Vector<mixed> {

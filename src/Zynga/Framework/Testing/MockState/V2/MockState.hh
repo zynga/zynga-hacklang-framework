@@ -4,24 +4,24 @@ namespace Zynga\Framework\Testing\MockState\V2;
 
 use Zynga\Framework\Testing\MockState\V2\MockableClass;
 
-
 /**
  * Class to allow developers to have one spot to turn on / off the mocking
  * environment for the whole platform.
  */
 class MockState {
 
-  private static Vector<string> $_mockableClassConfig = Vector {
-    'Zynga\Framework\Database\V2\Factory',
-    'Zynga\Framework\Fluentd\V1\Factory',
-    'Zynga\Framework\Log\Stat\V1\Factory',
-    'Zynga\Framework\Datadog\V2\Factory',
-    'Zynga\Framework\Queue\V2\Factory',
-    'Zynga\Framework\Cache\V2\Factory',
-    'Zynga\Framework\Database\V2\UserSharded\Factory',
-    'Zynga\Legacy\V1\SexyShards',
-    'Zynga\Legacy\V1\UnifiedSexyShards'
-  };
+  private static Vector<string>
+    $_mockableClassConfig = Vector {
+      'Zynga\Framework\Database\V2\Factory',
+      'Zynga\Framework\Fluentd\V1\Factory',
+      'Zynga\Framework\Log\Stat\V1\Factory',
+      'Zynga\Framework\Datadog\V2\Factory',
+      'Zynga\Framework\Queue\V2\Factory',
+      'Zynga\Framework\Cache\V2\Factory',
+      'Zynga\Framework\Database\V2\UserSharded\Factory',
+      'Zynga\Legacy\V1\SexyShards',
+      'Zynga\Legacy\V1\UnifiedSexyShards',
+    };
 
   public static Vector<MockableClass> $_mockables = Vector {};
 
@@ -39,7 +39,7 @@ class MockState {
 
     self::detectMockableClasses();
 
-    foreach ( self::$_mockables as $mockable ) {
+    foreach (self::$_mockables as $mockable) {
       $mockable->enable();
     }
 
@@ -50,7 +50,7 @@ class MockState {
 
     self::detectMockableClasses();
 
-    foreach ( self::$_mockables as $mockable ) {
+    foreach (self::$_mockables as $mockable) {
       $mockable->disable();
     }
 
@@ -64,15 +64,15 @@ class MockState {
 
   public static function detectMockableClasses(): bool {
 
-    if ( self::getMockableCount() > 0 ) {
+    if (self::getMockableCount() > 0) {
       return true;
     }
 
-    foreach ( self::$_mockableClassConfig as $mockableClass ) {
+    foreach (self::$_mockableClassConfig as $mockableClass) {
 
       $mockCandidate = new MockableClass($mockableClass);
 
-      if ( $mockCandidate->detect() === true ) {
+      if ($mockCandidate->detect() === true) {
         self::$_mockables->add($mockCandidate);
       }
 

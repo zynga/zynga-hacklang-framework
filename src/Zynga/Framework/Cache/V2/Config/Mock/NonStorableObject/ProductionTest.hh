@@ -8,7 +8,9 @@ use
   Zynga\Framework\Cache\V2\Config\Mock\NonStorableObject\Production as ConfigUnderTest
 ;
 
-use Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject;
+use
+  Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject
+;
 use
   Zynga\Framework\StorableObject\V1\Test\Mock\Valid as ValidExampleObjectRequiredFields
 ;

@@ -14,14 +14,15 @@ class QuoterTest extends TestCase {
     parent::doSetUpBeforeClass();
 
     DatabaseFactory::disableMockDrivers();
-    
+
     return true;
 
   }
 
   public function testFloatValues(): void {
 
-    $driver = DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
+    $driver =
+      DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
 
     $quoter = $driver->getQuoter();
 
@@ -41,7 +42,8 @@ class QuoterTest extends TestCase {
 
   public function testIntValues(): void {
 
-    $driver = DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
+    $driver =
+      DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
 
     $quoter = $driver->getQuoter();
 
@@ -63,7 +65,8 @@ class QuoterTest extends TestCase {
 
   public function testTextValues(): void {
 
-    $driver = DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
+    $driver =
+      DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
 
     $quoter = $driver->getQuoter();
 

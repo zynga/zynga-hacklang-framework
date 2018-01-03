@@ -5,10 +5,14 @@ namespace Zynga\Framework\Database\V2\Config\Mock\BrokeDriver;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 use Zynga\Framework\Database\V2\Factory as DatabaseFactory;
-use Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface;
+use
+  Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
+;
 use Zynga\Framework\Database\V2\Interfaces\QuoteInterface;
 use Zynga\Framework\Database\V2\Interfaces\TransactionInterface;
-use Zynga\Framework\Database\V2\Config\Mock\BrokeDriver\Staging as ConfigUnderTest;
+use
+  Zynga\Framework\Database\V2\Config\Mock\BrokeDriver\Staging as ConfigUnderTest
+;
 
 class StagingTest extends TestCase {
 
@@ -58,14 +62,17 @@ class StagingTest extends TestCase {
     $this->assertFalse($config->isDatabaseReadOnly());
 
     // This is special as this isn't a legit driver, so we fake it for coverage.
-    $driver = DatabaseFactory::factory(DatabaseDriverInterface::class, 'Mock_Cluster');
+    $driver = DatabaseFactory::factory(
+      DatabaseDriverInterface::class,
+      'Mock_Cluster',
+    );
     $this->assertClassImplements(
       'Zynga\Framework\Database\V2\Interfaces\QuoteInterface',
       $driver->getQuoter(),
     );
     $this->assertClassImplements(
       'Zynga\Framework\Database\V2\Interfaces\TransactionInterface',
-      $driver->getTransaction()
+      $driver->getTransaction(),
     );
   }
 

@@ -2,7 +2,9 @@
 
 namespace Zynga\Framework\Environment\DevelopmentMode\V1;
 
-use Zynga\Framework\Environment\DevelopmentMode\V1\Interfaces\DetectorInterface;
+use
+  Zynga\Framework\Environment\DevelopmentMode\V1\Interfaces\DetectorInterface
+;
 
 // There are php equivalents for all these functions in poker-server/shared/casino-platform/include/class/zyCasino/App.php
 class Detector implements DetectorInterface {

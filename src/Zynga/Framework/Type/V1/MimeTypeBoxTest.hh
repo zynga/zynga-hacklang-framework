@@ -23,10 +23,7 @@ class MimeTypeBoxTest extends TestCase {
 
   public function generateValidValues(): Vector<ValidValue> {
     $values = Vector {};
-    $values->add(new ValidValue(
-      MimeTypeBox::JSON,
-      MimeTypeBox::JSON
-    ));
+    $values->add(new ValidValue(MimeTypeBox::JSON, MimeTypeBox::JSON));
     return $values;
   }
 

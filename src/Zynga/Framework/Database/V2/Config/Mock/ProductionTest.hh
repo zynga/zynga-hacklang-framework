@@ -63,11 +63,11 @@ class ProductionTest extends TestCase {
     $driver = DatabaseFactory::factory(DriverInterface::class, 'Mock');
     $this->assertClassImplements(
       'Zynga\Framework\Database\V2\Interfaces\QuoteInterface',
-      $driver->getQuoter()
+      $driver->getQuoter(),
     );
     $this->assertClassImplements(
       'Zynga\Framework\Database\V2\Interfaces\TransactionInterface',
-      $driver->getTransaction()
+      $driver->getTransaction(),
     );
 
   }

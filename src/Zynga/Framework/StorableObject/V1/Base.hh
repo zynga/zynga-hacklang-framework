@@ -4,10 +4,16 @@ namespace Zynga\Framework\StorableObject\V1;
 
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
-use Zynga\Framework\StorableObject\V1\Exceptions\MissingKeyFromImportDataException;
+use
+  Zynga\Framework\StorableObject\V1\Exceptions\MissingKeyFromImportDataException
+;
 use Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException;
-use Zynga\Framework\StorableObject\V1\Exceptions\PropertyUnavailableException;
-use Zynga\Framework\StorableObject\V1\Exceptions\ExpectedFieldCountMismatchException;
+use
+  Zynga\Framework\StorableObject\V1\Exceptions\PropertyUnavailableException
+;
+use
+  Zynga\Framework\StorableObject\V1\Exceptions\ExpectedFieldCountMismatchException
+;
 
 use Zynga\Framework\StorableObject\V1\SupportedTypes;
 

@@ -35,14 +35,14 @@ class Vertica extends Base {
   }
 
   public function getTransaction(): TransactionInterface {
-    if ( $this->_transaction === null ) {
+    if ($this->_transaction === null) {
       $this->_transaction = new Transaction($this);
     }
     return $this->_transaction;
   }
 
   public function getQuoter(): QuoteInterface {
-    if ( $this->_quoter === null ) {
+    if ($this->_quoter === null) {
       $this->_quoter = new Quoter($this);
     }
     return $this->_quoter;
@@ -171,8 +171,7 @@ class Vertica extends Base {
 
     if ($this->_dbh === null) {
       throw new ConnectionGoneAwayException(
-        'NO_CONNECTION host='.
-        $this->getConfig()->getConnectionString(),
+        'NO_CONNECTION host='.$this->getConfig()->getConnectionString(),
       );
     }
 
@@ -193,9 +192,7 @@ class Vertica extends Base {
       return new VerticaResultSet($sql, $rs);
     }
 
-    throw new QueryFailedException(
-      'QueryException: '.$this->getLastError(),
-    );
+    throw new QueryFailedException('QueryException: '.$this->getLastError());
 
   }
 

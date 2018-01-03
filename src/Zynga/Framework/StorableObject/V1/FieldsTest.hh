@@ -17,7 +17,10 @@ class FieldsTest extends TestCase {
   public function test_getTypedField(): void {
     $obj = new Valid();
     $field = $obj->fields()->getTypedField('example_float');
-    $this->assertEquals('Zynga\Framework\Type\V1\FloatBox', get_class($field));
+    $this->assertEquals(
+      'Zynga\Framework\Type\V1\FloatBox',
+      get_class($field),
+    );
   }
 
   public function test_getRequiredFieldsWithDefaultValues_NoFields(): void {
@@ -26,7 +29,8 @@ class FieldsTest extends TestCase {
     $this->assertEquals(0, $data->count());
   }
 
-  public function test_getRequiredFieldsWithDefaultValues_ContextTraversal(): void {
+  public function test_getRequiredFieldsWithDefaultValues_ContextTraversal(
+  ): void {
 
     $obj = new ValidNested();
     $obj->otherVar->setIsRequired(true);

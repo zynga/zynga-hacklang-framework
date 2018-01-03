@@ -2,5 +2,4 @@
 
 namespace Zynga\Framework\Dynamic\V1\Mocks;
 
-class EmptyClass {
-}
+class EmptyClass {}

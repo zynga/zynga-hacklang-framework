@@ -15,7 +15,12 @@ class ChecksumBoxTest extends TestCase {
 
   public function generateValidValues(): Vector<ValidValue> {
     $values = Vector {};
-    $values->add(new ValidValue('53c246c38703ca02e1c3f67af025cde7', '53c246c38703ca02e1c3f67af025cde7'));
+    $values->add(
+      new ValidValue(
+        '53c246c38703ca02e1c3f67af025cde7',
+        '53c246c38703ca02e1c3f67af025cde7',
+      ),
+    );
     return $values;
   }
 

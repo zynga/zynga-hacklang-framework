@@ -15,7 +15,10 @@ use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 class Generic {
 
-  public static function getTypedField(mixed $obj, string $fieldName): TypeInterface {
+  public static function getTypedField(
+    mixed $obj,
+    string $fieldName,
+  ): TypeInterface {
     try {
 
       if (!is_object($obj)) {
@@ -28,23 +31,27 @@ class Generic {
 
       foreach ($properties as $property) {
 
-        if ($property->getName() == $fieldName ) {
+        if ($property->getName() == $fieldName) {
 
           $value = $property->getValue($obj);
 
-          if ( $value instanceof TypeInterface ) {
+          if ($value instanceof TypeInterface) {
             return $value;
           }
 
-          throw new UnsupportedTypeException('fieldName=' . $fieldName . ' is not a TypeInterface');
+          throw new UnsupportedTypeException(
+            'fieldName='.$fieldName.' is not a TypeInterface',
+          );
 
         }
 
       }
 
-      throw new NoFieldsFoundException('fieldName=' . $fieldName . ' is not found');
+      throw new NoFieldsFoundException(
+        'fieldName='.$fieldName.' is not found',
+      );
 
-    } catch ( Exception $e ) {
+    } catch (Exception $e) {
       throw $e;
     }
   }
@@ -89,7 +96,7 @@ class Generic {
     $pregs = array();
 
     if (preg_match('/([^\\\\]+Box)$/', $className, $pregs)) {
-        return $className;
+      return $className;
     } else if (preg_match(
                  '/(StorableMap|StorableVector)\<(.*Box)\>$/',
                  $className,

@@ -4,7 +4,9 @@ namespace Zynga\Framework\StorableObject\V1\Object;
 
 use Zynga\Framework\StorableObject\V1\Test\Mock\Valid;
 use Zynga\Framework\StorableObject\V1\Test\Mock\Nofields;
-use Zynga\Framework\StorableObject\V1\Test\Mock\Broken\Exporter as BrokenExporter;
+use
+  Zynga\Framework\StorableObject\V1\Test\Mock\Broken\Exporter as BrokenExporter
+;
 use Zynga\Framework\StorableObject\V1\Test\Mock\InvalidNested;
 use Zynga\Framework\StorableObject\V1\Test\Mock\ValidNested;
 use Zynga\Framework\StorableObject\V1\Test\Mock\InvalidUnsupportedType;

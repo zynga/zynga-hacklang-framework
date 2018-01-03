@@ -5,7 +5,9 @@ namespace Zynga\Framework\Database\V2\Driver\Mock;
 use Zynga\Framework\Database\V2\Driver\ResultSet\Base;
 
 use Zynga\Framework\Database\V2\Exceptions\OutOfBoundsForCursorException;
-use Zynga\Framework\Database\V2\Exceptions\Mock\ResultSetConfiguredWithNonMapException;
+use
+  Zynga\Framework\Database\V2\Exceptions\Mock\ResultSetConfiguredWithNonMapException
+;
 use
   Zynga\Framework\Database\V2\Exceptions\Mock\ResultSetConfiguredWithNonVectorException
 ;

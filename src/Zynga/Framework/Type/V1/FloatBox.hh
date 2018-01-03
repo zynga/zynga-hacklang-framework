@@ -25,12 +25,12 @@ class FloatBox extends BaseBox {
 
   <<__Override>>
   protected function importFromBool(bool $value): bool {
-      $floatValue = 0.0;
-      if ($value === true) {
-          $floatValue = 1.0;
-      }
+    $floatValue = 0.0;
+    if ($value === true) {
+      $floatValue = 1.0;
+    }
 
-      return $this->importFromFloat($floatValue);
+    return $this->importFromFloat($floatValue);
   }
 
   <<__Override>>

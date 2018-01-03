@@ -51,7 +51,9 @@ class GenericTest extends TestCase {
 
     $this->assertEquals(
       StringBox::class,
-      FieldGeneric::getShortNameForTypeBoxName('Zynga\Framework\Type\V1\StringBox'),
+      FieldGeneric::getShortNameForTypeBoxName(
+        'Zynga\Framework\Type\V1\StringBox',
+      ),
     );
 
     $testReflection = new ReflectionClass($this);

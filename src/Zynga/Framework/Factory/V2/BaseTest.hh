@@ -8,8 +8,12 @@ use Zynga\Framework\Environment\DevelopmentMode\V1\DevelopmentMode;
 
 use Zynga\Framework\Factory\V2\Test\Factory as TestFactory;
 use Zynga\Framework\Factory\V2\Template as FactoryTemplate;
-use Zynga\Framework\Factory\V2\Test\Interfaces\DriverInterface as TestDriverInterface;
-use Zynga\Framework\Factory\V2\Test\Interfaces\ConfigInterface as TestDriverConfigInterface;
+use
+  Zynga\Framework\Factory\V2\Test\Interfaces\DriverInterface as TestDriverInterface
+;
+use
+  Zynga\Framework\Factory\V2\Test\Interfaces\ConfigInterface as TestDriverConfigInterface
+;
 use Zynga\Framework\Factory\V2\Exceptions\FailedToLoadDriverException;
 
 class BaseTest extends TestCase {
@@ -69,7 +73,10 @@ class BaseTest extends TestCase {
 
   public function test_configExceptionTrap(): void {
     $this->expectException(FailedToLoadDriverException::class);
-    TestFactory::factory(TestDriverInterface::class, 'Mock_ConfigThrowsException');
+    TestFactory::factory(
+      TestDriverInterface::class,
+      'Mock_ConfigThrowsException',
+    );
   }
 
   public function test_mockDriverTriggers(): void {
@@ -88,7 +95,7 @@ class BaseTest extends TestCase {
     $devModes[] = DevelopmentMode::STAGING;
     $devModes[] = DevelopmentMode::PRODUCTION;
 
-    foreach ( $devModes as $devMode ) {
+    foreach ($devModes as $devMode) {
 
       DevelopmentMode::setMode($devMode);
 
@@ -100,9 +107,9 @@ class BaseTest extends TestCase {
 
       $this->assertTrue($config instanceof TestDriverConfigInterface);
 
-      $expected = 'This-is-' . DevelopmentMode::getModeAsString();
+      $expected = 'This-is-'.DevelopmentMode::getModeAsString();
 
-      if ( $config instanceof TestDriverConfigInterface ) {
+      if ($config instanceof TestDriverConfigInterface) {
         $this->assertEquals($expected, $config->getExampleConfigValue());
       } else {
         $this->fail('config should be TestDriverConfigInterface');

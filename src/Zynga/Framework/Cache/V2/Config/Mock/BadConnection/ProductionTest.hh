@@ -4,9 +4,13 @@ namespace Zynga\Framework\Cache\V2\Config\Mock\BadConnection;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
-use Zynga\Framework\Cache\V2\Config\Mock\BadConnection\Production as ConfigUnderTest;
+use
+  Zynga\Framework\Cache\V2\Config\Mock\BadConnection\Production as ConfigUnderTest
+;
 
-use Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject;
+use
+  Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject
+;
 use
   Zynga\Framework\StorableObject\V1\Test\Mock\Valid as ValidExampleObjectRequiredFields
 ;

@@ -20,7 +20,7 @@ interface FactoryTemplateInterface {
    * @return bool
    */
   public function addClassRoot(string $root): bool;
-  
+
   /**
    * Converts the requested name into a class name for use in dynamic inclusion.
    * @param  string $name
@@ -33,7 +33,9 @@ interface FactoryTemplateInterface {
    * @param  string $name
    * @return Vector<string>
    */
-  public function createDriverClassNames(ConfigInterface $config): Vector<string>;
+  public function createDriverClassNames(
+    ConfigInterface $config,
+  ): Vector<string>;
 
   /**
    * Gets a database configuration for a given driver name.

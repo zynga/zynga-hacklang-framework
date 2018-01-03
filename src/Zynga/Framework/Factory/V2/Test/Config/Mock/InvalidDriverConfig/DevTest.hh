@@ -3,7 +3,9 @@
 namespace Zynga\Framework\Factory\V2\Test\Config\Mock\InvalidDriver;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-use Zynga\Framework\Factory\V2\Test\Config\Mock\InvalidDriverConfig\Dev as TestConfig;
+use
+  Zynga\Framework\Factory\V2\Test\Config\Mock\InvalidDriverConfig\Dev as TestConfig
+;
 
 class DevTest extends TestCase {
 

@@ -36,11 +36,11 @@ class EmailBoxTest extends StringBoxTest {
 
     $data = $this->getInvalidStrings();
 
-    foreach ( $data as $stringValue => $stringMessage ) {
+    foreach ($data as $stringValue => $stringMessage) {
       try {
         $emailBox = new EmailBox();
         $emailBox->set($stringValue);
-      } catch ( FailedToImportFromStringException $e ) {
+      } catch (FailedToImportFromStringException $e) {
         $this->assertTrue(true);
       }
     }
@@ -51,7 +51,10 @@ class EmailBoxTest extends StringBoxTest {
     $data = Map {};
     $data->set('', 'Empty string is not an acceptable format');
     $data->set('12345', 'Numeric string is not an acceptable format');
-    $data->set('foo', 'Username without the domain is not an acceptable format');
+    $data->set(
+      'foo',
+      'Username without the domain is not an acceptable format',
+    );
     $data->set('@bar', 'Domain without username is not acceptable');
     $data->set('user@email', 'Malformed domain is not acceptable');
     return $data;

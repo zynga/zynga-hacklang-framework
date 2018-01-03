@@ -24,7 +24,10 @@ class Exporter<Tv> implements ExportInterface {
     $this->_object = $object;
   }
 
-  public function asJSON(?string $parentFieldName = null, bool $sorted = false): string {
+  public function asJSON(
+    ?string $parentFieldName = null,
+    bool $sorted = false,
+  ): string {
     try {
       $map = $this->_object->getMap();
       if ($map->keys()->count() == 0) {
@@ -43,7 +46,7 @@ class Exporter<Tv> implements ExportInterface {
 
       $map->keys();
       if ($sorted) {
-          ksort($map);
+        ksort($map);
       }
 
       foreach ($map as $fieldName => $field) {

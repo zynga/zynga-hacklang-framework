@@ -9,7 +9,7 @@ class FactoryExample {
     self::$_mocks = false;
     return true;
   }
-  
+
   public static function getUseMockDrivers(): bool {
     return self::$_mocks;
   }

@@ -33,19 +33,17 @@ class FloatBoxTest extends TestCase {
 
       // Test a string rep of a float value being imported.
       $whole = mt_rand(1, 100);
-      $mantissa = mt_rand(1,1000);
-      $floatStringVal = $sign . $whole . '.' . $mantissa;
-      $values->add(new ValidValue(
-        $floatStringVal,
-        floatval($floatStringVal)
-      ));
+      $mantissa = mt_rand(1, 1000);
+      $floatStringVal = $sign.$whole.'.'.$mantissa;
+      $values->add(
+        new ValidValue($floatStringVal, floatval($floatStringVal)),
+      );
 
       // test a non-leading value ex: -.1
       $nonLeaderStringVal = $sign.'.'.mt_rand(1, 1000);
-      $values->add(new ValidValue(
-        $nonLeaderStringVal,
-        floatval($nonLeaderStringVal)
-      ));
+      $values->add(
+        new ValidValue($nonLeaderStringVal, floatval($nonLeaderStringVal)),
+      );
 
     }
 

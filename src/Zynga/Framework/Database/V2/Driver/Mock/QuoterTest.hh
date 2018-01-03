@@ -11,7 +11,8 @@ class QuoterTest extends TestCase {
 
   public function testNormal(): void {
 
-    $driver = DatabaseFactory::factory(DriverInterface::class, 'Mock_Cluster');
+    $driver =
+      DatabaseFactory::factory(DriverInterface::class, 'Mock_Cluster');
 
     $quoter = $driver->getQuoter();
 
@@ -28,7 +29,7 @@ class QuoterTest extends TestCase {
     );
 
     DatabaseFactory::clear();
-    
+
   }
 
 }

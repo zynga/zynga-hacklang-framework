@@ -8,7 +8,10 @@ use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 class MatchTest extends TestCase {
   public function testCreateChessMatch(): void {
     $result = new Match();
-    $this->assertEquals('Zynga\Framework\ELO\V1\Chess\Match', get_class($result));
+    $this->assertEquals(
+      'Zynga\Framework\ELO\V1\Chess\Match',
+      get_class($result),
+    );
   }
 
   public function testUnitializedPlayer1Rating(): void {

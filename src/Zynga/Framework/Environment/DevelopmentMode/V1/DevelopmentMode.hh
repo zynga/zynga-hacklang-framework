@@ -2,7 +2,9 @@
 
 namespace Zynga\Framework\Environment\DevelopmentMode\V1;
 
-use Zynga\Framework\Environment\DevelopmentMode\V1\Interfaces\DetectorInterface;
+use
+  Zynga\Framework\Environment\DevelopmentMode\V1\Interfaces\DetectorInterface
+;
 use Zynga\Framework\Environment\DevelopmentMode\V1\Detector;
 
 class DevelopmentMode {

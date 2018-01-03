@@ -2,7 +2,9 @@
 
 namespace Zynga\Framework\Environment\Command\Finder\V1;
 
-use Zynga\Framework\Environment\Command\Finder\V1\Exceptions\CommandNotFoundException;
+use
+  Zynga\Framework\Environment\Command\Finder\V1\Exceptions\CommandNotFoundException
+;
 
 class Finder {
 

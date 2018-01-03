@@ -123,7 +123,7 @@ abstract class Base implements FactoryInterface {
     // While mocking is on you cannot clear the driver set. It interferes with
     // people loading data sets into their mock drivers.
     // --
-    if ( self::getUseMockDrivers() === true ) {
+    if (self::getUseMockDrivers() === true) {
       return true;
     }
 

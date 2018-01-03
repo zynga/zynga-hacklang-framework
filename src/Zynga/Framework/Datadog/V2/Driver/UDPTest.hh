@@ -4,7 +4,9 @@ namespace Zynga\Framework\Datadog\V2;
 
 use Zynga\Framework\Datadog\V2\Driver\UDP;
 use Zynga\Framework\Datadog\V2\Factory as DatadogFactory;
-use Zynga\Framework\Datadog\V2\Interfaces\DriverInterface as DatadogDriverInterface;
+use
+  Zynga\Framework\Datadog\V2\Interfaces\DriverInterface as DatadogDriverInterface
+;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 class UDPTest extends TestCase {
@@ -93,7 +95,7 @@ class UDPTest extends TestCase {
   public function testCloseSocket(): void {
     $dog = DatadogFactory::factory(DatadogDriverInterface::class, 'Poker');
 
-    if ( $dog instanceof UDP ) {
+    if ($dog instanceof UDP) {
       $this->assertTrue($dog->increment('testStat', 1.0));
       $this->assertTrue($dog->closeSocket());
       $this->assertFalse($dog->closeSocket());

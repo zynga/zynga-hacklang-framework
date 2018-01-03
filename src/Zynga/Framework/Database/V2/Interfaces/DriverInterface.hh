@@ -6,7 +6,9 @@ use Zynga\Framework\Database\V2\Interfaces\DriverConfigInterface;
 use Zynga\Framework\Database\V2\Interfaces\ResultSetInterface;
 use Zynga\Framework\Database\V2\Interfaces\QuoteInterface;
 use Zynga\Framework\Database\V2\Interfaces\TransactionInterface;
-use Zynga\Framework\Factory\V2\Interfaces\DriverInterface as FactoryDriverInterface;
+use
+  Zynga\Framework\Factory\V2\Interfaces\DriverInterface as FactoryDriverInterface
+;
 
 interface DriverInterface extends FactoryDriverInterface {
 

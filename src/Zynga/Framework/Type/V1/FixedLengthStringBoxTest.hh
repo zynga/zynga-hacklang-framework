@@ -29,14 +29,19 @@ class FixedLengthStringBoxTest extends StringBoxTest {
 
   public function testSetStringExceedingMaxLengthThrowsException(): void {
     $data = $this->getExceededMaxLengthParams();
-    foreach ( $data as $testString => $testStringLength ) {
+    foreach ($data as $testString => $testStringLength) {
       try {
         $stringBox = new FixedLengthStringBox($testStringLength);
         $stringBox->set($testString);
-      } catch ( StringTooLongException $e ) {
+      } catch (StringTooLongException $e) {
         $this->assertTrue(true);
-      } catch ( Exception $e ) {
-        $this->fail('Did not handle string being too long string=' . $testString . ' expLen=' . $testStringLength);
+      } catch (Exception $e) {
+        $this->fail(
+          'Did not handle string being too long string='.
+          $testString.
+          ' expLen='.
+          $testStringLength,
+        );
       }
     }
   }
@@ -50,7 +55,7 @@ class FixedLengthStringBoxTest extends StringBoxTest {
 
   public function testSetStringUnderMaxLengthSucceeds(): void {
     $data = $this->getValidStrings();
-    foreach ( $data as $testString => $testStringLength ) {
+    foreach ($data as $testString => $testStringLength) {
       $stringBox = new FixedLengthStringBox($testStringLength);
       $this->assertTrue($stringBox->set($testString));
     }

@@ -5,7 +5,9 @@ namespace Zynga\Environment\V1;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\Environment\DevelopmentMode\V1\DevelopmentMode;
 use Zynga\Framework\Environment\DevelopmentMode\V1\Detector;
-use Zynga\Framework\Environment\DevelopmentMode\V1\Interfaces\DetectorInterface;
+use
+  Zynga\Framework\Environment\DevelopmentMode\V1\Interfaces\DetectorInterface
+;
 
 class Mock_DevDetector implements DetectorInterface {
   public function isDevelopment(): bool {

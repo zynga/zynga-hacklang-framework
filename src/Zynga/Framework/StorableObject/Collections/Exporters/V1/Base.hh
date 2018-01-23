@@ -78,6 +78,8 @@ abstract class Base<Tv> implements ExportInterface {
           } catch (Exception $e) {
             throw $e;
           }
+        } else if ($storableItem instanceof TypeInterface) {
+          $value = json_encode($storableItem->get());
         }
 
         if ($value !== null) {

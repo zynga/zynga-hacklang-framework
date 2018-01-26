@@ -2,6 +2,7 @@
 
 namespace Zynga\Framework\Type\V1;
 
+use \DateTime;
 use Zynga\Framework\Type\V1\DateTimeBox;
 use Zynga\Framework\Type\V1\Exceptions\FailedToImportFromBoolException;
 use Zynga\Framework\Type\V1\Exceptions\FailedToImportFromFloatException;
@@ -56,6 +57,24 @@ class DateTimeBoxTest extends StringBoxTest {
         $this->assertTrue(false);
       }
     }
+  }
+
+  public function testToStringDefaultValueIsUnknownDateTime(): void {
+    $dateTimeBox = new DateTimeBox();
+    $this->assertEquals("Unknown DateTime", $dateTimeBox->__toString());
+  }
+
+  public function testResetSucceeds(): void {
+    $dateTimeBox = new DateTimeBox();
+    $this->assertTrue($dateTimeBox->reset());
+  }
+
+  public function testGetReturnsCorrectValue(): void {
+    $dateTimeBox = new DateTimeBox();
+    $dateTimeBox->set("2005-08-15T15:52:01+00:00");
+    $expected = new DateTime("2005-08-15T15:52:01+00:00");
+    $actual = $dateTimeBox->get();
+    $this->assertEquals($expected, $actual);
   }
 
   private function getInvalidStrings(): Map<string, string> {

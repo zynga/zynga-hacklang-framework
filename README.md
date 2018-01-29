@@ -31,6 +31,7 @@ Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Type
 0.0) mysql
 0.1) postgresql
 0.2) hhvm with postgresql enabled
+0.3) composer
 
 ```bash
 # using brew
@@ -46,6 +47,50 @@ brew edit hhvm
 #-DPGSQL_LIBRARY=#{Formula["postgresql"].opt_lib}/libpq.dylib
 brew reinstall --build-from-source hhvm
 ```
+
+1) Setup composer for use locally
+
+Download composer:
+
+https://getcomposer.org/download/
+
+Follow the above steps to get a composer.phar in your ~/bin directory.
+
+Create a composer phar wrapper to handle running it via hhvm.
+
+Edit ~/bin/composer
+
+```php
+#!/usr/local/bin/hhvm
+<?hh
+
+$command = array();
+$command[] = '/usr/local/bin/hhvm';
+$command[] = '-d hhvm.jit=false';
+$command[] = dirname(__FILE__) . '/composer.phar';
+
+$argvCount = count($argv);
+for ( $i = 1; $i < $argvCount; $i++ ) {
+  $command[] = $argv[$i];
+}
+
+// var_dump($command);
+
+$commandString = join(' ', $command);
+
+// var_dump($commandString);
+
+$rv = 0;
+passthru($commandString, $rv);
+
+exit($rv);
+```
+
+Chmod the composer file to be executable:
+```bash
+chmod 755 ~/bin/composer
+```
+
 2) Run the setup process to get all the make files and symlinks available.
 ```bash
 ./bin/setup.sh

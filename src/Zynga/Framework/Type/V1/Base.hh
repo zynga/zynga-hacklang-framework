@@ -2,10 +2,9 @@
 
 namespace Zynga\Framework\Type\V1;
 
-use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
-use Zynga\Framework\Type\V1\Exceptions\UnSupportedTypeException;
-
 use Zynga\Framework\Exception\V1\Exception;
+use Zynga\Framework\Type\V1\Exceptions\UnSupportedTypeException;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
 abstract class Base implements TypeInterface {
   private bool $_isRequired;
@@ -21,11 +20,13 @@ abstract class Base implements TypeInterface {
     $this->_isDefaultValue = true;
   }
 
+  <<__Override>>
   public function setIsRequired(bool $isRequired): bool {
     $this->_isRequired = $isRequired;
     return true;
   }
 
+  <<__Override>>
   public function getIsRequired(): bool {
     return $this->_isRequired;
   }
@@ -41,11 +42,13 @@ abstract class Base implements TypeInterface {
     }
   }
 
+  <<__Override>>
   public function isDefaultValue(): (bool, Vector<string>) {
     $vec = Vector {};
     return tuple($this->_isDefaultValue, $vec);
   }
 
+  <<__Override>>
   public function setIsDefaultValue(bool $tf): bool {
     $this->_isDefaultValue = $tf;
     return true;
@@ -60,6 +63,27 @@ abstract class Base implements TypeInterface {
     } catch (Exception $e) {
       throw $e;
     }
+  }
+
+  <<__Override>>
+  public function equals(mixed $value): bool {
+    if ($value === null) {
+      return false;
+    }
+
+    // This first line is because "$value instanceof self" will be true for
+    // everything inheriting from Base.hh
+    // What we REALLY want to do is check if $value is a subclass of
+    // $this's class, not that $value is a subclass of Base.hh
+    if (is_a($value, get_class($this)) &&
+    // This tells the stupid typechecker that the next line is kosher
+    // because it's too dumb to understand that the above line means that
+    // $value is a subclass of $this and so implements get()
+        $value instanceof self) {
+      return $value->get() == $this->get();
+    }
+
+    return false;
   }
 
   public abstract function get(): mixed;

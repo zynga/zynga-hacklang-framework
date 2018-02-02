@@ -17,6 +17,8 @@ interface TypeInterface {
   public function get(): mixed;
   public function set(mixed $value): bool;
 
+  public function equals(mixed $value): bool;
+
   // These are internal functions utilized within the outward interfaces, please
   // do not expose these as it would mess up functionality like required.
   /*

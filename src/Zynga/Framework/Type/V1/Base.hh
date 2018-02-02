@@ -76,11 +76,11 @@ abstract class Base implements TypeInterface {
     // What we REALLY want to do is check if $value is a subclass of
     // $this's class, not that $value is a subclass of Base.hh
     if (is_a($value, get_class($this)) &&
-    // This tells the stupid typechecker that the next line is kosher
-    // because it's too dumb to understand that the above line means that
+    // This tells the typechecker that the next line is kosher
+    // because it doesn't understand that the above line means that
     // $value is a subclass of $this and so implements get()
         $value instanceof self) {
-      return $value->get() == $this->get();
+      return $value->get() === $this->get();
     }
 
     return false;

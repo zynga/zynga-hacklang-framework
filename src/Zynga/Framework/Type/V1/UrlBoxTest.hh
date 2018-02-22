@@ -52,4 +52,18 @@ class UrlBoxTest extends TestCase {
     $values[] = 1;
     return $values;
   }
+
+  public function testReplaceInUrlReturnsFalseWhenInvalid(): void {
+    $url = 'https://www.zynga.com';
+    $urlBox = new UrlBox();
+    $urlBox->set($url);
+    $this->assertFalse($urlBox->replaceInUrl('https', '????????'));
+  }
+
+  public function testReplaceInUrlReturnsTrueWhenValid(): void {
+    $url = 'https://www.zynga.com';
+    $urlBox = new UrlBox();
+    $urlBox->set($url);
+    $this->assertTrue($urlBox->replaceInUrl('com', 'org'));
+  }
 }

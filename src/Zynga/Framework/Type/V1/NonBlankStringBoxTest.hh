@@ -36,6 +36,7 @@ class NonBlankStringBoxTest extends TestCase {
     $values[] = '    ';
     $values[] = "\n";
     $values[] = "\t";
+    $values[] = "\r\n";
 
     return $values;
   }

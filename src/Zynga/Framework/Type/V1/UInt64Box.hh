@@ -82,4 +82,9 @@ class UInt64Box extends BaseBox {
 
   }
 
+  <<__Override>>
+  public function __toString(): string {
+    $value = $this->get();
+    return strval($value);
+  }
 }

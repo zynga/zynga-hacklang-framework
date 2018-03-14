@@ -87,12 +87,16 @@ abstract class Base implements TypeInterface, JsonSerializable {
     return false;
   }
 
+  /**
+   * This function returns the values to serialize from this class,
+   * typically just the one value returned by get()
+   */
   public function jsonSerialize(): mixed {
-    return $this->__toString();
+    return $this->get();
   }
 
   public function __toString(): string {
-    return "{}";
+    return json_encode($this);
   }
 
   public abstract function get(): mixed;

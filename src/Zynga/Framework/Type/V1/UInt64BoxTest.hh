@@ -37,4 +37,10 @@ class UInt64BoxTest extends TestCase {
     $this->assertEquals($obj->get(), 123);
   }
 
+  public function test_toString(): void {
+    $obj = new UInt64Box(123);
+    $this->assertEquals($obj->__toString(), '123');
+    $this->assertTrue('123' == $obj);
+  }
+
 }

@@ -169,11 +169,19 @@ class StringBox extends BaseBox {
    * @param $encoding
    */
   public function getLength(string $encoding = mb_internal_encoding()): int {
+
     $result = mb_strlen($this->_value, $encoding);
-    if ($result === false) {
+
+    // --
+    // Normally, I would argue for === false here, but I was unable to create
+    // a string that would enduce a false return out of mb_strlen. I think
+    // the implementation within hacklang is a smidge better than the php one.
+    // --
+    if ($result == false) {
       return 0;
     }
 
     return $result;
+    
   }
 }

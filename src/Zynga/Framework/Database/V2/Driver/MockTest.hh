@@ -118,4 +118,20 @@ class MockTest extends TestCase {
     }
   }
 
+  public function testLoadResultsWithVector(): void {
+    $mock =
+      DatabaseFactory::factory(DriverInterface::class, self::TEST_DRIVER);
+    if ($mock instanceof Mock) {
+      $this->assertTrue($mock->loadResultsForTest(self::class, __FUNCTION__));
+    }
+  }
+
+  public function testLoadResultsBadData(): void {
+    $mock =
+      DatabaseFactory::factory(DriverInterface::class, self::TEST_DRIVER);
+    if ($mock instanceof Mock) {
+      $this->assertTrue($mock->loadResultsForTest(self::class, __FUNCTION__));
+    }
+  }
+
 }

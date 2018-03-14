@@ -16,7 +16,7 @@ class UnixTimestampBox extends UInt64Box {
     if (preg_match(
           '/^(\d\d\d\d)(\d\d)(\d\d)\-(\d\d)(\d\d)(\d\d)$/',
           $value,
-          $pregs,
+          &$pregs,
         )) {
 
       // YYYYMMDD-HHMMSS format, break that down into a int timestamp.

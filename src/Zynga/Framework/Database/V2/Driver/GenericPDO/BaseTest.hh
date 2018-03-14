@@ -3,7 +3,9 @@
 namespace Zynga\Framework\Database\V2\Driver\GenericPDO;
 
 use Zynga\Framework\Database\V2\Config\Test\Mysql\Dev as MockConfig;
-use Zynga\Framework\Database\V2\Config\Test\Mysql\ReadOnly\Dev as MockReadOnlyConfig;
+use
+  Zynga\Framework\Database\V2\Config\Test\Mysql\ReadOnly\Dev as MockReadOnlyConfig
+;
 use Zynga\Framework\Database\V2\Driver\GenericPDO\Base as BaseDriver;
 use Zynga\Framework\Database\V2\Exceptions\ConnectionIsReadOnly;
 use Zynga\Framework\Database\V2\Exceptions\ConnectionGoneAwayException;
@@ -104,7 +106,10 @@ class BaseTest extends TestCase {
     $config = new MockReadOnlyConfig();
     $this->assertTrue($config->isDatabaseReadOnly());
     $this->assertEquals('GenericPDO', $config->getDriver());
-    $this->assertEquals('mysql:host=localhost;user=zframework;password=i-am-a-walrus;port=3306;dbname=phpunit;', $config->getConnectionString());
+    $this->assertEquals(
+      'mysql:host=localhost;user=zframework;password=i-am-a-walrus;port=3306;dbname=phpunit;',
+      $config->getConnectionString(),
+    );
   }
 
   public function testQuery_ConnectionReadOnlyButHasDML(): void {

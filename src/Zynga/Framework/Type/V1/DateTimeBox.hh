@@ -71,7 +71,7 @@ class DateTimeBox extends BaseBox {
     }
 
     throw new FailedToImportFromStringException(
-      "Unable to import string. value=$value"
+      "Unable to import string. value=$value",
     );
   }
 

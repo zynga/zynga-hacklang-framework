@@ -12,7 +12,10 @@ class MockableClassTest extends TestCaseBase {
 
     $mockedClass = new MockableClass(FactoryExample::class);
 
-    $this->assertEquals('unknown', $mockedClass->detectFunctionName(Vector { 'IamNotHere' }));
+    $this->assertEquals(
+      'unknown',
+      $mockedClass->detectFunctionName(Vector {'IamNotHere'}),
+    );
 
   }
 

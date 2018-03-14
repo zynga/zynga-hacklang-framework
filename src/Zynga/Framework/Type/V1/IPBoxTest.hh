@@ -14,15 +14,20 @@ class IPBoxTest extends TestCase {
   }
 
   public function generateValidValues(): Vector<ValidValue> {
-    $values = Vector{};
+    $values = Vector {};
     $values->add(new ValidValue('172.16.254.1', '172.16.254.1'));
     $values->add(new ValidValue('172.16.0.0', '172.16.0.0'));
-    $values->add(new ValidValue('2001:0db8:85a3:0000:0000:8a2e:0370:7334', '2001:0db8:85a3:0000:0000:8a2e:0370:7334'));
+    $values->add(
+      new ValidValue(
+        '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
+        '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
+      ),
+    );
     return $values;
   }
 
   public function generateInvalidValues(): Vector<mixed> {
-    $values = Vector{};
+    $values = Vector {};
     $values[] = false;
     $values[] = true;
     $values[] = -3.5;

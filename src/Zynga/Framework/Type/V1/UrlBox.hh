@@ -10,7 +10,7 @@ class UrlBox extends StringBox {
 
   public function replaceInUrl(string $find, string $replace): bool {
     $result = str_replace($find, $replace, $this->_value);
-    
+
     try {
       $this->importFromString($result);
     } catch (FailedToImportFromStringException $exception) {

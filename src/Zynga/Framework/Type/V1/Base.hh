@@ -2,11 +2,12 @@
 
 namespace Zynga\Framework\Type\V1;
 
+use JsonSerializable;
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Type\V1\Exceptions\UnSupportedTypeException;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
-abstract class Base implements TypeInterface {
+abstract class Base implements TypeInterface, JsonSerializable {
   private bool $_isRequired;
   private bool $_isDefaultValue;
 
@@ -84,6 +85,18 @@ abstract class Base implements TypeInterface {
     }
 
     return false;
+  }
+
+  /**
+   * This function returns the values to serialize from this class,
+   * typically just the one value returned by get()
+   */
+  public function jsonSerialize(): mixed {
+    return $this->get();
+  }
+
+  public function __toString(): string {
+    return json_encode($this);
   }
 
   public abstract function get(): mixed;

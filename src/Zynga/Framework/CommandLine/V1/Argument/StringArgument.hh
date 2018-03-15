@@ -44,10 +44,10 @@ class StringArgument extends Base {
     try {
       $argRegex = $this->getArgumentRegex();
       $m_args = array();
-      if (preg_match('/'.$argRegex.'/', $argument, &$m_args)) {
+      if (preg_match('/'.$argRegex.'/', $argument, $m_args)) {
         $value = $m_args[1];
         $q_args = array();
-        if (preg_match('/^(?:\'|")(.*)(?:\'|")$/', $value, &$q_args)) {
+        if (preg_match('/^(?:\'|")(.*)(?:\'|")$/', $value, $q_args)) {
           $value = $q_args[1];
         }
         $this->set($value);

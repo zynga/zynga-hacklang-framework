@@ -12,7 +12,7 @@ use Zynga\Framework\StorableObject\V1\Exceptions\InvalidObjectException;
 use Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException;
 use Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException;
 use Zynga\Framework\StorableObject\V1\StorableMap;
-use Zynga\Framework\StorableObject\V1\StorableVector;
+use Zynga\Framework\StorableObject\Collections\Vector\V1\Base as StorableVector;
 use Zynga\Framework\Type\V1\StringBox;
 
 use \ReflectionClass;
@@ -26,7 +26,7 @@ class GenericTest extends TestCase {
     parent::__construct($name);
 
     $this->_testStorableMap = new StorableMap();
-    $this->_testStorableVector = new StorableVector();
+    $this->_testStorableVector = new StorableVector(StringBox::class);
 
   }
 
@@ -64,9 +64,10 @@ class GenericTest extends TestCase {
 
     $mapBoxType = FieldGeneric::getShortNameForTypeBoxName($mapClass);
     $this->assertEquals('StorableMap<'.StringBox::class.'>', $mapBoxType);
+    // $this->assertEquals(StorableMap::class . '<'.StringBox::class.'>', $mapBoxType);
 
     $vecBoxType = FieldGeneric::getShortNameForTypeBoxName($vecClass);
-    $this->assertEquals('StorableVector<'.StringBox::class.'>', $vecBoxType);
+    $this->assertEquals(StorableVector::class . '<'.StringBox::class.'>', $vecBoxType);
 
   }
 

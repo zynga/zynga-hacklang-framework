@@ -46,7 +46,7 @@ class Exporter<Tv> implements ExportInterface {
 
       $map->keys();
       if ($sorted) {
-        ksort(&$map);
+        ksort($map);
       }
 
       foreach ($map as $fieldName => $field) {

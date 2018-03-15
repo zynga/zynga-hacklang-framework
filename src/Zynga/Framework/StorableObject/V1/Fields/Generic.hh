@@ -95,12 +95,12 @@ class Generic {
 
     $pregs = array();
 
-    if (preg_match('/([^\\\\]+Box)$/', $className, &$pregs)) {
+    if (preg_match('/([^\\\\]+Box)$/', $className, $pregs)) {
       return $className;
     } else if (preg_match(
                  '/(StorableMap|StorableVector)\<(.*Box)\>$/',
                  $className,
-                 &$pregs,
+                 $pregs,
                )) {
       $typeName =
         $pregs[1].'<'.self::getShortNameForTypeBoxName($pregs[2]).'>';

@@ -52,7 +52,7 @@ class Exporter implements ExportInterface {
       $firstField = true;
 
       if ($sorted) {
-        ksort(&$fields);
+        ksort($fields);
       }
 
       foreach ($fields as $fieldName => $field) {

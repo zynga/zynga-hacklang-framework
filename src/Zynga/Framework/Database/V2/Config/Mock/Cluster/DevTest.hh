@@ -49,7 +49,7 @@ class DevTest extends TestCase {
     if (preg_match(
           '/^username\=(.*)\;password\=(.*)\;host\=(.*)\;$/',
           $config->getConnectionString(),
-          &$pregs,
+          $pregs,
         )) {
       $this->assertEquals(ConfigUnderTest::TEST_USERNAME, $pregs[1]);
       $this->assertEquals(ConfigUnderTest::TEST_PASSWORD, $pregs[2]);

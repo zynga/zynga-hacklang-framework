@@ -113,7 +113,7 @@ class ResultSets {
           // load the data row
           $pregs = array();
 
-          if (preg_match('/^(\d+)\|(.*)$/', $line, &$pregs)) {
+          if (preg_match('/^(\d+)\|(.*)$/', $line, $pregs)) {
 
             $dataset = intval($pregs[1]);
             $rawData = $pregs[2];

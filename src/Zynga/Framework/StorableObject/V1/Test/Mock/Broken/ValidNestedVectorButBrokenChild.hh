@@ -3,7 +3,7 @@
 namespace Zynga\Framework\StorableObject\V1\Test\Mock\Broken;
 
 use Zynga\Framework\StorableObject\V1\Base as StorableObjectBase;
-use Zynga\Framework\StorableObject\V1\StorableVector;
+use Zynga\Framework\StorableObject\Collections\Vector\V1\Base as StorableVector;
 use Zynga\Framework\Type\V1\StringBox;
 
 use
@@ -18,8 +18,8 @@ class ValidNestedVectorButBrokenChild extends StorableObjectBase {
 
     parent::__construct();
 
-    $this->stringVec = new StorableVector();
-    $this->validVec = new StorableVector();
+    $this->stringVec = new StorableVector(StringBox::class);
+    $this->validVec = new StorableVector(ValidButHasConstructorArgs::class);
 
   }
 

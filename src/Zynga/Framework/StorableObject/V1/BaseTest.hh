@@ -68,4 +68,20 @@ class BaseTest extends TestCase {
     $this->assertFalse($isDefaultValue);
   }
 
+  public function testJsonEncodingIsHandledByExporter(): void {
+    $obj = new Valid();
+    $testStringValue = 'string_value_65';
+    $testIntValue = 89012;
+    $testFloatValue = 12938.123;
+
+    $testMap = Map {};
+    $testMap['example_string'] = $testStringValue;
+    $testMap['example_uint64'] = $testIntValue;
+    $testMap['example_float'] = $testFloatValue;
+
+    $obj->import()->fromMap($testMap);
+
+    $this->assertEquals($obj->export()->asJSON(), json_encode($obj));
+  }
+
 }

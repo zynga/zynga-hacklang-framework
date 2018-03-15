@@ -90,8 +90,52 @@ abstract class Base<Tv> implements ExportInterface {
     }
   }
 
+  /**
+   * This function returns the values in the collection as a map, recursively
+   * Since this collection doesn't have field names, we use incrementing numerals for keys,
+   * The same way the base Map class does when importing an array
+   */
   public function asMap(): Map<string, mixed> {
-    throw new OperationNotSupportedException(__METHOD__.' not supported');
+    try {
+
+      $map = Map {};
+
+      $fieldNum = 0;
+      $items = $this->collection->items();
+
+      foreach ($items as $storableItem) {
+        $fieldName = "" . $fieldNum;
+
+        // We can skip the value if the item is still in default state.
+        list($isRequired, $isDefaultValue) =
+          FieldsGeneric::getIsRequiredAndIsDefaultValue($storableItem);
+
+        if ($isDefaultValue === true) {
+          continue;
+        }
+
+        $value = null;
+        if ($storableItem instanceof StorableObjectInterface) {
+          try {
+            $value = $storableItem->export()->asMap();
+          } catch (Exception $e) {
+            throw $e;
+          }
+        } else if ($storableItem instanceof TypeInterface) {
+          $value = $storableItem->get();
+        }
+
+        if ($value !== null) {
+          $map->set($fieldName, $value);
+          $fieldNum++;
+        }
+      }
+
+      return $map;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
   }
 
   public function asBinary(): string {

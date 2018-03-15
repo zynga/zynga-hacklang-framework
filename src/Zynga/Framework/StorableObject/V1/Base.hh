@@ -2,6 +2,7 @@
 
 namespace Zynga\Framework\StorableObject\V1;
 
+use JsonSerializable;
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 use
@@ -31,7 +32,7 @@ use Zynga\Framework\StorableObject\V1\Fields\Generic as FieldsGeneric;
 
 use Zynga\Framework\Exception\V1\Exception;
 
-abstract class Base implements StorableObjectInterface {
+abstract class Base implements StorableObjectInterface, JsonSerializable {
   private bool $_isRequired;
   private ?bool $_isDefaultValue;
 
@@ -109,6 +110,10 @@ abstract class Base implements StorableObjectInterface {
 
     return tuple($isDefaultValue, $defaultFields);
 
+  }
+
+  public function jsonSerialize(): mixed {
+    return $this->export()->asMap()->toArray();
   }
 
 }

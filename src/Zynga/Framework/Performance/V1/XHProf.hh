@@ -4,8 +4,12 @@ namespace Zynga\Framework\Performance\V1;
 
 use Zynga\Environment\CodePath\V1\CodePath;
 
-require_once CodePath::getRoot() . '/third-party/xhprof/xhprof_lib/utils/xhprof_lib.php';
-require_once CodePath::getRoot() . '/third-party/xhprof/xhprof_lib/utils/xhprof_runs.php';
+require_once
+  CodePath::getRoot().'/third-party/xhprof/xhprof_lib/utils/xhprof_lib.php'
+;
+require_once
+  CodePath::getRoot().'/third-party/xhprof/xhprof_lib/utils/xhprof_runs.php'
+;
 
 use \XHProfRuns_Default;
 
@@ -19,14 +23,14 @@ class XHProfiler {
   }
 
   public static function isXhProfileAvailable(): bool {
-    if ( function_exists('xhprof_enable') ) {
+    if (function_exists('xhprof_enable')) {
       return true;
     }
     return false;
   }
 
   public static function isXhProfileEnabled(): bool {
-    if ( getenv('xhprof.enable') == true ) {
+    if (getenv('xhprof.enable') == true) {
       return true;
     }
     return false;
@@ -34,11 +38,11 @@ class XHProfiler {
 
   public static function setProfileDir(string $dir): bool {
 
-    if ( ! is_dir($dir) ) {
+    if (!is_dir($dir)) {
       mkdir($dir, 0755);
     }
 
-    if ( is_dir($dir) === true && is_writeable($dir) === true ) {
+    if (is_dir($dir) === true && is_writeable($dir) === true) {
       self::$_profileDir = $dir;
       return true;
     }
@@ -55,12 +59,14 @@ class XHProfiler {
 
   public static function startProfiling(): bool {
 
-    if ( self::isXhProfileAvailable() !== true ) {
-      self::error('WARNING - you asked for xhprof profiling but the extension is not available.');
+    if (self::isXhProfileAvailable() !== true) {
+      self::error(
+        'WARNING - you asked for xhprof profiling but the extension is not available.',
+      );
       return false;
     }
 
-    if ( self::isXhProfileEnabled() !== true ) {
+    if (self::isXhProfileEnabled() !== true) {
       return false;
     }
 
@@ -75,8 +81,8 @@ class XHProfiler {
 
   public static function stopProfiling(string $context): bool {
 
-    if ( self::$_isProfiling !== true ) {
-			// Currently stopProfiling is called from xhprofile_append script even if profiling was not started due to sampling, lever, etc.
+    if (self::$_isProfiling !== true) {
+      // Currently stopProfiling is called from xhprofile_append script even if profiling was not started due to sampling, lever, etc.
       // To avoid noise, disabling the warnings for now till we fix this script.
       self::error('WARNING - xhprofile was not started');
       return false;
@@ -89,11 +95,11 @@ class XHProfiler {
 
     $xhProfDir = self::getProfileDir();
 
-    self::error('xhProfDir=' . $xhProfDir . ' context=' . $context);
+    self::error('xhProfDir='.$xhProfDir.' context='.$context);
     $xhprof_runs = new XHProfRuns_Default($xhProfDir);
 
     $run_id = $xhprof_runs->save_run($xhprof_data, $context);
-    self::error('xhRunId=' . $run_id);
+    self::error('xhRunId='.$run_id);
 
     return true;
 

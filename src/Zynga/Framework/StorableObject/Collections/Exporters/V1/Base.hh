@@ -33,12 +33,6 @@ abstract class Base<Tv> implements ExportInterface {
   ): string {
     try {
 
-      if ($this->collection->count() == 0) {
-        throw new NoFieldsFoundException(
-          'class='.get_class($this->collection),
-        );
-      }
-
       $stack = '';
 
       if ($parentFieldName !== null) {
@@ -72,9 +66,6 @@ abstract class Base<Tv> implements ExportInterface {
         if ($storableItem instanceof StorableObjectInterface) {
           try {
             $value = $storableItem->export()->asJSON(null, $sorted);
-          } catch (NoFieldsFoundException $e) {
-            // no fields to export, fine.. skip this element.
-            $value = null;
           } catch (Exception $e) {
             throw $e;
           }

@@ -10,9 +10,4 @@ class Valid extends Base {
     return 0;
   }
 
-  public function getTime(): int {
-    // hardcoded to JEO: dob
-    return 236563200;
-  }
-
 }

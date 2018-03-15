@@ -85,6 +85,12 @@ class StringBoxTest extends TestCase {
     return $vec;
   }
 
+  public function testInvalidMBData(): void {
+    $foo = new StringBox();
+    $foo->set("");
+    $this->assertEquals(0, $foo->getLength("UTF-8"));
+  }
+
 }
 
 class StringAndLengthData {

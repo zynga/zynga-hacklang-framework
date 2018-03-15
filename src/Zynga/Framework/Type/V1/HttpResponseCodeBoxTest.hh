@@ -44,4 +44,12 @@ class HttpResponseCodeBoxTest extends TestCase {
     $values[] = 0;
     return $values;
   }
+
+  public function test_OK(): void {
+
+    $okBox = HttpResponseCodeBox::ok();
+    $this->assertEquals(HttpResponseCodeBox::HTTP_OK, $okBox->get());
+
+  }
+  
 }

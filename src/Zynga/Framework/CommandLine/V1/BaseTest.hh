@@ -50,10 +50,14 @@ class BaseTest extends TestCase {
 
   public function testMessage(): void {
     $obj = new Valid();
+
     $ts = $obj->getTime();
+    $this->assertTrue($ts > 0);
+
     $val = 'time='.time();
     $obj->message($val);
     $this->expectOutput(date(Base::DATE_FORMAT, $ts).' '.$val."\n");
+
   }
 
   public function testQuietMode(): void {
@@ -83,4 +87,5 @@ class BaseTest extends TestCase {
     //$obj->handleRun();
     $this->assertEquals(255, $obj->run());
   }
+
 }

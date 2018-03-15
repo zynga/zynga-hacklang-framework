@@ -53,13 +53,18 @@ abstract class BaseTest extends TestCase {
     $vec->add($c_vec);
 
     $json = $vec->export()->asJSON();
-    $this->assertEquals('[]', $json);
+    $this->assertEquals('[[]]', $json);
   }
 
   public function testAsJSONNoFields(): void {
     $vec = $this->getCollection(ValidStorableObject::class);
-    $this->expectException(NoFieldsFoundException::class);
     $json = $vec->export()->asJSON();
+    $this->assertEquals('[]', $json);
+  }
+
+  public function testCollectionCount(): void {
+    $vec = $this->getCollection(ValidStorableObject::class);
+    $this->assertEquals(0, $vec->count());
   }
 
   public function testAsJSONRecursiveStorable(): void {

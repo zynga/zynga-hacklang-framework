@@ -52,7 +52,7 @@ abstract class Base implements ArgumentInterface {
     try {
       $argRegex = $this->getArgumentRegex();
       $m_args = array();
-      if (preg_match('/'.$argRegex.'/', $argument, $m_args)) {
+      if (preg_match('/'.$argRegex.'/', $argument, &$m_args)) {
         $this->set($m_args[1]);
       }
       return true;

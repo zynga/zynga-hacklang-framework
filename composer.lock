@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9fcd3018761ac4bc7311218ef439a4eb",
+    "content-hash": "afc83bf873c224953fef9cb561fb1b4c",
     "packages": [
         {
             "name": "zynga/phpunit",

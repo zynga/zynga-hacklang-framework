@@ -1,6 +1,6 @@
 # zynga-hacklang-framework
 
-This is a collection of libraries that the Zynga uses to enable hacklang strict usage.
+This is a collection of libraries that Zynga uses to enable hacklang strict usage.
 
 # What is provided:
 

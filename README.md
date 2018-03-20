@@ -136,7 +136,7 @@ In order for a new namespace to properly resolve to the correct file path, you h
 2) Commit this change.
 3) Run make composer-update.
 4) Verify that your mapping appears in ./vendor/composer/autoload_psr4.php
-5) Verify that your namespace is recognized and a class in said namespace can be loaded AT RUNTIME (running hh_client isn't sufficient).
+5) Verify that your namespace is recognized and a class in said namespace can be loaded AT RUNTIME. Running hh_client isn't sufficient as the typechecker uses a different means of verifying classes/namespaces.
 
 # Submitting code
 1) Run make test

@@ -14,11 +14,22 @@ class BaseTest extends TestCase {
   }
 
   public function test_basic(): void {
+    // --
+    // Find our root
+    // --
+    $autoloaderRoot = dirname(__FILE__);          // This file
+    $autoloaderRoot = dirname($autoloaderRoot);   // strip: V1
+    $autoloaderRoot = dirname($autoloaderRoot);   // strip: AutoLoader
+    $autoloaderRoot = dirname($autoloaderRoot);   // strip: Framework
+    $autoloaderRoot = dirname($autoloaderRoot);   // strip: Zynga
+    $autoloaderRoot = dirname($autoloaderRoot);   // strip: src
+    $autoloaderRoot .= '/tests/autoloader';
+
     $obj = new MockAutoLoader();
     $this->assertInstanceOf(MockAutoLoader::class, $obj);
     $this->assertFalse($obj->load('someclass'));
     $this->assertEquals(
-      CodePath::getRoot().'/tests/autoloader',
+      $autoloaderRoot,
       $obj->getFileSystemRoot(),
     );
   }

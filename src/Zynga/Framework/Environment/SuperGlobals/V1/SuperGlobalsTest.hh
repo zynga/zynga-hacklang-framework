@@ -116,9 +116,20 @@ class SuperGlobalsTest extends TestCase {
     $this->assertTrue(SuperGlobals::clearRequest());
   }
 
+  public function findTestDir(): string {
+    $testDir = dirname(__FILE__);
+    $testDir = dirname($testDir);       // V1
+    $testDir = dirname($testDir);       // SuperGlobals
+    $testDir = dirname($testDir);       // Environment
+    $testDir = dirname($testDir);       // Framework
+    $testDir = dirname($testDir);       // Zynga
+    $testDir = dirname($testDir);       // src
+    return $testDir;
+  }
+
   public function test_getRequestBodyAsMap_Empty(): void {
 
-    $requestFile = CodePath::getRoot().'/tests/empty_request_body.js';
+    $requestFile = $this->findTestDir() . '/tests/empty_request_body.js';
 
     SuperGlobals::setBodyFilePath($requestFile);
 
@@ -129,7 +140,7 @@ class SuperGlobalsTest extends TestCase {
 
   public function test_getRequestBodyAsMap_SomeData(): void {
 
-    $requestFile = CodePath::getRoot().'/tests/some_data.js';
+    $requestFile = $this->findTestDir().'/tests/some_data.js';
 
     SuperGlobals::setBodyFilePath($requestFile);
 

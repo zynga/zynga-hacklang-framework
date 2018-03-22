@@ -17,23 +17,6 @@ class CodePathTest extends TestCase {
   }
 
   /**
-   * Do we return the right path for our code
-   */
-  public function testGetExistingRoot(): void {
-
-    // --
-    // Code is expected to be within:
-    // Walk up the dirtree to get our expected value
-    // --
-    $expected = __FILE__;
-    for ($l = 0; $l < 7; $l++) {
-      $expected = dirname($expected);
-    }
-    $value = CodePath::getRoot();
-    $this->assertEquals($expected, $value);
-  }
-
-  /**
    * Are we able to set a new root and return it
    */
   public function testChangeRoot(): void {

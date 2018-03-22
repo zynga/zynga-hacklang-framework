@@ -40,8 +40,20 @@ class ProtobufTest extends TestCase {
   const int MAX_SINT64 = PHP_INT_MAX;
   const bool MAX_BOOL = true;
 
+  public function getTestFilePath(string $shortPath): string {
+    $filePath = dirname(__FILE__);
+    $filePath = dirname($filePath);     // strip: Exporter
+    $filePath = dirname($filePath);     // strip: V1
+    $filePath = dirname($filePath);     // strip: StorableObject
+    $filePath = dirname($filePath);     // strip: Framework
+    $filePath = dirname($filePath);     // strip: Zynga
+    $filePath = dirname($filePath);     // strip: src
+    $filePath .= '/tests/protobuf-java-compat/'. $shortPath;
+    return $filePath;
+  }
+
   public function getMinValuesBinary(string $binFile): string {
-    $filePath = CodePath::getRoot().'/tests/protobuf-java-compat/'.$binFile;
+    $filePath = $this->getTestFilePath($binFile);
     $this->assertFileExists($filePath);
     return file_get_contents($filePath);
   }

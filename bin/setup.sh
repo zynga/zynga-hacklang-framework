@@ -21,6 +21,24 @@ add_to_git_ignore()
 
 }
 
+skeleton_find() 
+{
+  projectRoot=$1
+  skeletonRoot=$2
+  skeletonFile=$3
+  localSkeletonRoot="$projectRoot/src/skeleton"
+  localFile="$localSkeletonRoot/$skeletonFile"
+  skeletonFile="$skeletonRoot/$skeletonFile"
+  if [ -f $localFile ]; then
+    #echo "skeletonFind usingSkeleton=$localFile"
+    echo $localFile;
+    return 0;
+  fi
+  #echo "skeletonFind usingSkeleton=$skeletonFile"
+  echo $skeletonFile;
+  return 0;
+}
+
 copy_from_skeleton()
 {
   projectRoot=$1
@@ -57,7 +75,7 @@ setup_dir()
     mkdir -p $targetDir
   else
     echo "  setupDir - targetDir=$targetDir - aok"
-    return
+    return;
   fi
 
   if [ ! -d $targetDir ]; then
@@ -95,35 +113,55 @@ add_to_git_ignore $project_root "tmp";
 echo "Copying in files from project skeleton"
 
 # Copy over our hhconfig
+hhConfigFile=$(skeleton_find $project_root $skeleton_root ".hhconfig")
+echo "  hhConfigSkeleton=$hhConfigFile"
+
 copy_from_skeleton \
   $project_root \
-  "$skeleton_root/.hhconfig" \
+  $hhConfigFile \
   "$project_root/.hhconfig"
 
 add_to_git_ignore $project_root ".hhconfig"
 
+
+echo "  --------------------------------------------------------------------------------"
 # Copy over our makefile
+makeFile=$(skeleton_find $project_root $skeleton_root "Makefile")
+echo "  makeFile=$makeFile"
+
 copy_from_skeleton \
   $project_root \
-  "$skeleton_root/Makefile" \
+  $makeFile \
   "$project_root/Makefile"
 
 add_to_git_ignore $project_root "Makefile"
 
+echo "  --------------------------------------------------------------------------------"
+
 # copy over the bootstrap file
+bootstrapFile=$(skeleton_find $project_root $skeleton_root "bootstrap")
+echo "  bootstrap=$bootstrapFile"
+
 copy_from_skeleton \
   $project_root \
-  "$skeleton_root/bootstrap" \
+  $bootstrapFile \
   "$project_root/bootstrap.hh"
 
 add_to_git_ignore $project_root "bootstrap.hh"
 
+echo "  --------------------------------------------------------------------------------"
+
 # copy over the phpunit.xml config
+phpunitFile=$(skeleton_find $project_root $skeleton_root "phpunit.xml")
+echo "  phpunitFile=$phpunitFile"
+
 copy_from_skeleton \
   $project_root \
   "$skeleton_root/phpunit.xml" \
   "$project_root/phpunit.xml"
 
 add_to_git_ignore $project_root "phpunit.xml"
+
+echo "  --------------------------------------------------------------------------------"
 
 echo "DONE"

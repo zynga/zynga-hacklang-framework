@@ -9,4 +9,4 @@ use Zynga\Framework\IO\V1\Exception\IO as IOException;
  * Represents that there was an exception with a disk input or
  * output operation
  */
-abstract class DiskIO extends IOException {}
+abstract class DiskIOException extends IOException {}

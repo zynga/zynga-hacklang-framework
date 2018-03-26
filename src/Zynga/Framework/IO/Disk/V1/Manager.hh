@@ -2,135 +2,242 @@
 
 namespace Zynga\Framework\IO\Disk\V1;
 
-use Zynga\Framework\IO\Disk\V1\Exception\FailedToCloseFile as FailedToCloseFileException;
-use Zynga\Framework\IO\Disk\V1\Exception\FailedToCreateDirectory as FailedToCreateDirectoryException;
-use Zynga\Framework\IO\Disk\V1\Exception\FailedToOpenFile as FailedToOpenFileException;
-use Zynga\Framework\IO\Disk\V1\Exception\FailedToWriteToFile as FailedToWriteToFileException;
-use Zynga\Framework\IO\Disk\V1\Exception\ReadPermissions as ReadPermissionsException;
-use Zynga\Framework\IO\Disk\V1\Exception\WritePermissions as WritePermissionsException;
+use \Exception;
+use Zynga\Framework\IO\Disk\V1\Exception\FailedToCloseFileException;
+use Zynga\Framework\IO\Disk\V1\Exception\FailedToCreateDirectoryException;
+use Zynga\Framework\IO\Disk\V1\Exception\FailedToOpenFileException;
+use Zynga\Framework\IO\Disk\V1\Exception\FailedToWriteToFileException;
+use Zynga\Framework\IO\Disk\V1\Exception\ReadPermissionsException;
+use Zynga\Framework\IO\Disk\V1\Exception\WritePermissionsException;
+use Zynga\Framework\IO\Disk\V1\ManagerInterface as DiskIOManagerInterface;
 
 /**
  * Lightweight class for managing Disk IO
  */
-class Manager {
+class Manager implements DiskIOManagerInterface {
+
+  private static ?DiskIOManagerInterface $instance;
+
+  public static function instance(): DiskIOManagerInterface {
+    if (self::$instance === null) {
+      self::$instance = new self();
+    }
+    invariant(self::$instance !== null, '$instance was null');
+
+    return self::$instance;
+  }
+
+  protected function __construct() {
+  }
 
   /**
-   * Creates a folder at the given path if none exists.
-   *
-   * @param $path Absolute path of directory to create
-   * @param $permissions Integer flag rpresenting file permissions
-   * @return bool True if the path already exists or was successfully created,
-   *         otherwise false
-   *
+   * See @ManagerInterface
    */
-  public static function checkOrCreatePath(string $path, int $permissions): bool {
-    if (!file_exists($path)) {
-      return mkdir($path, $permissions, true);
+  public function checkOrCreatePath(string $path, int $permissions): bool {
+    if (!$this->doesFileExist($path)) {
+      return $this->makeDirectory($path, $permissions, true);
     }
 
     return true;
   }
 
   /**
-   * Deletes the file at the given path if one exists.
-   *
-   * @param $path Absolute path of directory to create
-   * @return bool True if the file does not exist or was successfully deleted,
-   *         otherwise false
+   * See @ManagerInterface
    */
-  public static function deleteFile(string $path): bool {
-    if (file_exists($path)) {
-      return unlink($path);
+  public function deleteFile(string $path): bool {
+    if ($this->doesFileExist($path)) {
+      return $this->unlink($path);
     }
 
     return true;
   }
 
   /**
-   * Creates (if neccessary) a file at the given path and writes the provided
-   * data to it.
-   *
-   * @param $fileName Absolute path of file to create/write to
-   * @param $dataToWrite Data to write to file
-   * @throws FailedToCreateDirectoryException
-   * @throws FailedToOpenFileException
-   * @throws FailedToWriteToFileException
-   * @throws FailedToCloseFileException
+   * See @ManagerInterface
    */
-  public static function writeFile(string $fileName, string $dataToWrite): void {
-    $filePath = dirname($fileName);
-    if (!$this->checkOrCreatePath($filePath)) {
+  public function writeFile(string $fileName, string $dataToWrite, int $permissions): void {
+    $filePath = $this->directoryName($fileName);
+    if ($this->checkOrCreatePath($filePath, $permissions) === false) {
       throw new FailedToCreateDirectoryException($filePath);
     }
 
-    $handle = fopen($fileName, 'w');
+    $handle = $this->fileOpen($fileName, 'w');
     if ($handle === false) {
       throw new FailedToOpenFileException($fileName);
     }
 
-    $writeResult = fwrite($handle, $dataToWrite);
-
+    $writeResult = $this->fwrite($handle, $dataToWrite);
     if ($writeResult === false) {
-      fclose($handle);
+      $this->fclose($handle);
       throw new FailedToWriteToFileException($fileName);
     }
 
-    if ($writeResult != strlen($dataToWrite)) {
-      fclose($handle);
+    if ($writeResult != strlen($dataToWrite) &&
+      // fwrite always writes at least one byte if successful, even on
+      // empty string input
+      !($writeResult == 1 && strlen($dataToWrite) === 0)) {
+      $this->fclose($handle);
       throw new FailedToWriteToFileException(
-        "Only wrote $writeResult of ".strlen($dataToWrite)." bytes to $fileName"
+        "Only wrote ".(string)$writeResult." of ".strlen($dataToWrite)." bytes to $fileName"
       );
     }
 
-    $closeResult = fclose($handle);
+    $closeResult = $this->fclose($handle);
     if ($closeResult === false) {
       throw new FailedToCloseFileException($fileName);
     }
   }
 
   /**
-   * Compresses the given file into a bzip2 file at the given output path.
-   *
-   * @param $in Absolute path of file to compress
-   * @param $out Absolute path of output bzip2 file
-   * @throws ReadPermissionsException
-   * @throws WritePermissionsException
-   * @throws FailedToOpenFileException
-   * @throws FailedToCloseFileException
+   * See @ManagerInterface
    */
-  public static function bzip2(string $in, string $out): void {
-    if (!file_exists($in) || !is_readable($in)) {
+  public function bzip2(string $in, string $out): void {
+    if (!$this->doesFileExist($in) || !$this->isReadable($in)) {
       throw new ReadPermissionsException($in);
     }
 
-    if ((!file_exists($out) && !is_writeable(dirname($out)) ||
-        (file_exists($out) && !is_writable($out)))) {
+    if ((!$this->doesFileExist($out) && !$this->isWriteable($this->directoryName($out)) ||
+        ($this->doesFileExist($out) && !$this->isWriteable($out)))) {
       throw new WritePermissionsException($out);
     }
 
-    $inFile = fopen($in, "r");
+    $inFile = $this->fileOpen($in, "r");
     if ($inFile === false) {
       throw new FailedToOpenFileException($in);
     }
 
-    $outFile = bzopen($out, "w");
+    $outFile = $this->bzopen($out, "w");
     if ($outFile === false) {
-      fclose($inFile);
+      $this->fclose($inFile);
       throw new FailedToOpenFileException($out);
     }
 
-    while (!feof($inFile)) {
-      $buffer = fgets($inFile, 4096);
-      bzwrite($outFile, $buffer, 4096);
+    while (!$this->feof($inFile)) {
+      $buffer = $this->fgets($inFile, 4096);
+      $this->bzwrite($outFile, $buffer, 4096);
     }
 
-    if (!fclose($inFile)) {
-      bzclose($outFile);
+    if (!$this->fclose($inFile)) {
+      $this->bzclose($outFile);
       throw new FailedToCloseFileException($in);
     }
 
-    if (!bzclose($outFile)) {
+    if (!$this->bzclose($outFile)) {
       throw new FailedToCloseFileException($out);
     }
+  }
+
+  // Have to use mixed for $handle here because Hack doesn't allow
+  // passing resource types to functions
+  protected function feof(mixed $handle): bool {
+    if (is_resource($handle)) {
+      return feof($handle);
+    }
+
+    return false;
+  }
+
+  // Have to use mixed for $handle here because Hack doesn't allow
+  // passing resource types to functions
+  protected function fgets(mixed $handle, int $maxBytesToRead): string {
+    if (is_resource($handle)) {
+      $result = fgets($handle, $maxBytesToRead);
+      if (is_string($result)) {
+        return $result;
+      }
+    }
+
+    return '';
+  }
+
+  protected function doesFileExist(string $fileName): bool {
+    return file_exists($fileName);
+  }
+
+  protected function fileOpen(string $fileName, string $mode): mixed {
+    try {
+      return fopen($fileName, $mode);
+    } catch (Exception $e) {
+      return false;
+    }
+  }
+
+  protected function directoryName(string $fileName): string {
+    return dirname($fileName);
+  }
+
+  protected function makeDirectory(string $path, int $permissions, bool $recursivePermissions): bool {
+    try {
+      return mkdir($path, $permissions, $recursivePermissions);
+    } catch (Exception $e) {
+      return false;
+    }
+  }
+
+  protected function unlink(string $fileName): bool {
+    try {
+      return unlink($fileName);
+    } catch (Exception $e) {
+      return false;
+    }
+  }
+
+  // Have to use mixed for $handle here because Hack doesn't allow
+  // passing resource types to functions
+  protected function fwrite(mixed $handle, string $dataToWrite): mixed {
+    if (is_resource($handle)) {
+      return fwrite($handle, $dataToWrite);
+    }
+
+    return false;
+  }
+
+  // Have to use mixed for $handle here because Hack doesn't allow
+  // passing resource types to functions
+  protected function fclose(mixed $handle): bool {
+    if (is_resource($handle)) {
+      return fclose($handle);
+    }
+
+    return false;
+  }
+
+  protected function isReadable(string $fileName): bool {
+    return is_readable($fileName);
+  }
+
+  protected function isWriteable(string $fileName): bool {
+    return is_writeable($fileName);
+  }
+
+  protected function bzopen(string $fileName, string $mode): mixed {
+    try {
+      return bzopen($fileName, $mode);
+    } catch (Exception $e) {
+      return false;
+    }
+  }
+
+  // Have to use mixed for $handle here because Hack doesn't allow
+  // passing resource types to functions
+  protected function bzclose(mixed $handle): bool {
+    if (is_resource($handle)) {
+      return bzclose($handle);
+    }
+
+    return false;
+  }
+
+  // Have to use mixed for $handle here because Hack doesn't allow
+  // passing resource types to functions
+  protected function bzwrite(mixed $handle, string $dataToWrite, int $maxBytesToRead): int {
+    if (is_resource($handle)) {
+      $result = bzwrite($handle, $dataToWrite, $maxBytesToRead);
+      if (is_int($result)) {
+        return $result;
+      }
+    }
+
+    return 0;
   }
 }

@@ -36,9 +36,15 @@ Zynga\Framework\Type | Typeboxes for hacklang supporting data validation | [Type
 ```bash
 # using brew
 brew install mysql
+
+# ------
+# HHVM 3.25 and above now includes postgre for Mac. If you install an older version, you can follow the steps below.
+# More info on this ticket: https://github.com/zynga/zynga-hacklang-framework/issues/16
+# Main advantage is that you can use the binaries rather than needing to build.
 brew install postgresql
 brew edit hhvm
-# manual work around for now, you will be adding the following postgresql definitions to the brew recipie
+
+# Manual work around for versions older than 3.25. You will be adding the following postgresql definitions to the brew recipie
 ## look for the following line
 # -DLIBSODIUM_LIBRARIES=#{Formula["libsodium"].opt_lib}/libsodium.dylib
 ## Add the following

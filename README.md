@@ -174,3 +174,19 @@ In order for a new namespace to properly resolve to the correct file path, you h
 - [ ] Write doc/port internal docs: Zynga\Framework\Type
 - [ ] Migrate the composer and project layout into something similar to what symfony is doing with multiple deps within a single master dep.
 - [ ] Port StorableObject/V1/StorableMap to separate, new collection with added import support
+
+# Naming Conventions
+
+## Exceptions
+
+Please postfix all exceptions with the 'Exception' name.
+
+```
+<?hh //strict
+
+namespace My\Domain;
+
+use Zynga\Framework\Exception\V1\Exception;
+
+class MyDomainException extends Exception {}
+```

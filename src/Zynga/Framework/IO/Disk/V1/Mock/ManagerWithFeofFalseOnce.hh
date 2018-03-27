@@ -25,18 +25,18 @@ class ManagerWithFeofFalseOnce extends BaseManager {
   }
 
   <<__Override>>
-  protected function fileOpen(string $path, string $mode): bool {
-    return true;
+  protected function fileOpen(string $path, string $mode): mixed {
+    return tmpfile();
   }
 
   <<__Override>>
   protected function bzopen(string $path, string $mode): mixed {
-    return true;
+    return tmpfile();
   }
 
   private static bool $feof = false;
   <<__Override>>
-  protected function feof(mixed $handle): bool {
+  protected function feof(resource $handle): bool {
     self::$feof = !self::$feof;
     return self::$feof;
   }

@@ -25,12 +25,12 @@ class ManagerWithFailedToWriteToFile extends BaseManager {
   }
 
   <<__Override>>
-  protected function fileOpen(string $path, string $mode): bool {
-    return true;
+  protected function fileOpen(string $path, string $mode): mixed {
+    return tmpfile();
   }
 
   <<__Override>>
-  protected function fwrite(mixed $handle, string $dataToWrite): mixed {
+  protected function fwrite(resource $handle, string $dataToWrite): mixed {
     return false;
   }
 

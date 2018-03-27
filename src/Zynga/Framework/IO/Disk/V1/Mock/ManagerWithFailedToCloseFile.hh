@@ -25,17 +25,17 @@ class ManagerWithFailedToCloseFile extends BaseManager {
   }
 
   <<__Override>>
-  protected function fileOpen(string $path, string $mode): bool {
+  protected function fileOpen(string $path, string $mode): mixed {
+    return tmpfile();
+  }
+
+  <<__Override>>
+  protected function fwrite(resource $handle, string $dataToWrite): mixed {
     return true;
   }
 
   <<__Override>>
-  protected function fwrite(mixed $handle, string $dataToWrite): mixed {
-    return true;
-  }
-
-  <<__Override>>
-  protected function fclose(mixed $handle): bool {
+  protected function fclose(resource $handle): bool {
     return false;
   }
 

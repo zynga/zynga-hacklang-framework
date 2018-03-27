@@ -20,7 +20,7 @@ class ManagerWithFeofFalseOnceFcloseFails extends BaseManager {
   }
 
   <<__Override>>
-  protected function fclose(mixed $handle): bool {
+  protected function fclose(resource $handle): bool {
     return false;
   }
 

@@ -42,7 +42,7 @@ class Manager implements DiskIOManagerInterface {
   }
 
   /**
-   * See @ManagerInterface
+   * @see ManagerInterface
    */
   public function deleteFile(string $path): bool {
     if ($this->doesFileExist($path)) {
@@ -53,19 +53,25 @@ class Manager implements DiskIOManagerInterface {
   }
 
   /**
-   * See @ManagerInterface
+   * @see ManagerInterface
    */
-  public function writeFile(string $fileName, string $dataToWrite, int $permissions): void {
+  public function writeFile(string $fileName, string $dataToWrite, int $permissions, bool $appendIfExists): void {
     $filePath = $this->directoryName($fileName);
     if ($this->checkOrCreatePath($filePath, $permissions) === false) {
       throw new FailedToCreateDirectoryException($filePath);
     }
 
-    $handle = $this->fileOpen($fileName, 'w');
+    $mode = 'w';
+    if ($appendIfExists) {
+      $mode = 'a';
+    }
+
+    $handle = $this->fileOpen($fileName, $mode);
     if ($handle === false) {
       throw new FailedToOpenFileException($fileName);
     }
 
+    invariant(is_resource($handle),'');
     $writeResult = $this->fwrite($handle, $dataToWrite);
     if ($writeResult === false) {
       $this->fclose($handle);
@@ -89,7 +95,7 @@ class Manager implements DiskIOManagerInterface {
   }
 
   /**
-   * See @ManagerInterface
+   * @see ManagerInterface
    */
   public function bzip2(string $in, string $out): void {
     if (!$this->doesFileExist($in) || !$this->isReadable($in)) {
@@ -105,12 +111,14 @@ class Manager implements DiskIOManagerInterface {
     if ($inFile === false) {
       throw new FailedToOpenFileException($in);
     }
+    invariant(is_resource($inFile), '');
 
     $outFile = $this->bzopen($out, "w");
     if ($outFile === false) {
       $this->fclose($inFile);
       throw new FailedToOpenFileException($out);
     }
+    invariant(is_resource($outFile), '');
 
     while (!$this->feof($inFile)) {
       $buffer = $this->fgets($inFile, 4096);
@@ -127,24 +135,14 @@ class Manager implements DiskIOManagerInterface {
     }
   }
 
-  // Have to use mixed for $handle here because Hack doesn't allow
-  // passing resource types to functions
-  protected function feof(mixed $handle): bool {
-    if (is_resource($handle)) {
-      return feof($handle);
-    }
-
-    return false;
+  protected function feof(resource $handle): bool {
+    return feof($handle);
   }
 
-  // Have to use mixed for $handle here because Hack doesn't allow
-  // passing resource types to functions
-  protected function fgets(mixed $handle, int $maxBytesToRead): string {
-    if (is_resource($handle)) {
-      $result = fgets($handle, $maxBytesToRead);
-      if (is_string($result)) {
-        return $result;
-      }
+  protected function fgets(resource $handle, int $maxBytesToRead): string {
+    $result = fgets($handle, $maxBytesToRead);
+    if (is_string($result)) {
+      return $result;
     }
 
     return '';
@@ -182,24 +180,12 @@ class Manager implements DiskIOManagerInterface {
     }
   }
 
-  // Have to use mixed for $handle here because Hack doesn't allow
-  // passing resource types to functions
-  protected function fwrite(mixed $handle, string $dataToWrite): mixed {
-    if (is_resource($handle)) {
-      return fwrite($handle, $dataToWrite);
-    }
-
-    return false;
+  protected function fwrite(resource $handle, string $dataToWrite): mixed {
+    return fwrite($handle, $dataToWrite);
   }
 
-  // Have to use mixed for $handle here because Hack doesn't allow
-  // passing resource types to functions
-  protected function fclose(mixed $handle): bool {
-    if (is_resource($handle)) {
-      return fclose($handle);
-    }
-
-    return false;
+  protected function fclose(resource $handle): bool {
+    return fclose($handle);
   }
 
   protected function isReadable(string $fileName): bool {
@@ -218,24 +204,14 @@ class Manager implements DiskIOManagerInterface {
     }
   }
 
-  // Have to use mixed for $handle here because Hack doesn't allow
-  // passing resource types to functions
-  protected function bzclose(mixed $handle): bool {
-    if (is_resource($handle)) {
-      return bzclose($handle);
-    }
-
-    return false;
+  protected function bzclose(resource $handle): bool {
+    return bzclose($handle);
   }
 
-  // Have to use mixed for $handle here because Hack doesn't allow
-  // passing resource types to functions
-  protected function bzwrite(mixed $handle, string $dataToWrite, int $maxBytesToRead): int {
-    if (is_resource($handle)) {
-      $result = bzwrite($handle, $dataToWrite, $maxBytesToRead);
-      if (is_int($result)) {
-        return $result;
-      }
+  protected function bzwrite(resource $handle, string $dataToWrite, int $maxBytesToRead): int {
+    $result = bzwrite($handle, $dataToWrite, $maxBytesToRead);
+    if (is_int($result)) {
+      return $result;
     }
 
     return 0;

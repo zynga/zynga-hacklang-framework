@@ -35,8 +35,8 @@ class ManagerWithFailedBZOpen extends BaseManager {
   }
 
   <<__Override>>
-  protected function fileOpen(string $path, string $mode): bool {
-    return true;
+  protected function fileOpen(string $path, string $mode): mixed {
+    return tmpfile();
   }
 
   <<__Override>>

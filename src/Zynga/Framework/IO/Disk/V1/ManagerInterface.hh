@@ -34,12 +34,14 @@ interface ManagerInterface {
    * @param $fileName Absolute path of file to create/write to
    * @param $dataToWrite Data to write to file
    * @param $permissions Integer flag rpresenting file permissions
+   * @param $appendIfExists If true, appends to the file if it already exists.
+   *        Otherwise, overwrites the existing file.
    * @throws FailedToCreateDirectoryException
    * @throws FailedToOpenFileException
    * @throws FailedToWriteToFileException
    * @throws FailedToCloseFileException
    */
-  public function writeFile(string $fileName, string $dataToWrite, int $permissions): void;
+  public function writeFile(string $fileName, string $dataToWrite, int $permissions, bool $appendIfExists): void;
 
   /**
    * Compresses the given file into a bzip2 file at the given output path.

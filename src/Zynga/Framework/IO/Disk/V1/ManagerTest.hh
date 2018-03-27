@@ -87,14 +87,6 @@ class ManagerTest extends TestCase {
     $this->assertEquals($result, 4);
   }
 
-  public function testFwriteWithInvalidHandleReturnsFalse(): void {
-    $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
-    $method = $class->getMethod('fwrite');
-    $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), null, 'test');
-    $this->assertFalse($result);
-  }
-
   public function testFCloseWithValidHanldeReturnsTrue(): void {
     mkdir('/home/deploy/tmp/ManagerTest/6', 0777, true);
     $handle = fopen('/home/deploy/tmp/ManagerTest/6', 'r');
@@ -110,14 +102,6 @@ class ManagerTest extends TestCase {
     }
 
     rmdir('/home/deploy/tmp/ManagerTest/6');
-  }
-
-  public function testFCloseWithInvalidHanldeReturnsFalse(): void {
-    $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
-    $method = $class->getMethod('fclose');
-    $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), null);
-    $this->assertFalse($result);
   }
 
   public function testIsReadableWithInvalidFilenameReturnsFalse(): void {
@@ -163,14 +147,6 @@ class ManagerTest extends TestCase {
     }
 
     rmdir('/home/deploy/tmp/ManagerTest/10');
-  }
-
-  public function testBzcloseWithInvalidHandleReturnsFalse(): void {
-    $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
-    $method = $class->getMethod('bzclose');
-    $method->setAccessible(true);
-    $handle = $method->invoke(DiskIOManager::instance(), null);
-    $this->assertFalse($handle);
   }
 
   public function testBzcloseWithValidHandleReturnsTrue(): void {
@@ -225,14 +201,6 @@ class ManagerTest extends TestCase {
     rmdir('/home/deploy/tmp/ManagerTest/15');
   }
 
-  public function testFeofReturnsFalseForNonResource(): void {
-    $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
-    $method = $class->getMethod('feof');
-    $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), '');
-    $this->assertFalse($result);
-  }
-
   public function testFeofReturnsFalseForResourceWithMoreToRead(): void {
     mkdir('/home/deploy/tmp/ManagerTest/16', 0777, true);
     touch('/home/deploy/tmp/ManagerTest/16/1');
@@ -247,19 +215,11 @@ class ManagerTest extends TestCase {
     rmdir('/home/deploy/tmp/ManagerTest/16');
   }
 
-  public function testFgetsReturnsEmptyStringForNonResource(): void {
-    $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
-    $method = $class->getMethod('fgets');
-    $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), '', 100);
-    $this->assertEquals('', $result);
-  }
-
   public function testFgetsReturnsValidCountForResource(): void {
     mkdir('/home/deploy/tmp/ManagerTest/17', 0777, true);
     touch('/home/deploy/tmp/ManagerTest/17/1');
     $handle = fopen('/home/deploy/tmp/ManagerTest/17/1', 'w');
-    error_log("jsimmer: fwrite=".fwrite($handle, '12345'));
+    fwrite($handle, '12345');
     fclose($handle);
     $handle = fopen('/home/deploy/tmp/ManagerTest/17/1', 'r');
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
@@ -270,14 +230,6 @@ class ManagerTest extends TestCase {
     fclose($handle);
     unlink('/home/deploy/tmp/ManagerTest/17/1');
     rmdir('/home/deploy/tmp/ManagerTest/17');
-  }
-
-  public function testBzwriteReturnsZeroForNonResource(): void {
-    $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
-    $method = $class->getMethod('bzwrite');
-    $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), '', '', 100);
-    $this->assertEquals(0, $result);
   }
 
   public function testBZWriteReturnsValidCountForResource(): void {
@@ -295,27 +247,27 @@ class ManagerTest extends TestCase {
 
   public function testWriteFileThrowsFailedToCreateDirectoryException(): void {
     $this->expectException(FailedToCreateDirectoryException::class);
-    ManagerWithFailedCheckOrCreatePath::instance()->writeFile('', '', 0777);
+    ManagerWithFailedCheckOrCreatePath::instance()->writeFile('', '', 0777, true);
   }
 
   public function testWriteFileThrowsFailedToOpenFileException(): void {
     $this->expectException(FailedToOpenFileException::class);
-    ManagerWithFailedFileOpen::instance()->writeFile('', '', 0777);
+    ManagerWithFailedFileOpen::instance()->writeFile('', '', 0777, true);
   }
 
   public function testWriteFileThrowsFailedToWriteToFileException(): void {
     $this->expectException(FailedToWriteToFileException::class);
-    ManagerWithFailedToWriteToFile::instance()->writeFile('', '', 0777);
+    ManagerWithFailedToWriteToFile::instance()->writeFile('', '', 0777, true);
   }
 
   public function testWriteToFileWithIncorrectBytesThrowsFailedToWriteToFileException(): void {
     $this->expectException(FailedToWriteToFileException::class);
-    ManagerWithFileWriteZeroBytes::instance()->writeFile('', 'asdf', 0777);
+    ManagerWithFileWriteZeroBytes::instance()->writeFile('', 'asdf', 0777, true);
   }
 
   public function testWriteFileThrowsFailedToCloseFileException(): void {
     $this->expectException(FailedToCloseFileException::class);
-    ManagerWithFailedToCloseFile::instance()->writeFile('', '', 0777);
+    ManagerWithFailedToCloseFile::instance()->writeFile('', '', 0777, true);
   }
 
   public function testBZip2ThrowsReadPermissionsException(): void {

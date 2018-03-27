@@ -40,7 +40,7 @@ class ManagerWithFailedFileOpen extends BaseManager {
   }
 
   <<__Override>>
-  protected function fileOpen(string $path, string $mode): bool {
+  protected function fileOpen(string $path, string $mode): mixed {
     return false;
   }
 

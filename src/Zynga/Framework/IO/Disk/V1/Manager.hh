@@ -165,9 +165,12 @@ class Manager implements DiskIOManagerInterface {
   }
 
   protected function makeDirectory(string $path, int $permissions, bool $recursivePermissions): bool {
+    $old = umask(0);
     try {
       return mkdir($path, $permissions, $recursivePermissions);
+      umask($old);
     } catch (Exception $e) {
+      umask($old);
       return false;
     }
   }

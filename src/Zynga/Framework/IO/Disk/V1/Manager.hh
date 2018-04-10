@@ -55,7 +55,12 @@ class Manager implements DiskIOManagerInterface {
   /**
    * @see ManagerInterface
    */
-  public function writeFile(string $fileName, string $dataToWrite, int $permissions, bool $appendIfExists): void {
+  public function writeFile(
+    string $fileName,
+    string $dataToWrite,
+    int $permissions,
+    bool $appendIfExists): void {
+
     $filePath = $this->directoryName($fileName);
     if ($this->checkOrCreatePath($filePath, $permissions) === false) {
       throw new FailedToCreateDirectoryException($filePath);
@@ -133,6 +138,13 @@ class Manager implements DiskIOManagerInterface {
     if (!$this->bzclose($outFile)) {
       throw new FailedToCloseFileException($out);
     }
+  }
+
+  /**
+   * @see ManagerInterface
+   */
+  public function chown(string $fileName, string $userName): bool {
+    return chown($fileName, $userName);
   }
 
   protected function feof(resource $handle): bool {

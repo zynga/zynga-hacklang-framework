@@ -54,4 +54,13 @@ interface ManagerInterface {
    * @throws FailedToCloseFileException
    */
   public function bzip2(string $in, string $out): void;
+
+  /**
+   * Modifies the given file to be owned by the given user, if possible.
+   *
+   * @param $fileName Absolute path of file changing ownership
+   * @param $userName Name of user to set as owner of file
+   * @return True on success, otherwise false
+   */
+  public function chown(string $fileName, string $userName): bool;
 }

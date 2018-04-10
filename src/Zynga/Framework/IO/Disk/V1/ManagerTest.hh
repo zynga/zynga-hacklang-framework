@@ -300,4 +300,11 @@ class ManagerTest extends TestCase {
     ManagerWithFeofFalseOnceFcloseFails::instance()->bzip2('', '');
   }
 
+  public function testChown(): void {
+    mkdir('/home/deploy/tmp/ManagerTest/19', 0777, true);
+    $result = DiskIOManager::instance()->chown('/home/deploy/tmp/ManagerTest/19', get_current_user());
+    $this->assertTrue($result);
+    rmdir('/home/deploy/tmp/ManagerTest/19');
+  }
+
 }

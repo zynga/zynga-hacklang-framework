@@ -40,6 +40,14 @@ mysql < /var/source/tests/sql/mysql/create_test_database.sql
 mysql -e 'SHOW DATABASES'
 mysql -e 'SHOW TABLES' phpunit       
 
+# install postgresql
+apt-get install -y postgresql postgresql-contrib
+/etc/init.d/postgresql start
+
+psql -U postgres < /var/source/tests/sql/postgresql/create_test_database.sql
+echo "localhost:5432:phpunit:zframework:i-am-a-walrus" > ~/.pgpass
+echo '\d' | psql --user=zframework --host=localhost phpunit        
+
 # Bring the latest composer into the environment
 setup_composer;
 

@@ -72,7 +72,9 @@ class Manager implements DiskIOManagerInterface {
    * @see ManagerInterface
    */
   public function recursivelyDeleteDirectory(string $path): bool {
-    if (!$this->doesFileExist($path) ||
+    if ($path == '/' ||
+        $path == 'c:\\'||
+        !$this->doesFileExist($path) ||
         !$this->isDirectory($path)) {
       return false;
     }

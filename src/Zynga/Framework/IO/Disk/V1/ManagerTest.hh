@@ -22,6 +22,8 @@ use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnce;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnceBzcloseFails;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnceFcloseFails;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFileWriteZeroBytes;
+use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense;
+use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithRmdirFalse;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 
@@ -62,7 +64,6 @@ class ManagerTest extends TestCase {
     $method->setAccessible(true);
     $method->invoke(DiskIOManager::instance(), '/home/deploy/tmp/ManagerTest/3', 0000, false);
     $success = $method->invoke(DiskIOManager::instance(), '/home/deploy/tmp/ManagerTest/3', 0000, false);
-    rmdir('/home/deploy/tmp/ManagerTest/3');
     $this->assertFalse($success);
   }
 
@@ -305,6 +306,57 @@ class ManagerTest extends TestCase {
     $result = DiskIOManager::instance()->chown('/home/deploy/tmp/ManagerTest/19', get_current_user());
     $this->assertTrue($result);
     rmdir('/home/deploy/tmp/ManagerTest/19');
+  }
+
+  public function testRecursivelyDeleteDirectoryForNestedDirectoriesReturnsTrue(): void {
+    mkdir('/home/deploy/tmp/ManagerTest/20', 0777, true);
+    touch('/home/deploy/tmp/ManagerTest/20/0.txt');
+    mkdir('/home/deploy/tmp/ManagerTest/20/0', 0777, true);
+    touch('/home/deploy/tmp/ManagerTest/20/0/0.txt');
+    mkdir('/home/deploy/tmp/ManagerTest/20/0/0', 0777, true);
+    mkdir('/home/deploy/tmp/ManagerTest/20/1', 0777, true);
+    mkdir('/home/deploy/tmp/ManagerTest/20/1/0', 0777, true);
+    mkdir('/home/deploy/tmp/ManagerTest/20/1/0/0', 0777, true);
+    touch('/home/deploy/tmp/ManagerTest/20/1/0/0/0.txt');
+    $this->assertTrue(file_exists('/home/deploy/tmp/ManagerTest/20'));
+    $this->assertTrue(file_exists('/home/deploy/tmp/ManagerTest/20/0.txt'));
+    $this->assertTrue(file_exists('/home/deploy/tmp/ManagerTest/20/0'));
+    $this->assertTrue(file_exists('/home/deploy/tmp/ManagerTest/20/0/0.txt'));
+    $this->assertTrue(file_exists('/home/deploy/tmp/ManagerTest/20/0/0'));
+    $this->assertTrue(file_exists('/home/deploy/tmp/ManagerTest/20/1'));
+    $this->assertTrue(file_exists('/home/deploy/tmp/ManagerTest/20/1/0'));
+    $this->assertTrue(file_exists('/home/deploy/tmp/ManagerTest/20/1/0/0'));
+    $this->assertTrue(file_exists('/home/deploy/tmp/ManagerTest/20/1/0/0/0.txt'));
+    $result = DiskIOManager::instance()->recursivelyDeleteDirectory('/home/deploy/tmp/ManagerTest/20');
+    $this->assertTrue($result);
+    $this->assertFalse(file_exists('/home/deploy/tmp/ManagerTest/20'));
+    $this->assertFalse(file_exists('/home/deploy/tmp/ManagerTest/20/0.txt'));
+    $this->assertFalse(file_exists('/home/deploy/tmp/ManagerTest/20/0'));
+    $this->assertFalse(file_exists('/home/deploy/tmp/ManagerTest/20/0/0.txt'));
+    $this->assertFalse(file_exists('/home/deploy/tmp/ManagerTest/20/0/0'));
+    $this->assertFalse(file_exists('/home/deploy/tmp/ManagerTest/20/1'));
+    $this->assertFalse(file_exists('/home/deploy/tmp/ManagerTest/20/1/0'));
+    $this->assertFalse(file_exists('/home/deploy/tmp/ManagerTest/20/1/0/0'));
+    $this->assertFalse(file_exists('/home/deploy/tmp/ManagerTest/20/1/0/0/0.txt'));
+  }
+
+  public function testRecursivelyDeleteDirectoryWithNonExistentPath(): void {
+    $result = DiskIOManager::instance()->recursivelyDeleteDirectory('/home/deploy/tmp/ManagerTest/21');
+    $this->assertFalse($result);
+  }
+
+  public function testRecursivelyDeleteDirectoryWithRecursiveFailure(): void {
+    mkdir('/home/deploy/tmp/ManagerTest/22', 0777, true);
+    $result = ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense::instance()->recursivelyDeleteDirectory('/home/deploy/tmp/ManagerTest/22');
+    $this->assertFalse($result);
+    rmdir('/home/deploy/tmp/ManagerTest/22');
+  }
+
+  public function testRecursivelyDeleteDirectoryWithRmdirFailure(): void {
+    mkdir('/home/deploy/tmp/ManagerTest/23', 0777, true);
+    $result = ManagerWithRmdirFalse::instance()->recursivelyDeleteDirectory('/home/deploy/tmp/ManagerTest/23');
+    $this->assertFalse($result);
+    rmdir('/home/deploy/tmp/ManagerTest/23');
   }
 
 }

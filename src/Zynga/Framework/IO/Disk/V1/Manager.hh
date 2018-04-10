@@ -9,6 +9,7 @@ use Zynga\Framework\IO\Disk\V1\Exception\FailedToOpenFileException;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToWriteToFileException;
 use Zynga\Framework\IO\Disk\V1\Exception\ReadPermissionsException;
 use Zynga\Framework\IO\Disk\V1\Exception\WritePermissionsException;
+use Zynga\Framework\IO\Disk\V1\Exception\FailedToDeleteFileException;
 use Zynga\Framework\IO\Disk\V1\ManagerInterface as DiskIOManagerInterface;
 
 /**
@@ -50,6 +51,50 @@ class Manager implements DiskIOManagerInterface {
     }
 
     return true;
+  }
+
+  /**
+   * @see ManagerInterface
+   */
+  public function deleteDirectory(string $path): void {
+    try {
+      if (!$this->rmdir($path)) {
+        throw new Exception("Failed to delete directory='$path'");
+      }
+    } catch (Exception $e) {
+      // Not only might we throw our own exception above, but
+      // rmdir can itself throw an exception.
+      throw new FailedToDeleteFileException($e->getMessage());
+    }
+  }
+
+  /**
+   * @see ManagerInterface
+   */
+  public function recursivelyDeleteDirectory(string $path): bool {
+    if (!$this->doesFileExist($path) ||
+        !$this->isDirectory($path)) {
+      return false;
+    }
+
+    $resources = $this->scanDirectory($path);
+    foreach ($resources as $resource) {
+      if ($resource != "." && $resource != "..") {
+        if ($this->isDirectory($path."/".$resource) &&
+            !$this->recursivelyDeleteDirectory($path."/".$resource)) {
+          return false;
+        } else if (!$this->deleteFile($path."/".$resource)) {
+          return false;
+        }
+      }
+    }
+
+    try {
+      $this->deleteDirectory($path);
+      return true;
+    } catch (FailedToDeleteFileException $e) {
+      return false;
+    }
   }
 
   /**
@@ -151,6 +196,10 @@ class Manager implements DiskIOManagerInterface {
     return false;
   }
 
+  protected function isDirectory(string $path): bool {
+    return is_dir($path);
+  }
+
   protected function feof(resource $handle): bool {
     return feof($handle);
   }
@@ -234,5 +283,19 @@ class Manager implements DiskIOManagerInterface {
     }
 
     return 0;
+  }
+
+  /**
+   * @throws Exception
+   */
+  protected function rmdir(string $path): bool {
+    return rmdir($path);
+  }
+
+  protected function scanDirectory(string $path): Vector<resource> {
+    $objects = scandir($path);
+    $results = Vector{};
+    $results->addAll($objects);
+    return $results;
   }
 }

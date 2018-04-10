@@ -36,10 +36,10 @@ interface ManagerInterface {
    * @param $permissions Integer flag rpresenting file permissions
    * @param $appendIfExists If true, appends to the file if it already exists.
    *        Otherwise, overwrites the existing file.
-   * @throws FailedToCreateDirectoryException
-   * @throws FailedToOpenFileException
-   * @throws FailedToWriteToFileException
-   * @throws FailedToCloseFileException
+   * @throws Zynga\Framework\IO\Disk\V1\Exception\FailedToCreateDirectoryException
+   * @throws Zynga\Framework\IO\Disk\V1\Exception\FailedToOpenFileException
+   * @throws Zynga\Framework\IO\Disk\V1\Exception\FailedToWriteToFileException
+   * @throws Zynga\Framework\IO\Disk\V1\Exception\FailedToCloseFileException
    */
   public function writeFile(string $fileName, string $dataToWrite, int $permissions, bool $appendIfExists): void;
 
@@ -48,10 +48,10 @@ interface ManagerInterface {
    *
    * @param $in Absolute path of file to compress
    * @param $out Absolute path of output bzip2 file
-   * @throws ReadPermissionsException
-   * @throws WritePermissionsException
-   * @throws FailedToOpenFileException
-   * @throws FailedToCloseFileException
+   * @throws Zynga\Framework\IO\Disk\V1\Exception\ReadPermissionsException
+   * @throws Zynga\Framework\IO\Disk\V1\Exception\WritePermissionsException
+   * @throws Zynga\Framework\IO\Disk\V1\Exception\FailedToOpenFileException
+   * @throws Zynga\Framework\IO\Disk\V1\Exception\FailedToCloseFileException
    */
   public function bzip2(string $in, string $out): void;
 
@@ -63,4 +63,20 @@ interface ManagerInterface {
    * @return True on success, otherwise false
    */
   public function chown(string $fileName, string $userName): bool;
+
+  /**
+   * Deletes the given file path
+   *
+   * @param $path Absolute path of directory to be deleted
+   * @throws Zynga\Framework\IO\Disk\V1\Exception\FailedToDeleteFileException
+   */
+  public function deleteDirectory(string $path): void;
+
+  /**
+   * Recursively deletes the given directory and all of its contents
+   *
+   * @param $path Absolute path of directory to be deleted
+   * @return True on success, otherwise false
+   */
+  public function recursivelyDeleteDirectory(string $path): bool;
 }

@@ -25,6 +25,14 @@ apt-get update -y
 # install modules we need to use to test with.
 apt-get install -y wget curl git make time
 
+# install mysql-server
+apt-get install -y mysql-server
+
+# load up our test database
+mysql < /var/source/tests/sql/mysql/create_test_database.sql
+mysql -e 'SHOW DATABASES'
+mysql -e 'SHOW TABLES' phpunit       
+
 # Bring the latest composer into the environment
 setup_composer;
 

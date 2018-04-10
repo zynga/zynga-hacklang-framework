@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "afc83bf873c224953fef9cb561fb1b4c",
+    "content-hash": "98c4c2bf40770d86e920f362b0a88bd3",
     "packages": [
         {
             "name": "zynga/phpunit",
-            "version": "v1.5.0",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zynga/zynga-hhvm-phpunit.git",
-                "reference": "3d04823fb27af5265ffc8df1783d2fc62b498883"
+                "reference": "46edf4cc60ed5ddfa630f6b01eade908dcc7e3ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/3d04823fb27af5265ffc8df1783d2fc62b498883",
-                "reference": "3d04823fb27af5265ffc8df1783d2fc62b498883",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/46edf4cc60ed5ddfa630f6b01eade908dcc7e3ae",
+                "reference": "46edf4cc60ed5ddfa630f6b01eade908dcc7e3ae",
                 "shasum": ""
             },
             "require": {
@@ -39,10 +39,10 @@
                 "xunit"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v1.5.0",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v1.7.0",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit/issues"
             },
-            "time": "2017-12-20T18:21:18+00:00"
+            "time": "2018-04-10T15:51:56+00:00"
         },
         {
             "name": "zynga/phpunit-hhi",

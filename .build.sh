@@ -25,9 +25,15 @@ apt-get update -y
 # install modules we need to use to test with.
 apt-get install -y wget curl git make time
 
-# install mysql-server
 export DEBIAN_FRONTEND=noninteractive
+
+# stand up a memcached on the image
+apt-get install -y memcached
+/etc/init.d/memcached start 
+
+# install mysql-server
 apt-get install -y mysql-server
+/etc/init.d/mysql start 
 
 # load up our test database
 mysql < /var/source/tests/sql/mysql/create_test_database.sql

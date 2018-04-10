@@ -26,6 +26,7 @@ apt-get update -y
 apt-get install -y wget curl git make time
 
 # install mysql-server
+export DEBIAN_FRONTEND=noninteractive
 apt-get install -y mysql-server
 
 # load up our test database

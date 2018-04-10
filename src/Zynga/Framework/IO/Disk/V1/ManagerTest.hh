@@ -57,10 +57,10 @@ class ManagerTest extends TestCase {
   }
 
   public function testMakeDirectoryReturnsFalseOnExistingDirectory(): void {
-    mkdir('/home/deploy/tmp/ManagerTest/3', 0000, false);
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('makeDirectory');
     $method->setAccessible(true);
+    $method->invoke(DiskIOManager::instance(), '/home/deploy/tmp/ManagerTest/3', 0000, false);
     $success = $method->invoke(DiskIOManager::instance(), '/home/deploy/tmp/ManagerTest/3', 0000, false);
     rmdir('/home/deploy/tmp/ManagerTest/3');
     $this->assertFalse($success);

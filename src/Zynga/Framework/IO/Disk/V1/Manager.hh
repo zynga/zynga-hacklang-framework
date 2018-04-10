@@ -144,7 +144,11 @@ class Manager implements DiskIOManagerInterface {
    * @see ManagerInterface
    */
   public function chown(string $fileName, string $userName): bool {
-    return chown($fileName, $userName);
+    try {
+      return chown($fileName, $userName);
+    } catch (Exception $e) {}
+
+    return false;
   }
 
   protected function feof(resource $handle): bool {

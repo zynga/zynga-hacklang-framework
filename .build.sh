@@ -49,6 +49,8 @@ su postgres -c 'psql < /var/source/tests/sql/postgresql/create_test_database.sql
 
 # setup the postgres password into the .pgpass property file.
 echo "localhost:5432:phpunit:zframework:i-am-a-walrus" > ~/.pgpass
+chmod 0600 ~/.pgpass
+
 echo '\d' | psql --user=zframework --host=localhost phpunit        
 
 # Bring the latest composer into the environment

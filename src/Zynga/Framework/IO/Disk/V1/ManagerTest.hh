@@ -30,6 +30,11 @@ use Zynga\Framework\Environment\CodePath\V1\CodePath;
 
 class ManagerTest extends TestCase {
 
+  public function doTearDownAfterClass(): bool {
+    DiskIOManager::instance()->recursivelyDeleteDirectory(CodePath::getRoot().'/ManagerTest');
+    return parent::doTearDownAfterClass();
+  }
+
   public function testDoesFileExistReturnsFalseOnEmptyString(): void {
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('doesFileExist');

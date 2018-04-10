@@ -71,7 +71,7 @@ class Manager implements DiskIOManagerInterface {
   /**
    * @see ManagerInterface
    */
-  public function recursivelyDeleteDirectory(string $path): bool {
+  public function recursivelyDeleteDirectory(string $path, int $minimumMillisecondsSinceModificaiton = 0): bool {
     if ($path == '/' ||
         $path == 'c:\\'||
         !$this->doesFileExist($path) ||
@@ -82,17 +82,22 @@ class Manager implements DiskIOManagerInterface {
     $resources = $this->scanDirectory($path);
     foreach ($resources as $resource) {
       if ($resource != "." && $resource != "..") {
-        if ($this->isDirectory($path."/".$resource) &&
-            !$this->recursivelyDeleteDirectory($path."/".$resource)) {
-          return false;
-        } else if (!$this->deleteFile($path."/".$resource)) {
+        if ($this->isDirectory($path."/".$resource)) {
+          if (!$this->recursivelyDeleteDirectory($path."/".$resource)) {
+            return false;
+          }
+        } else if ((time() - filemtime($path."/".$resource)) >= $minimumMillisecondsSinceModificaiton &&
+                   !$this->deleteFile($path."/".$resource)) {
           return false;
         }
       }
     }
 
     try {
-      $this->deleteDirectory($path);
+      if ((time() - filemtime($path)) >= $minimumMillisecondsSinceModificaiton ||
+          $resources->count() <= 2) {
+        $this->deleteDirectory($path);
+      }
       return true;
     } catch (FailedToDeleteFileException $e) {
       return false;

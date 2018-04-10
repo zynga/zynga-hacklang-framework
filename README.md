@@ -190,3 +190,7 @@ use Zynga\Framework\Exception\V1\Exception;
 
 class MyDomainException extends Exception {}
 ```
+
+# Build status
+
+[![Build Status](https://travis-ci.org/zynga/zynga-hacklang-framework.svg?branch=master)](https://travis-ci.org/zynga/zynga-hacklang-framework)

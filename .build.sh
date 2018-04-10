@@ -44,7 +44,10 @@ mysql -e 'SHOW TABLES' phpunit
 apt-get install -y postgresql postgresql-contrib
 /etc/init.d/postgresql start
 
-psql -U postgres < /var/source/tests/sql/postgresql/create_test_database.sql
+# install the database user.
+su postgres -c 'psql < /var/source/tests/sql/postgresql/create_test_database.sql'
+
+# setup the postgres password into the .pgpass property file.
 echo "localhost:5432:phpunit:zframework:i-am-a-walrus" > ~/.pgpass
 echo '\d' | psql --user=zframework --host=localhost phpunit        
 

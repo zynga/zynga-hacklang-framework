@@ -197,6 +197,10 @@ class Manager implements DiskIOManagerInterface {
    */
   public function chown(string $fileName, string $userName): bool {
     try {
+      if (posix_getpwuid(fileowner($fileName))['name'] == $userName) {
+        return true;
+      }
+      
       return chown($fileName, $userName);
     } catch (Exception $e) {}
 

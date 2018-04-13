@@ -365,4 +365,13 @@ class ManagerTest extends TestCase {
     rmdir(CodePath::getRoot().'/ManagerTest/23');
   }
 
+  public function testChownOnAlreadyOwnedDirectory(): void {
+    mkdir(CodePath::getRoot().'/ManagerTest/24', 0777, true);
+    $result = DiskIOManager::instance()->chown(CodePath::getRoot().'/ManagerTest/24', get_current_user());
+    $this->assertTrue($result);
+    $result = DiskIOManager::instance()->chown(CodePath::getRoot().'/ManagerTest/24', get_current_user());
+    $this->assertTrue($result);
+    rmdir(CodePath::getRoot().'/ManagerTest/24');
+  }
+
 }

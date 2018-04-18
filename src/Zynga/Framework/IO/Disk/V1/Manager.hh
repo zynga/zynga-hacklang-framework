@@ -179,6 +179,10 @@ class Manager implements DiskIOManagerInterface {
     if (!file_exists($out)) {
       throw new FailedToWriteToFileException($out);
     }
+
+    if (!$this->tarbalValid($out)) {
+      throw new FailedToWriteToFileException($out);
+    }
   }
 
   /**
@@ -338,5 +342,11 @@ class Manager implements DiskIOManagerInterface {
     $results = Vector{};
     $results->addAll($objects);
     return $results;
+  }
+
+  protected function tarbalValid(string $tarPath): bool {
+    $output = array();
+    exec("tar --absolute-names -df '$tarPath'", $output);
+    return count($output) === 0;
   }
 }

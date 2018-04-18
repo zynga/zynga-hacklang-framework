@@ -91,7 +91,6 @@ interface ManagerInterface {
    * @throws WritePermissionsException
    * @throws InvalidFileNameException
    * @throws FailedToWriteToFileException
-   * @return True on success, otherwise false
    */
   public function tarball(string $in, string $out): void;
 }

@@ -30,6 +30,7 @@ use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsWriteableFalseAndDoesFileExistT
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithRmdirFalse;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
+use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithTarballValidFalse;
 
 class ManagerTest extends TestCase {
 
@@ -423,6 +424,18 @@ class ManagerTest extends TestCase {
     rmdir(CodePath::getRoot().'/ManagerTest/27/0');
     rmdir(CodePath::getRoot().'/ManagerTest/27');
     $this->assertFalse(file_exists(CodePath::getRoot().'/ManagerTest/27'));
+  }
+
+  public function testManagerWithTarballValidFalseThrowsFailedToWriteToFileException(): void {
+    mkdir(CodePath::getRoot().'/ManagerTest/28/0', 0777, true);
+    try {
+      ManagerWithTarballValidFalse::instance()->tarball(CodePath::getRoot().'/ManagerTest/28/0', CodePath::getRoot().'/ManagerTest/28/0.tar');
+      $this->fail();
+    } catch (FailedToWriteToFileException $e) {}
+    $this->assertTrue(file_exists(CodePath::getRoot().'/ManagerTest/28/0.tar'));
+    unlink(CodePath::getRoot().'/ManagerTest/28/0.tar');
+    rmdir(CodePath::getRoot().'/ManagerTest/28/0');
+    rmdir(CodePath::getRoot().'/ManagerTest/28');
   }
 
 }

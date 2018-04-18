@@ -81,4 +81,17 @@ interface ManagerInterface {
    * @return True on success, otherwise false
    */
   public function recursivelyDeleteDirectory(string $path, int $minimumMillisecondsSinceModificaiton = 0): bool;
+
+  /**
+   * Given a file or directory path as input, create a tarball file at the given output
+   *
+   * @param $in Absolute path of file/directory to tar
+   * @param $out Absolute path of created tarball
+   * @throws ReadPermissionsException
+   * @throws WritePermissionsException
+   * @throws InvalidFileNameException
+   * @throws FailedToWriteToFileException
+   * @return True on success, otherwise false
+   */
+  public function tarball(string $in, string $out): void;
 }

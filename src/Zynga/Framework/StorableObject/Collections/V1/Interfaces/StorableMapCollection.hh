@@ -13,11 +13,11 @@ use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
  * to be extended for anything other than intrinsics.
  * @see https://github.com/facebook/hhvm/issues/8042#issuecomment-342976327
  */
-interface StorableCollection<Tv> extends StorableObjectInterface {
+interface StorableMapCollection<Tk, Tv> extends StorableObjectInterface {
   /**
    * Removes all items from the collection.
    */
-  public function clear(): void;
+  public function clear(): bool;
 
   /**
    * Is the collection empty?
@@ -40,7 +40,7 @@ interface StorableCollection<Tv> extends StorableObjectInterface {
    * @return - Returns an `Iterable` with access to all of the items in
    *   the collection.
    */
-  public function items(): Iterable<Tv>;
+  public function items(): Map<Tk, Tv>;
 
   /**
    * Add a value to the collection and return the collection itself.
@@ -53,7 +53,7 @@ interface StorableCollection<Tv> extends StorableObjectInterface {
    *
    * @return - A shallow copy of the updated current collection itself.
    */
-  public function add(Tv $e): this;
+  public function add(Tk $k, Tv $v): bool;
 
   /**
    * For every element in the provided `Traversable`, append a value into the
@@ -69,17 +69,17 @@ interface StorableCollection<Tv> extends StorableObjectInterface {
    * @return - A shallow copy of the current collection with the added the
    *           values.
    */
-  public function addAll(?Traversable<Tv> $traversable): this;
+  public function addAll(?Traversable<Pair<Tk,Tv>> $iterable): Map<Tk, Tv>;
 
   /**
    * @throws OutOfBoundsException
    */
-  public function at(int $key): Tv;
+  public function at(Tk $key): Tv;
 
   /**
    * Converts collection to raw array
    * Similar to @see https://docs.hhvm.com/hack/reference/class/HH.Vector/toArray/
    */
-  public function toArray(): array<Tv>;
+  public function toArray(): array<Tk, Tv>;
 
 }

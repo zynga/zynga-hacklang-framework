@@ -9,11 +9,14 @@ use Zynga\Framework\Type\V1\FileType\Enum\FileType as FileTypeEnum;
 class BoxFactoryTest extends ZyngaTestCase {
 
   public function testJsonReturnsValidType(): void {
-    $this->assertEquals((string)FileTypeEnum::JSON, BoxFactory::json()->get());
+    $this->assertEquals(
+      (string) FileTypeEnum::JSON,
+      BoxFactory::json()->get(),
+    );
   }
 
   public function testCsvReturnsValidType(): void {
-    $this->assertEquals((string)FileTypeEnum::CSV, BoxFactory::csv()->get());
+    $this->assertEquals((string) FileTypeEnum::CSV, BoxFactory::csv()->get());
   }
 
   public function testIsValidValueReturnsFalseCorrectly(): void {
@@ -21,8 +24,8 @@ class BoxFactoryTest extends ZyngaTestCase {
   }
 
   public function testIsValidValueReturnsTrueCorrectly(): void {
-    $this->assertTrue(BoxFactory::isValidValue((string)FileTypeEnum::JSON));
-    $this->assertTrue(BoxFactory::isValidValue((string)FileTypeEnum::CSV));
+    $this->assertTrue(BoxFactory::isValidValue((string) FileTypeEnum::JSON));
+    $this->assertTrue(BoxFactory::isValidValue((string) FileTypeEnum::CSV));
   }
 
 }

@@ -28,8 +28,7 @@ class Manager implements DiskIOManagerInterface {
     return self::$instance;
   }
 
-  protected function __construct() {
-  }
+  protected function __construct() {}
 
   /**
    * See @ManagerInterface
@@ -71,9 +70,12 @@ class Manager implements DiskIOManagerInterface {
   /**
    * @see ManagerInterface
    */
-  public function recursivelyDeleteDirectory(string $path, int $minimumMillisecondsSinceModificaiton = 0): bool {
+  public function recursivelyDeleteDirectory(
+    string $path,
+    int $minimumMillisecondsSinceModificaiton = 0,
+  ): bool {
     if ($path == '/' ||
-        $path == 'c:\\'||
+        $path == 'c:\\' ||
         !$this->doesFileExist($path) ||
         !$this->isDirectory($path)) {
       return false;
@@ -111,7 +113,8 @@ class Manager implements DiskIOManagerInterface {
     string $fileName,
     string $dataToWrite,
     int $permissions,
-    bool $appendIfExists): void {
+    bool $appendIfExists,
+  ): void {
 
     $filePath = $this->directoryName($fileName);
     if ($this->checkOrCreatePath($filePath, $permissions) === false) {
@@ -128,7 +131,7 @@ class Manager implements DiskIOManagerInterface {
       throw new FailedToOpenFileException($fileName);
     }
 
-    invariant(is_resource($handle),'');
+    invariant(is_resource($handle), '');
     $writeResult = $this->fwrite($handle, $dataToWrite);
     if ($writeResult === false) {
       $this->fclose($handle);
@@ -136,12 +139,16 @@ class Manager implements DiskIOManagerInterface {
     }
 
     if ($writeResult != strlen($dataToWrite) &&
-      // fwrite always writes at least one byte if successful, even on
-      // empty string input
-      !($writeResult == 1 && strlen($dataToWrite) === 0)) {
+        // fwrite always writes at least one byte if successful, even on
+        // empty string input
+        !($writeResult == 1 && strlen($dataToWrite) === 0)) {
       $this->fclose($handle);
       throw new FailedToWriteToFileException(
-        "Only wrote ".(string)$writeResult." of ".strlen($dataToWrite)." bytes to $fileName"
+        "Only wrote ".
+        (string) $writeResult.
+        " of ".
+        strlen($dataToWrite).
+        " bytes to $fileName",
       );
     }
 
@@ -159,8 +166,10 @@ class Manager implements DiskIOManagerInterface {
       throw new ReadPermissionsException($in);
     }
 
-    if ((!$this->doesFileExist($out) && !$this->isWriteable($this->directoryName($out)) ||
-        ($this->doesFileExist($out) && !$this->isWriteable($out)))) {
+    if ((!$this->doesFileExist($out) && !$this->isWriteable(
+           $this->directoryName($out),
+         ) ||
+         ($this->doesFileExist($out) && !$this->isWriteable($out)))) {
       throw new WritePermissionsException($out);
     }
 
@@ -200,9 +209,10 @@ class Manager implements DiskIOManagerInterface {
       if (posix_getpwuid(fileowner($fileName))['name'] == $userName) {
         return true;
       }
-      
+
       return chown($fileName, $userName);
-    } catch (Exception $e) {}
+    } catch (Exception $e) {
+    }
 
     return false;
   }
@@ -240,7 +250,11 @@ class Manager implements DiskIOManagerInterface {
     return dirname($fileName);
   }
 
-  protected function makeDirectory(string $path, int $permissions, bool $recursivePermissions): bool {
+  protected function makeDirectory(
+    string $path,
+    int $permissions,
+    bool $recursivePermissions,
+  ): bool {
     $old = umask(0);
     try {
       return mkdir($path, $permissions, $recursivePermissions);
@@ -287,7 +301,11 @@ class Manager implements DiskIOManagerInterface {
     return bzclose($handle);
   }
 
-  protected function bzwrite(resource $handle, string $dataToWrite, int $maxBytesToRead): int {
+  protected function bzwrite(
+    resource $handle,
+    string $dataToWrite,
+    int $maxBytesToRead,
+  ): int {
     $result = bzwrite($handle, $dataToWrite, $maxBytesToRead);
     if (is_int($result)) {
       return $result;
@@ -305,7 +323,7 @@ class Manager implements DiskIOManagerInterface {
 
   protected function scanDirectory(string $path): Vector<resource> {
     $objects = scandir($path);
-    $results = Vector{};
+    $results = Vector {};
     $results->addAll($objects);
     return $results;
   }

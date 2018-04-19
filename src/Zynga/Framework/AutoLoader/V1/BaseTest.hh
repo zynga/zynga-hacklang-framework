@@ -17,21 +17,18 @@ class BaseTest extends TestCase {
     // --
     // Find our root
     // --
-    $autoloaderRoot = dirname(__FILE__);          // This file
-    $autoloaderRoot = dirname($autoloaderRoot);   // strip: V1
-    $autoloaderRoot = dirname($autoloaderRoot);   // strip: AutoLoader
-    $autoloaderRoot = dirname($autoloaderRoot);   // strip: Framework
-    $autoloaderRoot = dirname($autoloaderRoot);   // strip: Zynga
-    $autoloaderRoot = dirname($autoloaderRoot);   // strip: src
+    $autoloaderRoot = dirname(__FILE__); // This file
+    $autoloaderRoot = dirname($autoloaderRoot); // strip: V1
+    $autoloaderRoot = dirname($autoloaderRoot); // strip: AutoLoader
+    $autoloaderRoot = dirname($autoloaderRoot); // strip: Framework
+    $autoloaderRoot = dirname($autoloaderRoot); // strip: Zynga
+    $autoloaderRoot = dirname($autoloaderRoot); // strip: src
     $autoloaderRoot .= '/tests/autoloader';
 
     $obj = new MockAutoLoader();
     $this->assertInstanceOf(MockAutoLoader::class, $obj);
     $this->assertFalse($obj->load('someclass'));
-    $this->assertEquals(
-      $autoloaderRoot,
-      $obj->getFileSystemRoot(),
-    );
+    $this->assertEquals($autoloaderRoot, $obj->getFileSystemRoot());
   }
 
   public function test_enableDebug(): void {

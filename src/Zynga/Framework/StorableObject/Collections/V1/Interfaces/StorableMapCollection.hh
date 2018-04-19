@@ -69,7 +69,7 @@ interface StorableMapCollection<Tk, Tv> extends StorableObjectInterface {
    * @return - A shallow copy of the current collection with the added the
    *           values.
    */
-  public function addAll(?Traversable<Pair<Tk,Tv>> $iterable): Map<Tk, Tv>;
+  public function addAll(?Traversable<Pair<Tk, Tv>> $iterable): Map<Tk, Tv>;
 
   /**
    * @throws OutOfBoundsException

@@ -66,23 +66,26 @@ class ResultSets {
 
   }
 
-  public function getFileNameForTest(string $class, string $functionName): string {
+  public function getFileNameForTest(
+    string $class,
+    string $functionName,
+  ): string {
 
     $fileName = CodePath::getRoot();
     $fileName .=
       '/tests/data/'.str_replace('\\', '/', $class).'/'.$functionName.'.data';
 
-    if ( is_file($fileName) ) {
+    if (is_file($fileName)) {
       return $fileName;
     }
 
     $frameworkFile = dirname(__FILE__);
-    $frameworkFile = dirname($frameworkFile);     // Mock
-    $frameworkFile = dirname($frameworkFile);     // V2
-    $frameworkFile = dirname($frameworkFile);     // Database
-    $frameworkFile = dirname($frameworkFile);     // Framework
-    $frameworkFile = dirname($frameworkFile);     // Zynga
-    $frameworkFile = dirname($frameworkFile);     // src
+    $frameworkFile = dirname($frameworkFile); // Mock
+    $frameworkFile = dirname($frameworkFile); // V2
+    $frameworkFile = dirname($frameworkFile); // Database
+    $frameworkFile = dirname($frameworkFile); // Framework
+    $frameworkFile = dirname($frameworkFile); // Zynga
+    $frameworkFile = dirname($frameworkFile); // src
     $frameworkFile .=
       '/tests/data/'.str_replace('\\', '/', $class).'/'.$functionName.'.data';
 

@@ -45,7 +45,7 @@ class Base<Tk, Tv> implements StorableMapCollection<Tk, Tv> {
   }
 
   public function isEmpty(): bool {
-    if ( $this->map->count() == 0 ) {
+    if ($this->map->count() == 0) {
       return true;
     }
     return false;
@@ -60,16 +60,16 @@ class Base<Tk, Tv> implements StorableMapCollection<Tk, Tv> {
   }
 
   public function add(Tk $k, Tv $v): bool {
-    if ( $this->map->containsKey($k) === false ) {
+    if ($this->map->containsKey($k) === false) {
       $this->map->set($k, $v);
       return true;
     }
     return false;
- }
+  }
 
- public function addAll(?Traversable<Pair<Tk,Tv>> $iterable): Map<Tk, Tv> {
-   return $this->map->addAll($iterable);
- }
+  public function addAll(?Traversable<Pair<Tk, Tv>> $iterable): Map<Tk, Tv> {
+    return $this->map->addAll($iterable);
+  }
 
   public function get(Tk $key): ?Tv {
 
@@ -106,7 +106,7 @@ class Base<Tk, Tv> implements StorableMapCollection<Tk, Tv> {
         FieldsGeneric::getIsRequiredAndIsDefaultValue($value);
 
       if ($f_isDefaultValue === true) {
-        if ( is_string($key) ) {
+        if (is_string($key)) {
           $defaultFields[] = $key;
         } else {
           $defaultFields[] = strval($key);

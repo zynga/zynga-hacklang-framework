@@ -22,16 +22,18 @@ use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnce;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnceBzcloseFails;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnceFcloseFails;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFileWriteZeroBytes;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense;
+use
+  Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense
+;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithRmdirFalse;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\Environment\CodePath\V1\CodePath;
 
-
 class ManagerTest extends TestCase {
 
   public function doTearDownAfterClass(): bool {
-    DiskIOManager::instance()->recursivelyDeleteDirectory(CodePath::getRoot().'/ManagerTest');
+    DiskIOManager::instance()
+      ->recursivelyDeleteDirectory(CodePath::getRoot().'/ManagerTest');
     return parent::doTearDownAfterClass();
   }
 
@@ -47,7 +49,11 @@ class ManagerTest extends TestCase {
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('fileOpen');
     $method->setAccessible(true);
-    $handle = $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/1', 'y');
+    $handle = $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/1',
+      'y',
+    );
     $this->assertFalse($handle);
 
     // Just in case it didn't fail opening
@@ -60,7 +66,10 @@ class ManagerTest extends TestCase {
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('directoryName');
     $method->setAccessible(true);
-    $directory = $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/2');
+    $directory = $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/2',
+    );
     $this->assertEquals(CodePath::getRoot().'/ManagerTest', $directory);
   }
 
@@ -68,8 +77,18 @@ class ManagerTest extends TestCase {
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('makeDirectory');
     $method->setAccessible(true);
-    $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/3', 0000, false);
-    $success = $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/3', 0000, false);
+    $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/3',
+      0000,
+      false,
+    );
+    $success = $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/3',
+      0000,
+      false,
+    );
     $this->assertFalse($success);
   }
 
@@ -77,7 +96,10 @@ class ManagerTest extends TestCase {
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('unlink');
     $method->setAccessible(true);
-    $success = $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/4');
+    $success = $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/4',
+    );
     $this->assertFalse($success);
   }
 
@@ -115,7 +137,10 @@ class ManagerTest extends TestCase {
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('isReadable');
     $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/7');
+    $result = $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/7',
+    );
     $this->assertFalse($result);
   }
 
@@ -123,7 +148,10 @@ class ManagerTest extends TestCase {
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('isReadable');
     $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/8');
+    $result = $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/8',
+    );
     $this->assertFalse($result);
   }
 
@@ -131,7 +159,11 @@ class ManagerTest extends TestCase {
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('bzopen');
     $method->setAccessible(true);
-    $handle = $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/9', 'y');
+    $handle = $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/9',
+      'y',
+    );
     $this->assertFalse($handle);
 
     // Just in case it didn't fail opening
@@ -145,7 +177,11 @@ class ManagerTest extends TestCase {
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('bzopen');
     $method->setAccessible(true);
-    $handle = $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/10/1.tar.bz2', 'w');
+    $handle = $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/10/1.tar.bz2',
+      'w',
+    );
     $this->assertTrue(is_resource($handle));
 
     if ($handle !== false) {
@@ -172,7 +208,11 @@ class ManagerTest extends TestCase {
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('checkOrCreatePath');
     $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/12', 0777);
+    $result = $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/12',
+      0777,
+    );
     $this->assertTrue($result);
     rmdir(CodePath::getRoot().'/ManagerTest/12');
   }
@@ -181,8 +221,16 @@ class ManagerTest extends TestCase {
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('checkOrCreatePath');
     $method->setAccessible(true);
-    $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/13', 0777);
-    $result = $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/13', 0777);
+    $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/13',
+      0777,
+    );
+    $result = $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/13',
+      0777,
+    );
     $this->assertTrue($result);
     rmdir(CodePath::getRoot().'/ManagerTest/13');
   }
@@ -193,7 +241,10 @@ class ManagerTest extends TestCase {
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('deleteFile');
     $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/14/1');
+    $result = $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/14/1',
+    );
     $this->assertTrue($result);
     rmdir(CodePath::getRoot().'/ManagerTest/14');
   }
@@ -203,7 +254,10 @@ class ManagerTest extends TestCase {
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
     $method = $class->getMethod('deleteFile');
     $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), CodePath::getRoot().'/ManagerTest/15/1');
+    $result = $method->invoke(
+      DiskIOManager::instance(),
+      CodePath::getRoot().'/ManagerTest/15/1',
+    );
     $this->assertTrue($result);
     rmdir(CodePath::getRoot().'/ManagerTest/15');
   }
@@ -254,7 +308,8 @@ class ManagerTest extends TestCase {
 
   public function testWriteFileThrowsFailedToCreateDirectoryException(): void {
     $this->expectException(FailedToCreateDirectoryException::class);
-    ManagerWithFailedCheckOrCreatePath::instance()->writeFile('', '', 0777, true);
+    ManagerWithFailedCheckOrCreatePath::instance()
+      ->writeFile('', '', 0777, true);
   }
 
   public function testWriteFileThrowsFailedToOpenFileException(): void {
@@ -267,9 +322,11 @@ class ManagerTest extends TestCase {
     ManagerWithFailedToWriteToFile::instance()->writeFile('', '', 0777, true);
   }
 
-  public function testWriteToFileWithIncorrectBytesThrowsFailedToWriteToFileException(): void {
+  public function testWriteToFileWithIncorrectBytesThrowsFailedToWriteToFileException(
+  ): void {
     $this->expectException(FailedToWriteToFileException::class);
-    ManagerWithFileWriteZeroBytes::instance()->writeFile('', 'asdf', 0777, true);
+    ManagerWithFileWriteZeroBytes::instance()
+      ->writeFile('', 'asdf', 0777, true);
   }
 
   public function testWriteFileThrowsFailedToCloseFileException(): void {
@@ -309,12 +366,15 @@ class ManagerTest extends TestCase {
 
   public function testChown(): void {
     mkdir(CodePath::getRoot().'/ManagerTest/19', 0777, true);
-    $result = DiskIOManager::instance()->chown(CodePath::getRoot().'/ManagerTest/19', get_current_user());
+    $result =
+      DiskIOManager::instance()
+        ->chown(CodePath::getRoot().'/ManagerTest/19', get_current_user());
     $this->assertTrue($result);
     rmdir(CodePath::getRoot().'/ManagerTest/19');
   }
 
-  public function testRecursivelyDeleteDirectoryForNestedDirectoriesReturnsTrue(): void {
+  public function testRecursivelyDeleteDirectoryForNestedDirectoriesReturnsTrue(
+  ): void {
     mkdir(CodePath::getRoot().'/ManagerTest/20', 0777, true);
     touch(CodePath::getRoot().'/ManagerTest/20/0.txt');
     mkdir(CodePath::getRoot().'/ManagerTest/20/0', 0777, true);
@@ -325,51 +385,83 @@ class ManagerTest extends TestCase {
     mkdir(CodePath::getRoot().'/ManagerTest/20/1/0/0', 0777, true);
     touch(CodePath::getRoot().'/ManagerTest/20/1/0/0/0.txt');
     $this->assertTrue(file_exists(CodePath::getRoot().'/ManagerTest/20'));
-    $this->assertTrue(file_exists(CodePath::getRoot().'/ManagerTest/20/0.txt'));
+    $this->assertTrue(
+      file_exists(CodePath::getRoot().'/ManagerTest/20/0.txt'),
+    );
     $this->assertTrue(file_exists(CodePath::getRoot().'/ManagerTest/20/0'));
-    $this->assertTrue(file_exists(CodePath::getRoot().'/ManagerTest/20/0/0.txt'));
+    $this->assertTrue(
+      file_exists(CodePath::getRoot().'/ManagerTest/20/0/0.txt'),
+    );
     $this->assertTrue(file_exists(CodePath::getRoot().'/ManagerTest/20/0/0'));
     $this->assertTrue(file_exists(CodePath::getRoot().'/ManagerTest/20/1'));
     $this->assertTrue(file_exists(CodePath::getRoot().'/ManagerTest/20/1/0'));
-    $this->assertTrue(file_exists(CodePath::getRoot().'/ManagerTest/20/1/0/0'));
-    $this->assertTrue(file_exists(CodePath::getRoot().'/ManagerTest/20/1/0/0/0.txt'));
-    $result = DiskIOManager::instance()->recursivelyDeleteDirectory(CodePath::getRoot().'/ManagerTest/20');
+    $this->assertTrue(
+      file_exists(CodePath::getRoot().'/ManagerTest/20/1/0/0'),
+    );
+    $this->assertTrue(
+      file_exists(CodePath::getRoot().'/ManagerTest/20/1/0/0/0.txt'),
+    );
+    $result =
+      DiskIOManager::instance()
+        ->recursivelyDeleteDirectory(CodePath::getRoot().'/ManagerTest/20');
     $this->assertTrue($result);
     $this->assertFalse(file_exists(CodePath::getRoot().'/ManagerTest/20'));
-    $this->assertFalse(file_exists(CodePath::getRoot().'/ManagerTest/20/0.txt'));
+    $this->assertFalse(
+      file_exists(CodePath::getRoot().'/ManagerTest/20/0.txt'),
+    );
     $this->assertFalse(file_exists(CodePath::getRoot().'/ManagerTest/20/0'));
-    $this->assertFalse(file_exists(CodePath::getRoot().'/ManagerTest/20/0/0.txt'));
-    $this->assertFalse(file_exists(CodePath::getRoot().'/ManagerTest/20/0/0'));
+    $this->assertFalse(
+      file_exists(CodePath::getRoot().'/ManagerTest/20/0/0.txt'),
+    );
+    $this->assertFalse(
+      file_exists(CodePath::getRoot().'/ManagerTest/20/0/0'),
+    );
     $this->assertFalse(file_exists(CodePath::getRoot().'/ManagerTest/20/1'));
-    $this->assertFalse(file_exists(CodePath::getRoot().'/ManagerTest/20/1/0'));
-    $this->assertFalse(file_exists(CodePath::getRoot().'/ManagerTest/20/1/0/0'));
-    $this->assertFalse(file_exists(CodePath::getRoot().'/ManagerTest/20/1/0/0/0.txt'));
+    $this->assertFalse(
+      file_exists(CodePath::getRoot().'/ManagerTest/20/1/0'),
+    );
+    $this->assertFalse(
+      file_exists(CodePath::getRoot().'/ManagerTest/20/1/0/0'),
+    );
+    $this->assertFalse(
+      file_exists(CodePath::getRoot().'/ManagerTest/20/1/0/0/0.txt'),
+    );
   }
 
   public function testRecursivelyDeleteDirectoryWithNonExistentPath(): void {
-    $result = DiskIOManager::instance()->recursivelyDeleteDirectory(CodePath::getRoot().'/ManagerTest/21');
+    $result =
+      DiskIOManager::instance()
+        ->recursivelyDeleteDirectory(CodePath::getRoot().'/ManagerTest/21');
     $this->assertFalse($result);
   }
 
   public function testRecursivelyDeleteDirectoryWithRecursiveFailure(): void {
     mkdir(CodePath::getRoot().'/ManagerTest/22', 0777, true);
-    $result = ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense::instance()->recursivelyDeleteDirectory(CodePath::getRoot().'/ManagerTest/22');
+    $result =
+      ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense::instance()
+        ->recursivelyDeleteDirectory(CodePath::getRoot().'/ManagerTest/22');
     $this->assertFalse($result);
     rmdir(CodePath::getRoot().'/ManagerTest/22');
   }
 
   public function testRecursivelyDeleteDirectoryWithRmdirFailure(): void {
     mkdir(CodePath::getRoot().'/ManagerTest/23', 0777, true);
-    $result = ManagerWithRmdirFalse::instance()->recursivelyDeleteDirectory(CodePath::getRoot().'/ManagerTest/23');
+    $result =
+      ManagerWithRmdirFalse::instance()
+        ->recursivelyDeleteDirectory(CodePath::getRoot().'/ManagerTest/23');
     $this->assertFalse($result);
     rmdir(CodePath::getRoot().'/ManagerTest/23');
   }
 
   public function testChownOnAlreadyOwnedDirectory(): void {
     mkdir(CodePath::getRoot().'/ManagerTest/24', 0777, true);
-    $result = DiskIOManager::instance()->chown(CodePath::getRoot().'/ManagerTest/24', get_current_user());
+    $result =
+      DiskIOManager::instance()
+        ->chown(CodePath::getRoot().'/ManagerTest/24', get_current_user());
     $this->assertTrue($result);
-    $result = DiskIOManager::instance()->chown(CodePath::getRoot().'/ManagerTest/24', get_current_user());
+    $result =
+      DiskIOManager::instance()
+        ->chown(CodePath::getRoot().'/ManagerTest/24', get_current_user());
     $this->assertTrue($result);
     rmdir(CodePath::getRoot().'/ManagerTest/24');
   }

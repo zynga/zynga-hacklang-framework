@@ -182,6 +182,6 @@ class StringBox extends BaseBox {
     }
 
     return $result;
-    
+
   }
 }

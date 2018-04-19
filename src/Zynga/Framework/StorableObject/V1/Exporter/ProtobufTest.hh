@@ -42,13 +42,13 @@ class ProtobufTest extends TestCase {
 
   public function getTestFilePath(string $shortPath): string {
     $filePath = dirname(__FILE__);
-    $filePath = dirname($filePath);     // strip: Exporter
-    $filePath = dirname($filePath);     // strip: V1
-    $filePath = dirname($filePath);     // strip: StorableObject
-    $filePath = dirname($filePath);     // strip: Framework
-    $filePath = dirname($filePath);     // strip: Zynga
-    $filePath = dirname($filePath);     // strip: src
-    $filePath .= '/tests/protobuf-java-compat/'. $shortPath;
+    $filePath = dirname($filePath); // strip: Exporter
+    $filePath = dirname($filePath); // strip: V1
+    $filePath = dirname($filePath); // strip: StorableObject
+    $filePath = dirname($filePath); // strip: Framework
+    $filePath = dirname($filePath); // strip: Zynga
+    $filePath = dirname($filePath); // strip: src
+    $filePath .= '/tests/protobuf-java-compat/'.$shortPath;
     return $filePath;
   }
 

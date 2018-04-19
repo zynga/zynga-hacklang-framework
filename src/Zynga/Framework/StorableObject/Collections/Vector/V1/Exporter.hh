@@ -104,7 +104,7 @@ class Exporter<Tv> implements ExportInterface {
       $items = $this->collection->items();
 
       foreach ($items as $storableItem) {
-        $fieldName = "" . $fieldNum;
+        $fieldName = "".$fieldNum;
 
         // We can skip the value if the item is still in default state.
         list($isRequired, $isDefaultValue) =

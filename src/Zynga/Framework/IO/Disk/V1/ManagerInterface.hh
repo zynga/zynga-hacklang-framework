@@ -41,7 +41,12 @@ interface ManagerInterface {
    * @throws Zynga\Framework\IO\Disk\V1\Exception\FailedToWriteToFileException
    * @throws Zynga\Framework\IO\Disk\V1\Exception\FailedToCloseFileException
    */
-  public function writeFile(string $fileName, string $dataToWrite, int $permissions, bool $appendIfExists): void;
+  public function writeFile(
+    string $fileName,
+    string $dataToWrite,
+    int $permissions,
+    bool $appendIfExists,
+  ): void;
 
   /**
    * Compresses the given file into a bzip2 file at the given output path.
@@ -80,5 +85,8 @@ interface ManagerInterface {
    *        modified >= this many milliseconds ago
    * @return True on success, otherwise false
    */
-  public function recursivelyDeleteDirectory(string $path, int $minimumMillisecondsSinceModificaiton = 0): bool;
+  public function recursivelyDeleteDirectory(
+    string $path,
+    int $minimumMillisecondsSinceModificaiton = 0,
+  ): bool;
 }

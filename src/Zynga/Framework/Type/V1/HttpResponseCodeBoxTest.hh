@@ -51,5 +51,5 @@ class HttpResponseCodeBoxTest extends TestCase {
     $this->assertEquals(HttpResponseCodeBox::HTTP_OK, $okBox->get());
 
   }
-  
+
 }

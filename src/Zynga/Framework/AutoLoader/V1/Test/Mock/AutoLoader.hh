@@ -11,14 +11,14 @@ class AutoLoader extends Base {
     // --
     // Find our root
     // --
-    $autoloaderRoot = dirname(__FILE__);          // This file
-    $autoloaderRoot = dirname($autoloaderRoot);   // strip: Mock
-    $autoloaderRoot = dirname($autoloaderRoot);   // strip: Test
-    $autoloaderRoot = dirname($autoloaderRoot);   // strip: V1
-    $autoloaderRoot = dirname($autoloaderRoot);   // strip: AutoLoader
-    $autoloaderRoot = dirname($autoloaderRoot);   // strip: Framework
-    $autoloaderRoot = dirname($autoloaderRoot);   // strip: Zynga
-    $autoloaderRoot = dirname($autoloaderRoot);   // strip: src
+    $autoloaderRoot = dirname(__FILE__); // This file
+    $autoloaderRoot = dirname($autoloaderRoot); // strip: Mock
+    $autoloaderRoot = dirname($autoloaderRoot); // strip: Test
+    $autoloaderRoot = dirname($autoloaderRoot); // strip: V1
+    $autoloaderRoot = dirname($autoloaderRoot); // strip: AutoLoader
+    $autoloaderRoot = dirname($autoloaderRoot); // strip: Framework
+    $autoloaderRoot = dirname($autoloaderRoot); // strip: Zynga
+    $autoloaderRoot = dirname($autoloaderRoot); // strip: src
     $autoloaderRoot .= '/tests/autoloader';
     return $autoloaderRoot;
   }

@@ -3,9 +3,15 @@
 namespace Zynga\Framework\IO\Web\V1;
 
 use \ReflectionClass;
-use Zynga\Framework\IO\Web\V1\Exception\FailedExecution as FailedExecutionException;
-use Zynga\Framework\IO\Web\V1\Exception\FailedInitialization as FailedInitializationException;
-use Zynga\Framework\IO\Web\V1\Exception\UnexpectedHttpCode as UnexpectedHttpCodeException;
+use
+  Zynga\Framework\IO\Web\V1\Exception\FailedExecution as FailedExecutionException
+;
+use
+  Zynga\Framework\IO\Web\V1\Exception\FailedInitialization as FailedInitializationException
+;
+use
+  Zynga\Framework\IO\Web\V1\Exception\UnexpectedHttpCode as UnexpectedHttpCodeException
+;
 use Zynga\Framework\IO\Web\V1\Manager;
 use Zynga\Framework\IO\Web\V1\Mock\ManagerWithFailedExecuteCurl;
 use Zynga\Framework\IO\Web\V1\Mock\ManagerWithFailedInitializeCurl;
@@ -80,7 +86,8 @@ class ManagerTest extends TestCase {
     $method = $class->getMethod('setCurlOption');
     $method->setAccessible(true);
     $resourceHandle = curl_init('');
-    $result = $method->invoke(null, $resourceHandle, CURLOPT_CUSTOMREQUEST, "PUT");
+    $result =
+      $method->invoke(null, $resourceHandle, CURLOPT_CUSTOMREQUEST, "PUT");
     $this->assertTrue($result);
   }
 

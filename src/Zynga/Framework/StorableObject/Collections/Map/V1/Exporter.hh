@@ -119,7 +119,7 @@ class Exporter<Tk, Tv> implements ExportInterface {
         }
 
         if ($value !== null) {
-          if ( is_string($fieldName) ) {
+          if (is_string($fieldName)) {
             $payload[$fieldName] = $value;
           } else {
             $payload[strval($fieldName)] = $value;

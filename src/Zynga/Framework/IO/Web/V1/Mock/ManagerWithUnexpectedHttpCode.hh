@@ -5,7 +5,7 @@ namespace Zynga\Framework\IO\Web\V1\Mock;
 use Zynga\Framework\Type\V1\UrlBox;
 use Zynga\Framework\IO\Web\V1\Manager as BaseManager;
 
-class ManagerWithUnexpectedHttpCode extends BaseManager{
+class ManagerWithUnexpectedHttpCode extends BaseManager {
 
   <<__Override>>
   protected static function getCurlInfo(mixed $curlHandle, int $flag): mixed {

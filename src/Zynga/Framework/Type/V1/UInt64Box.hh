@@ -21,7 +21,7 @@ class UInt64Box extends BaseBox {
     $this->setIsDefaultValue(true);
 
     if ($value !== null) {
-      $this->importFromInteger($value);
+      $this->set($value);
     }
 
   }

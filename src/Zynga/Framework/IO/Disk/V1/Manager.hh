@@ -5,11 +5,12 @@ namespace Zynga\Framework\IO\Disk\V1;
 use \Exception;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToCloseFileException;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToCreateDirectoryException;
+use Zynga\Framework\IO\Disk\V1\Exception\FailedToDeleteFileException;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToOpenFileException;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToWriteToFileException;
+use Zynga\Framework\IO\Disk\V1\Exception\InvalidFileNameException;
 use Zynga\Framework\IO\Disk\V1\Exception\ReadPermissionsException;
 use Zynga\Framework\IO\Disk\V1\Exception\WritePermissionsException;
-use Zynga\Framework\IO\Disk\V1\Exception\FailedToDeleteFileException;
 use Zynga\Framework\IO\Disk\V1\ManagerInterface as DiskIOManagerInterface;
 
 /**
@@ -155,6 +156,39 @@ class Manager implements DiskIOManagerInterface {
     $closeResult = $this->fclose($handle);
     if ($closeResult === false) {
       throw new FailedToCloseFileException($fileName);
+    }
+  }
+
+  /**
+   * @see ManagerInterface
+   */
+  public function tarball(string $in, string $out): void {
+    if (!$this->doesFileExist($in) || !$this->isReadable($in)) {
+      throw new ReadPermissionsException($in);
+    }
+
+    if ((!$this->doesFileExist($out) && !$this->isWriteable($this->directoryName($out)) ||
+        ($this->doesFileExist($out) && !$this->isWriteable($out)))) {
+      throw new WritePermissionsException($out);
+    }
+
+    if (strpos($in, '\'') !== false ||
+        strpos($out, '\'') !== false) {
+      throw new InvalidFileNameException($out);
+    }
+
+    if (file_exists($out)) {
+      throw new InvalidFileNameException($out);
+    }
+
+    exec("tar --absolute-names -cvf '$out' '$in' 2>/dev/null");
+
+    if (!file_exists($out)) {
+      throw new FailedToWriteToFileException($out);
+    }
+
+    if (!$this->tarbalValid($out)) {
+      throw new FailedToWriteToFileException($out);
     }
   }
 
@@ -326,5 +360,11 @@ class Manager implements DiskIOManagerInterface {
     $results = Vector {};
     $results->addAll($objects);
     return $results;
+  }
+
+  protected function tarbalValid(string $tarPath): bool {
+    $output = array();
+    exec("tar --absolute-names -df '$tarPath'", $output);
+    return count($output) === 0;
   }
 }

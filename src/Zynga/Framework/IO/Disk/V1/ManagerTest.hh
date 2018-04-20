@@ -4,13 +4,16 @@ namespace Zynga\Framework\IO\Disk\V1;
 
 use \ReflectionClass;
 use \ReflectionMethod;
+use Zynga\Framework\Environment\CodePath\V1\CodePath;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToCloseFileException;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToCreateDirectoryException;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToOpenFileException;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToWriteToFileException;
+use Zynga\Framework\IO\Disk\V1\Exception\InvalidFileNameException;
 use Zynga\Framework\IO\Disk\V1\Exception\ReadPermissionsException;
 use Zynga\Framework\IO\Disk\V1\Exception\WritePermissionsException;
 use Zynga\Framework\IO\Disk\V1\Manager as DiskIOManager;
+use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithDoesFileExistFalse;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFailedBZOpen;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFailedCheckOrCreatePath;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFailedFileOpen;
@@ -22,12 +25,12 @@ use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnce;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnceBzcloseFails;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnceFcloseFails;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFileWriteZeroBytes;
-use
-  Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense
-;
+use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense;
+use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrue;
+use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithRmdirFalse;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-use Zynga\Framework\Environment\CodePath\V1\CodePath;
+use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithTarballValidFalse;
 
 class ManagerTest extends TestCase {
 
@@ -464,6 +467,66 @@ class ManagerTest extends TestCase {
         ->chown(CodePath::getRoot().'/ManagerTest/24', get_current_user());
     $this->assertTrue($result);
     rmdir(CodePath::getRoot().'/ManagerTest/24');
+  }
+
+  public function testTarballSucceeds(): void {
+    mkdir(CodePath::getRoot().'/ManagerTest/25/0', 0777, true);
+    DiskIOManager::instance()->tarball(CodePath::getRoot().'/ManagerTest/25/0', CodePath::getRoot().'/ManagerTest/25/0.tar');
+    $this->assertTrue(file_exists(CodePath::getRoot().'/ManagerTest/25/0.tar'));
+    unlink(CodePath::getRoot().'/ManagerTest/25/0.tar');
+    rmdir(CodePath::getRoot().'/ManagerTest/25/0');
+    rmdir(CodePath::getRoot().'/ManagerTest/25');
+  }
+
+  public function testTarballWithDoesFileExistFalseThrowsReadPermissionsException(): void {
+    $this->expectException(ReadPermissionsException::class);
+    ManagerWithDoesFileExistFalse::instance()->tarball('', '');
+  }
+
+  public function testTarballWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrueThrowsWritePermissionsException(): void {
+    $this->expectException(WritePermissionsException::class);
+    ManagerWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrue::instance()->tarball('', '');
+  }
+
+  public function testTarballWithQuotesInFileNamesThrowsInvalidFileNameException(): void {
+    $this->expectException(InvalidFileNameException::class);
+    ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue::instance()->tarball('\'', '\'');
+  }
+
+  public function testTarballWithExistingFileThrowsInvalidFileNameException(): void {
+    mkdir(CodePath::getRoot().'/ManagerTest/26/0', 0777, true);
+    touch(CodePath::getRoot().'/ManagerTest/26/0.tar', 0777, true);
+    try {
+      ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue::instance()->tarball(CodePath::getRoot().'/ManagerTest/26/0', CodePath::getRoot().'/ManagerTest/26/0.tar');
+      $this->fail();
+    } catch (InvalidFileNameException $e){}
+    unlink(CodePath::getRoot().'/ManagerTest/26/0.tar');
+    rmdir(CodePath::getRoot().'/ManagerTest/26/0');
+    rmdir(CodePath::getRoot().'/ManagerTest/26');
+    $this->assertFalse(file_exists(CodePath::getRoot().'/ManagerTest/26'));
+  }
+
+  public function testTarballWithEmptyFileNameThrowsFailedToWriteToFileException(): void {
+    mkdir(CodePath::getRoot().'/ManagerTest/27/0', 0777, true);
+    try {
+      ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue::instance()->tarball('', '');
+      $this->fail();
+    } catch (FailedToWriteToFileException $e) {}
+    rmdir(CodePath::getRoot().'/ManagerTest/27/0');
+    rmdir(CodePath::getRoot().'/ManagerTest/27');
+    $this->assertFalse(file_exists(CodePath::getRoot().'/ManagerTest/27'));
+  }
+
+  public function testManagerWithTarballValidFalseThrowsFailedToWriteToFileException(): void {
+    mkdir(CodePath::getRoot().'/ManagerTest/28/0', 0777, true);
+    try {
+      ManagerWithTarballValidFalse::instance()->tarball(CodePath::getRoot().'/ManagerTest/28/0', CodePath::getRoot().'/ManagerTest/28/0.tar');
+      $this->fail();
+    } catch (FailedToWriteToFileException $e) {}
+    $this->assertTrue(file_exists(CodePath::getRoot().'/ManagerTest/28/0.tar'));
+    unlink(CodePath::getRoot().'/ManagerTest/28/0.tar');
+    rmdir(CodePath::getRoot().'/ManagerTest/28/0');
+    rmdir(CodePath::getRoot().'/ManagerTest/28');
   }
 
 }

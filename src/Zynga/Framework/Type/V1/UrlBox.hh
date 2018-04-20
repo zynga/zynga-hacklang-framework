@@ -12,7 +12,7 @@ class UrlBox extends StringBox {
     $result = str_replace($find, $replace, $this->_value);
 
     try {
-      $this->importFromString($result);
+      $this->set($result);
     } catch (FailedToImportFromStringException $exception) {
       return false;
     }

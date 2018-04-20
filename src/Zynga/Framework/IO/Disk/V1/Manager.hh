@@ -181,7 +181,14 @@ class Manager implements DiskIOManagerInterface {
       throw new InvalidFileNameException($out);
     }
 
-    exec("tar --absolute-names -cvf '$out' '$in' 2>/dev/null");
+    $cmd = "tar --absolute-names -cf ";
+    $cmd .= escapeshellarg($out);
+    $cmd .= ' ';
+    $cmd .= escapeshellarg($in);
+    $cmd .= ' ';
+    $cmd .= '2>/dev/null';
+
+    system($cmd);
 
     if (!file_exists($out)) {
       throw new FailedToWriteToFileException($out);
@@ -356,15 +363,21 @@ class Manager implements DiskIOManagerInterface {
   }
 
   protected function scanDirectory(string $path): Vector<resource> {
-    $objects = scandir($path);
     $results = Vector {};
+
+    $objects = scandir($path);
+    if ( $objects === false ) {
+      return $results;
+    }
     $results->addAll($objects);
     return $results;
   }
 
   protected function tarbalValid(string $tarPath): bool {
     $output = array();
-    exec("tar --absolute-names -df '$tarPath'", $output);
+    $cmd = "tar --absolute-names -df ";
+    $cmd .= escapeshellarg($tarPath);
+    exec($cmd, $output);
     return count($output) === 0;
   }
 }

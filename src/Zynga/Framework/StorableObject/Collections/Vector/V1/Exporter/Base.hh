@@ -1,6 +1,6 @@
 <?hh // strict
 
-namespace Zynga\Framework\StorableObject\Collections\Vector\V1;
+namespace Zynga\Framework\StorableObject\Collections\Vector\V1\Exporter;
 
 use
   Zynga\Framework\StorableObject\Collections\V1\Interfaces\StorableCollection
@@ -23,7 +23,7 @@ use Zynga\Framework\Exception\V1\Exception;
  * Base class for collection exporters. This class should be inherited
  * and each collection should have their own concrete exporter.
  */
-class Exporter<Tv> implements ExportInterface {
+class Base<Tv> implements ExportInterface {
 
   public function __construct(private StorableCollection<Tv> $collection) {}
 

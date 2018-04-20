@@ -48,9 +48,7 @@ abstract class TestCase extends ZyngaTestCase {
     // for it.
     // --
     if ($validValues->count() == 0) {
-      // @codeCoverageIgnoreStart
       $this->fail('all type check tests should have valid values');
-      // @codeCoverageIgnoreEnd
     }
 
     foreach ($validValues as $validValue) {
@@ -78,9 +76,7 @@ abstract class TestCase extends ZyngaTestCase {
     // for it.
     // --
     if ($invalidValues->count() == 0) {
-      // @codeCoverageIgnoreStart
       $this->fail('all type check tests should have invalid values');
-      // @codeCoverageIgnoreEnd
     }
 
     foreach ($invalidValues as $invalidValue) {
@@ -88,11 +84,9 @@ abstract class TestCase extends ZyngaTestCase {
       try {
         $obj = $this->getTypeObject();
         $obj->set($invalidValue);
-        // @codeCoverageIgnoreStart
         $this->fail(
           'value='.strval($invalidValue).' should of been rejected',
         );
-        // @codeCoverageIgnoreEnd
       } catch (Exception $e) {
         $this->assertTrue(true);
       }
@@ -102,9 +96,7 @@ abstract class TestCase extends ZyngaTestCase {
         $stringValue = strval($invalidValue);
         $obj = $this->getTypeObject();
         $obj->set($stringValue);
-        // @codeCoverageIgnoreStart
         $this->fail('value='.$stringValue.' should of been rejected for set');
-        // @codeCoverageIgnoreEnd
       } catch (Exception $e) {
         $this->assertTrue(true);
       }
@@ -115,13 +107,11 @@ abstract class TestCase extends ZyngaTestCase {
       try {
         $obj = $this->getTypeObject();
         $obj->setDefaultValue($invalidValue);
-        // @codeCoverageIgnoreStart
         $this->fail(
           'value='.
           strval($invalidValue).
           ' should of been rejected for setDefaultValue',
         );
-        // @codeCoverageIgnoreEnd
       } catch (Exception $e) {
         $this->assertTrue(true);
       }

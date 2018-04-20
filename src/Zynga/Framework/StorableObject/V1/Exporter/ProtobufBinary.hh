@@ -30,11 +30,9 @@ class ProtobufBinary {
   public function __destroy(): void {
     // Close off the buffer handle.
     // Turns out destructors fuck up coverage.
-    // @codeCoverageIgnoreStart
     if (is_resource($this->_buffer)) {
       fclose($this->_buffer);
     }
-    // @codeCoverageIgnoreEnd
   }
 
   public function getBuffer(): string {
@@ -72,9 +70,7 @@ class ProtobufBinary {
       return true;
     }
 
-    // @codeCoverageIgnoreStart
     return false;
-    // @codeCoverageIgnoreEnd
 
   }
 

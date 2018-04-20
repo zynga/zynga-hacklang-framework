@@ -16,7 +16,15 @@ use Zynga\Framework\StorableObject\V1\Interfaces\ImportInterface;
 use
   Zynga\Framework\StorableObject\Collections\V1\Interfaces\StorableCollection
 ;
-
+use
+  Zynga\Framework\StorableObject\Collections\Vector\V1\Exporter\Base as Exporter
+;
+use
+  Zynga\Framework\StorableObject\Collections\Vector\V1\Importer\Box as BoxImporter
+;
+use
+  Zynga\Framework\StorableObject\Collections\Vector\V1\Importer\Storable as StorableImporter
+;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
 /**

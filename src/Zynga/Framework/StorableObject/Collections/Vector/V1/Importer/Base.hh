@@ -1,6 +1,6 @@
 <?hh //strict
 
-namespace Zynga\Framework\StorableObject\Collections\Importers\V1;
+namespace Zynga\Framework\StorableObject\Collections\Vector\V1\Importer;
 
 use Zynga\Framework\StorableObject\V1\Interfaces\ImportInterface;
 use
@@ -29,6 +29,7 @@ abstract class Base<Tv> implements ImportInterface {
   }
 
   public function fromMap(Map<string, mixed> $data): bool {
+
     $this->collection->clear();
 
     foreach ($data as $key => $item) {

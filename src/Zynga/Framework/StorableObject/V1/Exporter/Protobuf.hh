@@ -150,9 +150,7 @@ class Protobuf {
         return $binConverter->addVarint($value);
       }
 
-      // @codeCoverageIgnoreStart
       throw new UnsupportedTypeException('type='.$type);
-      // @codeCoverageIgnoreEnd
 
     } catch (Exception $e) {
       throw $e;

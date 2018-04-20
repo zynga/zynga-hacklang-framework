@@ -47,10 +47,8 @@ abstract class Base
    * @param string $dataName
    */
   public function __construct(string $name) {
-    // @codeCoverageIgnoreStart
     $this->_testCaseShim = new TestCaseShim($name);
     $this->_testCaseShim->setTest($this);
-    // @codeCoverageIgnoreEnd
   }
 
   public function hideLogs(): bool {
@@ -135,10 +133,6 @@ abstract class Base
    *  our platform. This means you need to call me if you want to be a good
    *  citizen.
    *
-   * JEO: This really should be the only spot we see codeCoverageIgnore. However
-   *  given enough time to make a meta mock here we could get around this.
-   *
-   * @codeCoverageIgnore
    */
   public function setUp(): void {
     if ($this->hideLogs() === true) {
@@ -267,7 +261,6 @@ abstract class Base
   // All of these are currently not covered due to the impact of phpunits reliance
   // upon global singletons. We would have to undo that to make all of these testable.
   // --
-  // @codeCoverageIgnoreStart
   /**
    * Mark the test as skipped.
    *
@@ -754,7 +747,5 @@ abstract class Base
   public function getResult(): mixed {
     return $this->_testCaseShim->getResult();
   }
-
-  // @codeCoverageIgnoreEnd
 
 }

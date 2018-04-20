@@ -1,9 +1,12 @@
 <?hh // strict
 
-namespace Zynga\Framework\StorableObject\Collections\Importers\V1;
+namespace Zynga\Framework\StorableObject\Collections\Vector\V1\Importer;
 
 use
   Zynga\Framework\StorableObject\Collections\V1\Interfaces\StorableCollection
+;
+use
+  Zynga\Framework\StorableObject\Collections\Vector\V1\Importer\Base as ImporterBase
 ;
 
 use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
@@ -42,13 +45,14 @@ use Zynga\Framework\Exception\V1\Exception;
  * //We can deserialize the payload safely with the below JSON
  * {[{"foo": "myString"}, {"foo":"myString2"}]}
  */
-abstract class Storable<Tv> extends Base<Tv> {
+class Storable<Tv> extends ImporterBase<Tv> {
   /**
    * When deserializing items for a storable object,
    * we expect each item to have a key value pair for proper
    * indexing. Otherwise, the set may not be in a known order for deserialization.
    */
   protected function getTypeFromItem(mixed $item): Tv {
+
     $storable = DynamicClassCreation::createClassByNameGeneric(
       $this->rawType,
       Vector {},

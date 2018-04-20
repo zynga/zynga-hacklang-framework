@@ -153,11 +153,9 @@ abstract class Base {
     // but the reality is that we're talking about a very odd state, where the
     // inclusion tree is not initalized at all, so therefor how did you load this file?
     // --
-    // @codeCoverageIgnoreStart
     if ($autoloaders === false) {
       return null;
     }
-    // @codeCoverageIgnoreEnd
 
     if (is_array($autoloaders)) {
       foreach ($autoloaders as $autoloader) {
@@ -185,7 +183,6 @@ abstract class Base {
       return;
     }
 
-    // @codeCoverageIgnoreStart
     $leader = $this->getClassName();
 
     if ($this->_debugTarget === 'stdout') {
@@ -195,8 +192,6 @@ abstract class Base {
 
     error_log($leader.' '.$message);
     return;
-
-    // @codeCoverageIgnoreEnd
 
   }
 

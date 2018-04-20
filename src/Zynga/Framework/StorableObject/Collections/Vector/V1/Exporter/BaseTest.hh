@@ -1,11 +1,12 @@
 <?hh //strict
 
-namespace Zynga\Framework\StorableObject\Collections\Vector\V1;
+namespace Zynga\Framework\StorableObject\Collections\Vector\V1\Exporter;
 
 use Zynga\Framework\Exception\V1\Exception;
 use
   Zynga\Framework\StorableObject\Collections\V1\Interfaces\StorableCollection
 ;
+use Zynga\Framework\StorableObject\Collections\Vector\V1\Base as VectorBase;
 use
   Zynga\Framework\StorableObject\Collections\Vector\V1\Mock\ValidVectorMock as ValidVectorMock
 ;
@@ -26,17 +27,17 @@ use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\Type\V1\StringBox;
 use Zynga\Framework\Type\V1\UInt64Box;
 
-class ExporterTest extends TestCase {
+class BaseTest extends TestCase {
 
   protected function getCollection<Tv as StorableObjectInterface>(
     classname<Tv> $classname,
   ): StorableCollection<Tv> {
-    return new Base($classname);
+    return new VectorBase($classname);
   }
 
   protected function getCollectionClassName<Tv as StorableObjectInterface>(
   ): classname<StorableCollection<Tv>> {
-    return Base::class;
+    return VectorBase::class;
   }
 
   public function testValidJSONFromTypeInterface(): void {

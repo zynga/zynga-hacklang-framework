@@ -20,63 +20,17 @@ class Manager {
    * @throws Zynga\Framework\IO\Web\V1\Exception\WebIO
    */
   public static function putFile(UrlBox $uploadUrl, string $fileName, string $mimeType): void {
-    $ch = static::initializeCurl($uploadUrl);
-    if ($ch === false) {
-      throw new FailedInitializationException('Failed to initialize cURL handle');
-    }
+    $returnCodes = array();
+    $exec = "curl -s -I '".$uploadUrl->get()."' --upload-file '$fileName' | grep HTTP/1.1 | awk {'print $2'}";
+    exec($exec, $returnCodes);
 
-    $cfile = static::createCurlFile($fileName, $mimeType, $fileName);
-    $data = array('file' => $cfile);
-    static::setCurlOption($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-    static::setCurlOption($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-
-    if (static::executeCurl($ch) === false) {
+    if (count($returnCodes) === 0) {
       throw new FailedExecutionException('Failed to execute cURL');
     }
 
-    $returnCode = static::getCurlInfo($ch, CURLINFO_HTTP_CODE);
-    if ($returnCode !== 200) {
+    $returnCode = $returnCodes[count($returnCodes) - 1];
+    if ($returnCode != 200) {
       throw new UnexpectedHttpCodeException((string)$returnCode);
-    }
-  }
-
-  // Have to use mixed for $curlHandle here because Hack doesn't allow
-  // passing resource types to functions
-  protected static function getCurlInfo(mixed $curlHandle, int $flag): mixed {
-    if (is_resource($curlHandle)) {
-      return curl_getinfo($curlHandle, $flag);
-    } else {
-      return false;
-    }
-  }
-
-  // Have to use mixed for $curlHandle here because Hack doesn't allow
-  // passing resource types to functions
-  protected static function executeCurl(mixed $curlHandle): mixed {
-    if (is_resource($curlHandle)) {
-      return curl_exec($curlHandle);
-    } else {
-      return false;
-    }
-  }
-
-  protected static function initializeCurl(UrlBox $url): mixed {
-    return curl_init($url->get());
-  }
-
-  protected static function createCurlFile(string $fileName,
-                                         string $mimeType,
-                                         string $newFileName): CURLFile {
-    return curl_file_create($fileName, $mimeType, $fileName);
-  }
-
-  // Have to use mixed for $curlHandle here because Hack doesn't allow
-  // passing resource types to functions
-  protected static function setCurlOption(mixed $curlHandle, int $option, mixed $value): bool {
-    if (is_resource($curlHandle)) {
-      return curl_setopt($curlHandle, $option, $value);
-    } else {
-      return false;
     }
   }
 

@@ -167,14 +167,17 @@ class Manager implements DiskIOManagerInterface {
 
     if (strpos($in, '\'') !== false ||
         strpos($out, '\'') !== false) {
-      throw new InvalidFileNameException($out);
+      throw new InvalidFileNameException("in=$in, out=$out");
     }
 
     if (file_exists($out)) {
       throw new InvalidFileNameException($out);
     }
 
-    exec("tar --absolute-names -cvf '$out' '$in' 2>/dev/null");
+    $inDir = $this->directoryName($in);
+    $trimmedIn = ltrim(substr($in, strlen($inDir)), '/');
+    $exec = "tar -C '$inDir' -cvf '$out' '$trimmedIn' 2>/dev/null";
+    exec($exec);
 
     if (!file_exists($out)) {
       throw new FailedToWriteToFileException($out);
@@ -346,7 +349,11 @@ class Manager implements DiskIOManagerInterface {
 
   protected function tarbalValid(string $tarPath): bool {
     $output = array();
-    exec("tar --absolute-names -df '$tarPath'", $output);
+    if (!$this->doesFileExist($tarPath)) {
+      return false;
+    }
+
+    exec("tar --absolute-names -df '$tarPath' 2>/dev/null", $output);
     return count($output) === 0;
   }
 }

@@ -5,7 +5,8 @@ namespace Zynga\Framework\IO\Disk\V1\Mock;
 use Zynga\Framework\IO\Disk\V1\Manager as BaseManager;
 use Zynga\Framework\IO\Disk\V1\ManagerInterface as DiskIOManagerInterface;
 
-class ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense extends BaseManager {
+class ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense
+  extends BaseManager {
 
   private static ?DiskIOManagerInterface $instance;
 
@@ -26,7 +27,7 @@ class ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense extends BaseMana
 
   <<__Override>>
   protected function scanDirectory(string $path): Vector<resource> {
-    return Vector{xml_parser_create()};
+    return Vector {xml_parser_create()};
   }
 
 }

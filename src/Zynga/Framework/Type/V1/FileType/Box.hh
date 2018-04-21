@@ -13,11 +13,11 @@ class Box extends StringBox {
 
   <<__Override>>
   protected function importFromString(string $value): bool {
-      if (FileTypeBoxFactory::isValidValue($value)) {
-        return parent::importFromString($value);
-      }
+    if (FileTypeBoxFactory::isValidValue($value)) {
+      return parent::importFromString($value);
+    }
 
-      throw new UnknownFileTypeException('value='.$value);
+    throw new UnknownFileTypeException('value='.$value);
   }
 
 }

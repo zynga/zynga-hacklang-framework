@@ -14,10 +14,8 @@ abstract class TestCase extends TypeTestCase {
 
     parent::__construct($name);
 
-    // @codeCoverageIgnoreStart
     $this->_min = 0;
     $this->_max = 0;
-    // @codeCoverageIgnoreEnd
 
   }
 
@@ -93,13 +91,11 @@ abstract class TestCase extends TypeTestCase {
 
       $obj->set($oobMin);
 
-      // @codeCoverageIgnoreStart
       $this->fail(
         'value='.
         strval($oobMin).
         ' should of failed, it exceeds the min value for this range',
       );
-      // @codeCoverageIgnoreEnd
 
     } catch (Exception $e) {
       $this->assertTrue(true);
@@ -116,13 +112,11 @@ abstract class TestCase extends TypeTestCase {
 
       $obj->set($oobMax);
 
-      // @codeCoverageIgnoreStart
       $this->fail(
         'value='.
         strval($oobMax).
         ' should of failed, it exceeds the max value for this range',
       );
-      // @codeCoverageIgnoreEnd
 
     } catch (Exception $e) {
       $this->assertTrue(true);

@@ -1,11 +1,11 @@
 <?hh // strict
 
-namespace Zynga\Framework\StorableObject\Collections\Importers\V1;
+namespace Zynga\Framework\StorableObject\Collections\Vector\V1\Importer;
 
 use
   Zynga\Framework\StorableObject\Collections\V1\Interfaces\StorableCollection
 ;
-
+use Zynga\Framework\StorableObject\Collections\Vector\V1\Importer\Base;
 use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
 
 use Zynga\Framework\StorableObject\V1\Interfaces\ImportInterface;
@@ -36,7 +36,7 @@ use Zynga\Framework\Exception\V1\Exception;
  * // For StringBox, we can deserialize the payload safely with the below JSON
  * {["myString2"]}
  */
-abstract class Box<Tv> extends Base<Tv> {
+class Box<Tv> extends Base<Tv> {
   /**
    * When deserializing items for a storable object,
    * we expect each item to not be key value pairs. They should be

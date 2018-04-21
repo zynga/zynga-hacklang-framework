@@ -1,32 +1,74 @@
 <?hh //strict
 
-namespace Zynga\Framework\StorableObject\Collections\Exporters\V1;
+namespace Zynga\Framework\StorableObject\Collections\Vector\V1\Exporter;
 
+use Zynga\Framework\Exception\V1\Exception;
 use
   Zynga\Framework\StorableObject\Collections\V1\Interfaces\StorableCollection
 ;
-use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
-
-use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-use Zynga\Framework\Exception\V1\Exception;
+use Zynga\Framework\StorableObject\Collections\Vector\V1\Base as VectorBase;
+use
+  Zynga\Framework\StorableObject\Collections\Vector\V1\Mock\ValidVectorMock as ValidVectorMock
+;
 use
   Zynga\Framework\StorableObject\V1\Exceptions\OperationNotSupportedException
 ;
-
-use Zynga\Framework\StorableObject\V1\Test\Mock\ValidNestedVector;
-
 use Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException;
-use Zynga\Framework\StorableObject\V1\Test\Mock\Valid as ValidStorableObject;
+use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 use
   Zynga\Framework\StorableObject\V1\Test\Mock\Nofields as NofieldsStorableObject
 ;
+use Zynga\Framework\StorableObject\V1\Test\Mock\Valid as ValidStorableObject;
 use
   Zynga\Framework\StorableObject\V1\Test\Mock\Broken\ValidButBrokenExporter
 ;
-
+use Zynga\Framework\StorableObject\V1\Test\Mock\ValidNestedVector;
+use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
+use Zynga\Framework\Type\V1\StringBox;
 use Zynga\Framework\Type\V1\UInt64Box;
 
-abstract class BaseTest extends TestCase {
+class BaseTest extends TestCase {
+
+  protected function getCollection<Tv as StorableObjectInterface>(
+    classname<Tv> $classname,
+  ): StorableCollection<Tv> {
+    return new VectorBase($classname);
+  }
+
+  protected function getCollectionClassName<Tv as StorableObjectInterface>(
+  ): classname<StorableCollection<Tv>> {
+    return VectorBase::class;
+  }
+
+  public function testValidJSONFromTypeInterface(): void {
+    $collectionVector = new ValidVectorMock();
+    $stringBox1 = new StringBox();
+    $stringBox1->set('123');
+    $collectionVector->stringVector->add($stringBox1);
+
+    $stringBox2 = new StringBox();
+    $stringBox2->set('234');
+    $collectionVector->stringVector->add($stringBox2);
+
+    $targetJson = '{"stringVector":["123","234"]}';
+    $this->assertEquals($targetJson, $collectionVector->export()->asJSON());
+  }
+
+  public function testValidMapFromTypeInterface(): void {
+
+    $collectionVector = new ValidVectorMock();
+    $stringBox1 = new StringBox();
+    $stringBox1->set('some-first-value');
+    $collectionVector->stringVector->add($stringBox1);
+
+    $stringBox2 = new StringBox();
+    $stringBox2->set('some-second-value');
+    $collectionVector->stringVector->add($stringBox2);
+
+    $exportedMap = $collectionVector->stringVector->export()->asMap();
+    $this->assertEquals('some-first-value', $exportedMap->get('0'));
+    $this->assertEquals('some-second-value', $exportedMap->get('1'));
+  }
 
   public function testAsJSONValid(): void {
 
@@ -111,7 +153,7 @@ abstract class BaseTest extends TestCase {
 
     $vec->add($testValue);
 
-    $targetMap = Map { '0' => $testValue->export()->asMap() };
+    $targetMap = Map {'0' => $testValue->export()->asMap()};
     $this->assertEquals($targetMap, $vec->export()->asMap());
   }
 
@@ -156,15 +198,18 @@ abstract class BaseTest extends TestCase {
 
     // now we should see only one entry for the object that contains  data, the
     // empty one gets filtered out.
-    $targetMap = Map{
+    $targetMap = Map {
       "0" => Map {
         "example_string" => $someString,
         "example_uint64" => $someUint64,
-        "example_float" => $someFloat
-      }
+        "example_float" => $someFloat,
+      },
     };
     $this->assertEquals($targetMap, $vec->export()->asMap());
-    $this->assertEquals(json_encode($targetMap), json_encode($vec->export()->asMap()));
+    $this->assertEquals(
+      json_encode($targetMap),
+      json_encode($vec->export()->asMap()),
+    );
   }
 
   public function testAsJSONNoFieldsOnChild(): void {
@@ -201,11 +246,15 @@ abstract class BaseTest extends TestCase {
     $map->export()->asJSON();
   }
 
-  abstract protected function getCollectionClassName<Tv as StorableObjectInterface>(
-  ): classname<StorableCollection<Tv>>;
+  public function testAsMapBrokenExporter(): void {
+    $obj = new ValidButBrokenExporter();
+    $obj->example_float->set(3.145);
 
-  abstract protected function getCollection<Tv as StorableObjectInterface>(
-    classname<Tv> $classname,
-  ): StorableCollection<Tv>;
+    $map = $this->getCollection(ValidButBrokenExporter::class);
+    $map->add($obj);
+
+    $this->expectException(Exception::class);
+    $map->export()->asMap();
+  }
 
 }

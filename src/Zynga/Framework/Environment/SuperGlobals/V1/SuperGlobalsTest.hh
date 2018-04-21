@@ -118,18 +118,18 @@ class SuperGlobalsTest extends TestCase {
 
   public function findTestDir(): string {
     $testDir = dirname(__FILE__);
-    $testDir = dirname($testDir);       // V1
-    $testDir = dirname($testDir);       // SuperGlobals
-    $testDir = dirname($testDir);       // Environment
-    $testDir = dirname($testDir);       // Framework
-    $testDir = dirname($testDir);       // Zynga
-    $testDir = dirname($testDir);       // src
+    $testDir = dirname($testDir); // V1
+    $testDir = dirname($testDir); // SuperGlobals
+    $testDir = dirname($testDir); // Environment
+    $testDir = dirname($testDir); // Framework
+    $testDir = dirname($testDir); // Zynga
+    $testDir = dirname($testDir); // src
     return $testDir;
   }
 
   public function test_getRequestBodyAsMap_Empty(): void {
 
-    $requestFile = $this->findTestDir() . '/tests/empty_request_body.js';
+    $requestFile = $this->findTestDir().'/tests/empty_request_body.js';
 
     SuperGlobals::setBodyFilePath($requestFile);
 

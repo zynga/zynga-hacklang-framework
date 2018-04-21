@@ -29,8 +29,7 @@ class Manager implements DiskIOManagerInterface {
     return self::$instance;
   }
 
-  protected function __construct() {
-  }
+  protected function __construct() {}
 
   /**
    * See @ManagerInterface
@@ -72,9 +71,12 @@ class Manager implements DiskIOManagerInterface {
   /**
    * @see ManagerInterface
    */
-  public function recursivelyDeleteDirectory(string $path, int $minimumMillisecondsSinceModificaiton = 0): bool {
+  public function recursivelyDeleteDirectory(
+    string $path,
+    int $minimumMillisecondsSinceModificaiton = 0,
+  ): bool {
     if ($path == '/' ||
-        $path == 'c:\\'||
+        $path == 'c:\\' ||
         !$this->doesFileExist($path) ||
         !$this->isDirectory($path)) {
       return false;
@@ -112,7 +114,8 @@ class Manager implements DiskIOManagerInterface {
     string $fileName,
     string $dataToWrite,
     int $permissions,
-    bool $appendIfExists): void {
+    bool $appendIfExists,
+  ): void {
 
     $filePath = $this->directoryName($fileName);
     if ($this->checkOrCreatePath($filePath, $permissions) === false) {
@@ -129,7 +132,7 @@ class Manager implements DiskIOManagerInterface {
       throw new FailedToOpenFileException($fileName);
     }
 
-    invariant(is_resource($handle),'');
+    invariant(is_resource($handle), '');
     $writeResult = $this->fwrite($handle, $dataToWrite);
     if ($writeResult === false) {
       $this->fclose($handle);
@@ -137,12 +140,16 @@ class Manager implements DiskIOManagerInterface {
     }
 
     if ($writeResult != strlen($dataToWrite) &&
-      // fwrite always writes at least one byte if successful, even on
-      // empty string input
-      !($writeResult == 1 && strlen($dataToWrite) === 0)) {
+        // fwrite always writes at least one byte if successful, even on
+        // empty string input
+        !($writeResult == 1 && strlen($dataToWrite) === 0)) {
       $this->fclose($handle);
       throw new FailedToWriteToFileException(
-        "Only wrote ".(string)$writeResult." of ".strlen($dataToWrite)." bytes to $fileName"
+        "Only wrote ".
+        (string) $writeResult.
+        " of ".
+        strlen($dataToWrite).
+        " bytes to $fileName",
       );
     }
 
@@ -176,10 +183,25 @@ class Manager implements DiskIOManagerInterface {
 
     $inDir = $this->directoryName($in);
     $trimmedIn = ltrim(substr($in, strlen($inDir)), '/');
-    $exec = "tar -C '$inDir' -cf '$out' '$trimmedIn' 2>/dev/null";
-    $result = exec($exec);
+    $cmd = 'tar -C';
+    $cmd .= ' ';
+    $cmd .= escapeshellarg($inDir);
+    $cmd .= ' ';
+    $cmd .= '-cf';
+    $cmd .= ' ';
+    $cmd .= escapeshellarg($out);
+    $cmd .= ' ';
+    $cmd .= escapeshellarg($trimmedIn);
+    $cmd .= ' ';
+    $cmd .= '2>/dev/null';
 
-    if ($result !== 0 ||
+    $results = array();
+    exec($cmd, $results);
+
+    error_log("jsimmer: cmd=$cmd");
+    error_log("jsimmer: file_exists(out)=".file_exists($out));
+
+    if (count($results) !== 0 ||
         !file_exists($out) ||
         !$this->tarbalValid($out)) {
       throw new FailedToWriteToFileException($out);
@@ -194,8 +216,10 @@ class Manager implements DiskIOManagerInterface {
       throw new ReadPermissionsException($in);
     }
 
-    if ((!$this->doesFileExist($out) && !$this->isWriteable($this->directoryName($out)) ||
-        ($this->doesFileExist($out) && !$this->isWriteable($out)))) {
+    if ((!$this->doesFileExist($out) && !$this->isWriteable(
+           $this->directoryName($out),
+         ) ||
+         ($this->doesFileExist($out) && !$this->isWriteable($out)))) {
       throw new WritePermissionsException($out);
     }
 
@@ -237,7 +261,8 @@ class Manager implements DiskIOManagerInterface {
       }
 
       return chown($fileName, $userName);
-    } catch (Exception $e) {}
+    } catch (Exception $e) {
+    }
 
     return false;
   }
@@ -275,7 +300,11 @@ class Manager implements DiskIOManagerInterface {
     return dirname($fileName);
   }
 
-  protected function makeDirectory(string $path, int $permissions, bool $recursivePermissions): bool {
+  protected function makeDirectory(
+    string $path,
+    int $permissions,
+    bool $recursivePermissions,
+  ): bool {
     $old = umask(0);
     try {
       return mkdir($path, $permissions, $recursivePermissions);
@@ -322,7 +351,11 @@ class Manager implements DiskIOManagerInterface {
     return bzclose($handle);
   }
 
-  protected function bzwrite(resource $handle, string $dataToWrite, int $maxBytesToRead): int {
+  protected function bzwrite(
+    resource $handle,
+    string $dataToWrite,
+    int $maxBytesToRead,
+  ): int {
     $result = bzwrite($handle, $dataToWrite, $maxBytesToRead);
     if (is_int($result)) {
       return $result;
@@ -339,8 +372,12 @@ class Manager implements DiskIOManagerInterface {
   }
 
   protected function scanDirectory(string $path): Vector<resource> {
+    $results = Vector {};
+
     $objects = scandir($path);
-    $results = Vector{};
+    if ( $objects === false ) {
+      return $results;
+    }
     $results->addAll($objects);
     return $results;
   }
@@ -351,7 +388,12 @@ class Manager implements DiskIOManagerInterface {
       return false;
     }
 
-    $result = exec("tar -df '$tarPath' 2>/dev/null", $output);
-    return $result === 0 && count($output) === 0;
+    $cmd = 'tar -df';
+    $cmd .= ' ';
+    $cmd .= escapeshellarg($tarPath);
+    $cmd .= ' ';
+    $cmd .= '2>/dev/null';
+    exec($cmd, $output);
+    return count($output) === 0;
   }
 }

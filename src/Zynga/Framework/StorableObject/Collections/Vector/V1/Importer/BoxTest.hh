@@ -1,11 +1,12 @@
 <?hh //strict
 
-namespace Zynga\Framework\StorableObject\Collections\Importers\V1;
+namespace Zynga\Framework\StorableObject\Collections\Vector\V1\Importer;
 
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 use
   Zynga\Framework\StorableObject\Collections\V1\Interfaces\StorableCollection
 ;
+use Zynga\Framework\StorableObject\Collections\Vector\V1\Base as VectorBase;
 use Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException;
 
 use Zynga\Framework\Type\V1\StringBox;
@@ -15,7 +16,8 @@ use
 ;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
-abstract class BoxTest extends TestCase {
+class BoxTest extends TestCase {
+
   public function __construct(string $name) {
     parent::__construct($name);
   }
@@ -139,7 +141,10 @@ abstract class BoxTest extends TestCase {
     return tuple($collection, $item, $payload);
   }
 
-  abstract protected function getCollection<Tv as TypeInterface>(
+  protected function getCollection<Tv as TypeInterface>(
     classname<Tv> $classname,
-  ): StorableCollection<Tv>;
+  ): StorableCollection<Tv> {
+    return new VectorBase($classname);
+  }
+
 }

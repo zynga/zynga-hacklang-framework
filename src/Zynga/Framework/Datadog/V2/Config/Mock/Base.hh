@@ -11,15 +11,11 @@ abstract class Base extends ConfigBase {
 
   public function getServerHostname(): string {
     // Because this is an abstract class, it will never be directly called
-    // @codeCoverageIgnoreStart
     return '';
-    // @codeCoverageIgnoreEnd
   }
 
   public function getServerPort(): int {
     // Because this is an abstract class, it will never be directly called
-    // @codeCoverageIgnoreStart
     return 0;
-    // @codeCoverageIgnoreEnd
   }
 }

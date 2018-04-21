@@ -16,8 +16,6 @@ abstract class ClusterBase extends Base {
   /**
    * Initializes the configuration, and verifies that all the functions have been called.
    * @return bool
-   * @codeCoverageIgnore
-   * JEO: Again we find the code coverage analysis doesn't accurately reflect what is executed.
    */
   final public function init(): bool {
 

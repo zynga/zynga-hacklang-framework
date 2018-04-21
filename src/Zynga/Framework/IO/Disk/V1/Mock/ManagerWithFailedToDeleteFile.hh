@@ -30,11 +30,14 @@ class ManagerWithFailedToDeleteFile extends BaseManager {
   }
 
   <<__Override>>
-  public function writeFile(string $fileName, string $dataToWrite, int $permissions, bool $appendIfExists): void {
-  }
+  public function writeFile(
+    string $fileName,
+    string $dataToWrite,
+    int $permissions,
+    bool $appendIfExists,
+  ): void {}
 
   <<__Override>>
-  public function bzip2(string $in, string $out): void {
-  }
+  public function bzip2(string $in, string $out): void {}
 
 }

@@ -4,9 +4,15 @@ namespace Zynga\Framework\IO\Web\V1;
 
 use \CURLFile;
 use \resource;
-use Zynga\Framework\IO\Web\V1\Exception\FailedExecution as FailedExecutionException;
-use Zynga\Framework\IO\Web\V1\Exception\FailedInitialization as FailedInitializationException;
-use Zynga\Framework\IO\Web\V1\Exception\UnexpectedHttpCode as UnexpectedHttpCodeException;
+use
+  Zynga\Framework\IO\Web\V1\Exception\FailedExecution as FailedExecutionException
+;
+use
+  Zynga\Framework\IO\Web\V1\Exception\FailedInitialization as FailedInitializationException
+;
+use
+  Zynga\Framework\IO\Web\V1\Exception\UnexpectedHttpCode as UnexpectedHttpCodeException
+;
 use Zynga\Framework\Type\V1\UrlBox;
 
 /**
@@ -19,7 +25,11 @@ class Manager {
    *
    * @throws Zynga\Framework\IO\Web\V1\Exception\WebIO
    */
-  public static function putFile(UrlBox $uploadUrl, string $fileName, string $mimeType): void {
+  public static function putFile(
+    UrlBox $uploadUrl,
+    string $fileName,
+    string $mimeType
+  ): void {
     $returnCodes = array();
     $exec = "curl -s %{http_code} '".$uploadUrl->get()."' --upload-file '$fileName' | awk {'print $1'}";
     exec($exec, $returnCodes);
@@ -33,5 +43,4 @@ class Manager {
       throw new UnexpectedHttpCodeException((string)$returnCode);
     }
   }
-
 }

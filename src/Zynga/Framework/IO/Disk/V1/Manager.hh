@@ -176,14 +176,12 @@ class Manager implements DiskIOManagerInterface {
 
     $inDir = $this->directoryName($in);
     $trimmedIn = ltrim(substr($in, strlen($inDir)), '/');
-    $exec = "tar -C '$inDir' -cvf '$out' '$trimmedIn' 2>/dev/null";
-    exec($exec);
+    $exec = "tar -C '$inDir' -cf '$out' '$trimmedIn' 2>/dev/null";
+    $result = exec($exec);
 
-    if (!file_exists($out)) {
-      throw new FailedToWriteToFileException($out);
-    }
-
-    if (!$this->tarbalValid($out)) {
+    if ($result !== 0 ||
+        !file_exists($out) ||
+        !$this->tarbalValid($out)) {
       throw new FailedToWriteToFileException($out);
     }
   }
@@ -353,7 +351,7 @@ class Manager implements DiskIOManagerInterface {
       return false;
     }
 
-    exec("tar --absolute-names -df '$tarPath' 2>/dev/null", $output);
-    return count($output) === 0;
+    $result = exec("tar -df '$tarPath' 2>/dev/null", $output);
+    return $result === 0 && count($output) === 0;
   }
 }

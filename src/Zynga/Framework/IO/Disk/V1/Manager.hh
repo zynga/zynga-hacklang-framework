@@ -174,27 +174,36 @@ class Manager implements DiskIOManagerInterface {
 
     if (strpos($in, '\'') !== false ||
         strpos($out, '\'') !== false) {
-      throw new InvalidFileNameException($out);
+      throw new InvalidFileNameException("in=$in, out=$out");
     }
 
     if (file_exists($out)) {
       throw new InvalidFileNameException($out);
     }
 
-    $cmd = "tar --absolute-names -cf ";
+    $inDir = $this->directoryName($in);
+    $trimmedIn = ltrim(substr($in, strlen($inDir)), '/');
+    $cmd = 'tar -C';
+    $cmd .= ' ';
+    $cmd .= escapeshellarg($inDir);
+    $cmd .= ' ';
+    $cmd .= '-cf';
+    $cmd .= ' ';
     $cmd .= escapeshellarg($out);
     $cmd .= ' ';
-    $cmd .= escapeshellarg($in);
+    $cmd .= escapeshellarg($trimmedIn);
     $cmd .= ' ';
     $cmd .= '2>/dev/null';
 
-    system($cmd);
+    $results = array();
+    exec($cmd, $results);
 
-    if (!file_exists($out)) {
-      throw new FailedToWriteToFileException($out);
-    }
+    error_log("jsimmer: cmd=$cmd");
+    error_log("jsimmer: file_exists(out)=".file_exists($out));
 
-    if (!$this->tarbalValid($out)) {
+    if (count($results) !== 0 ||
+        !file_exists($out) ||
+        !$this->tarbalValid($out)) {
       throw new FailedToWriteToFileException($out);
     }
   }
@@ -375,8 +384,15 @@ class Manager implements DiskIOManagerInterface {
 
   protected function tarbalValid(string $tarPath): bool {
     $output = array();
-    $cmd = "tar --absolute-names -df ";
+    if (!$this->doesFileExist($tarPath)) {
+      return false;
+    }
+
+    $cmd = 'tar -df';
+    $cmd .= ' ';
     $cmd .= escapeshellarg($tarPath);
+    $cmd .= ' ';
+    $cmd .= '2>/dev/null';
     exec($cmd, $output);
     return count($output) === 0;
   }

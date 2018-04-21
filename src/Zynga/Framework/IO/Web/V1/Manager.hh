@@ -21,7 +21,7 @@ class Manager {
    */
   public static function putFile(UrlBox $uploadUrl, string $fileName, string $mimeType): void {
     $returnCodes = array();
-    $exec = "curl -s -I '".$uploadUrl->get()."' --upload-file '$fileName' | grep HTTP/1.1 | awk {'print $2'}";
+    $exec = "curl -s %{http_code} '".$uploadUrl->get()."' --upload-file '$fileName' | awk {'print $1'}";
     exec($exec, $returnCodes);
 
     if (count($returnCodes) === 0) {

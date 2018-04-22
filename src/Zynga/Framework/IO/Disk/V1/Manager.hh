@@ -198,9 +198,6 @@ class Manager implements DiskIOManagerInterface {
     $results = array();
     exec($cmd, $results);
 
-    error_log("jsimmer: cmd=$cmd");
-    error_log("jsimmer: file_exists(out)=".file_exists($out));
-
     if (count($results) !== 0 ||
         !file_exists($out) ||
         !$this->tarbalValid($out)) {

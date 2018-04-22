@@ -195,10 +195,12 @@ class Manager implements DiskIOManagerInterface {
     $cmd .= ' ';
     $cmd .= '2>/dev/null';
 
+    $returnCode = 0;
     $results = array();
-    exec($cmd, $results);
+    exec($cmd, $results, $returnCode);
 
-    if (count($results) !== 0 ||
+    if ($returnCode !== 0 ||
+        count($results) !== 0 ||
         !file_exists($out) ||
         !$this->tarbalValid($out)) {
       throw new FailedToWriteToFileException($out);

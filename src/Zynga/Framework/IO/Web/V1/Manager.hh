@@ -30,11 +30,12 @@ class Manager {
     string $fileName,
     string $mimeType
   ): void {
+    $returnCode = 0;
     $returnCodes = array();
     $exec = "curl -s %{http_code} '".$uploadUrl->get()."' --upload-file '$fileName' | awk {'print $1'}";
-    exec($exec, $returnCodes);
+    exec($exec, $returnCodes, $returnCode);
 
-    if (count($returnCodes) === 0) {
+    if ($returnCode !== 0 || count($returnCodes) === 0) {
       throw new FailedExecutionException('Failed to execute cURL');
     }
 

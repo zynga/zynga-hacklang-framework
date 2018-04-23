@@ -32,7 +32,7 @@ class Manager {
   ): void {
     $returnCode = 0;
     $returnCodes = array();
-    $exec = "curl -s %{http_code} '".$uploadUrl->get()."' --upload-file '$fileName' | awk {'print $1'}";
+    $exec = "curl -s -w '%{http_code}' -T '$fileName' '".$uploadUrl->get()."' | awk {'print $1'}";
     exec($exec, $returnCodes, $returnCode);
 
     if ($returnCode !== 0 || count($returnCodes) === 0) {

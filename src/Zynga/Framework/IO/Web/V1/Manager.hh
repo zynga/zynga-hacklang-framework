@@ -32,8 +32,14 @@ class Manager {
   ): void {
     $returnCode = 0;
     $returnCodes = array();
-    $exec = "curl -s %{http_code} '".$uploadUrl->get()."' --upload-file '$fileName' | awk {'print $1'}";
-    exec($exec, $returnCodes, $returnCode);
+    $cmd = "curl -s -w '%{http_code}' -T";
+    $cmd .= ' ';
+    $cmd .= escapeshellarg($fileName);
+    $cmd .= ' ';
+    $cmd .= escapeshellarg($uploadUrl->get());
+    $cmd .= ' ';
+    $cmd .= "| awk {'print $1'}";
+    exec($cmd, $returnCodes, $returnCode);
 
     if ($returnCode !== 0 || count($returnCodes) === 0) {
       throw new FailedExecutionException('Failed to execute cURL');

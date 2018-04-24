@@ -19,6 +19,9 @@ use Zynga\Framework\Type\V1\UrlBox;
  * Lightweight class for managing Web IO
  */
 class Manager {
+  
+  public static bool $useMockCurl = false;
+  public static array<string, mixed> $useMockCurlResult = array();
 
   /**
    * Uploads $fileName to $uploadUrl using a PUT request
@@ -50,4 +53,25 @@ class Manager {
       throw new UnexpectedHttpCodeException((string)$returnCode);
     }
   }
+  
+  public static function makeCurlRequest(
+    UrlBox $uploadUrl,
+    Map<string, mixed> $postParams): array<string, mixed> {
+      if(self::$useMockCurl == false) {
+        $session = curl_init();
+        curl_setopt( $session, CURLOPT_URL, $uploadUrl->get());
+        curl_setopt( $session, CURLOPT_POST, true);
+        curl_setopt( $session, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt( $session, CURLOPT_POSTFIELDS, http_build_query($postParams));
+        curl_setopt( $session, CURLOPT_TIMEOUT, 5);
+        $result = json_decode(curl_exec($session), true);
+        if($result == null) {
+          $result = array();
+        }
+        curl_close($session);
+        return $result;
+      }
+      
+      return self::$useMockCurlResult;
+    }
 }

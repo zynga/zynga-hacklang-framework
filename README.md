@@ -51,7 +51,9 @@ brew edit hhvm
 #-DENABLE_EXTENSION_PGSQL=ON
 #-DPGSQL_INCLUDE_DIR=#{Formula["postgresql"].opt_include}
 #-DPGSQL_LIBRARY=#{Formula["postgresql"].opt_lib}/libpq.dylib
-brew reinstall --build-from-source hhvm
+
+# We currently use hhvm/hhvm/hhvm@3.21-lts instead of the latest version.
+brew reinstall --build-from-source hhvm/hhvm/hhvm@3.21-lts
 ```
 
 1) Setup composer for use locally

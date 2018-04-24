@@ -10,7 +10,7 @@ use
   Zynga\Framework\Factory\V2\Interfaces\DriverInterface as FactoryDriverInterface
 ;
 
-interface DriverInterface extends FactoryDriverInterface {
+interface DriverInterface extends FactoryDriverInterface, QueryableInterface {
 
   public function getRequiresMockQueries(): bool;
   public function enableRequireMockQueries(): bool;
@@ -78,12 +78,5 @@ interface DriverInterface extends FactoryDriverInterface {
    * @return TransactionInterface
    */
   public function getTransaction(): TransactionInterface;
-
-  /**
-   * Running a sql query against the database.
-   * @param string $sql
-   * @return ResultSetInterface
-   */
-  public function query(string $sql): ResultSetInterface;
 
 }

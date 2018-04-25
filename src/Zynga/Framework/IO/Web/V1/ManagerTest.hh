@@ -8,6 +8,7 @@ use Zynga\Framework\Type\V1\UrlBox;
 use Zynga\Framework\IO\Web\V1\Curl\CurlInterface;
 use Zynga\Framework\IO\Web\V1\Curl\CurlRequest;
 use Zynga\Framework\IO\Web\V1\Curl\MockedCurlRequest;
+use Zynga\Framework\IO\Web\V1\Curl\CurlResponsePayload;
 
 class ManagerTest extends TestCase {
   
@@ -17,41 +18,51 @@ class ManagerTest extends TestCase {
     Manager::$useMockCurl = false;
   }
   
-  public function testMockedCurlRequestClassObject(): void {
+  public function testMockCurlReturnsMockedCurlRequestClass(): void {
     $curlRequest = $this->getCurlRequest(true);
     $this->assertEquals(MockedCurlRequest::class, get_class($curlRequest));
   }
   
-  public function testSettingOptionsOnMockedCurlRequest(): void {
+  public function testSettingOptionsOnMockCurlReturnsTrue(): void {
     $curlRequest = $this->getCurlRequest(true);
     $this->assertTrue($curlRequest->setOptionsArray(array()));
   }
   
-  public function testCurlResponseOnExecutingAMockedCurlRequest(): void {
-    $curlRequest = $this->getCurlRequest(true);
-    $curlExecReturn = $curlRequest->execute();
-    invariant(is_array($curlExecReturn), 'CurlExecReturn is not an array');
-    $this->assertTrue(array_key_exists('success', $curlExecReturn));
-    $this->assertEquals(true, $curlExecReturn['success']);
+  public function testCurlResponseOnMockCurlReturnsFailure(): void {
+    $url = new UrlBox();
+    $url->set('https://www.zynga.com');
+    Manager::$useMockCurl = true;
+    Manager::$curlExecReturn = null;
+    $curlRequest = Manager::getCurlRequest($url);
+    $curlResponse = $curlRequest->execute();
+    $this->assertFalse($curlResponse->success);
+    $this->assertEquals(array(), $curlResponse->payload);
   }
   
-  public function testGettingInfoOnMockedCurlRequest(): void {
+  public function testCurlResponseOnMockCurlReturnsSuccess(): void {
+    $curlRequest = $this->getCurlRequest(true);
+    $curlResponse = $curlRequest->execute();
+    $this->assertTrue($curlResponse->success);
+    $this->assertEquals(true, $curlResponse->payload['success']);
+  }
+  
+  public function testGettingHttpCodeOnMockCurlReturns200(): void {
     $curlRequest = $this->getCurlRequest(true);
     $curlInfoReturn = $curlRequest->getInfo(CURLINFO_HTTP_CODE);
     $this->assertEquals(200, $curlInfoReturn);
   }
   
-  public function testClosingAMockedCurlRequest(): void {
+  public function testClosingAMockCurlTrue(): void {
     $curlRequest = $this->getCurlRequest(true);
     $this->assertTrue($curlRequest->close());
   }
   
-  public function testCurlRequestClassObject(): void {
+  public function testCurlReturnsCurlRequestClass(): void {
     $curlRequest = $this->getCurlRequest(false);
     $this->assertEquals(CurlRequest::class, get_class($curlRequest));
   }
   
-  public function testSettingOptionsOnCurlRequest(): void {
+  public function testSettingOptionsOnCurlReturnsTrue(): void {
     $curlRequest = $this->getCurlRequest(false);
     $this->assertTrue($curlRequest->setOptionsArray(
     array(
@@ -59,19 +70,21 @@ class ManagerTest extends TestCase {
     )));
   }
   
-  public function testCurlResponseOnExecutingACurlRequest(): void {
+  public function testCurlResponseOnCurlReturnsSuccess(): void {
     $curlRequest = $this->getCurlRequest(false);
-    $this->assertTrue(($curlRequest->execute() == true));
+    $curlRequest->setOptionsArray(array(CURLOPT_RETURNTRANSFER => true));
+    $curlResponse = $curlRequest->execute();
+    $this->assertTrue($curlResponse->success);
   }
   
-  public function testGettingInfoOnCurlRequest(): void {
+  public function testGettingHttpCodeOnCurlReturns200(): void {
     $curlRequest = $this->getCurlRequest(false);
     $curlRequest->execute();
     $curlHttpCode = $curlRequest->getInfo(CURLINFO_HTTP_CODE);
     $this->assertEquals(200, $curlHttpCode);
   }
   
-  public function testClosingACurlRequest(): void {
+  public function testClosingACurlReturnsTrue(): void {
     $curlRequest = $this->getCurlRequest(false);
     $this->assertTrue($curlRequest->close());
   }
@@ -80,7 +93,7 @@ class ManagerTest extends TestCase {
     Manager::$useMockCurl = $useMock;
     if($useMock == true) {
       Manager::$setOptionsReturn = true;
-      Manager::$curlExecReturn = array('success' => true);
+      Manager::$curlExecReturn = new CurlResponsePayload(true, array('success' => true));
       Manager::$curlInfoReturn = 200;
     }
     

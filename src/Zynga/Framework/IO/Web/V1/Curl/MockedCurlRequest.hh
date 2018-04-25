@@ -5,10 +5,10 @@ namespace Zynga\Framework\IO\Web\V1\Curl;
 class MockedCurlRequest implements CurlInterface {
   
   private bool $setOptionsReturn = false;
-  private mixed $curlExecReturn;
+  private CurlResponsePayload $curlExecReturn;
   private mixed $curlInfoReturn;
   
-  public function __construct(bool $setOptionsReturn, mixed $curlExecReturn, mixed $curlInfoReturn) {
+  public function __construct(bool $setOptionsReturn, CurlResponsePayload $curlExecReturn, mixed $curlInfoReturn) {
     $this->setOptionsReturn = $setOptionsReturn;
     $this->curlExecReturn = $curlExecReturn;
     $this->curlInfoReturn = $curlInfoReturn;
@@ -18,7 +18,7 @@ class MockedCurlRequest implements CurlInterface {
     return $this->setOptionsReturn;
   }
 
-  public function execute(): mixed {
+  public function execute(): CurlResponsePayload {
     return $this->curlExecReturn;
   }
 

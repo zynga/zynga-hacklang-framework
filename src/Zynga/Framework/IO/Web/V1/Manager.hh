@@ -14,12 +14,21 @@ use
   Zynga\Framework\IO\Web\V1\Exception\UnexpectedHttpCode as UnexpectedHttpCodeException
 ;
 use Zynga\Framework\Type\V1\UrlBox;
+use Zynga\Framework\IO\Web\V1\Curl\CurlInterface;
+use Zynga\Framework\IO\Web\V1\Curl\CurlRequest;
+use Zynga\Framework\IO\Web\V1\Curl\MockedCurlRequest;
+use Zynga\Framework\IO\Web\V1\Curl\CurlResponsePayload;
 
 /**
  * Lightweight class for managing Web IO
  */
 class Manager {
-
+    
+  public static bool $useMockCurl = false;
+  public static bool $setOptionsReturn = false;
+  public static ?CurlResponsePayload $curlExecReturn;
+  public static mixed $curlInfoReturn = array();
+  
   /**
    * Uploads $fileName to $uploadUrl using a PUT request
    *
@@ -49,5 +58,17 @@ class Manager {
     if ($returnCode != 200) {
       throw new UnexpectedHttpCodeException((string)$returnCode);
     }
+  }
+  
+  public static function getCurlRequest(UrlBox $url): CurlInterface {
+    if(self::$useMockCurl) {
+      if(self::$curlExecReturn == null) {
+        self::$curlExecReturn = new CurlResponsePayload(false, array());
+      }
+      
+      return new MockedCurlRequest(self::$setOptionsReturn, self::$curlExecReturn, self::$curlInfoReturn);
+    }
+    
+    return new CurlRequest($url);
   }
 }

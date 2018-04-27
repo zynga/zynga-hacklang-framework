@@ -23,8 +23,8 @@ class IPBox extends StringBox {
 
   <<__Override>>
   protected function importFromString(string $value): bool {
-    if (is_numeric($value)) {
-      $value = long2ip((int) $value);
+    if (ctype_digit($value)) {
+      $value = long2ip((int)$value);
     }
 
     if ($this->isValidIpV4Address($value)) {

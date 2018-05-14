@@ -44,7 +44,6 @@ class DateTimeBox extends BaseBox {
     return $this->value;
   }
 
-  <<__Override>>
   public function isStringValid(string $value): bool {
     $dateTime = new self();
     try {

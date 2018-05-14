@@ -44,6 +44,16 @@ class DateTimeBox extends BaseBox {
     return $this->value;
   }
 
+  public function isStringValid(string $value): bool {
+    $dateTime = new self();
+    try {
+      $dateTime->set($value);
+      return true;
+    } catch (FailedToImportFromStringException $e) {
+      return false;
+    }
+  }
+
   <<__Override>>
   protected function importFromBool(bool $value): bool {
     throw new FailedToImportFromBoolException();

@@ -22,6 +22,17 @@ class IPBox extends StringBox {
   }
 
   <<__Override>>
+  public function isStringValid(string $value): bool {
+    $ip = new self();
+    try {
+      $ip->set($value);
+      return true;
+    } catch (FailedToImportFromStringException $e) {
+      return false;
+    }
+  }
+
+  <<__Override>>
   protected function importFromString(string $value): bool {
     if (ctype_digit($value)) {
       $value = long2ip((int)$value);

@@ -13,6 +13,12 @@ class IPBoxTest extends TestCase {
     return new IPBox();
   }
 
+  public function testIsStringValid(): void {
+    $ipBox = new IPBox();
+    $this->assertFalse($ipBox->isStringValid(''));
+    $this->assertTrue($ipBox->isStringValid('10.10.0.1'));
+  }
+
   public function generateValidValues(): Vector<ValidValue> {
     $values = Vector {};
     $values->add(new ValidValue('172.16.254.1', '172.16.254.1'));

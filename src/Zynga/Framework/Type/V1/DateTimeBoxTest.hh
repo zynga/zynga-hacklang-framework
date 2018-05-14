@@ -24,6 +24,12 @@ class DateTimeBoxTest extends StringBoxTest {
     $dateTimeBox->set(true);
   }
 
+  public function testIsStringValid(): void {
+    $dateTimeBox = new DateTimeBox();
+    $this->assertTrue($dateTimeBox->isStringValid('1970'));
+    $this->assertFalse($dateTimeBox->isStringValid('198.161.0.0'));
+  }
+
   public function testCannotImportFromFloat(): void {
     $dateTimeBox = new DateTimeBox();
     $this->expectException(FailedToImportFromFloatException::class);

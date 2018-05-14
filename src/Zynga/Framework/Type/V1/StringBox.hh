@@ -46,6 +46,16 @@ class StringBox extends BaseBox {
     return $this->_value;
   }
 
+  public function isStringValid(string $value): bool {
+    $string = new self();
+    try {
+      $string->set($value);
+      return true;
+    } catch (FailedToImportFromStringException $e) {
+      return false;
+    }
+  }
+
   <<__Override>>
   protected function importFromBool(bool $value): bool {
     return $this->importFromString(strval($value));

@@ -17,6 +17,17 @@ use Zynga\Framework\Type\V1\Exceptions\FailedToImportFromStringException;
  */
 class EmailBox extends StringBox {
 
+  <<__Override>>
+  public function isStringValid(string $value): bool {
+    $email = new self();
+    try {
+      $email->set($value);
+      return true;
+    } catch (FailedToImportFromStringException $e) {
+      return false;
+    }
+  }
+
   protected function importFromBool(bool $value): bool {
     throw new FailedToImportFromBoolException();
   }

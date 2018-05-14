@@ -13,6 +13,12 @@ class StringBoxTest extends TestCase {
     return new StringBox();
   }
 
+  public function testIsStringValid(): void {
+    $stringBox = new StringBox();
+    $this->assertFalse($stringBox->isStringValid('script:'));
+    $this->assertTrue($stringBox->isStringValid('198.161.0.0'));
+  }
+
   public function testNativeValue(): void {
     $obj = $this->getTypeObject();
     $obj->set('some-value');

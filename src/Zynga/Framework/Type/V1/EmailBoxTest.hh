@@ -24,6 +24,12 @@ class EmailBoxTest extends StringBoxTest {
     $emailBox->set(true);
   }
 
+  public function testIsStringValid(): void {
+    $emailBox = new EmailBox();
+    $this->assertTrue($emailBox->isStringValid('jsimmer@zynga.com'));
+    $this->assertFalse($emailBox->isStringValid('198.161.0.0'));
+  }
+
   /**
    * @expectedException Zynga\Framework\Type\V1\Exceptions\FailedToImportFromFloatException
    */

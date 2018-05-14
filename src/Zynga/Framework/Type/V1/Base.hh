@@ -6,7 +6,9 @@ use JsonSerializable;
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Type\V1\Exceptions\UnSupportedTypeException;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
+use Zynga\Framework\Type\V1\Exceptions\FailedToImportFromStringException;
 
+<<__ConsistentConstruct>>
 abstract class Base implements TypeInterface, JsonSerializable {
   private bool $_isRequired;
   private bool $_isDefaultValue;
@@ -97,6 +99,16 @@ abstract class Base implements TypeInterface, JsonSerializable {
 
   public function __toString(): string {
     return json_encode($this);
+  }
+
+  public function isStringValid(string $value): bool {
+    $email = new static();
+    try {
+      $email->set($value);
+      return true;
+    } catch (FailedToImportFromStringException $e) {
+      return false;
+    }
   }
 
   public abstract function get(): mixed;

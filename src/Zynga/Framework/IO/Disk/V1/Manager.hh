@@ -73,7 +73,7 @@ class Manager implements DiskIOManagerInterface {
    */
   public function recursivelyDeleteDirectory(
     string $path,
-    int $minimumMillisecondsSinceModificaiton = 0
+    int $minimumMillisecondsSinceModificaiton = 0,
   ): int {
     $totalFilesDeleted = 0;
 
@@ -88,15 +88,18 @@ class Manager implements DiskIOManagerInterface {
     foreach ($resources as $resource) {
       if ($resource != "." && $resource != "..") {
         if ($this->isDirectory($path."/".$resource)) {
-          $totalFilesDeleted += $this->recursivelyDeleteDirectory($path."/".$resource);
-        } else if ((time() - filemtime($path."/".$resource)) >= $minimumMillisecondsSinceModificaiton) {
-          $totalFilesDeleted += $this->deleteFile($path."/".$resource) ? 1 : 0;
+          $totalFilesDeleted +=
+            $this->recursivelyDeleteDirectory($path."/".$resource);
+        } else if ((time() - filemtime($path."/".$resource)) >=
+                   $minimumMillisecondsSinceModificaiton) {
+          $totalFilesDeleted +=
+            $this->deleteFile($path."/".$resource) ? 1 : 0;
         }
       }
     }
 
     try {
-      if ((time() - filemtime($path)) >= $minimumMillisecondsSinceModificaiton ||
+      if ((time() - filemtime($path)) >= $minimumMillisecondsSinceModificaiton &&
           $this->scanDirectory($path)->count() <= 2) {
         $this->deleteDirectory($path);
         ++$totalFilesDeleted;
@@ -167,13 +170,14 @@ class Manager implements DiskIOManagerInterface {
       throw new ReadPermissionsException($in);
     }
 
-    if ((!$this->doesFileExist($out) && !$this->isWriteable($this->directoryName($out)) ||
-        ($this->doesFileExist($out) && !$this->isWriteable($out)))) {
+    if ((!$this->doesFileExist($out) && !$this->isWriteable(
+           $this->directoryName($out),
+         ) ||
+         ($this->doesFileExist($out) && !$this->isWriteable($out)))) {
       throw new WritePermissionsException($out);
     }
 
-    if (strpos($in, '\'') !== false ||
-        strpos($out, '\'') !== false) {
+    if (strpos($in, '\'') !== false || strpos($out, '\'') !== false) {
       throw new InvalidFileNameException("in=$in, out=$out");
     }
 
@@ -374,7 +378,7 @@ class Manager implements DiskIOManagerInterface {
     $results = Vector {};
 
     $objects = scandir($path);
-    if ( $objects === false ) {
+    if ($objects === false) {
       return $results;
     }
     $results->addAll($objects);

@@ -97,7 +97,7 @@ class Manager implements DiskIOManagerInterface {
 
     try {
       if ((time() - filemtime($path)) >= $minimumMillisecondsSinceModificaiton ||
-          $resources->count() <= 2) {
+          $this->scanDirectory($path)->count() <= 2) {
         $this->deleteDirectory($path);
         ++$totalFilesDeleted;
       }

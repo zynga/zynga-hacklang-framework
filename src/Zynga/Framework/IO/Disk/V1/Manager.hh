@@ -88,8 +88,10 @@ class Manager implements DiskIOManagerInterface {
     foreach ($resources as $resource) {
       if ($resource != "." && $resource != "..") {
         if ($this->isDirectory($path."/".$resource)) {
-          $totalFilesDeleted +=
-            $this->recursivelyDeleteDirectory($path."/".$resource);
+          $totalFilesDeleted += $this->recursivelyDeleteDirectory(
+            $path."/".$resource,
+            $minimumMillisecondsSinceModificaiton,
+          );
         } else if ((time() - filemtime($path."/".$resource)) >=
                    $minimumMillisecondsSinceModificaiton) {
           $totalFilesDeleted +=

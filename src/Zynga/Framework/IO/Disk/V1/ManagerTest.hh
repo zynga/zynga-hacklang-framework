@@ -380,7 +380,7 @@ class ManagerTest extends TestCase {
     rmdir($this->getTempTestDir().'/19');
   }
 
-  public function testRecursivelyDeleteDirectoryForNestedDirectoriesReturnsTrue(
+  public function testRecursivelyDeleteDirectoryForNestedDirectoriesReturnsCorrectCount(
   ): void {
     mkdir($this->getTempTestDir().'/20', 0777, true);
     touch($this->getTempTestDir().'/20/0.txt');
@@ -411,7 +411,7 @@ class ManagerTest extends TestCase {
     $result =
       DiskIOManager::instance()
         ->recursivelyDeleteDirectory($this->getTempTestDir().'/20');
-    $this->assertTrue($result);
+    $this->assertEquals(9, $result);
     $this->assertFalse(file_exists($this->getTempTestDir().'/20'));
     $this->assertFalse(
       file_exists($this->getTempTestDir().'/20/0.txt'),
@@ -435,28 +435,19 @@ class ManagerTest extends TestCase {
     );
   }
 
-  public function testRecursivelyDeleteDirectoryWithNonExistentPath(): void {
+  public function testRecursivelyDeleteDirectoryWithNonExistentPathReturns0(): void {
     $result =
       DiskIOManager::instance()
         ->recursivelyDeleteDirectory($this->getTempTestDir().'/21');
-    $this->assertFalse($result);
+    $this->assertEquals(0, $result);
   }
 
-  public function testRecursivelyDeleteDirectoryWithRecursiveFailure(): void {
-    mkdir($this->getTempTestDir().'/22', 0777, true);
-    $result =
-      ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense::instance()
-        ->recursivelyDeleteDirectory($this->getTempTestDir().'/22');
-    $this->assertFalse($result);
-    rmdir($this->getTempTestDir().'/22');
-  }
-
-  public function testRecursivelyDeleteDirectoryWithRmdirFailure(): void {
+  public function testRecursivelyDeleteDirectoryWithRmdirFailureReturns0(): void {
     mkdir($this->getTempTestDir().'/23', 0777, true);
     $result =
       ManagerWithRmdirFalse::instance()
         ->recursivelyDeleteDirectory($this->getTempTestDir().'/23');
-    $this->assertFalse($result);
+    $this->assertEquals(0, $result);
     rmdir($this->getTempTestDir().'/23');
   }
 

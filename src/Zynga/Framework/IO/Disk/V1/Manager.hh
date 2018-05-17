@@ -73,25 +73,24 @@ class Manager implements DiskIOManagerInterface {
    */
   public function recursivelyDeleteDirectory(
     string $path,
-    int $minimumMillisecondsSinceModificaiton = 0,
-  ): bool {
+    int $minimumMillisecondsSinceModificaiton = 0
+  ): int {
+    $totalFilesDeleted = 0;
+
     if ($path == '/' ||
         $path == 'c:\\' ||
         !$this->doesFileExist($path) ||
         !$this->isDirectory($path)) {
-      return false;
+      return $totalFilesDeleted;
     }
 
     $resources = $this->scanDirectory($path);
     foreach ($resources as $resource) {
       if ($resource != "." && $resource != "..") {
         if ($this->isDirectory($path."/".$resource)) {
-          if (!$this->recursivelyDeleteDirectory($path."/".$resource)) {
-            return false;
-          }
-        } else if ((time() - filemtime($path."/".$resource)) >= $minimumMillisecondsSinceModificaiton &&
-                   !$this->deleteFile($path."/".$resource)) {
-          return false;
+          $totalFilesDeleted += $this->recursivelyDeleteDirectory($path."/".$resource);
+        } else if ((time() - filemtime($path."/".$resource)) >= $minimumMillisecondsSinceModificaiton) {
+          $totalFilesDeleted += $this->deleteFile($path."/".$resource) ? 1 : 0;
         }
       }
     }
@@ -100,11 +99,12 @@ class Manager implements DiskIOManagerInterface {
       if ((time() - filemtime($path)) >= $minimumMillisecondsSinceModificaiton ||
           $resources->count() <= 2) {
         $this->deleteDirectory($path);
+        ++$totalFilesDeleted;
       }
-      return true;
     } catch (FailedToDeleteFileException $e) {
-      return false;
     }
+
+    return $totalFilesDeleted;
   }
 
   /**

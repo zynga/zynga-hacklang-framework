@@ -83,12 +83,12 @@ interface ManagerInterface {
    * @param $path Absolute path of directory to be deleted
    * @param $minimumMillisecondsSinceModificaiton Only delete files and folders
    *        modified >= this many milliseconds ago
-   * @return True on success, otherwise false
+   * @return Number of files (directories included) that were successfully deleted
    */
   public function recursivelyDeleteDirectory(
     string $path,
     int $minimumMillisecondsSinceModificaiton = 0,
-  ): bool;
+  ): int;
 
   /**
    * Given a file or directory path as input, create a tarball file at the given output

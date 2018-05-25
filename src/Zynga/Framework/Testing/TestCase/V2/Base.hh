@@ -86,11 +86,19 @@ abstract class Base
       Vector {},
       true,
     );
+
     DynamicMethodCall::callMethod(
       'Zynga\Legacy\Log',
       'setHideAllLogs',
       Vector {true},
       true,
+    );
+
+    DynamicMethodCall::callMethod(
+      'Zynga\Framework\Database\V2\Factory',
+      'resetResultSets',
+      Vector {},
+      true
     );
 
     return true;
@@ -121,6 +129,13 @@ abstract class Base
       'enableMocks',
       Vector {},
       true,
+    );
+
+    DynamicMethodCall::callMethod(
+      'Zynga\Framework\Database\V2\Factory',
+      'resetResultSets',
+      Vector {},
+      true
     );
 
     return true;

@@ -34,4 +34,9 @@ class FactoryTest extends TestCase {
     $this->expectException(LoadTestDataNoFileFoundException::class);
     DatabaseFactory::loadResultsForTest(DatabaseFactory::class, __FUNCTION__);
   }
+
+  public function test_resetMockResultSets(): void {
+    $this->assertTrue(DatabaseFactory::resetResultSets());
+  }
+
 }

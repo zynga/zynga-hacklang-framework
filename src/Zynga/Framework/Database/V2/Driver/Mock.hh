@@ -114,7 +114,7 @@ class Mock extends Base {
 
   }
 
-  public function resetResultsSets(): bool {
+  public function resetResultSets(): bool {
     $this->_resultSets->clear();
     $this->_isConnected = false;
     $this->_queryCounter = 0;
@@ -128,7 +128,7 @@ class Mock extends Base {
     string $functionName,
   ): bool {
     try {
-      $this->resetResultsSets();
+      $this->resetResultSets();
       return $this->_resultSets->loadResultsForTest($class, $functionName);
     } catch (Exception $e) {
       throw $e;

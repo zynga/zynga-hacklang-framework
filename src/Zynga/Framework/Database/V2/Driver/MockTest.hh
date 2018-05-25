@@ -48,7 +48,7 @@ class MockTest extends TestCase {
 
     if ($mock instanceof Mock) {
 
-      $this->assertTrue($mock->resetResultsSets());
+      $this->assertTrue($mock->resetResultSets());
       $this->assertTrue($mock->addEmptyResultSet());
 
       $resultSet = $mock->query('SELECT * FROM DUAL');
@@ -73,7 +73,7 @@ class MockTest extends TestCase {
       DatabaseFactory::factory(DriverInterface::class, self::TEST_DRIVER);
 
     if ($mock instanceof Mock) {
-      $this->assertTrue($mock->resetResultsSets());
+      $this->assertTrue($mock->resetResultSets());
       $this->assertTrue($mock->addFailingResultSet());
       $mock->query('SELECT * FROM DUAL');
     }

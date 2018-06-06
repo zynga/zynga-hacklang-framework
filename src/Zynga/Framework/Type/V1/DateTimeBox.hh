@@ -25,7 +25,7 @@ class DateTimeBox extends BaseBox {
 
   public function __toString(): string {
     $stringValue = $this->get()->format('Y-m-d H:i:s');
-    if ($stringValue === false || $this->isDefaultValue()) {
+    if ($stringValue === false || $this->isDefaultValue()[0]) {
       $stringValue = "Unknown DateTime";
     }
 

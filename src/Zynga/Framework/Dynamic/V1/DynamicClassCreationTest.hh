@@ -74,4 +74,55 @@ class DynamicClassCreationTest extends TestCase {
     );
   }
 
+  public function testInvalidClassThrowsExceptionFromDoeSclassImplementInterface(
+  ): void {
+    $this->expectException(UnableToFindClassException::class);
+    DynamicClassCreation::doesClassImplementInterface(
+      'Not_Real_Class',
+      'Zynga\Framework\Dynamic\V1\Mocks\EmptyInterface',
+    );
+  }
+
+  public function testClassWithSingleInterfaceExtendsOnlyItsInterface(): void {
+    $this->assertTrue(
+      DynamicClassCreation::doesClassImplementInterface(
+        'Zynga\Framework\Dynamic\V1\Mocks\ClassWithSingleInterface',
+        'Zynga\Framework\Dynamic\V1\Mocks\EmptyInterface',
+      ),
+      'ClassWithSingleInterface should implement EmptyInterface',
+    );
+    $this->assertFalse(
+      DynamicClassCreation::doesClassImplementInterface(
+        'Zynga\Framework\Dynamic\V1\Mocks\ClassWithSingleInterface',
+        'Zynga\Framework\Dynamic\V1\Mocks\EmptyInterfaceTwo',
+      ),
+      'ClassWithSingleInterface should not implement EmptyInterfaceTwo',
+    );
+  }
+
+  public function testClassWithMultipleInterfacesExtendsOnlyItsInterfaces(
+  ): void {
+    $this->assertTrue(
+      DynamicClassCreation::doesClassImplementInterface(
+        'Zynga\Framework\Dynamic\V1\Mocks\ClassWithMultipleInterfaces',
+        'Zynga\Framework\Dynamic\V1\Mocks\EmptyInterface',
+      ),
+      'ClassWithMultipleInterfaces should implement EmptyInterface',
+    );
+    $this->assertTrue(
+      DynamicClassCreation::doesClassImplementInterface(
+        'Zynga\Framework\Dynamic\V1\Mocks\ClassWithMultipleInterfaces',
+        'Zynga\Framework\Dynamic\V1\Mocks\EmptyInterfaceTwo',
+      ),
+      'ClassWithMultipleInterfaces should implement EmptyInterface',
+    );
+    $this->assertFalse(
+      DynamicClassCreation::doesClassImplementInterface(
+        'Zynga\Framework\Dynamic\V1\Mocks\ClassWithMultipleInterfaces',
+        'Zynga\Framework\Dynamic\V1\Mocks\EmptyInterfaceThree',
+      ),
+      'ClassWithMultipleInterfaces should not implement EmptyInterfaceThree',
+    );
+  }
+
 }

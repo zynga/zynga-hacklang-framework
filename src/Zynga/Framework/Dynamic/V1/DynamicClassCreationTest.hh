@@ -74,7 +74,7 @@ class DynamicClassCreationTest extends TestCase {
     );
   }
 
-  public function testInvalidClassThrowsExceptionFromDoeSclassImplementInterface(
+  public function testInvalidClassThrowsExceptionFromDoesClassImplementInterface(
   ): void {
     $this->expectException(UnableToFindClassException::class);
     DynamicClassCreation::doesClassImplementInterface(

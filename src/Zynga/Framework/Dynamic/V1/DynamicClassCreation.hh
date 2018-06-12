@@ -24,6 +24,18 @@ class DynamicClassCreation {
     return false;
   }
 
+  public static function doesClassImplementInterface(
+    string $className,
+    string $interfaceName,
+  ): bool {
+    if (class_exists($className, true) !== true) {
+      throw new UnableToFindClassException('class='.$className);
+    }
+
+    $reflected = new ReflectionClass($className);
+    return in_array($interfaceName, $reflected->getInterfaceNames());
+  }
+
   public static function createClassByNameGeneric<Tv>(
     string $name,
     Vector<mixed> $params,

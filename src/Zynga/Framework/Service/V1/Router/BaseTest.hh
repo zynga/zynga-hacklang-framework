@@ -8,13 +8,18 @@ use Zynga\Framework\Service\V1\Test\Router\Mock;
 use Zynga\Framework\Service\V1\Router\Request;
 use Zynga\Framework\Service\V1\Router\Response;
 
+use Zynga\Framework\Service\V1\Service\Group\Config\Base as ServiceConfigBase;
+
 use Zynga\Framework\Type\V1\StringBox;
+
+class MockConfig extends ServiceConfigBase {};
 
 class BaseTest extends TestCase {
 
   public function testMockConfig(): void {
 
-    $obj = new Mock();
+    $config = new MockConfig();
+    $obj = new Mock($config);
 
     $obj->setHandlerFromString(Mock::NOOP_HANDLER);
 
@@ -39,7 +44,8 @@ class BaseTest extends TestCase {
 
   public function testValidRoute(): void {
 
-    $obj = new Mock();
+    $config = new MockConfig();
+    $obj = new Mock($config);
 
     $request = $obj->request();
 
@@ -55,7 +61,8 @@ class BaseTest extends TestCase {
 
   public function testInvalidRoute(): void {
 
-    $obj = new Mock();
+    $config = new MockConfig();
+    $obj = new Mock($config);
 
     $request = $obj->request();
 

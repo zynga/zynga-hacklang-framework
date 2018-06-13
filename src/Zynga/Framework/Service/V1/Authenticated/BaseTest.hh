@@ -99,7 +99,7 @@ class BaseTest extends TestCase {
 
     // JEO: We need some generic mocks created on the framework itself we
     //      shouldn't have to bind against rando services.
-    $parent = new \Zynga\Poker\Services\Internal\Economy\Dashboard\V1\Request();
+    $parent = new \Zynga\Poker\MicroServices\Internal\Economy\Dashboard\V1\Request();
     $child = new \Zynga\Framework\Service\V1\Authenticated\Request\Importer($parent);
 
     $obj = new AuthenticatedService();

@@ -1,6 +1,6 @@
 <?hh // strict 
 
-namespace Zynga\Framework\Service\V1\ServiceGroup\Config;
+namespace Zynga\Framework\Service\V1\Service\Group\Config;
 
 use Zynga\Framework\Type\V1\StringBox;
 

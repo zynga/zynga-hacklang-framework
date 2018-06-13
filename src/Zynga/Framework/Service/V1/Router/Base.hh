@@ -16,10 +16,20 @@ use Zynga\Framework\Type\V1\StringBox;
 
 use Zynga\Framework\Exception\V1\Exception;
 
-abstract class Base extends ServiceBase {
+use Zynga\Framework\Service\V1\Service\Group\Config\Base as ConfigBase;
 
+abstract class Base extends ServiceBase {
+  private ConfigBase $_config;
   private ?Request $_request;
   private ?ResponseInterface $_response;
+
+  public function __construct(ConfigBase $config) {
+
+    parent::__construct();
+
+    $this->_config = $config;
+
+  }
 
   public function request(): Request {
     if ($this->_request === null) {
@@ -35,8 +45,6 @@ abstract class Base extends ServiceBase {
     return $this->_response;
   }
 
-  abstract public function getClassBase(): string;
-
   public function handle(): bool {
     // --
     // Okay given the path that was reported, can we make a solid class path?
@@ -47,9 +55,14 @@ abstract class Base extends ServiceBase {
     $shortName = rtrim($jobPath, '/');
     $shortName = ltrim($shortName, '/');
     $shortName = str_replace('/', '\\', $shortName);
-    $classBase = $this->getClassBase();
 
-    $className = $classBase.'\\'.$shortName;
+    $className = "";
+    foreach ( $this->_config->patterns as $pattern ) {
+       $candidateClassName = $pattern->codePath->get().'\\'.$shortName;
+       if ( class_exists($candidateClassName) ) {
+         $className = $candidateClassName;
+       }
+    }
 
     $obj = null;
 

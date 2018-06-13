@@ -1,10 +1,11 @@
 <?hh // strict 
 
-namespace Zynga\Service\V1\Service\Group\Config;
+namespace Zynga\Framework\Service\V1\Service\Group\Config;
 
+use Zynga\Framework\Service\V1\Service\Group\Config\Pattern;
 use Zynga\Framework\Type\V1\StringBox;
 
-abstract class Config {
+abstract class Base {
 
   public StringBox $title;
   public StringBox $description;

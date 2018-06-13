@@ -3,7 +3,10 @@
 namespace Zynga\Framework\Service\V1\Swagger;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-use Zynga\Poker\Framework\Service\Consumer\Swagger\V1\Provider as ConsumerProvider;
+
+// JEO: Need mock interface for replacing the tie to Poker.
+/*
+use Zynga\Poker\Framework\MicroService\Consumer\Swagger\V1\Provider as ConsumerProvider;
 
 class BaseTest extends TestCase {
 
@@ -16,3 +19,4 @@ class BaseTest extends TestCase {
   }
 
 }
+*/

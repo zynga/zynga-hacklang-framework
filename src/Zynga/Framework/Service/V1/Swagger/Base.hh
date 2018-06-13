@@ -28,33 +28,24 @@ use Zynga\Framework\StorableObject\V1\Fields\Generic as FieldsGeneric;
 use Zynga\Framework\Type\V1\StringBox;
 use Zynga\Framework\Type\V1\MimeTypeBox;
 
+use Zynga\Framework\Service\V1\Service\Group\Config\Base as ConfigBase;
+
 abstract class Base extends ServiceBase {
 
+  private ConfigBase $_config;
   private ?Request $_request;
   private ?Response $_response;
 
   private ResponseFailure $_responseFailure;
 
-  public function __construct() {
+  public function __construct(ConfigBase $config) {
 
     parent::__construct();
 
+    $this->_config = $config;
     $this->_responseFailure = new ResponseFailure();
 
   }
-
-  abstract public function getServiceTitle(): string;
-
-  abstract public function getServiceDescription(): string;
-
-  // --
-  // Expectation: Map of { ClassPath => CodePath }
-  // --
-  abstract public function getClassConfiguration(): Map <string, string>;
-
-  abstract public function getClassBase(): string;
-
-  abstract public function getClassPathBase(): string;
 
   public function request(): Request {
     if ($this->_request === null) {
@@ -72,8 +63,8 @@ abstract class Base extends ServiceBase {
 
   public function handle(): bool {
 
-    $this->response()->info->title->set($this->getServiceTitle());
-    $this->response()->info->description->set($this->getServiceDescription());
+    $this->response()->info->title->set($this->_config->title->get());
+    $this->response()->info->description->set($this->_config->description->get());
     $this->response()->info->contact->email->set('jorcutt@zynga.com');
 
     // TODO: Should parse the version off the classname.
@@ -191,18 +182,19 @@ abstract class Base extends ServiceBase {
 
   public function getServiceClasses(): Vector<ServiceFile> {
 
-    $classConfig = $this->getClassConfiguration();
-
     $services = Vector {};
-    foreach ( $classConfig as $classPath => $codePath ) {
-      $serviceFinder = new ServiceFinder($classPath, $codePath);
+
+    foreach ( $this->_config->patterns as $pattern ) {
+      $serviceFinder = new ServiceFinder($pattern->codePath->get(), $pattern->filePath->get());
       $serviceFinder->find();
       $foundServices = $serviceFinder->getServices();
       foreach ( $foundServices as $foundService ) {
         $services[] = $foundService;
       }
     }
+
     return $services;
+
   }
 
   public function addServicesToResponse(): bool {

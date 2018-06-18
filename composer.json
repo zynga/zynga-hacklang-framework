@@ -29,6 +29,7 @@
       "Zynga\\Framework\\Factory\\V2\\": "src/Zynga/Framework/Factory/V2/",
       "Zynga\\Framework\\Performance\\V1\\": "src/Zynga/Framework/Performance/V1/",
       "Zynga\\Framework\\Service\\V1\\": "src/Zynga/Framework/Service/V1/",
+      "Zynga\\Framework\\Service\\V2\\": "src/Zynga/Framework/Service/V2/",
       "Zynga\\Framework\\Swagger\\V2\\": "src/Zynga/Framework/Swagger/V2/",
       "Zynga\\Framework\\StorableObject\\V1\\": "src/Zynga/Framework/StorableObject/V1/",
       "Zynga\\Framework\\StorableObject\\Collections\\V1\\": "src/Zynga/Framework/StorableObject/Collections/V1/",

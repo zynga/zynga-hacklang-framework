@@ -15,7 +15,7 @@ use Zynga\Framework\Type\V1\UInt16Box;
 use Zynga\Framework\Type\V1\UInt32Box;
 use Zynga\Framework\Type\V1\UInt64Box;
 use Zynga\Framework\Type\V1\UInt8Box;
-use Zynga\Framework\Service\V1\Interfaces\ResponseDataInterface;
+use Zynga\Framework\Service\V2\Interfaces\ResponseDataInterface;
 
 class Base extends StorableObjectBase {
 

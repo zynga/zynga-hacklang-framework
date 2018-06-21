@@ -57,26 +57,24 @@ abstract class Base extends ServiceBase {
     $shortName = str_replace('/', '\\', $shortName);
 
     $className = "";
+    $obj = null;
+
     foreach ( $this->_config->patterns as $pattern ) {
        $candidateClassName = $pattern->codePath->get().'\\'.$shortName;
        if ( class_exists($candidateClassName) ) {
          $className = $candidateClassName;
+         try {
+           $obj = DynamicClassCreation::createClassByName($className, Vector {});
+           if ($obj instanceof ServiceInterface) {
+             $obj->setHandler($this->getHandler());
+             $returnValue = $obj->handleRequest(false);
+             $this->_response = $obj->response();
+             return $returnValue;
+           }
+         } catch (Exception $e) {
+           // noop, we know we hit a exception, but the next traps will handle bubble up.
+         }
        }
-    }
-
-    $obj = null;
-
-    try {
-      $obj = DynamicClassCreation::createClassByName($className, Vector {});
-    } catch (Exception $e) {
-      // noop, we know we hit a exception, but the next traps will handle bubble up.
-    }
-
-    if ($obj instanceof ServiceInterface) {
-      $obj->setHandler($this->getHandler());
-      $returnValue = $obj->handleRequest(false);
-      $this->_response = $obj->response();
-      return $returnValue;
     }
 
     $failureMessage = new StringBox();

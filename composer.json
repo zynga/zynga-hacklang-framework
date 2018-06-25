@@ -25,7 +25,7 @@
       "Zynga\\Framework\\Environment\\DevelopmentMode\\V1\\": "src/Zynga/Framework/Environment/DevelopmentMode/V1/",
       "Zynga\\Framework\\Environment\\ErrorCapture\\V1\\": "src/Zynga/Framework/Environment/ErrorCapture/V1/",
       "Zynga\\Framework\\Environment\\SuperGlobals\\V1\\": "src/Zynga/Framework/Environment/SuperGlobals/V1/",
-      "Zynga\\Framework\\Environment\\HTTP\\HeaderContainer\\V2": "src/Zynga/Framework/Environment/HTTP/HeaderContainer/V2/",
+      "Zynga\\Framework\\Environment\\HTTP\\HeaderContainer\\V2\\": "src/Zynga/Framework/Environment/HTTP/HeaderContainer/V2/",
       "Zynga\\Framework\\Exception\\V1\\": "src/Zynga/Framework/Exception/V1/",
       "Zynga\\Framework\\Factory\\V2\\": "src/Zynga/Framework/Factory/V2/",
       "Zynga\\Framework\\Performance\\V1\\": "src/Zynga/Framework/Performance/V1/",

@@ -25,11 +25,20 @@ use Zynga\Framework\Type\V1\UrlBox;
 use Zynga\Framework\Dynamic\V1\Exceptions\MissingRequiredParametersException;
 use Zynga\Framework\Swagger\V2\Exceptions\UnknownZyngaTypeException;
 
-use Zynga\Poker\Type\Client\Id\V1\Box as ClientIdBox;
-use Zynga\Poker\Type\Client\Version\V1\Box as ClientVersionBox;
-use Zynga\Poker\Type\Game\Id\V1\Box as GameIdBox;
-use Zynga\Poker\Type\Snid\V1\Box as SnidBox;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
+//use Zynga\Poker\Type\Client\Id\V1\Box as ClientIdBox;
+//$this->assertTrue($obj->convertZyngaTypeToSwaggerType(ClientIdBox::class));
+
+//use Zynga\Poker\Type\Client\Version\V1\Box as ClientVersionBox;
+//$this->assertTrue($obj->convertZyngaTypeToSwaggerType(ClientVersionBox::class));
+
+//use Zynga\Poker\Type\Game\Id\V1\Box as GameIdBox;
+//$this->assertTrue($obj->convertZyngaTypeToSwaggerType(GameIdBox::class));
+
+//use Zynga\Poker\Type\Snid\V1\Box as SnidBox;
+//$this->assertTrue($obj->convertZyngaTypeToSwaggerType(SnidBox::class));
+
+//use Zynga\Poker\Type\Uid\V1\Box as UidBox;
+//$this->assertTrue($obj->convertZyngaTypeToSwaggerType(UidBox::class));
 
 class SwaggerTypeTest extends TestCase {
 
@@ -45,9 +54,6 @@ class SwaggerTypeTest extends TestCase {
 
     // Integer types.
     $this->assertTrue($obj->convertZyngaTypeToSwaggerType(UInt64Box::class));
-    $this->assertTrue($obj->convertZyngaTypeToSwaggerType(SnidBox::class));
-    $this->assertTrue($obj->convertZyngaTypeToSwaggerType(UidBox::class));
-    $this->assertTrue($obj->convertZyngaTypeToSwaggerType(ClientIdBox::class));
     $this->assertTrue(
       $obj->convertZyngaTypeToSwaggerType(HttpResponseCodeBox::class),
     );
@@ -71,10 +77,7 @@ class SwaggerTypeTest extends TestCase {
 
     $this->assertTrue($obj->convertZyngaTypeToSwaggerType(FixedLengthStringBox::class));
     $this->assertTrue($obj->convertZyngaTypeToSwaggerType(EmailBox::class));
-    $this->assertTrue($obj->convertZyngaTypeToSwaggerType(ClientIdBox::class));
-    $this->assertTrue($obj->convertZyngaTypeToSwaggerType(GameIdBox::class));
     $this->assertTrue($obj->convertZyngaTypeToSwaggerType(BoolBox::class));
-    $this->assertTrue($obj->convertZyngaTypeToSwaggerType(ClientVersionBox::class));
   }
 
   public function testUnknownType(): void {

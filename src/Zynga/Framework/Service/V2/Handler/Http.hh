@@ -2,8 +2,8 @@
 
 namespace Zynga\Framework\Service\V2\Handler;
 
-use Zynga\Framework\Environment\HTTP\HeaderContainer\V1\HeaderContainer as HttpHeaderContainer;
-use Zynga\Framework\Environment\HTTP\HeaderContainer\V1\Interfaces\HeaderContainerInterface as HttpHeaderContainerInterface;
+use Zynga\Framework\Environment\HTTP\HeaderContainer\V2\HeaderContainer as HttpHeaderContainer;
+use Zynga\Framework\Environment\HTTP\HeaderContainer\V2\Interfaces\HeaderContainerInterface as HttpHeaderContainerInterface;
 use Zynga\Framework\Environment\SuperGlobals\V1\SuperGlobals;
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Legacy\Log\V1\Log;

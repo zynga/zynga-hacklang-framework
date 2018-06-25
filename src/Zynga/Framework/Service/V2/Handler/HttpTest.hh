@@ -3,7 +3,7 @@
 namespace Zynga\Framework\Service\V2\Handler;
 
 use Zynga\Framework\Environment\CodePath\V1\CodePath;
-use Zynga\Framework\Environment\HTTP\HeaderContainer\V1\Interfaces\HeaderContainerInterface;
+use Zynga\Framework\Environment\HTTP\HeaderContainer\V2\Interfaces\HeaderContainerInterface;
 use Zynga\Framework\Environment\SuperGlobals\V1\SuperGlobals;
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Service\V2\Interfaces\ServiceInterface;

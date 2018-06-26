@@ -11,16 +11,16 @@ class ServiceFinderTest extends TestCase {
 
   public function testConstruct(): void {
     $pattern = new Pattern();
-    $pattern->codePath->set('Zynga\Poker\Services\Consumer');
-    $pattern->filePath->set(CodePath::getRoot().'/include/Zynga/Poker/Services/Consumer');
+    $pattern->codePath->set('Zynga\Framework\Service\V2\Test');
+    $pattern->filePath->set(CodePath::getRoot().'/src/Zynga/Framework/Service/V2/Test');
     $serviceFinder = new ServiceFinder($pattern);
     $this->assertTrue($serviceFinder instanceof ServiceFinder);
   }
 
   public function testFind(): void {
     $pattern = new Pattern();
-    $pattern->codePath->set('Zynga\Poker\Services\Consumer');
-    $pattern->filePath->set(CodePath::getRoot().'/include/Zynga/Poker/Services/Consumer');
+    $pattern->codePath->set('Zynga\Framework\Service\V2\Test');
+    $pattern->filePath->set(CodePath::getRoot().'/src/Zynga/Framework/Service/V2/Test');
     $serviceFinder = new ServiceFinder($pattern);
     $this->assertTrue($serviceFinder->find());
     $services = $serviceFinder->getServices();

@@ -19,12 +19,12 @@ class BaseTest extends TestCase {
     $this->assertEquals(true, $obj->success()->get());
 
     // Response codes are http codes even if the proto isn't http.
-    $this->assertTrue($obj->code()->set(HttpResponseCodeBox::HTTP_OK));
-    $this->assertEquals(HttpResponseCodeBox::HTTP_OK, $obj->code()->get());
+    $this->assertTrue($obj->code()->set(HttpResponseCodeBox::OK));
+    $this->assertEquals(HttpResponseCodeBox::OK, $obj->code()->get());
 
-    $this->assertTrue($obj->code()->set(HttpResponseCodeBox::HTTP_FAILURE));
+    $this->assertTrue($obj->code()->set(HttpResponseCodeBox::FAILURE_BAD_REQUEST));
     $this->assertEquals(
-      HttpResponseCodeBox::HTTP_FAILURE,
+      HttpResponseCodeBox::FAILURE_BAD_REQUEST,
       $obj->code()->get(),
     );
 

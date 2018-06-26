@@ -8,11 +8,29 @@ use Zynga\Framework\Service\V2\Test\Router\Mock;
 use Zynga\Framework\Service\V2\Router\Request;
 use Zynga\Framework\Service\V2\Router\Response;
 
+use Zynga\Framework\Service\V2\Interfaces\Exposure\Filter as BaseFilter;
 use Zynga\Framework\Service\V2\Service\Group\Config\Base as ServiceConfigBase;
+use Zynga\Framework\Service\V2\Service\Group\Config\Pattern as ConfigPattern;
+use Zynga\Framework\Environment\CodePath\V1\CodePath;
 
 use Zynga\Framework\Type\V1\StringBox;
 
-class MockConfig extends ServiceConfigBase {};
+class MockConfig extends ServiceConfigBase {
+
+  public function __construct() {
+    parent::__construct();
+    $this->initConfiguration();
+  }
+
+  private function initConfiguration(): void {
+    $legacyConfig = new ConfigPattern();
+    $legacyConfig->codePath->set('Zynga\Framework\Service\V2\Test');
+    $legacyConfig->filePath->set(CodePath::getRoot().'/include/Zynga/Framework/Service/V2/Test');
+    $legacyConfig->mustImplementFilter->add(BaseFilter::class);
+    $this->patterns->add($legacyConfig);
+  }
+
+}
 
 class BaseTest extends TestCase {
 
@@ -52,7 +70,7 @@ class BaseTest extends TestCase {
     $obj->setHandlerFromString(Mock::NOOP_HANDLER);
 
     if ($request instanceof Request) {
-      $request->servicePath->set('/Mock/V1/Noop');
+      $request->servicePath->set('/Valid');
     }
 
     $this->assertTrue($obj->handle());

@@ -102,7 +102,7 @@ class Http extends BaseHandler {
 
       parent::handleGenericSuccess();
 
-      $service->response()->code()->set(HttpResponseCodeBox::HTTP_OK);
+      $service->response()->code()->set(HttpResponseCodeBox::OK);
 
       return true;
     }
@@ -119,7 +119,7 @@ class Http extends BaseHandler {
 
       parent::handleGenericFailure();
 
-      $service->response()->code()->set(HttpResponseCodeBox::HTTP_FAILURE);
+      $service->response()->code()->set(HttpResponseCodeBox::FAILURE_BAD_REQUEST);
 
       return true;
 
@@ -135,7 +135,12 @@ class Http extends BaseHandler {
 
     $failure = new ResponseFailure();
     $failure->success()->set(false);
-    $failure->code()->set(HttpResponseCodeBox::HTTP_FAILURE);
+    if ( $service->response()->code()->get() >= HttpResponseCodeBox::FAILURE_RANGE_START &&
+        $service->response()->code()->get() <= HttpResponseCodeBox::FAILURE_RANGE_END ) {
+      $failure->code()->set($service->response()->code()->get());
+    } else {
+      $failure->code()->set(HttpResponseCodeBox::FAILURE_BAD_REQUEST);
+    }
 
     $values = $service->response()->message()->toArray();
 
@@ -153,7 +158,7 @@ class Http extends BaseHandler {
   ): ResponseFailure {
     $failure = new ResponseFailure();
     $failure->success()->set(false);
-    $failure->code()->set(HttpResponseCodeBox::HTTP_FAILURE);
+    $failure->code()->set(HttpResponseCodeBox::FAILURE_BAD_REQUEST);
     $errorMessage = new StringBox();
     $errorMessage->set(
       $this->createShortExceptionName($e).': '.$e->getMessage(),
@@ -179,8 +184,7 @@ class Http extends BaseHandler {
       //  not needing.
       //
       // --
-      if ($service->response()->code()->get() !==
-          HttpResponseCodeBox::HTTP_OK) {
+      if ($service->response()->code()->get() !== HttpResponseCodeBox::OK) {
 
         $failure = $this->createHttpCodeResponseFailure($service);
         return $failure->export()->asJSON();

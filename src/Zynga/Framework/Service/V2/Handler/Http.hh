@@ -6,7 +6,7 @@ use Zynga\Framework\Environment\HTTP\HeaderContainer\V2\HeaderContainer as HttpH
 use Zynga\Framework\Environment\HTTP\HeaderContainer\V2\Interfaces\HeaderContainerInterface as HttpHeaderContainerInterface;
 use Zynga\Framework\Environment\SuperGlobals\V1\SuperGlobals;
 use Zynga\Framework\Exception\V1\Exception;
-use Zynga\Legacy\Log\V1\Log;
+use Zynga\Framework\Logging\V1\StaticLogger;
 use Zynga\Framework\Service\V2\Handler\Base as BaseHandler;
 use Zynga\Framework\Service\V2\Interfaces\ServiceInterface;
 use Zynga\Framework\Service\V2\Response\Failure as ResponseFailure;
@@ -238,14 +238,7 @@ class Http extends BaseHandler {
     } catch (Exception $e) {
       // this is a hard failure situation, we can't use our normal methods.
       echo '{"message":"uncaught-exception"}';
-      Log::error_log(
-        'responseErrorCaught e='.
-        get_class($e).
-        ' message='.
-        $e->getMessage().
-        ' stackTrace='.
-        $e->getTraceAsString(),
-      );
+      StaticLogger::exception('responseErrorCaught', Map {}, $e, true);
       return false;
     }
   }

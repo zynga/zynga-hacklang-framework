@@ -8,7 +8,7 @@ use Zynga\Framework\Service\V2\Interfaces\ServiceInterface;
 use Zynga\Framework\Type\V1\StringBox;
 
 use Zynga\Framework\Exception\V1\Exception;
-use Zynga\Legacy\Log\V1\Log;
+use Zynga\Framework\Logging\V1\StaticLogger;
 
 abstract class Base implements HandlerInterface {
   private ?ServiceInterface $_service;
@@ -69,15 +69,14 @@ abstract class Base implements HandlerInterface {
     $service->response()->addMessage($failureMessage);
     $message = $service->response()->message()->export()->asJSON();
 
-    Log::error_log(
-      'Service Handler failed',
-      array(
+    StaticLogger::error('Service Handler failed',
+      Map {
         'failureMessage' => $failureMessage,
         'service' => get_class($service),
         'method' => __METHOD__,
-        'stacktrace' => $e->getTraceAsString(),
         'request' => $service->request(),
-      ),
+        },
+      true
     );
 
     return true;

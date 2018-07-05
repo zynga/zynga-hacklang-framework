@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a28c91251c47cf889dd56bd979faa8e",
+    "content-hash": "ffa81a777a0c69036b191210cd799242",
     "packages": [
         {
             "name": "zynga/phpunit",
-            "version": "v1.7.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zynga/zynga-hhvm-phpunit.git",
-                "reference": "d2d8e5d092508aa1c35587464d4244256e846124"
+                "reference": "e42b6d431a382f3c7955bf8c57f790b5290c0bed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/d2d8e5d092508aa1c35587464d4244256e846124",
-                "reference": "d2d8e5d092508aa1c35587464d4244256e846124",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/e42b6d431a382f3c7955bf8c57f790b5290c0bed",
+                "reference": "e42b6d431a382f3c7955bf8c57f790b5290c0bed",
                 "shasum": ""
             },
             "require": {
@@ -32,6 +32,14 @@
                 "vendor/phpunit/phpunit/phpunit-vendor-xdebug"
             ],
             "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zynga\\PHPUnit\\": "src/Zynga/PHPUnit/",
+                    "PHPUnit\\Exceptions\\": "src/PHPUnit/Exceptions/",
+                    "PHPUnit\\Framework\\": "src/PHPUnit/Framework/",
+                    "PHPUnit\\Interfaces\\": "src/PHPUnit/Interfaces/"
+                }
+            },
             "description": "Zynga modifications to the PHPUNIT framework.",
             "keywords": [
                 "phpunit",
@@ -39,23 +47,23 @@
                 "xunit"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v1.7.2",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/master",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit/issues"
             },
-            "time": "2018-05-25T16:47:31+00:00"
+            "time": "2018-07-05T07:35:01+00:00"
         },
         {
             "name": "zynga/phpunit-hhi",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zynga/zynga-hhvm-phpunit-hhi.git",
-                "reference": "254eab5d6655863df8056289d435a9b723691d89"
+                "reference": "8e283b0d568937b7fa0046f4327d559239073456"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit-hhi/zipball/254eab5d6655863df8056289d435a9b723691d89",
-                "reference": "254eab5d6655863df8056289d435a9b723691d89",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit-hhi/zipball/8e283b0d568937b7fa0046f4327d559239073456",
+                "reference": "8e283b0d568937b7fa0046f4327d559239073456",
                 "shasum": ""
             },
             "require": {
@@ -77,16 +85,18 @@
                 "testing"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/tree/v1.0.0",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/tree/v1.0.1",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/issues"
             },
-            "time": "2017-09-21T17:57:25+00:00"
+            "time": "2018-07-03T06:01:28+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "zynga/phpunit": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

@@ -20,7 +20,7 @@ class TestCaseTestNoImplement {}
 
 class TestCaseMock extends ZyngaTestCase {}
 
-class TestCaseTest extends ZyngaTestCase {
+class BaseTest extends ZyngaTestCase {
 
   public function test_perfFunction(): void {
 

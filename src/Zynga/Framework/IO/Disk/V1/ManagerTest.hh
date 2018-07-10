@@ -25,9 +25,15 @@ use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnce;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnceBzcloseFails;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnceFcloseFails;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFileWriteZeroBytes;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrue;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue;
+use
+  Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense
+;
+use
+  Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrue
+;
+use
+  Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue
+;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithRmdirFalse;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithTarballValidFalse;
@@ -35,9 +41,17 @@ use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithTarballValidFalse;
 class ManagerTest extends TestCase {
 
   private function getTempTestDir(): string {
-    return CodePath::getRoot() . '/tmp/ManagerTest';
+    return CodePath::getRoot().'/tmp/ManagerTest';
   }
 
+  <<__Override>>
+  public function doSetUpBeforeClass(): bool {
+    DiskIOManager::instance()
+      ->recursivelyDeleteDirectory($this->getTempTestDir());
+    return parent::doSetUpBeforeClass();
+  }
+
+  <<__Override>>
   public function doTearDownAfterClass(): bool {
     DiskIOManager::instance()
       ->recursivelyDeleteDirectory($this->getTempTestDir());
@@ -58,7 +72,7 @@ class ManagerTest extends TestCase {
     $method->setAccessible(true);
     $handle = $method->invoke(
       DiskIOManager::instance(),
-      $this->getTempTestDir() . '/1',
+      $this->getTempTestDir().'/1',
       'y',
     );
     $this->assertFalse($handle);
@@ -75,7 +89,7 @@ class ManagerTest extends TestCase {
     $method->setAccessible(true);
     $directory = $method->invoke(
       DiskIOManager::instance(),
-      $this->getTempTestDir() . '/2',
+      $this->getTempTestDir().'/2',
     );
     $this->assertEquals($this->getTempTestDir(), $directory);
   }
@@ -86,13 +100,13 @@ class ManagerTest extends TestCase {
     $method->setAccessible(true);
     $method->invoke(
       DiskIOManager::instance(),
-      $this->getTempTestDir() . '/3',
+      $this->getTempTestDir().'/3',
       0000,
       false,
     );
     $success = $method->invoke(
       DiskIOManager::instance(),
-      $this->getTempTestDir() . '/3',
+      $this->getTempTestDir().'/3',
       0000,
       false,
     );
@@ -105,12 +119,13 @@ class ManagerTest extends TestCase {
     $method->setAccessible(true);
     $success = $method->invoke(
       DiskIOManager::instance(),
-      $this->getTempTestDir() . '/4',
+      $this->getTempTestDir().'/4',
     );
     $this->assertFalse($success);
   }
 
   public function testFwriteWithValidHandleReturnsCorrectCount(): void {
+    var_dump($this->getTempTestDir());
     mkdir($this->getTempTestDir().'/5', 0777, true);
     $handle = fopen($this->getTempTestDir().'/5/1', 'w');
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
@@ -392,63 +407,74 @@ class ManagerTest extends TestCase {
     mkdir($this->getTempTestDir().'/20/1/0/0', 0777, true);
     touch($this->getTempTestDir().'/20/1/0/0/0.txt');
     $this->assertTrue(file_exists($this->getTempTestDir().'/20'));
-    $this->assertTrue(
-      file_exists($this->getTempTestDir().'/20/0.txt'),
-    );
+    $this->assertTrue(file_exists($this->getTempTestDir().'/20/0.txt'));
     $this->assertTrue(file_exists($this->getTempTestDir().'/20/0'));
-    $this->assertTrue(
-      file_exists($this->getTempTestDir().'/20/0/0.txt'),
-    );
+    $this->assertTrue(file_exists($this->getTempTestDir().'/20/0/0.txt'));
     $this->assertTrue(file_exists($this->getTempTestDir().'/20/0/0'));
     $this->assertTrue(file_exists($this->getTempTestDir().'/20/1'));
     $this->assertTrue(file_exists($this->getTempTestDir().'/20/1/0'));
-    $this->assertTrue(
-      file_exists($this->getTempTestDir().'/20/1/0/0'),
-    );
-    $this->assertTrue(
-      file_exists($this->getTempTestDir().'/20/1/0/0/0.txt'),
-    );
+    $this->assertTrue(file_exists($this->getTempTestDir().'/20/1/0/0'));
+    $this->assertTrue(file_exists($this->getTempTestDir().'/20/1/0/0/0.txt'));
     $result =
       DiskIOManager::instance()
         ->recursivelyDeleteDirectory($this->getTempTestDir().'/20');
     $this->assertEquals(9, $result);
     $this->assertFalse(file_exists($this->getTempTestDir().'/20'));
-    $this->assertFalse(
-      file_exists($this->getTempTestDir().'/20/0.txt'),
-    );
+    $this->assertFalse(file_exists($this->getTempTestDir().'/20/0.txt'));
     $this->assertFalse(file_exists($this->getTempTestDir().'/20/0'));
-    $this->assertFalse(
-      file_exists($this->getTempTestDir().'/20/0/0.txt'),
-    );
-    $this->assertFalse(
-      file_exists($this->getTempTestDir().'/20/0/0'),
-    );
+    $this->assertFalse(file_exists($this->getTempTestDir().'/20/0/0.txt'));
+    $this->assertFalse(file_exists($this->getTempTestDir().'/20/0/0'));
     $this->assertFalse(file_exists($this->getTempTestDir().'/20/1'));
-    $this->assertFalse(
-      file_exists($this->getTempTestDir().'/20/1/0'),
-    );
-    $this->assertFalse(
-      file_exists($this->getTempTestDir().'/20/1/0/0'),
-    );
+    $this->assertFalse(file_exists($this->getTempTestDir().'/20/1/0'));
+    $this->assertFalse(file_exists($this->getTempTestDir().'/20/1/0/0'));
     $this->assertFalse(
       file_exists($this->getTempTestDir().'/20/1/0/0/0.txt'),
     );
   }
 
-  public function testRecursivelyDeleteDirectoryWithNonExistentPathReturns0(): void {
+  public function testRecursivelyDeleteDirectoryWithNonExistentPathReturns0(
+  ): void {
     $result =
       DiskIOManager::instance()
         ->recursivelyDeleteDirectory($this->getTempTestDir().'/21');
     $this->assertEquals(0, $result);
   }
 
-  public function testRecursivelyDeleteDirectoryWithRmdirFailureReturns0(): void {
+  public function testRecursivelyDeleteDirectoryWithRmdirFailureReturns0(
+  ): void {
     mkdir($this->getTempTestDir().'/23', 0777, true);
     $result =
       ManagerWithRmdirFalse::instance()
         ->recursivelyDeleteDirectory($this->getTempTestDir().'/23');
     $this->assertEquals(0, $result);
     rmdir($this->getTempTestDir().'/23');
+  }
+
+  public function testDeleteAgeFilter(): void {
+    $dir = $this->getTempTestDir().'/'.__FUNCTION__;
+    mkdir($dir, 0777, true);
+    $oneHourAgo = time() - 3600;
+    touch("$dir/oldFileToBeDeleted.txt", $oneHourAgo);
+    touch("$dir/recentlyCreatedFileShouldNotBeDeleted.txt");
+    $result =
+      DiskIOManager::instance()->recursivelyDeleteDirectory($dir, 300);
+
+    $this->assertEquals(1, $result);
+  }
+
+  public function testDeleteAgeFilterWithSubDirs(): void {
+    $dir = $this->getTempTestDir().'/'.__FUNCTION__;
+    mkdir($dir, 0777, true);
+    mkdir("$dir/subDir1", 0777, true);
+    mkdir("$dir/subDir2", 0777, true);
+
+    $oneHourAgo = time() - 3600;
+    touch("$dir/subDir1/oldFileToBeDeleted.txt", $oneHourAgo);
+    touch("$dir/subDir2/recentlyCreatedFileShouldNotBeDeleted.txt");
+    $result =
+      DiskIOManager::instance()->recursivelyDeleteDirectory($dir, 300);
+
+    $this->assertEquals(1, $result);
   }
 
   public function testChownOnAlreadyOwnedDirectory(): void {
@@ -466,58 +492,80 @@ class ManagerTest extends TestCase {
 
   public function testTarballSucceeds(): void {
     mkdir($this->getTempTestDir().'/25/0', 0777, true);
-    DiskIOManager::instance()->tarball($this->getTempTestDir().'/25/0', $this->getTempTestDir().'/25/0.tar');
+    DiskIOManager::instance()->tarball(
+      $this->getTempTestDir().'/25/0',
+      $this->getTempTestDir().'/25/0.tar',
+    );
     $this->assertTrue(file_exists($this->getTempTestDir().'/25/0.tar'));
     unlink($this->getTempTestDir().'/25/0.tar');
     rmdir($this->getTempTestDir().'/25/0');
     rmdir($this->getTempTestDir().'/25');
   }
 
-  public function testTarballWithDoesFileExistFalseThrowsReadPermissionsException(): void {
+  public function testTarballWithDoesFileExistFalseThrowsReadPermissionsException(
+  ): void {
     $this->expectException(ReadPermissionsException::class);
     ManagerWithDoesFileExistFalse::instance()->tarball('', '');
   }
 
-  public function testTarballWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrueThrowsWritePermissionsException(): void {
+  public function testTarballWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrueThrowsWritePermissionsException(
+  ): void {
     $this->expectException(WritePermissionsException::class);
-    ManagerWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrue::instance()->tarball('', '');
+    ManagerWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrue::instance()
+      ->tarball('', '');
   }
 
-  public function testTarballWithQuotesInFileNamesThrowsInvalidFileNameException(): void {
+  public function testTarballWithQuotesInFileNamesThrowsInvalidFileNameException(
+  ): void {
     $this->expectException(InvalidFileNameException::class);
-    ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue::instance()->tarball('\'', '\'');
+    ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue::instance()
+      ->tarball('\'', '\'');
   }
 
-  public function testTarballWithExistingFileThrowsInvalidFileNameException(): void {
+  public function testTarballWithExistingFileThrowsInvalidFileNameException(
+  ): void {
     mkdir($this->getTempTestDir().'/26/0', 0777, true);
     touch($this->getTempTestDir().'/26/0.tar', 0777, true);
     try {
-      ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue::instance()->tarball($this->getTempTestDir().'/26/0', $this->getTempTestDir().'/26/0.tar');
+      ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue::instance()
+        ->tarball(
+          $this->getTempTestDir().'/26/0',
+          $this->getTempTestDir().'/26/0.tar',
+        );
       $this->fail();
-    } catch (InvalidFileNameException $e){}
+    } catch (InvalidFileNameException $e) {
+    }
     unlink($this->getTempTestDir().'/26/0.tar');
     rmdir($this->getTempTestDir().'/26/0');
     rmdir($this->getTempTestDir().'/26');
     $this->assertFalse(file_exists($this->getTempTestDir().'/26'));
   }
 
-  public function testTarballWithEmptyFileNameThrowsFailedToWriteToFileException(): void {
+  public function testTarballWithEmptyFileNameThrowsFailedToWriteToFileException(
+  ): void {
     mkdir($this->getTempTestDir().'/27/0', 0777, true);
     try {
-      ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue::instance()->tarball('', '');
+      ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue::instance()
+        ->tarball('', '');
       $this->fail();
-    } catch (FailedToWriteToFileException $e) {}
+    } catch (FailedToWriteToFileException $e) {
+    }
     rmdir($this->getTempTestDir().'/27/0');
     rmdir($this->getTempTestDir().'/27');
     $this->assertFalse(file_exists($this->getTempTestDir().'/27'));
   }
 
-  public function testManagerWithTarballValidFalseThrowsFailedToWriteToFileException(): void {
+  public function testManagerWithTarballValidFalseThrowsFailedToWriteToFileException(
+  ): void {
     mkdir($this->getTempTestDir().'/28/0', 0777, true);
     try {
-      ManagerWithTarballValidFalse::instance()->tarball($this->getTempTestDir().'/28/0', $this->getTempTestDir().'/28/0.tar');
+      ManagerWithTarballValidFalse::instance()->tarball(
+        $this->getTempTestDir().'/28/0',
+        $this->getTempTestDir().'/28/0.tar',
+      );
       $this->fail();
-    } catch (FailedToWriteToFileException $e) {}
+    } catch (FailedToWriteToFileException $e) {
+    }
     $this->assertTrue(file_exists($this->getTempTestDir().'/28/0.tar'));
     unlink($this->getTempTestDir().'/28/0.tar');
     rmdir($this->getTempTestDir().'/28/0');

@@ -73,7 +73,7 @@ class Manager implements DiskIOManagerInterface {
    */
   public function recursivelyDeleteDirectory(
     string $path,
-    int $minimumMillisecondsSinceModificaiton = 0,
+    int $minimumSecondsSinceModification = 0,
   ): int {
     $totalFilesDeleted = 0;
 
@@ -90,10 +90,10 @@ class Manager implements DiskIOManagerInterface {
         if ($this->isDirectory($path."/".$resource)) {
           $totalFilesDeleted += $this->recursivelyDeleteDirectory(
             $path."/".$resource,
-            $minimumMillisecondsSinceModificaiton,
+            $minimumSecondsSinceModification,
           );
         } else if ((time() - filemtime($path."/".$resource)) >=
-                   $minimumMillisecondsSinceModificaiton) {
+                   $minimumSecondsSinceModification) {
           $totalFilesDeleted +=
             $this->deleteFile($path."/".$resource) ? 1 : 0;
         }
@@ -101,7 +101,7 @@ class Manager implements DiskIOManagerInterface {
     }
 
     try {
-      if ((time() - filemtime($path)) >= $minimumMillisecondsSinceModificaiton &&
+      if ((time() - filemtime($path)) >= $minimumSecondsSinceModification &&
           $this->scanDirectory($path)->count() <= 2) {
         $this->deleteDirectory($path);
         ++$totalFilesDeleted;

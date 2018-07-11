@@ -81,13 +81,13 @@ interface ManagerInterface {
    * Recursively deletes the given directory and all of its contents
    *
    * @param $path Absolute path of directory to be deleted
-   * @param $minimumMillisecondsSinceModificaiton Only delete files and folders
-   *        modified >= this many milliseconds ago
+   * @param $minimumSecondsSinceModificaiton Only delete files and folders
+   *        modified >= this many seconds ago
    * @return Number of files (directories included) that were successfully deleted
    */
   public function recursivelyDeleteDirectory(
     string $path,
-    int $minimumMillisecondsSinceModificaiton = 0,
+    int $minimumSecondsSinceModification = 0,
   ): int;
 
   /**

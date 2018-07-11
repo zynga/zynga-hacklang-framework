@@ -125,7 +125,6 @@ class ManagerTest extends TestCase {
   }
 
   public function testFwriteWithValidHandleReturnsCorrectCount(): void {
-    var_dump($this->getTempTestDir());
     mkdir($this->getTempTestDir().'/5', 0777, true);
     $handle = fopen($this->getTempTestDir().'/5/1', 'w');
     $class = new ReflectionClass('Zynga\Framework\IO\Disk\V1\Manager');
@@ -450,7 +449,7 @@ class ManagerTest extends TestCase {
     rmdir($this->getTempTestDir().'/23');
   }
 
-  public function testDeleteAgeFilter(): void {
+  public function testDeleteWithNonZeroMtimeFilter(): void {
     $dir = $this->getTempTestDir().'/'.__FUNCTION__;
     mkdir($dir, 0777, true);
     $oneHourAgo = time() - 3600;
@@ -462,7 +461,7 @@ class ManagerTest extends TestCase {
     $this->assertEquals(1, $result);
   }
 
-  public function testDeleteAgeFilterWithSubDirs(): void {
+  public function testDeleteWithNonZeroMtimeFilterWithSubDirs(): void {
     $dir = $this->getTempTestDir().'/'.__FUNCTION__;
     mkdir($dir, 0777, true);
     mkdir("$dir/subDir1", 0777, true);

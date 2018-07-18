@@ -57,6 +57,25 @@ class BaseTest extends TestCase {
     $this->assertFalse($svc->response()->success()->get());
   }
 
+  public function testValid_FailureExceptionDoesNotChangeInRangeFailureCode(
+  ): void {
+    $obj = new MockEmptyHandler();
+    $svc = new ValidService();
+    $obj->setService($svc);
+    $e = new Exception('some-error-message');
+    $svc->response()->code->set(500);
+    $this->assertTrue($obj->handleFailureException($e));
+    $message = $svc->response()->message()->at(0);
+    if ($message instanceof StringBox) {
+      $this->assertEquals(
+        'Zynga\Framework\Exception\V1\Exception: some-error-message',
+        $message->get(),
+      );
+    }
+    $this->assertFalse($svc->response()->success()->get());
+    $this->assertTrue(500 == $svc->response()->code->get());
+  }
+
   public function testValid_HandleGenericSuccess(): void {
     $obj = new MockEmptyHandler();
     $svc = new ValidService();

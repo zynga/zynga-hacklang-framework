@@ -3,7 +3,9 @@
 namespace Zynga\Framework\Service\V2\Handler;
 
 use Zynga\Framework\Environment\CodePath\V1\CodePath;
-use Zynga\Framework\Environment\HTTP\HeaderContainer\V2\Interfaces\HeaderContainerInterface;
+use
+  Zynga\Framework\Environment\HTTP\HeaderContainer\V2\Interfaces\HeaderContainerInterface
+;
 use Zynga\Framework\Environment\SuperGlobals\V1\SuperGlobals;
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Service\V2\Interfaces\ServiceInterface;
@@ -13,7 +15,9 @@ use Zynga\Framework\Service\V2\Test\Handler\MockHttpHandler;
 use Zynga\Framework\Service\V2\Test\Valid as ValidService;
 use Zynga\Framework\Service\V2\Test\ValidNoFields as ValidNoFieldsService;
 use Zynga\Framework\Service\V2\Test\ValidRequired as ValidRequiredService;
-use Zynga\Framework\StorableObject\V1\Exceptions\MissingDataFromExportDataException;
+use
+  Zynga\Framework\StorableObject\V1\Exceptions\MissingDataFromExportDataException
+;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\Type\V1\StringBox;
 
@@ -82,13 +86,24 @@ class HttpTest extends TestCase {
     );
   }
 
-  public function test_createJsonForResponse_notOk(): void {
+  public function test_createJsonForResponse_notOk_400(): void {
     $obj = new MockHttpHandler();
     $svc = new ValidService();
     $this->assertTrue($obj->setService($svc));
     $svc->response()->code()->set(400);
     $this->assertEquals(
       '{"success":false,"code":400}',
+      $obj->createJsonForResponse(),
+    );
+  }
+
+  public function test_createJsonForResponse_notOk_500(): void {
+    $obj = new MockHttpHandler();
+    $svc = new ValidService();
+    $this->assertTrue($obj->setService($svc));
+    $svc->response()->code()->set(500);
+    $this->assertEquals(
+      '{"success":false,"code":500}',
       $obj->createJsonForResponse(),
     );
   }
@@ -157,11 +172,22 @@ class HttpTest extends TestCase {
     $this->assertTrue($obj->getService() instanceof ServiceInterface);
   }
 
-  public function test_handleGenericFailure(): void {
+  public function test_handleGenericFailure_Sets400(): void {
     $obj = new MockHttpHandler();
     $svc = new ValidService();
     $obj->setService($svc);
     $this->assertTrue($obj->handleGenericFailure());
+    $this->assertEquals(400, $svc->response()->code()->get());
+    $this->assertFalse($svc->response()->success()->get());
+  }
+
+  public function test_handleGenericFailure_Preserves500(): void {
+    $obj = new MockHttpHandler();
+    $svc = new ValidService();
+    $obj->setService($svc);
+    $svc->response()->code()->set(500);
+    $this->assertTrue($obj->handleGenericFailure());
+    $this->assertEquals(500, $svc->response()->code()->get());
     $this->assertFalse($svc->response()->success()->get());
   }
 
@@ -190,7 +216,8 @@ class HttpTest extends TestCase {
     $this->assertTrue($svc->response()->success()->get());
   }
 
-  public function test_createHttpCodeResponseFailure(): void {
+  public function test_createHttpCodeResponseFailureSetsFailureBadRequest(
+  ): void {
     $obj = new MockHttpHandler();
     $svc = new ValidService();
     $mess = new StringBox();
@@ -199,6 +226,19 @@ class HttpTest extends TestCase {
     $failure = $obj->createHttpCodeResponseFailure($svc);
     $this->assertTrue($failure instanceof ResponseFailure);
     $this->assertEquals(400, $failure->code()->get());
+  }
+
+  public function test_createHttpCodeResponseFailureUsesServiceCodeInRange(
+  ): void {
+    $obj = new MockHttpHandler();
+    $svc = new ValidService();
+    $mess = new StringBox();
+    $mess->set('some-error-message');
+    $svc->response()->message()->add($mess);
+    $svc->response()->code()->set(500);
+    $failure = $obj->createHttpCodeResponseFailure($svc);
+    $this->assertTrue($failure instanceof ResponseFailure);
+    $this->assertEquals(500, $failure->code()->get());
   }
 
   public function test_createMissingDataFailure(): void {

@@ -2,15 +2,21 @@
 
 namespace Zynga\Framework\Service\V2\Handler;
 
-use Zynga\Framework\Environment\HTTP\HeaderContainer\V2\HeaderContainer as HttpHeaderContainer;
-use Zynga\Framework\Environment\HTTP\HeaderContainer\V2\Interfaces\HeaderContainerInterface as HttpHeaderContainerInterface;
+use
+  Zynga\Framework\Environment\HTTP\HeaderContainer\V2\HeaderContainer as HttpHeaderContainer
+;
+use
+  Zynga\Framework\Environment\HTTP\HeaderContainer\V2\Interfaces\HeaderContainerInterface as HttpHeaderContainerInterface
+;
 use Zynga\Framework\Environment\SuperGlobals\V1\SuperGlobals;
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Logging\V1\StaticLogger;
 use Zynga\Framework\Service\V2\Handler\Base as BaseHandler;
 use Zynga\Framework\Service\V2\Interfaces\ServiceInterface;
 use Zynga\Framework\Service\V2\Response\Failure as ResponseFailure;
-use Zynga\Framework\StorableObject\V1\Exceptions\MissingDataFromExportDataException;
+use
+  Zynga\Framework\StorableObject\V1\Exceptions\MissingDataFromExportDataException
+;
 use Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException;
 use Zynga\Framework\Type\V1\HttpResponseCodeBox;
 use Zynga\Framework\Type\V1\StringBox;
@@ -118,8 +124,11 @@ class Http extends BaseHandler {
     if ($service instanceof ServiceInterface) {
 
       parent::handleGenericFailure();
-
-      $service->response()->code()->set(HttpResponseCodeBox::FAILURE_BAD_REQUEST);
+      if ($service->response()->code()->isDefaultValue()[0] === true) {
+        $service->response()
+          ->code()
+          ->set(HttpResponseCodeBox::FAILURE_BAD_REQUEST);
+      }
 
       return true;
 
@@ -135,8 +144,8 @@ class Http extends BaseHandler {
 
     $failure = new ResponseFailure();
     $failure->success()->set(false);
-    if ( $service->response()->code()->get() >= HttpResponseCodeBox::FAILURE_RANGE_START &&
-        $service->response()->code()->get() <= HttpResponseCodeBox::FAILURE_RANGE_END ) {
+    if ($service->response()->code()->get() >= HttpResponseCodeBox::FAILURE_RANGE_START &&
+        $service->response()->code()->get() <= HttpResponseCodeBox::FAILURE_RANGE_END) {
       $failure->code()->set($service->response()->code()->get());
     } else {
       $failure->code()->set(HttpResponseCodeBox::FAILURE_BAD_REQUEST);

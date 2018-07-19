@@ -5,11 +5,11 @@ services:
 env:
   - HHVM_VERSION=3.18-lts-latest
     ##
-    # Post 3.18 we are not compatible as the changes to include & references when utilizing certain 
-    # php extensions breaks us. 
+    # Post 3.18 we are not compatible as the changes to include & references when utilizing certain
+    # php extensions breaks us.
     ##
     #- HHVM_VERSION=latest
 install:
   - docker pull hhvm/hhvm:$HHVM_VERSION
 script:
-  - docker run -it -v $(pwd):/var/source hhvm/hhvm:$HHVM_VERSION /var/source/.build.sh
+  - docker run -it -e GITHUB_TOKEN=$GITHUB_TOKEN -v $(pwd):/var/source hhvm/hhvm:$HHVM_VERSION /var/source/.build.sh

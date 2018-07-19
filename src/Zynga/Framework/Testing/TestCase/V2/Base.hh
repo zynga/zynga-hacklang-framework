@@ -23,7 +23,7 @@ use Zynga\Framework\Testing\TestCase\V2\TestCaseShim;
 // public function run(PHPUnit_Framework_TestResult $result = null);
 // public function toString();
 
-use PHPUnit\Exceptions\AssertionFailedError;
+use \PHPUnit_Framework_AssertionFailedError;
 
 use \PHPUnit_Framework_Test;
 use \PHPUnit_Framework_SelfDescribing;
@@ -100,7 +100,7 @@ abstract class Base
       'Zynga\Framework\Database\V2\Factory',
       'resetResultSets',
       Vector {},
-      true
+      true,
     );
 
     return true;
@@ -137,7 +137,7 @@ abstract class Base
       'Zynga\Framework\Database\V2\Factory',
       'resetResultSets',
       Vector {},
-      true
+      true,
     );
 
     return true;
@@ -208,7 +208,7 @@ abstract class Base
   }
 
   public function assertionFailureExpected(): void {
-    $this->expectException(AssertionFailedError::class);
+    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
   }
 
   public function assertClassImplements(string $expected, mixed $value): void {
@@ -298,7 +298,7 @@ abstract class Base
    * @param bool   $condition
    * @param string $message
    *
-   * @throws AssertionFailedError
+   * @throws PHPUnit_Framework_AssertionFailedError
    */
   public function assertTrue(bool $condition, string $message = ''): void {
     $this->_testCaseShim->assertTrue($condition, $message);
@@ -449,7 +449,7 @@ abstract class Base
    * @param bool   $condition
    * @param string $message
    *
-   * @throws AssertionFailedError
+   * @throws PHPUnit_Framework_AssertionFailedError
    */
   public function assertFalse(bool $condition, string $message = ''): void {
     $this->_testCaseShim->assertFalse($condition, $message);
@@ -471,7 +471,7 @@ abstract class Base
    * @param mixed  $actual
    * @param string $message
    *
-   * @throws AssertionFailedError
+   * @throws PHPUnit_Framework_AssertionFailedError
    */
   public function assertNotEmpty(mixed $actual, string $message = ''): void {
     $this->_testCaseShim->assertNotEmpty($actual, $message);
@@ -500,7 +500,7 @@ abstract class Base
    * @param mixed  $actual
    * @param string $message
    *
-   * @throws AssertionFailedError
+   * @throws PHPUnit_Framework_AssertionFailedError
    */
   public function assertEmpty(mixed $actual, string $message = ''): void {
     $this->_testCaseShim->assertEmpty($actual, $message);
@@ -511,7 +511,7 @@ abstract class Base
    *
    * @param string $message
    *
-   * @throws AssertionFailedError
+   * @throws PHPUnit_Framework_AssertionFailedError
    */
   public function fail(string $message = ''): void {
     $this->_testCaseShim->fail($message);
@@ -527,7 +527,7 @@ abstract class Base
    * @param mixed   $condition
    * @param string $message
    *
-   * @throws AssertionFailedError
+   * @throws PHPUnit_Framework_AssertionFailedError
    */
   public function assertNotFalse(
     mixed $condition,

@@ -14,6 +14,7 @@ use Zynga\Framework\Service\V2\Interfaces\RequestInterface;
 use Zynga\Framework\Service\V2\Interfaces\ResponseInterface;
 use Zynga\Framework\Service\V2\Response\Mock\Base as MockResponse;
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
+use Zynga\Framework\ReflectionCache\V1\ReflectionClasses;
 
 class Client implements ClientInterface {
   private string $_serviceUrl;
@@ -118,7 +119,16 @@ class Client implements ClientInterface {
   }
 
   public function addRequest(RequestInterface $object): (int, int) {
-    $reflectionClass = new ReflectionClass($this->_serviceResponseObject);
+    $reflectionClass =
+      ReflectionClasses::getReflection($this->_serviceResponseObject);
+
+    if (!$reflectionClass instanceof ReflectionClass) {
+      throw new InvalidServiceResponseException(
+        "Adding request using bad _serviceResponseObject=".
+        $this->_serviceResponseObject,
+      );
+    }
+
     if (!$reflectionClass->isInstantiable()) {
       throw new InvalidServiceResponseException(
         "Adding request using bad _serviceResponseObject=".

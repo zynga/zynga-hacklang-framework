@@ -5,6 +5,7 @@ namespace Zynga\Framework\Dynamic\V1;
 use Zynga\Framework\Dynamic\V1\Exceptions\UnableToFindClassException;
 use Zynga\Framework\Dynamic\V1\Exceptions\MissingRequiredParametersException;
 use Zynga\Framework\Exception\V1\Exception;
+use Zynga\Framework\ReflectionCache\V1\ReflectionClasses;
 
 use \ReflectionClass;
 use \ReflectionMethod;
@@ -28,11 +29,19 @@ class DynamicClassCreation {
     string $className,
     string $interfaceName,
   ): bool {
+
     if (class_exists($className, true) !== true) {
       throw new UnableToFindClassException('class='.$className);
     }
 
-    $reflected = new ReflectionClass($className);
+    $reflected = ReflectionClasses::getReflection($className);
+
+    if (!$reflected instanceof ReflectionClass) {
+      throw new UnableToFindClassException(
+        'class='.$className.' - unable to reflect',
+      );
+    }
+
     return in_array($interfaceName, $reflected->getInterfaceNames());
   }
 
@@ -48,7 +57,13 @@ class DynamicClassCreation {
 
       $obj = null;
 
-      $reflected = new ReflectionClass($name);
+      $reflected = ReflectionClasses::getReflection($name);
+
+      if (!$reflected instanceof ReflectionClass) {
+        throw new UnableToFindClassException(
+          'class='.$name.' - unable to reflect',
+        );
+      }
 
       $constructor = $reflected->getConstructor();
 

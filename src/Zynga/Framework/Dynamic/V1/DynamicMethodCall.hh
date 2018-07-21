@@ -6,6 +6,7 @@ use Zynga\Framework\Dynamic\V1\Exceptions\UnableToFindClassException;
 use Zynga\Framework\Dynamic\V1\Exceptions\UnableToFindMethodException;
 use Zynga\Framework\Dynamic\V1\Exceptions\MissingRequiredParametersException;
 use Zynga\Framework\Exception\V1\Exception;
+use Zynga\Framework\ReflectionCache\V1\ReflectionClasses;
 
 use \ReflectionClass;
 use \ReflectionMethod;
@@ -36,7 +37,11 @@ class DynamicMethodCall {
     try {
 
       // pull a reflection of the class
-      $refClass = new ReflectionClass($className);
+      $class = ReflectionClasses::getReflection($className);
+      $refClass = ReflectionClasses::getReflection($className);
+      if (!$refClass instanceof ReflectionClass) {
+        throw new Exception('Failed to reflect className='.$className);
+      }
 
       if ($refClass->hasMethod($method) !== true) {
         throw new UnableToFindMethodException(

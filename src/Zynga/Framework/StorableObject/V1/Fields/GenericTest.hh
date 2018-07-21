@@ -16,6 +16,7 @@ use
   Zynga\Framework\StorableObject\Collections\Vector\V1\Base as StorableVector
 ;
 use Zynga\Framework\Type\V1\StringBox;
+use Zynga\Framework\ReflectionCache\V1\ReflectionClasses;
 
 use \ReflectionClass;
 
@@ -58,7 +59,16 @@ class GenericTest extends TestCase {
       ),
     );
 
-    $testReflection = new ReflectionClass($this);
+    $testReflection = ReflectionClasses::getReflection($this);
+
+    if (!$testReflection instanceof ReflectionClass) {
+      $this->assertTrue(
+        false,
+        'testUnableToBeReflected name='.get_class($this),
+      );
+      return;
+    }
+
     $mapClass =
       $testReflection->getProperty('_testStorableMap')->getTypeText();
     $vecClass =

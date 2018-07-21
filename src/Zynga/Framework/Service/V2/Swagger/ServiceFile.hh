@@ -2,9 +2,11 @@
 
 namespace Zynga\Framework\Service\V2\Swagger;
 
+use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Service\V2\Interfaces\ServiceInterface;
 use Zynga\Framework\Type\V1\StringBox;
 use \ReflectionClass;
+use Zynga\Framework\ReflectionCache\V1\ReflectionClasses;
 
 class ServiceFile {
   public StringBox $shortClassName;
@@ -23,17 +25,22 @@ class ServiceFile {
 
   public function doesImplementClass(string $neededClass): bool {
 
-    // -- 
+    // --
     // Do some reflection magic to see if this class is indeed a service implementation.
     // --
     $className = $this->getClassName();
 
-    if ( class_exists($className) === true ) {
+    if (class_exists($className) === true) {
       // Yay we have a class to work with.
-      $serviceReflection = new ReflectionClass($className);
+      $serviceReflection = ReflectionClasses::getReflection($className);
+
+      if (!$serviceReflection instanceof ReflectionClass) {
+        throw new Exception('testUnableToBeReflected name='.$className);
+      }
+
       $implementedInterfaces = $serviceReflection->getInterfaceNames();
 
-      if ( in_array($neededClass, $implementedInterfaces) === true ) {
+      if (in_array($neededClass, $implementedInterfaces) === true) {
         return true;
       }
 
@@ -47,7 +54,8 @@ class ServiceFile {
   }
 
   public function getClassName(): string {
-    return sprintf('%s\%s', $this->codePath->get(), $this->shortClassName->get());
+    return
+      sprintf('%s\%s', $this->codePath->get(), $this->shortClassName->get());
   }
 
   public function setFilePath(string $classPathBase, string $filePath): bool {

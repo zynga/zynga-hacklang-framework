@@ -12,6 +12,7 @@ use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
+use Zynga\Framework\ReflectionCache\V1\ReflectionClasses;
 
 class Generic {
 
@@ -25,7 +26,11 @@ class Generic {
         throw new InvalidObjectException('passedType='.gettype($obj));
       }
 
-      $reflectedClass = new ReflectionClass($obj);
+      $reflectedClass = ReflectionClasses::getReflection($obj);
+
+      if (!$reflectedClass instanceof ReflectionClass) {
+        throw new Exception('testUnableToBeReflected name='.get_class($obj));
+      }
 
       $properties = $reflectedClass->getProperties();
 
@@ -64,7 +69,11 @@ class Generic {
         throw new InvalidObjectException('passedType='.gettype($obj));
       }
 
-      $reflectedClass = new ReflectionClass($obj);
+      $reflectedClass = ReflectionClasses::getReflection($obj);
+
+      if (!$reflectedClass instanceof ReflectionClass) {
+        throw new Exception('testUnableToBeReflected name='.get_class($obj));
+      }
 
       $properties = $reflectedClass->getProperties();
 
@@ -121,7 +130,11 @@ class Generic {
         throw new InvalidObjectException('passedType='.gettype($obj));
       }
 
-      $reflectedClass = new ReflectionClass($obj);
+      $reflectedClass = ReflectionClasses::getReflection($obj);
+
+      if (!$reflectedClass instanceof ReflectionClass) {
+        throw new Exception('testUnableToBeReflected name='.get_class($obj));
+      }
 
       $properties = $reflectedClass->getProperties();
 

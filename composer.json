@@ -9,7 +9,7 @@
   ],
   "require": {
     "hhvm": "^3.12",
-    "zynga/phpunit": "^1.7"
+    "zynga/phpunit": "^1.8"
   },
   "autoload": {
     "psr-4": {
@@ -30,6 +30,7 @@
       "Zynga\\Framework\\Factory\\V2\\": "src/Zynga/Framework/Factory/V2/",
       "Zynga\\Framework\\Logging\\V1\\": "src/Zynga/Framework/Logging/V1/",
       "Zynga\\Framework\\Performance\\V1\\": "src/Zynga/Framework/Performance/V1/",
+      "Zynga\\Framework\\ReflectionCache\\V1\\": "src/Zynga/Framework/ReflectionCache/V1/",
       "Zynga\\Framework\\Service\\V1\\": "src/Zynga/Framework/Service/V1/",
       "Zynga\\Framework\\Service\\V2\\": "src/Zynga/Framework/Service/V2/",
       "Zynga\\Framework\\Swagger\\V2\\": "src/Zynga/Framework/Swagger/V2/",

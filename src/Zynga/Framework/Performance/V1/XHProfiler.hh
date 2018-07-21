@@ -2,7 +2,7 @@
 
 namespace Zynga\Framework\Performance\V1;
 
-use Zynga\Environment\CodePath\V1\CodePath;
+use Zynga\Framework\Environment\CodePath\V1\CodePath;
 
 require_once
   CodePath::getRoot().'/third-party/xhprof/xhprof_lib/utils/xhprof_lib.php'
@@ -18,7 +18,7 @@ class XHProfiler {
   private static bool $_isProfiling = false;
 
   public static function error(string $string): bool {
-    // error_log($string);
+    error_log($string);
     return true;
   }
 

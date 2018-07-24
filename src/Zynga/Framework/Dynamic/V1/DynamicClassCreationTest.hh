@@ -6,11 +6,22 @@ use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
 use Zynga\Framework\Dynamic\V1\Exceptions\UnableToFindClassException;
 use Zynga\Framework\Dynamic\V1\Exceptions\MissingRequiredParametersException;
+use Zynga\Framework\Dynamic\V1\Mocks\AbstractClass;
 use Zynga\Framework\Dynamic\V1\Mocks\EmptyClass;
 use Zynga\Framework\Dynamic\V1\Mocks\ClassWithConstructor;
 use Zynga\Framework\Dynamic\V1\Mocks\ClassWithConstructorParams;
+use Zynga\Framework\ReflectionCache\V1\ReflectionClasses;
 
 class DynamicClassCreationTest extends TestCase {
+
+  <<__Override>>
+  public function tearDown(): void {
+    parent::tearDown();
+
+    // Disable failure for ReflectionClasses so that
+    // it can function normally
+    ReflectionClasses::disableFailure(); 
+  }
 
   public function testDoesClassExist(): void {
     $this->assertTrue(
@@ -35,6 +46,20 @@ class DynamicClassCreationTest extends TestCase {
     );
     $this->assertTrue($obj instanceof EmptyClass);
   }
+
+  public function testFailureToReflectThrowsExceptionForClassExistsGeneric(
+  ): void {
+    $this->expectException(UnableToFindClassException::class);
+
+    $className = 'Zynga\Framework\Dynamic\V1\Mocks\EmptyClass';
+    ReflectionClasses::enableFailure($className);
+
+    DynamicClassCreation::createClassByNameGeneric(
+      $className,
+      Vector {},
+    );
+  }
+
 
   public function testClassExists(): void {
     $obj = DynamicClassCreation::createClassByName(
@@ -125,4 +150,46 @@ class DynamicClassCreationTest extends TestCase {
     );
   }
 
+  public function testFailureToReflectThrowsExceptionForDoesClassImplementInterface(
+  ): void {
+    $this->expectException(UnableToFindClassException::class);
+
+    $className = 'Zynga\Framework\Dynamic\V1\Mocks\ClassWithSingleInterface';
+    ReflectionClasses::enableFailure($className);
+
+    DynamicClassCreation::doesClassImplementInterface(
+      $className,
+      'Zynga\Framework\Dynamic\V1\Mocks\EmptyInterface',
+    );
+  }
+
+  public function testIsClassAbstract(): void {
+    $this->assertTrue(
+      DynamicClassCreation::isClassAbstract(
+        'Zynga\Framework\Dynamic\V1\Mocks\AbstractClass',
+      ),
+      'AbstractClass is not marked as abstract',
+    );
+    $this->assertFalse(
+      DynamicClassCreation::isClassAbstract(
+        'Zynga\Framework\Dynamic\V1\Mocks\EmptyClass',
+      ),
+      'EmptyClass is marked as abstract',
+    );
+  }
+
+  public function testInvalidClassThrowsExceptionForIsClassAbstract(): void {
+    $this->expectException(UnableToFindClassException::class);
+    $obj = DynamicClassCreation::isClassAbstract('Not_Real_Class');
+  }
+
+  public function testFailureToReflectThrowsExceptionForIsClassAbstract(
+  ): void {
+    $this->expectException(UnableToFindClassException::class);
+
+    $className = 'Zynga\Framework\Dynamic\V1\Mocks\AbstractClass';
+    ReflectionClasses::enableFailure($className);
+
+    DynamicClassCreation::isClassAbstract($className);
+  }
 }

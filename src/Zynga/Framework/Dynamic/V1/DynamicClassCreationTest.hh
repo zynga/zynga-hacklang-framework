@@ -6,7 +6,6 @@ use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
 use Zynga\Framework\Dynamic\V1\Exceptions\UnableToFindClassException;
 use Zynga\Framework\Dynamic\V1\Exceptions\MissingRequiredParametersException;
-use Zynga\Framework\Dynamic\V1\Mocks\AbstractClass;
 use Zynga\Framework\Dynamic\V1\Mocks\EmptyClass;
 use Zynga\Framework\Dynamic\V1\Mocks\ClassWithConstructor;
 use Zynga\Framework\Dynamic\V1\Mocks\ClassWithConstructorParams;
@@ -59,7 +58,6 @@ class DynamicClassCreationTest extends TestCase {
       Vector {},
     );
   }
-
 
   public function testClassExists(): void {
     $obj = DynamicClassCreation::createClassByName(

@@ -3,14 +3,23 @@
 set -ex
 
 /etc/init.d/memcached start
-/etc/init.d/mysql start
-/etc/init.d/postgresql start
 
 # dump out the schema as it stands
-mysql -e 'SHOW DATABASES'
+/etc/init.d/mysql start && \
+mysql -e 'SHOW DATABASES' && \
 mysql -e 'SHOW TABLES' phpunit
 
 # dump out the schema as it stands
+/etc/init.d/postgresql start
+
+RETRIES=15
+
+until psql --user=zframework --host=localhost -d phpunit -c 'select 1' > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
+  echo "Waiting for postgres server to start, $((RETRIES)) remaining attempts..."
+  RETRIES=$((RETRIES-=1))
+  sleep 1
+done
+
 echo '\d' | psql --user=zframework --host=localhost phpunit
 
 # show the version of hhvm
@@ -20,7 +29,9 @@ hhvm --version
 cd /var/source
 
 # setup the github token for use
-composer config -g github-oauth.github.com $GITHUB_TOKEN
+if [ ! -z "$GITHUB_TOKEN" ]; then
+  composer config -g github-oauth.github.com $GITHUB_TOKEN
+fi
 
 # make sure composer is configured correctly
 composer validate --no-check-all --ansi

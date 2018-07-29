@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "af6fa15283c8769ed8772edbf585fd97",
@@ -52,16 +52,16 @@
         },
         {
             "name": "zynga/phpunit-hhi",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zynga/zynga-hhvm-phpunit-hhi.git",
-                "reference": "8e283b0d568937b7fa0046f4327d559239073456"
+                "reference": "3c6bedfd8f66b86150aa1367d02ce94ac110e299"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit-hhi/zipball/8e283b0d568937b7fa0046f4327d559239073456",
-                "reference": "8e283b0d568937b7fa0046f4327d559239073456",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit-hhi/zipball/3c6bedfd8f66b86150aa1367d02ce94ac110e299",
+                "reference": "3c6bedfd8f66b86150aa1367d02ce94ac110e299",
                 "shasum": ""
             },
             "require": {
@@ -83,10 +83,10 @@
                 "testing"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/tree/v1.0.1",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/tree/v1.0.2",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/issues"
             },
-            "time": "2018-07-03T06:01:28+00:00"
+            "time": "2018-07-28T04:06:10+00:00"
         }
     ],
     "packages-dev": [],

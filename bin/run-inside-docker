@@ -1,0 +1,11 @@
+#!/bin/bash
+
+GID=`id -g $UID`
+
+echo "uid=$UID"
+echo "gid=$GID"
+
+##
+# Couple of assumptions atm, you setup your docker with your uid/gid within the image.
+##
+docker run -it -u $UID:$GID -v $(pwd):/var/source -w /var/source zerodiv/hhvm:latest $@

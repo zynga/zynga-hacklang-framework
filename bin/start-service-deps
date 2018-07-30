@@ -1,0 +1,82 @@
+#!/bin/bash
+
+if [ -z "$ZYNGA_DOCKER" ]; then
+  echo "WARNING: start-service-deps ZYNGA_DOCKER is not enabled, not running service start scripts."
+  echo "  This can be okay, if your environment already has the deps started, etc."
+  exit 0
+fi
+
+function mysql_ping() {
+  local output=255
+  if (( $IS_ROOT == 1 )); then
+    output=$( mysqladmin ping --silent > /dev/null 2>&1 )
+  else
+    output=$( sudo mysqladmin ping --silent > /dev/null 2>&1 )
+  fi
+  echo $output
+}
+
+IS_ROOT=0
+
+if (( $EUID == 0 )); then
+  IS_ROOT=1
+fi
+
+echo "IS_ROOT=${IS_ROOT} EUID=${EUID}"
+
+if (( $IS_ROOT == 1 )); then
+  /etc/init.d/memcached start
+else
+  sudo /etc/init.d/memcached start
+fi
+
+if (( $IS_ROOT == 1 )); then
+  /etc/init.d/mysql start
+else
+  sudo /etc/init.d/mysql start
+fi
+
+MYSQL_RETRIES=15
+
+until mysql_ping || [ $MYSQL_RETRIES -eq 0 ]; do
+  echo "Waiting for mysql server to start, $((MYSQL_RETRIES)) remaining attempts..."
+  MYSQL_RETRIES=$((MYSQL_RETRIES-=1))
+  sleep 1
+done
+
+if (( $MYSQL_RETRIES == 0 )); then
+ echo "Failed waiting on mysql"
+ exit 255
+fi
+
+if (( $IS_ROOT == 1 )); then
+  mysql -e 'SHOW DATABASES' && \
+  mysql -e 'SHOW TABLES' phpunit
+else
+  sudo mysql -e 'SHOW DATABASES' && \
+  sudo mysql -e 'SHOW TABLES' phpunit
+fi
+
+if (( $IS_ROOT == 1 )); then
+  /etc/init.d/postgresql start
+else
+  sudo /etc/init.d/postgresql start
+fi
+
+POSTGRES_RETRIES=15
+
+until psql --user=zframework --host=localhost -d phpunit -c 'select 1' > /dev/null 2>&1 || [ $POSTGRES_RETRIES -eq 0 ]; do
+  echo "Waiting for postgres server to start, $((POSTGRES_RETRIES)) remaining attempts..."
+  POSTGRES_RETRIES=$((POSTGRES_RETRIES-=1))
+  sleep 1
+done
+
+if (( $POSTGRES_RETRIES == 0 )); then
+  echo "Failed waiting on postgres"
+  exit 255
+fi
+
+echo '\d' | psql --user=zframework --host=localhost phpunit
+
+echo "Services are all available and ready for testing"
+exit 0

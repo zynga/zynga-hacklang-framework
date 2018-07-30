@@ -20,12 +20,14 @@ abstract class Base {
     $this->_debugTarget = 'stdout';
   }
 
-  public function enableDebug() {
+  public function enableDebug(): bool {
     $this->_debug = true;
+    return true;
   }
 
-  public function disableDebug() {
+  public function disableDebug(): bool {
     $this->_debug = false;
+    return true;
   }
 
   public function getDebug(): bool {
@@ -153,9 +155,9 @@ abstract class Base {
     // but the reality is that we're talking about a very odd state, where the
     // inclusion tree is not initalized at all, so therefor how did you load this file?
     // --
-    if ($autoloaders === false) {
-      return null;
-    }
+    //if ($autoloaders === false) {
+    //  return null;
+    //}
 
     if (is_array($autoloaders)) {
       foreach ($autoloaders as $autoloader) {
@@ -179,9 +181,9 @@ abstract class Base {
    */
   public function debugMessage(string $message): void {
 
-    if ($this->_debug !== true) {
-      return;
-    }
+    // if ($this->_debug !== true) {
+    //   return;
+    // }
 
     $leader = $this->getClassName();
 
@@ -190,7 +192,7 @@ abstract class Base {
       return;
     }
 
-    error_log($leader.' '.$message);
+    trigger_error($leader.' '.$message, E_USER_ERROR);
     return;
 
   }

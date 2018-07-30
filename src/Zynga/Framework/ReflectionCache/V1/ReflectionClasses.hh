@@ -27,7 +27,16 @@ class ReflectionClasses {
     }
 
     try {
-      // The one and onyl ReflectionClass call in the stack.
+
+      // --
+      // attempt to find the class in the interpreter, allow the autoloader to
+      // pick up the class if needed.
+      // --
+      if ( class_exists($className, true) !== true ) {
+        return null;
+      }
+
+      // The one and only ReflectionClass call in the stack.
       $reflected = new ReflectionClass($className);
     } catch ( Exception $e ) {
       $reflected = null;

@@ -30,10 +30,6 @@ class DynamicClassCreation {
     string $interfaceName,
   ): bool {
 
-    if (class_exists($className, true) !== true) {
-      throw new UnableToFindClassException('class='.$className);
-    }
-
     $reflected = ReflectionClasses::getReflection($className);
 
     if (!$reflected instanceof ReflectionClass) {
@@ -49,10 +45,7 @@ class DynamicClassCreation {
     string $name,
     Vector<mixed> $params,
   ): Tv {
-    if (class_exists($name, true) !== true) {
-      throw new UnableToFindClassException('class='.$name);
-    }
-
+    
     try {
 
       $obj = null;

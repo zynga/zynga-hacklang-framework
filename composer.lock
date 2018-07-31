@@ -1,23 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "content-hash": "af6fa15283c8769ed8772edbf585fd97",
     "packages": [
         {
             "name": "zynga/phpunit",
-            "version": "v1.8.9",
+            "version": "v1.8.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zynga/zynga-hhvm-phpunit.git",
-                "reference": "cff1acbd626666145953488ad0e8fb2487b4f612"
+                "reference": "8bab9fcaf9867a2907dffc9b95398b72c0f1a440"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/cff1acbd626666145953488ad0e8fb2487b4f612",
-                "reference": "cff1acbd626666145953488ad0e8fb2487b4f612",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/8bab9fcaf9867a2907dffc9b95398b72c0f1a440",
+                "reference": "8bab9fcaf9867a2907dffc9b95398b72c0f1a440",
                 "shasum": ""
             },
             "require": {
@@ -37,6 +37,7 @@
             "autoload": {
                 "psr-4": {
                     "PHPUnit\\Tests\\": "tests/phpunit/PHPUnit/Tests/",
+                    "SebastianBergmann\\CodeCoverage\\": "src/SebastianBergmann/CodeCoverage/",
                     "Zynga\\PHPUnit\\V2\\": "src/Zynga/PHPUnit/V2/"
                 }
             },
@@ -47,10 +48,10 @@
                 "xunit"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v1.8.9",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v1.8.10",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit/issues"
             },
-            "time": "2018-07-29T07:11:54+00:00"
+            "time": "2018-07-30T21:22:44+00:00"
         },
         {
             "name": "zynga/phpunit-hhi",

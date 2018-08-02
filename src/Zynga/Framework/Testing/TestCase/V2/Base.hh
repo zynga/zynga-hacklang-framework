@@ -278,6 +278,14 @@ abstract class Base
   // All of these are currently not covered due to the impact of phpunits reliance
   // upon global singletons. We would have to undo that to make all of these testable.
   // --
+  public function assertCount(
+    int $expected,
+    mixed $haystack,
+    string $message = '',
+  ): void {
+    $this->_testCaseShim->assertCount($expected, $haystack, $message);
+  }
+
   /**
    * Mark the test as skipped.
    *

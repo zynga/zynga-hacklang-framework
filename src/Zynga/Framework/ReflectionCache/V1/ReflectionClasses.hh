@@ -13,32 +13,33 @@ class ReflectionClasses {
 
     $className = '';
 
-    if ( is_object($classOrName) ) {
+    if (is_string($classOrName)) {
+      $className = $classOrName;
+    } else if (is_object($classOrName)) {
       $className = get_class($classOrName);
     } else {
       $className = strval($classOrName);
     }
 
-    $reflected = null;
-
-    if ( self::$_classes->containsKey($className) === true ) {
-      $reflected = self::$_classes->get($className);
-      return $reflected;
-    }
-
     try {
+
+      $reflected = self::$_classes->get($className);
+
+      if ($reflected instanceof ReflectionClass) {
+        return $reflected;
+      }
 
       // --
       // attempt to find the class in the interpreter, allow the autoloader to
       // pick up the class if needed.
       // --
-      if ( class_exists($className, true) !== true ) {
+      if (class_exists($className, true) !== true) {
         return null;
       }
 
       // The one and only ReflectionClass call in the stack.
       $reflected = new ReflectionClass($className);
-    } catch ( Exception $e ) {
+    } catch (Exception $e) {
       $reflected = null;
     }
 

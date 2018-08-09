@@ -41,7 +41,7 @@ class Manager {
   ): void {
     $returnCode = 0;
     $returnCodes = array();
-    $cmd = "curl -s -w '%{http_code}' -T";
+    $cmd = "curl -s -o /dev/null -w '%{http_code}' -T";
     $cmd .= ' ';
     $cmd .= escapeshellarg($fileName);
     $cmd .= ' ';

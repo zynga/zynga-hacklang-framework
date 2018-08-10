@@ -181,9 +181,9 @@ abstract class Base {
    */
   public function debugMessage(string $message): void {
 
-    // if ($this->_debug !== true) {
-    //   return;
-    // }
+    if ($this->_debug !== true) {
+      return;
+    }
 
     $leader = $this->getClassName();
 

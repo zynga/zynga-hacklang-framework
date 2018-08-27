@@ -18,17 +18,25 @@ class ReflectionClasses {
       return null;
     }
 
-    $reflected = null;
-
-    if ( self::$_classes->containsKey($className) === true ) {
-      $reflected = self::$_classes->get($className);
-      return $reflected;
-    }
-
     try {
-      // The one and onyl ReflectionClass call in the stack.
+
+      $reflected = self::$_classes->get($className);
+
+      if ($reflected instanceof ReflectionClass) {
+        return $reflected;
+      }
+
+      // --
+      // attempt to find the class in the interpreter, allow the autoloader to
+      // pick up the class if needed.
+      // --
+      if (class_exists($className, true) !== true) {
+        return null;
+      }
+
+      // The one and only ReflectionClass call in the stack.
       $reflected = new ReflectionClass($className);
-    } catch ( Exception $e ) {
+    } catch (Exception $e) {
       $reflected = null;
     }
 
@@ -39,7 +47,11 @@ class ReflectionClasses {
   }
 
   private static function getClassName(mixed $classOrName): string {
-    if ( is_object($classOrName) ) {
+    if (is_string($classOrName)) {
+      return $classOrName;
+    }
+
+    if (is_object($classOrName)) {
       return get_class($classOrName);
     }
 

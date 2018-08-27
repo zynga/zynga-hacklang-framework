@@ -5,3 +5,4 @@ composer.lock
 bootstrap.hh
 phpunit.xml
 .hhconfig
+www.pid

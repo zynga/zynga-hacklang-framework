@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "zynga/phpunit",
-            "version": "v1.8.0",
+            "version": "v1.8.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zynga/zynga-hhvm-phpunit.git",
-                "reference": "e253e21cef65fc77fa3205d72cee1e4147ffe039"
+                "reference": "8bab9fcaf9867a2907dffc9b95398b72c0f1a440"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/e253e21cef65fc77fa3205d72cee1e4147ffe039",
-                "reference": "e253e21cef65fc77fa3205d72cee1e4147ffe039",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/8bab9fcaf9867a2907dffc9b95398b72c0f1a440",
+                "reference": "8bab9fcaf9867a2907dffc9b95398b72c0f1a440",
                 "shasum": ""
             },
             "require": {
@@ -26,12 +26,21 @@
             },
             "bin": [
                 "bin/phpunit",
+                "bin/phpunit-xhprof",
+                "bin/phpunit.hh",
+                "bin/run-single-test",
+                "bin/run-single-test-xhprof",
                 "bin/run-single-test.hh",
-                "vendor/bin/hhvm-restart-wrapper",
-                "vendor/phpunit/phpunit/phpunit-vendor",
-                "vendor/phpunit/phpunit/phpunit-vendor-xdebug"
+                "bin/hhvm-restart-wrapper"
             ],
             "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PHPUnit\\Tests\\": "tests/phpunit/PHPUnit/Tests/",
+                    "SebastianBergmann\\CodeCoverage\\": "src/SebastianBergmann/CodeCoverage/",
+                    "Zynga\\PHPUnit\\V2\\": "src/Zynga/PHPUnit/V2/"
+                }
+            },
             "description": "Zynga modifications to the PHPUNIT framework.",
             "keywords": [
                 "phpunit",
@@ -39,23 +48,23 @@
                 "xunit"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v1.8.0",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v1.8.10",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit/issues"
             },
-            "time": "2018-07-21T16:04:24+00:00"
+            "time": "2018-07-30T21:22:44+00:00"
         },
         {
             "name": "zynga/phpunit-hhi",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zynga/zynga-hhvm-phpunit-hhi.git",
-                "reference": "8e283b0d568937b7fa0046f4327d559239073456"
+                "reference": "3c6bedfd8f66b86150aa1367d02ce94ac110e299"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit-hhi/zipball/8e283b0d568937b7fa0046f4327d559239073456",
-                "reference": "8e283b0d568937b7fa0046f4327d559239073456",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit-hhi/zipball/3c6bedfd8f66b86150aa1367d02ce94ac110e299",
+                "reference": "3c6bedfd8f66b86150aa1367d02ce94ac110e299",
                 "shasum": ""
             },
             "require": {
@@ -77,10 +86,10 @@
                 "testing"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/tree/v1.0.1",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/tree/v1.0.2",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/issues"
             },
-            "time": "2018-07-03T06:01:28+00:00"
+            "time": "2018-07-28T04:06:10+00:00"
         }
     ],
     "packages-dev": [],

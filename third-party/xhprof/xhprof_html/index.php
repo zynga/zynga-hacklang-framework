@@ -80,7 +80,11 @@ $vbbar = ' class="vbbar"';
 $vrbar = ' class="vrbar"';
 $vgbar = ' class="vgbar"';
 
-$xhprof_runs_impl = new XHProfRuns_Default();
+$frameworkRoot = dirname(dirname(dirname(dirname(__FILE__))));
+
+$profileDir = $frameworkRoot . '/tmp/phpunit-xhprof';
+
+$xhprof_runs_impl = new XHProfRuns_Default($profileDir);
 
 displayXHProfReport($xhprof_runs_impl, $params, $source, $run, $wts,
                     $symbol, $sort, $run1, $run2);

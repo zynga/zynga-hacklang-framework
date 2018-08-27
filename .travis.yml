@@ -3,13 +3,8 @@ language: generic
 services:
   - docker
 env:
-  - HHVM_VERSION=3.18-lts-latest
-    ##
-    # Post 3.18 we are not compatible as the changes to include & references when utilizing certain
-    # php extensions breaks us.
-    ##
-    #- HHVM_VERSION=latest
+  - HHVM_VERSION=latest
 install:
-  - docker pull hhvm/hhvm:$HHVM_VERSION
+  - docker pull zerodiv/hhvm:$HHVM_VERSION
 script:
-  - docker run -it -e GITHUB_TOKEN=$GITHUB_TOKEN -v $(pwd):/var/source hhvm/hhvm:$HHVM_VERSION /var/source/.build.sh
+  - docker run -it -e GITHUB_TOKEN=$GITHUB_TOKEN -v $(pwd):/var/source zerodiv/hhvm:$HHVM_VERSION /var/source/.build.sh

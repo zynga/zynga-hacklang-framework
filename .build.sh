@@ -1,63 +1,34 @@
 #!/bin/bash
 
-setup_composer()
-{
-
-  composerFile=/usr/local/bin/composer
-
-  if [ ! -f $composerFile ]; then
-    # install the composer binary to /usr/local/bin
-    curl https://getcomposer.org/installer | hhvm --php -- /dev/stdin --install-dir=/usr/local/bin --filename=composer
-  fi
-
-  if [ ! -f $composerFile ]; then
-    echo "Failed to install composer to $composerFile";
-    exit 255;
-  fi
-
-}
-
 set -ex
 
-# update the environment via apt
-apt-get update -y
-
-# install modules we need to use to test with.
-apt-get install -y wget curl git make time
-
-export DEBIAN_FRONTEND=noninteractive
-
-# stand up a memcached on the image
-apt-get install -y memcached
 /etc/init.d/memcached start
 
-# install mysql-server
-apt-get install -y mysql-server
+# dump out the schema as it stands
 /etc/init.d/mysql start
 
-# load up our test database
-mysql < /var/source/tests/sql/mysql/create_test_database.sql
-mysql -e 'SHOW DATABASES'
+RETRIES=15
+until mysqladmin ping --silent > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
+  echo "Waiting for mysql server to start, $((RETRIES)) remaining attempts..."
+  RETRIES=$((RETRIES-=1))
+  sleep 1
+done
+
+mysql -e 'SHOW DATABASES' && \
 mysql -e 'SHOW TABLES' phpunit
 
-# install postgresql
-apt-get install -y postgresql postgresql-contrib
+# dump out the schema as it stands
 /etc/init.d/postgresql start
 
-# install the database user.
-su postgres -c 'psql < /var/source/tests/sql/postgresql/create_test_database.sql'
+RETRIES=15
 
-# setup the postgres password into the .pgpass property file.
-echo "localhost:5432:phpunit:zframework:i-am-a-walrus" > ~/.pgpass
-chmod 0600 ~/.pgpass
+until psql --user=zframework --host=localhost -d phpunit -c 'select 1' > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
+  echo "Waiting for postgres server to start, $((RETRIES)) remaining attempts..."
+  RETRIES=$((RETRIES-=1))
+  sleep 1
+done
 
 echo '\d' | psql --user=zframework --host=localhost phpunit
-
-# Bring the latest composer into the environment
-setup_composer;
-
-# turn off the jit
-echo hhvm.jit=0 >> /etc/hhvm/php.ini
 
 # show the version of hhvm
 hhvm --version
@@ -66,7 +37,9 @@ hhvm --version
 cd /var/source
 
 # setup the github token for use
-composer config -g github-oauth.github.com $GITHUB_TOKEN
+if [ ! -z "$GITHUB_TOKEN" ]; then
+  composer config -g github-oauth.github.com $GITHUB_TOKEN
+fi
 
 # make sure composer is configured correctly
 composer validate --no-check-all --ansi

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# clean up all stopped containers
+docker ps -qa -f "status=exited"
+docker ps -qa --no-trunc -f "status=exited" | xargs docker rm
+
+# cleanup dangling / untagged images
+docker images -q --filter dangling=true | xargs docker rmi

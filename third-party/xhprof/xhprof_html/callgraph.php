@@ -78,7 +78,12 @@ if (!array_key_exists($type, $xhprof_legal_image_types)) {
   $type = $params['type'][1]; // default image type.
 }
 
-$xhprof_runs_impl = new XHProfRuns_Default();
+
+$frameworkRoot = dirname(dirname(dirname(dirname(__FILE__))));
+
+$profileDir = $frameworkRoot . '/tmp/phpunit-xhprof';
+
+$xhprof_runs_impl = new XHProfRuns_Default($profileDir);
 
 if (!empty($run)) {
   // single run call graph image generation

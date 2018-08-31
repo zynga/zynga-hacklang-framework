@@ -4,6 +4,9 @@ set -ex
 
 /etc/init.d/memcached start
 
+#Experiment to see if this resolves the docker mysql start issue
+find /var/lib/mysql/mysql -exec touch -c -a {} \;
+
 # dump out the schema as it stands
 /etc/init.d/mysql start
 

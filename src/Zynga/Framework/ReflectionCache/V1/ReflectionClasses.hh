@@ -6,19 +6,16 @@ use \Exception;
 use \ReflectionClass;
 
 class ReflectionClasses {
+  private static bool $shouldFail = false;
+  private static string $classNameToFail = '';
 
   private static Map<string, ?ReflectionClass> $_classes = Map {};
 
   public static function getReflection(mixed $classOrName): ?ReflectionClass {
+    $className = self::getClassName($classOrName);
 
-    $className = '';
-
-    if (is_string($classOrName)) {
-      $className = $classOrName;
-    } else if (is_object($classOrName)) {
-      $className = get_class($classOrName);
-    } else {
-      $className = strval($classOrName);
+    if (self::$shouldFail === true && self::$classNameToFail === $className) {
+      return null;
     }
 
     try {
@@ -49,4 +46,25 @@ class ReflectionClasses {
 
   }
 
+  private static function getClassName(mixed $classOrName): string {
+    if (is_string($classOrName)) {
+      return $classOrName;
+    }
+
+    if (is_object($classOrName)) {
+      return get_class($classOrName);
+    }
+
+    return strval($classOrName);
+  }
+
+  public static function enableFailure(mixed $classOrName): void {
+    self::$shouldFail = true;
+    self::$classNameToFail = self::getClassName($classOrName);
+  }
+
+  public static function disableFailure(): void {
+    self::$shouldFail = false;
+    self::$classNameToFail = '';
+  }
 }

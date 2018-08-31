@@ -41,6 +41,24 @@ class DynamicClassCreation {
     return in_array($interfaceName, $reflected->getInterfaceNames());
   }
 
+  public static function isClassAbstract(
+    string $className,
+  ): bool {
+    if (DynamicClassCreation::doesClassExist($className) === false) {
+      throw new UnableToFindClassException('class='.$className);
+    }
+
+    $reflected = ReflectionClasses::getReflection($className);
+
+    if (!$reflected instanceof ReflectionClass) {
+      throw new UnableToFindClassException(
+        'class='.$className.' - unable to reflect',
+      );
+    }
+
+    return $reflected->isAbstract();
+  }
+
   public static function createClassByNameGeneric<Tv>(
     string $name,
     Vector<mixed> $params,

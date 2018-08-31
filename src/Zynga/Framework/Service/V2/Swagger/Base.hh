@@ -214,6 +214,15 @@ abstract class Base extends ServiceBase {
         // non-services might not have consistent constructors
         continue;
       }
+
+      if (DynamicClassCreation::isClassAbstract(
+            $longClassName,
+          )) {
+        // We also need to check this before instantiating the class because
+        // abstract class cant be instantiated and will cause fatal error
+        continue;
+      }
+
       // Stand up the service in question and ask it about the request
       // and response objects it has.
       $service =

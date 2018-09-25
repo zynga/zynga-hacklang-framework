@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "af6fa15283c8769ed8772edbf585fd97",
+    "content-hash": "9f62009d13d82f1805559b519f56b8b8",
     "packages": [
         {
             "name": "zynga/phpunit",
-            "version": "v1.8.10",
+            "version": "v1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zynga/zynga-hhvm-phpunit.git",
-                "reference": "8bab9fcaf9867a2907dffc9b95398b72c0f1a440"
+                "reference": "008960058a7a5ba95acab29053f2543885728202"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/8bab9fcaf9867a2907dffc9b95398b72c0f1a440",
-                "reference": "8bab9fcaf9867a2907dffc9b95398b72c0f1a440",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/008960058a7a5ba95acab29053f2543885728202",
+                "reference": "008960058a7a5ba95acab29053f2543885728202",
                 "shasum": ""
             },
             "require": {
@@ -38,6 +38,11 @@
                 "psr-4": {
                     "PHPUnit\\Tests\\": "tests/phpunit/PHPUnit/Tests/",
                     "SebastianBergmann\\CodeCoverage\\": "src/SebastianBergmann/CodeCoverage/",
+                    "SebastianBergmann\\Environment\\": "src/SebastianBergmann/Environment/",
+                    "SebastianBergmann\\TextTemplate\\": "src/SebastianBergmann/TextTemplate/",
+                    "SebastianBergmann\\TokenStream\\": "src/SebastianBergmann/TokenStream/",
+                    "SebastianBergmann\\TokenStream\\Tests\\": "tests/token-stream/SebastianBergmann/TokenStream/Tests/",
+                    "Zynga\\CodeBase\\V1\\": "src/Zynga/CodeBase/V1/",
                     "Zynga\\PHPUnit\\V2\\": "src/Zynga/PHPUnit/V2/"
                 }
             },
@@ -48,10 +53,10 @@
                 "xunit"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v1.8.10",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v1.9.1",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit/issues"
             },
-            "time": "2018-07-30T21:22:44+00:00"
+            "time": "2018-09-25T20:51:56+00:00"
         },
         {
             "name": "zynga/phpunit-hhi",

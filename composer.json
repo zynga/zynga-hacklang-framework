@@ -9,7 +9,7 @@
   ],
   "require": {
     "hhvm": "^3.12",
-    "zynga/phpunit": "^1.8"
+    "zynga/phpunit": "^1.9"
   },
   "autoload": {
     "psr-4": {

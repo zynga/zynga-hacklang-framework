@@ -12,7 +12,7 @@ class Production extends ConfigBase {
     $errorLog = new ErrorLog();
     $this->addAdapter($errorLog);
     $this->unsetLogLevel(Level::DEBUG);
-    $this->setLogLevel(Level::INFO);
+    $this->unsetLogLevel(Level::INFO);
     $this->setLogLevel(Level::WARNING);
     $this->setLogLevel(Level::ERROR);
     $this->setLogLevel(Level::CRITICAL);

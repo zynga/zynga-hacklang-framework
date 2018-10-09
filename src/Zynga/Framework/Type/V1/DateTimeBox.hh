@@ -55,6 +55,17 @@ class DateTimeBox extends BaseBox {
   }
 
   <<__Override>>
+  public function set(mixed $value): bool {
+    if ($value instanceof DateTime) {
+      $this->value = $value;
+      $this->setIsDefaultValue(false);
+      return true;
+    } else {
+      return parent::set($value);
+    }
+  }
+
+  <<__Override>>
   protected function importFromBool(bool $value): bool {
     throw new FailedToImportFromBoolException();
   }

@@ -50,7 +50,6 @@ class DateTimeBoxTest extends StringBoxTest {
         $this->assertTrue(true);
       }
     }
-
   }
 
   public function testCanImportFromValidString(): void {
@@ -63,6 +62,11 @@ class DateTimeBoxTest extends StringBoxTest {
         $this->assertTrue(false);
       }
     }
+  }
+
+  public function testCanImportFromDateTime(): void {
+    $dateTimeBox = new DateTimeBox();
+    $this->assertTrue($dateTimeBox->set(DateTime::createFromFormat('U', time())));
   }
 
   public function testToStringDefaultValueIsUnknownDateTime(): void {

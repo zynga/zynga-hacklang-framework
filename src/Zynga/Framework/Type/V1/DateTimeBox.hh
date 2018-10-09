@@ -58,7 +58,7 @@ class DateTimeBox extends BaseBox {
   public function set(mixed $value): bool {
     if ($value instanceof DateTime) {
       $this->value = $value;
-      $this->setIsDefaultValue(true);
+      $this->setIsDefaultValue(false);
       return true;
     } else {
       return parent::set($value);

@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9f62009d13d82f1805559b519f56b8b8",
+    "content-hash": "7d7881faaa09bf8f5496d31d45c91509",
     "packages": [
         {
             "name": "zynga/phpunit",
-            "version": "v1.9.6",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zynga/zynga-hhvm-phpunit.git",
-                "reference": "1d2b4d3c59d8d30a03f65aea1420a28e40f08c3d"
+                "reference": "0c684d3664e0707ad0ee7d717e0f1b0c2540c3b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/1d2b4d3c59d8d30a03f65aea1420a28e40f08c3d",
-                "reference": "1d2b4d3c59d8d30a03f65aea1420a28e40f08c3d",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/0c684d3664e0707ad0ee7d717e0f1b0c2540c3b2",
+                "reference": "0c684d3664e0707ad0ee7d717e0f1b0c2540c3b2",
                 "shasum": ""
             },
             "require": {
@@ -53,10 +53,10 @@
                 "xunit"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v1.9.6",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/master",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit/issues"
             },
-            "time": "2018-09-27T18:26:01+00:00"
+            "time": "2018-10-18T22:18:21+00:00"
         },
         {
             "name": "zynga/phpunit-hhi",

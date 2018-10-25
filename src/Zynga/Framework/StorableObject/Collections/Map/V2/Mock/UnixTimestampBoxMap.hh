@@ -11,7 +11,7 @@ use Zynga\Framework\Type\V1\UnixTimestampBox;
 
 class UnixTimestampBoxMap {
   /**
-   * To test functionality on Map of UnitTimestampBox type 
+   * To test functionality on Map of UnitTimestampBox type
    */
   public StorableMapCollection<UnixTimestampBox> $unixTimestampMap;
 

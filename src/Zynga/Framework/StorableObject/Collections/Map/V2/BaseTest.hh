@@ -4,20 +4,19 @@ namespace Zynga\Framework\StorableObject\Collections\Map\V2;
 
 use \OutOfBoundsException;
 use Zynga\Framework\StorableObject\Collections\Map\V2\Base as MapBase;
-use Zynga\Framework\StorableObject\Collections\Map\V2\Mock\UnsupportedType;
 use
   Zynga\Framework\StorableObject\Collections\Map\V2\Importer\Box as BoxImporter
 ;
 use
   Zynga\Framework\StorableObject\Collections\Map\V2\Importer\Storable as StorableImporter
 ;
-use
-  Zynga\Framework\StorableObject\V1\Exceptions\OperationNotSupportedException
-;
 use Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException;
 use Zynga\Framework\StorableObject\V1\Interfaces\ExportInterface;
 use Zynga\Framework\StorableObject\V1\Interfaces\FieldsInterface;
 use Zynga\Framework\StorableObject\V1\Interfaces\ImportInterface;
+use
+  Zynga\Framework\StorableObject\V1\Test\Mock\UnsupportedCollectionValueType
+;
 use Zynga\Framework\StorableObject\V1\Test\Mock\Valid as ValidStorableObject;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\Type\V1\StringBox;
@@ -33,8 +32,8 @@ class BaseTest extends TestCase {
   }
 
   public function testConstructionFailsForUnsupportedType(): void {
-    $this->expectException(OperationNotSupportedException::class);
-    $collection = new MapBase(UnsupportedType::class);
+    $this->expectException(UnsupportedTypeException::class);
+    $collection = new MapBase(UnsupportedCollectionValueType::class);
   }
 
   public function testAddInsertsItemWithNewKey(): void {

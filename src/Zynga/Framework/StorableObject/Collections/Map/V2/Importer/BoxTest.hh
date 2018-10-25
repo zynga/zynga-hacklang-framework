@@ -4,7 +4,9 @@ namespace Zynga\Framework\StorableObject\Collections\Map\V2\Importer;
 
 use Zynga\Framework\StorableObject\Collections\Map\V2\Mock\FloatBoxMap;
 use Zynga\Framework\StorableObject\Collections\Map\V2\Mock\StringBoxMap;
-use Zynga\Framework\StorableObject\Collections\Map\V2\Mock\UnixTimestampBoxMap;
+use
+  Zynga\Framework\StorableObject\Collections\Map\V2\Mock\UnixTimestampBoxMap
+;
 use
   Zynga\Framework\StorableObject\V1\Exceptions\OperationNotSupportedException
 ;

@@ -102,7 +102,16 @@ interface StorableMapCollection<Tv> extends StorableObjectInterface {
   public function remove(string $k): this;
 
   /**
-   * If the key is not present, an exception is thrown.
+   * Returns the value at the specified key in the map
+   * If the key is not present, null is returned. If you would rather
+   * have an exception thrown when a key is not present then use at()
+   */
+  public function get(string $key): ?Tv;
+
+  /**
+   * Returns the value at the specified jey in the map
+   * If the key is not present, an exception is thrown. If you don't
+   * want an exception to be thrown use get()
    */
   public function at(string $key): Tv;
 

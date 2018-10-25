@@ -27,7 +27,7 @@ class StringBoxMap {
 
   /**
    * Helper functions for vector of strings
-   */ 
+   */
   public static function getRawVector(): Vector<mixed> {
     return Vector {ConstKeys::STRING_VAL_0, ConstKeys::STRING_VAL_1};
   }

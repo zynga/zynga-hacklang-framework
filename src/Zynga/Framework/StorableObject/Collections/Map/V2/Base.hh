@@ -14,9 +14,7 @@ use
 use
   Zynga\Framework\StorableObject\Collections\V2\Interfaces\StorableMapCollection
 ;
-use
-  Zynga\Framework\StorableObject\V1\Exceptions\OperationNotSupportedException
-;
+use Zynga\Framework\StorableObject\Collections\V2\Traits\TypeEnforcement;
 use Zynga\Framework\StorableObject\V1\Fields;
 use Zynga\Framework\StorableObject\V1\Fields\Generic as FieldsGeneric;
 use Zynga\Framework\StorableObject\V1\Interfaces\ExportInterface;
@@ -26,6 +24,8 @@ use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
 class Base<Tv> implements StorableMapCollection<Tv> {
+  use TypeEnforcement;
+
   /**
    * Native Map only supports int keys or string keys
    * https://docs.hhvm.com/hack/reference/class/HH.Map/
@@ -37,20 +37,15 @@ class Base<Tv> implements StorableMapCollection<Tv> {
   private bool $isDefaultValue;
 
   public function __construct(private classname<Tv> $valueType) {
-    $interfaces = class_implements($valueType);
-    if (array_key_exists(StorableObjectInterface::class, $interfaces) === false &&
-        array_key_exists(TypeInterface::class, $interfaces) === false) {
-      throw new OperationNotSupportedException(
-        'Collection only support the following types for Map values:'.
-        StorableObjectInterface::class.
-        ', '.
-        TypeInterface::class,
-      );
-    }
-
     $this->isRequired = false;
     $this->isDefaultValue = true;
     $this->map = Map {};
+
+    /**
+     * Can throw UnsupportedTypeException if valueType is not of expected type
+     * @see Zynga\Framework\StorableObject\Collections\V2\Traits\TypeEnforcement
+     */
+    $this->validateTypeImplementsRequiredInterface($valueType);
   }
 
   public function clear(): bool {
@@ -60,10 +55,7 @@ class Base<Tv> implements StorableMapCollection<Tv> {
   }
 
   public function isEmpty(): bool {
-    if ($this->map->count() == 0) {
-      return true;
-    }
-    return false;
+    return $this->map->isEmpty();
   }
 
   public function count(): int {
@@ -105,13 +97,7 @@ class Base<Tv> implements StorableMapCollection<Tv> {
   }
 
   public function get(string $key): ?Tv {
-
-    if ($this->map->containsKey($key) === true) {
-      return $this->map[$key];
-    }
-
-    return null;
-
+    return $this->map->get($key);
   }
 
   public function at(string $key): Tv {
@@ -138,10 +124,10 @@ class Base<Tv> implements StorableMapCollection<Tv> {
     $hadNonDefault = false;
 
     foreach ($this->map as $key => $value) {
-      list($f_isRequired, $f_isDefaultValue) =
+      list($isRequired, $isDefaultValue) =
         FieldsGeneric::getIsRequiredAndIsDefaultValue($value);
 
-      if ($f_isDefaultValue === true) {
+      if ($isDefaultValue === true) {
         $defaultFields[] = $key;
       } else {
         $hadNonDefault = true;

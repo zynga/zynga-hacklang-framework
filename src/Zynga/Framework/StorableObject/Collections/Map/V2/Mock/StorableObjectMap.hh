@@ -37,7 +37,11 @@ class StorableObjectMap {
 
   public static function getRawNestedVector(): Vector<mixed> {
     return Vector {
-      Vector {ConstKeys::STRING_VAL_0, ConstKeys::UINT_VAL_0, ConstKeys::FLOAT_VAL_0},
+      Vector {
+        ConstKeys::STRING_VAL_0,
+        ConstKeys::UINT_VAL_0,
+        ConstKeys::FLOAT_VAL_0,
+      },
       Map {
         TestStorableObject::EXAMPLE_STRING_KEY => ConstKeys::STRING_VAL_1,
         TestStorableObject::EXAMPLE_UINT64_KEY => ConstKeys::UINT_VAL_1,
@@ -79,7 +83,11 @@ class StorableObjectMap {
 
   public static function getJsonForNestedVector(): string {
     $arr = array(
-      array(ConstKeys::STRING_VAL_0, ConstKeys::UINT_VAL_0, ConstKeys::FLOAT_VAL_0),
+      array(
+        ConstKeys::STRING_VAL_0,
+        ConstKeys::UINT_VAL_0,
+        ConstKeys::FLOAT_VAL_0,
+      ),
       array(
         TestStorableObject::EXAMPLE_STRING_KEY => ConstKeys::STRING_VAL_1,
         TestStorableObject::EXAMPLE_UINT64_KEY => ConstKeys::UINT_VAL_1,
@@ -198,12 +206,13 @@ class StorableObjectMap {
       ),
     );
 
-    $arr = $dataArr;
+    $jsonString = json_encode($dataArr, JSON_FORCE_OBJECT);
+
     if ($parent != '') {
-      $arr = array($parent => $dataArr);
+      $jsonString = '"'.$parent.'":'.$jsonString;
     }
 
-    return json_encode($arr, JSON_FORCE_OBJECT);
+    return $jsonString;
   }
 
   /**

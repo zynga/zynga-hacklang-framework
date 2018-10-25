@@ -19,13 +19,18 @@ class FloatBoxMap {
     $this->floatMap = new StorableMap(FloatBox::class);
   }
 
-  public static function getEmptyCollection(): StorableMapCollection<FloatBox> {
+  public static function getEmptyCollection(
+  ): StorableMapCollection<FloatBox> {
     $obj = new FloatBoxMap();
     return $obj->floatMap;
   }
 
   public static function getRawVector(): Vector<mixed> {
-    return Vector {ConstKeys::FLOAT_VAL_0, ConstKeys::FLOAT_VAL_1, ConstKeys::FLOAT_VAL_2};
+    return Vector {
+      ConstKeys::FLOAT_VAL_0,
+      ConstKeys::FLOAT_VAL_1,
+      ConstKeys::FLOAT_VAL_2,
+    };
   }
 
   public static function getPopulatedCollectionFromVector(

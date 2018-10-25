@@ -2,6 +2,9 @@
 
 namespace Zynga\Framework\StorableObject\Collections\Map\V2\Importer;
 
+use
+  Zynga\Framework\StorableObject\Collections\Map\V2\Mock\Nested\MapDepth1 as DeeplyNestedMap
+;
 use Zynga\Framework\StorableObject\Collections\Map\V2\Mock\StorableObjectMap;
 use
   Zynga\Framework\StorableObject\V1\Exceptions\OperationNotSupportedException
@@ -36,6 +39,17 @@ class StorableTest extends TestCase {
 
     $this->assertEquals(
       StorableObjectMap::getPopulatedCollectionForNestedMap(),
+      $collection,
+    );
+  }
+
+  public function testImportFromMapSucceedsForDeeplyNestedMap(): void {
+    $collection = DeeplyNestedMap::getEmptyCollection();
+    $map = DeeplyNestedMap::getRawNestedMap();
+    $collection->import()->fromMap($map);
+
+    $this->assertEquals(
+      DeeplyNestedMap::getPopulatedCollectionForNestedMap(),
       $collection,
     );
   }

@@ -10,6 +10,9 @@ use
 use Zynga\Framework\StorableObject\V1\Interfaces\ExportInterface;
 use Zynga\Framework\StorableObject\V1\Interfaces\FieldsInterface;
 use Zynga\Framework\StorableObject\V1\Interfaces\ImportInterface;
+use
+  Zynga\Framework\StorableObject\V1\Test\Mock\UnsupportedCollectionValueType
+;
 use Zynga\Framework\StorableObject\Collections\Vector\V1\Base as VectorBase;
 use
   Zynga\Framework\StorableObject\Collections\Vector\V1\Importer\Storable as StorableImporter
@@ -23,6 +26,11 @@ class BaseTest extends TestCase {
   public function testConstructionWithBoxSucceeds(): void {
     $collection = new VectorBase(ValidStorableObject::class);
     $this->addToAssertionCount(1);
+  }
+
+  public function testConstructionFailsForUnsupportedType(): void {
+    $this->expectException(UnsupportedTypeException::class);
+    $collection = new VectorBase(UnsupportedCollectionValueType::class);
   }
 
   public function testIsEmptyReturnsTrueWhenCollectionIsEmpty(): void {

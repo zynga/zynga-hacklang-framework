@@ -24,11 +24,13 @@ class Base<Tv> implements ExportInterface {
         return '{}';
       }
 
-      $payload = '{';
+      $payload = '';
 
       if ($parentFieldName !== null) {
-        $payload .= json_encode($parentFieldName).':{';
+        $payload .= json_encode($parentFieldName).':';
       }
+
+      $payload .= '{';
 
       $firstValue = true;
 
@@ -70,10 +72,6 @@ class Base<Tv> implements ExportInterface {
           $firstValue = false;
         }
 
-      }
-
-      if ($parentFieldName != null) {
-        $payload .= '}';
       }
 
       $payload .= '}';

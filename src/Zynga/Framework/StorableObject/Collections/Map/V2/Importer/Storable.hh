@@ -7,7 +7,7 @@ use Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException;
 
 /**
  * Class for collection importers. This class creates object of the
- * valueType the storableMap has specified. Since valueType is of 
+ * valueType the storableMap has specified. Since valueType is of
  * storable nature we expect the payload to be a key value pairs to
  * be deserialize.
  */

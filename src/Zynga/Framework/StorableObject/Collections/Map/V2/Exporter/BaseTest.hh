@@ -3,6 +3,9 @@
 namespace Zynga\Framework\StorableObject\Collections\Map\V2\Exporter;
 
 use Zynga\Framework\Exception\V1\Exception;
+use
+  Zynga\Framework\StorableObject\Collections\Map\V2\Mock\Nested\MapDepth1 as DeeplyNestedMap
+;
 use Zynga\Framework\StorableObject\Collections\Map\V2\Mock\StorableObjectMap;
 use Zynga\Framework\StorableObject\Collections\Map\V2\Mock\StringBoxMap;
 use Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException;
@@ -46,6 +49,15 @@ class BaseTest extends TestCase {
 
     $this->assertEquals(
       StorableObjectMap::getKeyedJsonForNestedMap(),
+      $collection->export()->asJSON(),
+    );
+  }
+
+  public function testExportAsJsonSucceedsForDeeplyNestedMap(): void {
+    $collection = DeeplyNestedMap::getPopulatedCollectionForNestedMap();
+
+    $this->assertEquals(
+      DeeplyNestedMap::getJsonForNestedMap(),
       $collection->export()->asJSON(),
     );
   }

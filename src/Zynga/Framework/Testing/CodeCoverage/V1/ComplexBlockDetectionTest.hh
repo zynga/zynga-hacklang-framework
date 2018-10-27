@@ -20,4 +20,22 @@ class ComplexBlockDetectionTest extends ZyngaTestCase {
     $this->assertFalse($obj->moreComplexIf('jeo'));
   }
 
+  public function testSimpleTryCatch(): void {
+    $obj = new ComplexBlockDetection();
+    $this->assertTrue($obj->simpleTryCatch('bar'));
+    $this->assertFalse($obj->simpleTryCatch('baz'));
+  }
+
+  public function testComplexTryCatch(): void {
+    $obj = new ComplexBlockDetection();
+
+    $this->assertTrue($obj->moreComplexTryCatch('bar'));
+    $this->assertTrue($obj->didFinally());
+
+    $obj->resetFinally();
+    $this->assertFalse($obj->moreComplexTryCatch('baz'));
+    $this->assertTrue($obj->didFinally());
+    
+  }
+
 }

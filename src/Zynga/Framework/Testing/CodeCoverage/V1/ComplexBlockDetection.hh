@@ -30,4 +30,38 @@ class ComplexBlockDetection {
 
   }
 
+  public function simpleTryCatch(string $foo): bool {
+    try {
+      if ($foo == 'bar') {
+        return true;
+      }
+      throw new Exception('must be the bar');
+    } catch (Exception $e) {
+      return false;
+    }
+  }
+
+  private bool $didFinally = false;
+
+  public function resetFinally(): void {
+    $this->didFinally = false;
+  }
+
+  public function didFinally(): bool {
+    return $this->didFinally;
+  }
+
+  public function moreComplexTryCatch(string $foo): bool {
+    try {
+      if ( $foo == 'bar' ) {
+        return true;
+      }
+      throw new Exception('must be the bar');
+    } catch ( Exception $e ) {
+      return false;
+    } finally {
+      $this->didFinally = true;
+    }
+  }
+
 }

@@ -64,4 +64,19 @@ class ComplexBlockDetection {
     }
   }
 
+  public function pokePrivateWithIsDryRun(): bool {
+    return $this->dryRunLog('no-message', true );
+  }
+
+  public function pokePrivateWithIsNotDryRun(): bool {
+    return $this->dryRunLog('no-message', false );
+  }
+
+  private function dryRunLog(string $message, bool $isDryRun): bool {
+    if ( $isDryRun ) {
+      return true;
+    }
+    return false;
+  }
+
 }

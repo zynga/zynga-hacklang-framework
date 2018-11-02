@@ -23,8 +23,6 @@ use
 
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
-// Existing: TBD if we will be able to remove the below
-use Zynga\Framework\StorableObject\V1\Fields;
 use Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException;
 
 class Base<Tk, Tv> implements StorableMapCollection<Tk, Tv> {

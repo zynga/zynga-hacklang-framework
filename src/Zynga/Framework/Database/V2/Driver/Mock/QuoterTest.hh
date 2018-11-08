@@ -1,6 +1,6 @@
 <?hh //strict
 
-namespace Zynga\Framework\Database\V2\Driver\MOck;
+namespace Zynga\Framework\Database\V2\Driver\Mock;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 

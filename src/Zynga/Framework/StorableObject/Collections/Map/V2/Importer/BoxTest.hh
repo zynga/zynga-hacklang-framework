@@ -2,6 +2,7 @@
 
 namespace Zynga\Framework\StorableObject\Collections\Map\V2\Importer;
 
+use Zynga\Framework\StorableObject\Collections\Map\V2\Mock\ConstKeys;
 use Zynga\Framework\StorableObject\Collections\Map\V2\Mock\FloatBoxMap;
 use Zynga\Framework\StorableObject\Collections\Map\V2\Mock\StringBoxMap;
 use
@@ -122,5 +123,16 @@ class BoxTest extends TestCase {
 
     $this->expectException(UnsupportedTypeException::class);
     $collection->import()->fromJSON('InvalidJson');
+  }
+  
+  public function testImportFromMapWithArrayNumbericKeys(): void {
+    $collection = StringBoxMap::getEmptyCollection();
+    $collection->import()->fromMap(StringBoxMap::getMapFromArrayWithNumericStringKeys());
+    
+    $this->assertTrue(is_string($collection->items()->firstKey()));
+    $this->assertTrue(is_string($collection->items()->lastKey()));
+    $this->assertEquals(ConstKeys::INDEXED_KEY_3, $collection->items()->firstKey());
+    $this->assertEquals(ConstKeys::INDEXED_KEY_2, $collection->items()->lastKey());
+    
   }
 }

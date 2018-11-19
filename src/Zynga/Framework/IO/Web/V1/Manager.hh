@@ -27,8 +27,8 @@ class Manager {
   public static bool $useMockCurl = false;
   public static bool $setOptionsReturn = false;
   public static ?CurlResponsePayload $curlExecReturn;
-  public static mixed $curlInfoReturn = array();
-  
+  public static Map<int, mixed> $curlInfoReturn = Map {};
+
   /**
    * Uploads $fileName to $uploadUrl using a PUT request
    *

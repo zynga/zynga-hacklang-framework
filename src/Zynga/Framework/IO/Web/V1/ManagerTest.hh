@@ -94,7 +94,7 @@ class ManagerTest extends TestCase {
     if($useMock == true) {
       Manager::$setOptionsReturn = true;
       Manager::$curlExecReturn = new CurlResponsePayload(true, array('success' => true));
-      Manager::$curlInfoReturn = 200;
+      Manager::$curlInfoReturn = Map { CURLINFO_HTTP_CODE => 200 };
     }
     
     $url = new UrlBox();

@@ -11,8 +11,8 @@ class UtcOffsetBoxTest extends TestCase {
 
   public function setUp(): void {
     parent::setUp();
-    $this->setMin(-11);
-    $this->setMax(12);
+    $this->setMin(-12);
+    $this->setMax(14);
   }
 
   public function getTypeObject(): TypeInterface {

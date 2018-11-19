@@ -26,6 +26,6 @@ class UtcOffsetBox extends Int32Box {
    * @return True if the given UTC offset is valid, otherwise false
    */
   private function isValidUtcOffset(int $utcOffset): bool {
-    return $utcOffset >= -11 && $utcOffset <= 12;
+    return $utcOffset >= -12 && $utcOffset <= 14;
   }
 }

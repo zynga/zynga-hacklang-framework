@@ -125,7 +125,7 @@ class BoxTest extends TestCase {
     $collection->import()->fromJSON('InvalidJson');
   }
   
-  public function testImportFromMapWithArrayNumbericKeys(): void {
+  public function testImportFromMapWithArrayNumericKeys(): void {
     $collection = StringBoxMap::getEmptyCollection();
     $collection->import()->fromMap(StringBoxMap::getMapFromArrayWithNumericStringKeys());
     

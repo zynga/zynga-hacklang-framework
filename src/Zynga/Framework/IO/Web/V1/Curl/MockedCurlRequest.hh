@@ -6,9 +6,9 @@ class MockedCurlRequest implements CurlInterface {
   
   private bool $setOptionsReturn = false;
   private CurlResponsePayload $curlExecReturn;
-  private mixed $curlInfoReturn;
-  
-  public function __construct(bool $setOptionsReturn, CurlResponsePayload $curlExecReturn, mixed $curlInfoReturn) {
+  private Map<int, mixed> $curlInfoReturn;
+
+  public function __construct(bool $setOptionsReturn, CurlResponsePayload $curlExecReturn, Map<int, mixed> $curlInfoReturn) {
     $this->setOptionsReturn = $setOptionsReturn;
     $this->curlExecReturn = $curlExecReturn;
     $this->curlInfoReturn = $curlInfoReturn;
@@ -23,7 +23,7 @@ class MockedCurlRequest implements CurlInterface {
   }
 
   public function getInfo(int $optName): mixed {
-    return $this->curlInfoReturn;
+    return $this->curlInfoReturn[$optName];
   }
 
   public function close(): bool {

@@ -103,4 +103,13 @@ class StringBoxMap {
 
     return json_encode($arr);
   }
+  
+  public static function getMapFromArrayWithNumericStringKeys(): Map<string, mixed> {
+    return new Map(
+      array(
+        ConstKeys::INDEXED_KEY_3 => ConstKeys::FLOAT_VAL_0,
+        ConstKeys::INDEXED_KEY_2 => ConstKeys::STRING_KEY_0,
+      )
+    );
+  }
 }

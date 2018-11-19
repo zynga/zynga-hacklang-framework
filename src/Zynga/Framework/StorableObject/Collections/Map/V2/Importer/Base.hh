@@ -35,6 +35,7 @@ abstract class Base<Tv> implements ImportInterface {
 
     foreach ($data as $key => $item) {
       $storable = $this->getTypeFromItem($item);
+      $key = strval($key);
       $this->collection->set($key, $storable);
     }
 

@@ -83,6 +83,11 @@ class Http extends BaseHandler {
           $data[$k] = $v;
         }
 
+        $server = SuperGlobals::getServerAsMap();
+        foreach ($server as $k => $v) {
+          $data[$k] = $v;
+        }
+
         // var_dump($data);
         // Bring the input into the dataset.
         $service->request()->import()->fromMap($data);

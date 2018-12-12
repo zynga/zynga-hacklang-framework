@@ -9,6 +9,7 @@ use Zynga\Framework\Service\V2\Interfaces\ResponseInterface;
 
 use Zynga\Framework\Service\V2\Swagger\Request;
 use Zynga\Framework\Service\V2\Swagger\Response;
+use Zynga\Framework\Service\V2\Swagger\Server;
 use Zynga\Framework\Service\V2\Swagger\ServiceFinder;
 use Zynga\Framework\Service\V2\Swagger\ServiceFile;
 use Zynga\Framework\Service\V2\Response\Failure as ResponseFailure;
@@ -35,6 +36,7 @@ abstract class Base extends ServiceBase {
   private ConfigBase $_config;
   private ?Request $_request;
   private ?Response $_response;
+  private ?Server $_server;
 
   private ResponseFailure $_responseFailure;
 
@@ -59,6 +61,13 @@ abstract class Base extends ServiceBase {
       $this->_response = new Response();
     }
     return $this->_response;
+  }
+
+  public function server(): Server {
+    if ($this->_server === null) {
+      $this->_server = new Server();
+    }
+    return $this->_server;
   }
 
   public function handle(): bool {

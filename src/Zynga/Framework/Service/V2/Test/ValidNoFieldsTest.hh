@@ -13,6 +13,12 @@ class ValidNoFieldsTest extends TestCase {
     $this->assertNotNull($response);
   }
 
+  public function testServer(): void {
+    $validNoFields = new ValidNoFields();
+    $server = $validNoFields->server();
+    $this->assertNotNull($server);
+  }
+
   public function testHandle(): void {
     $validNoFields = new ValidNoFields();
     $response = $validNoFields->handle();

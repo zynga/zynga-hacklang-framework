@@ -8,6 +8,7 @@ use Zynga\Framework\Service\V2\Test\Router\Mock;
 use Zynga\Framework\Service\V2\Router\Request;
 use Zynga\Framework\Service\V2\Router\Response;
 
+use Zynga\Framework\Service\V2\Interfaces\ServerInterface;
 use Zynga\Framework\Service\V2\Interfaces\Exposure\Filter as BaseFilter;
 use Zynga\Framework\Service\V2\Service\Group\Config\Base as ServiceConfigBase;
 use Zynga\Framework\Service\V2\Service\Group\Config\Pattern as ConfigPattern;
@@ -98,6 +99,12 @@ class BaseTest extends TestCase {
       $this->assertEquals('SERVICE_NOT_FOUND', $errorMessage->get());
     }
 
+  }
+
+  public function testRouterServerType(): void {
+    $config = new MockConfig();
+    $obj = new Mock($config);
+    $this->assertClassImplements(ServerInterface::class, $obj->server());
   }
 
 }

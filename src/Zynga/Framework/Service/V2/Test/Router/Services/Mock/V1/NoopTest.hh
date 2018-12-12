@@ -8,6 +8,7 @@ use Zynga\Framework\Service\V2\Test\Router\Services\Mock\V1\Noop;
 
 use Zynga\Framework\Service\V2\Test\Router\Services\Mock\V1\Request;
 use Zynga\Framework\Service\V2\Test\Router\Services\Mock\V1\Response;
+use Zynga\Framework\Service\V2\Test\Router\Services\Mock\V1\Server;
 
 class NoopTest extends TestCase {
 
@@ -29,4 +30,9 @@ class NoopTest extends TestCase {
     $this->assertEquals(Response::class, get_class($obj->response()));
   }
 
+  public function test_server(): void {
+    $obj = new Noop();
+    $this->assertEquals(Server::class, get_class($obj->server()));
+    $this->assertEquals(Server::class, get_class($obj->server()));
+  }
 }

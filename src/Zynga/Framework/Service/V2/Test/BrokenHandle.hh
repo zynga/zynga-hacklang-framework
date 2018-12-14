@@ -32,7 +32,7 @@ class BrokenHandle extends Base {
     return $this->_response;
   }
 
-  public function server(): Server {
+  public function serverGlobals(): Server {
     if ($this->_server === null) {
       $this->_server = new Server();
     }

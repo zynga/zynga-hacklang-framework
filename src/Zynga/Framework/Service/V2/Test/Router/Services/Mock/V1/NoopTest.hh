@@ -32,7 +32,7 @@ class NoopTest extends TestCase {
 
   public function test_server(): void {
     $obj = new Noop();
-    $this->assertEquals(Server::class, get_class($obj->server()));
-    $this->assertEquals(Server::class, get_class($obj->server()));
+    $this->assertEquals(Server::class, get_class($obj->serverGlobals()));
+    $this->assertEquals(Server::class, get_class($obj->serverGlobals()));
   }
 }

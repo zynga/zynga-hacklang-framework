@@ -104,7 +104,7 @@ class BaseTest extends TestCase {
   public function testRouterServerType(): void {
     $config = new MockConfig();
     $obj = new Mock($config);
-    $this->assertClassImplements(ServerInterface::class, $obj->server());
+    $this->assertClassImplements(ServerInterface::class, $obj->serverGlobals());
   }
 
 }

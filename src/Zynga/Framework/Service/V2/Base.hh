@@ -15,6 +15,6 @@ abstract class Base extends ServiceBase {
 
   abstract public function response(): ResponseInterface;
 
-  abstract public function server(): ServerInterface;
+  abstract public function serverGlobals(): ServerInterface;
 
 }

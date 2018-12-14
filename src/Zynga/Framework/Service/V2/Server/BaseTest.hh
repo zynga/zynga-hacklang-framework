@@ -10,13 +10,13 @@ use Zynga\Framework\Service\V2\Test\Valid;
 
 class BaseTest extends TestCase {
 
-  public function testServerClass() : void {
+  public function testServiceReturnsServerObject() : void {
     $service = new Valid();
-    $this->assertClassImplements(ServerInterface::class, $service->server());
+    $this->assertClassImplements(ServerInterface::class, $service->serverGlobals());
   }
 
-  public function testServerValue() : void {
+  public function testServerHasPopulatedValue() : void {
     $service = new Valid();
-    $this->assertNotEmpty($service->server()->PHP_SELF);
+    $this->assertNotEmpty($service->serverGlobals()->PHP_SELF);
   }
 }

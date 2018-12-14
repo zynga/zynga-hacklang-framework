@@ -19,7 +19,7 @@ interface ServiceInterface {
 
   public function response(): ResponseInterface;
 
-  public function server(): ServerInterface;
+  public function serverGlobals(): ServerInterface;
 
   public function getHandler(): HandlerInterface;
 

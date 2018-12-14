@@ -44,7 +44,7 @@ abstract class Base extends ServiceBase {
     return $this->_response;
   }
 
-  public function server(): Server {
+  public function serverGlobals(): Server {
     if ($this->_server === null) {
       $this->_server = new Server();
     }

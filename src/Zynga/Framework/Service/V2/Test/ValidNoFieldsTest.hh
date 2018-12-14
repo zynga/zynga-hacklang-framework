@@ -15,7 +15,7 @@ class ValidNoFieldsTest extends TestCase {
 
   public function testServer(): void {
     $validNoFields = new ValidNoFields();
-    $server = $validNoFields->server();
+    $server = $validNoFields->serverGlobals();
     $this->assertNotNull($server);
   }
 

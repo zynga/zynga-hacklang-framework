@@ -5,6 +5,7 @@ namespace Zynga\Framework\Service\V2\Interfaces;
 use Zynga\Framework\Service\V2\Interfaces\RequestInterface;
 use Zynga\Framework\Service\V2\Interfaces\ResponseInterface;
 use Zynga\Framework\Service\V2\Interfaces\HandlerInterface;
+use Zynga\Framework\Service\V2\Interfaces\ServerGlobalsInterface;
 
 use Zynga\Framework\Exception\V1\Exception;
 
@@ -17,6 +18,8 @@ interface ServiceInterface {
   public function handle(): bool;
 
   public function response(): ResponseInterface;
+
+  public function serverGlobals(): ServerGlobalsInterface;
 
   public function getHandler(): HandlerInterface;
 

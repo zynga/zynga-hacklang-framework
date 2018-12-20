@@ -6,13 +6,13 @@ use Zynga\Framework\Service\V2\Base as ServiceBase;
 
 use Zynga\Framework\Service\V2\Test\Router\Services\Mock\V1\Request;
 use Zynga\Framework\Service\V2\Test\Router\Services\Mock\V1\Response;
-use Zynga\Framework\Service\V2\Test\Router\Services\Mock\V1\Server;
+use Zynga\Framework\Service\V2\Test\Router\Services\Mock\V1\ServerGlobals;
 
 class Noop extends ServiceBase {
 
   private ?Request $_request;
   private ?Response $_response;
-  private ?Server $_server;
+  private ?ServerGlobals $_serverGlobals;
 
   public function request(): Request {
     if ($this->_request === null) {
@@ -28,11 +28,11 @@ class Noop extends ServiceBase {
     return $this->_response;
   }
 
-  public function serverGlobals(): Server {
-    if ($this->_server === null) {
-      $this->_server = new Server();
+  public function serverGlobals(): ServerGlobals {
+    if ($this->_serverGlobals === null) {
+      $this->_serverGlobals = new ServerGlobals();
     }
-    return $this->_server;
+    return $this->_serverGlobals;
   }
 
   public function handle(): bool {

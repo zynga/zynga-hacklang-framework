@@ -8,7 +8,7 @@ use Zynga\Framework\Service\V2\Test\Router\Mock;
 use Zynga\Framework\Service\V2\Router\Request;
 use Zynga\Framework\Service\V2\Router\Response;
 
-use Zynga\Framework\Service\V2\Interfaces\ServerInterface;
+use Zynga\Framework\Service\V2\Interfaces\ServerGlobalsInterface;
 use Zynga\Framework\Service\V2\Interfaces\Exposure\Filter as BaseFilter;
 use Zynga\Framework\Service\V2\Service\Group\Config\Base as ServiceConfigBase;
 use Zynga\Framework\Service\V2\Service\Group\Config\Pattern as ConfigPattern;
@@ -101,10 +101,10 @@ class BaseTest extends TestCase {
 
   }
 
-  public function testRouterServerType(): void {
+  public function testRouterServerGlobalsType(): void {
     $config = new MockConfig();
     $obj = new Mock($config);
-    $this->assertClassImplements(ServerInterface::class, $obj->serverGlobals());
+    $this->assertClassImplements(ServerGlobalsInterface::class, $obj->serverGlobals());
   }
 
 }

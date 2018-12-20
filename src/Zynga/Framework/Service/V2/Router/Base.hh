@@ -9,7 +9,7 @@ use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
 use Zynga\Framework\Service\V2\Interfaces\ServiceInterface;
 use Zynga\Framework\Service\V2\Router\Request;
 use Zynga\Framework\Service\V2\Router\Response;
-use Zynga\Framework\Service\V2\Router\Server;
+use Zynga\Framework\Service\V2\Router\ServerGlobals;
 
 use Zynga\Framework\Service\V2\Interfaces\ResponseInterface;
 
@@ -23,7 +23,7 @@ abstract class Base extends ServiceBase {
   private ConfigBase $_config;
   private ?Request $_request;
   private ?ResponseInterface $_response;
-  private ?Server $_server;
+  private ?ServerGlobals $_serverGlobals;
 
   public function __construct(ConfigBase $config) {
     parent::__construct();
@@ -44,11 +44,11 @@ abstract class Base extends ServiceBase {
     return $this->_response;
   }
 
-  public function serverGlobals(): Server {
-    if ($this->_server === null) {
-      $this->_server = new Server();
+  public function serverGlobals(): ServerGlobals {
+    if ($this->_serverGlobals === null) {
+      $this->_serverGlobals = new ServerGlobals();
     }
-    return $this->_server;
+    return $this->_serverGlobals;
   }
 
   public function handle(): bool {

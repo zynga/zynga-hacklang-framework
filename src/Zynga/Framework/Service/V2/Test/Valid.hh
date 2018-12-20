@@ -5,7 +5,7 @@ namespace Zynga\Framework\Service\V2\Test;
 use Zynga\Framework\Service\V2\Base;
 use Zynga\Framework\Service\V2\Test\Request;
 use Zynga\Framework\Service\V2\Test\Response;
-use Zynga\Framework\Service\V2\Test\Server;
+use Zynga\Framework\Service\V2\Test\ServerGlobalsGlobals;
 
 use Zynga\Environment\V1\Interfaces\HTTP\HeaderContainerInterface;
 use Zynga\Environment\V1\Test\HTTP\MockHeaderContainer;
@@ -14,7 +14,7 @@ class Valid extends Base {
 
   private ?Request $_request;
   private ?Response $_response;
-  private ?Server $_server;
+  private ?ServerGlobals $_serverGlobals;
 
   public function request(): Request {
     if ($this->_request === null) {
@@ -30,11 +30,11 @@ class Valid extends Base {
     return $this->_response;
   }
 
-  public function serverGlobals(): Server {
-    if ($this->_server === null) {
-      $this->_server = new Server();
+  public function serverGlobals(): ServerGlobals {
+    if ($this->_serverGlobals === null) {
+      $this->_serverGlobals = new ServerGlobals();
     }
-    return $this->_server;
+    return $this->_serverGlobals;
   }
 
   public function handle(): bool {

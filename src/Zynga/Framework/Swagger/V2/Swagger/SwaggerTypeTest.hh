@@ -3,6 +3,8 @@
 namespace Zynga\Framework\Swagger\V2\Swagger;
 
 use Zynga\Factory\V2\Test\MockState as FactoryMockState;
+use Zynga\Framework\StorableObject\Collections\Map\V2\Mock\Nested\MapDepth1;
+use Zynga\Framework\StorableObject\Collections\Map\V2\Mock\StringBoxMap;
 use Zynga\Framework\StorableObject\V1\Test\Mock\Broken\ValidButHasConstructorArgs;
 use Zynga\Framework\StorableObject\V1\Test\Mock\Broken\ValidNestedVectorButBrokenChild;
 use Zynga\Framework\StorableObject\V1\Test\Mock\ValidNestedVector;
@@ -78,6 +80,39 @@ class SwaggerTypeTest extends TestCase {
     $this->assertTrue($obj->convertZyngaTypeToSwaggerType(FixedLengthStringBox::class));
     $this->assertTrue($obj->convertZyngaTypeToSwaggerType(EmailBox::class));
     $this->assertTrue($obj->convertZyngaTypeToSwaggerType(BoolBox::class));
+  }
+
+  public function testStorableMapObjectOfStringBox(): void {
+    $swag = new Swagger();
+    $obj = new SwaggerType($swag);
+    $this->assertTrue(
+      $obj->convertZyngaTypeToSwaggerType(StringBoxMap::class)
+    );
+  }
+
+  public function testNestedStorableMap(): void {
+    $swag = new Swagger();
+    $obj = new SwaggerType($swag);
+    $this->assertTrue(
+      $obj->convertZyngaTypeToSwaggerType(MapDepth1::class)
+    );
+  }
+
+  public function testClassPathOfStorableMapOfStringBox(): void {
+    $swag = new Swagger();
+    $obj = new SwaggerType($swag);
+    $this->assertTrue(
+      $obj->convertZyngaTypeToSwaggerType(
+        'Collections.Map.V2.Base<'.StringBox::class.'>',
+      ),
+    );
+  }
+
+  public function testClassPathOfStorableMapOfString(): void {
+    $swag = new Swagger();
+    $obj = new SwaggerType($swag);
+    $this->expectException(UnknownZyngaTypeException::class);
+    $obj->convertZyngaTypeToSwaggerType('Collections.Map.V2.Base<String>');
   }
 
   public function testUnknownType(): void {

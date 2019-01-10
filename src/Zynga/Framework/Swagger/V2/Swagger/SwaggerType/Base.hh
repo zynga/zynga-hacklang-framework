@@ -161,6 +161,11 @@ class Base extends StorableObjectBase {
       return true;
     }
 
+    if (preg_match('/Collections.Map.V\d+.Base</', $type)) {
+      $this->type->set(self::ARRAY_TYPE);
+      return true;
+    }
+
     if (preg_match('/StorableMap/', $type)) {
       $this->type->set(self::ARRAY_TYPE);
       return true;

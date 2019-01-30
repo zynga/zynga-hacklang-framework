@@ -5,14 +5,20 @@ namespace Zynga\Framework\Performance\V1;
 use Zynga\Framework\Environment\CodePath\V1\CodePath;
 
 require_once
-  CodePath::getRoot().'/third-party/xhprof/xhprof_lib/utils/xhprof_lib.php'
+  CodePath::getLibraryPath('xhprof').
+  '/third-party/xhprof/xhprof_lib/utils/xhprof_lib.php'
 ;
 require_once
-  CodePath::getRoot().'/third-party/xhprof/xhprof_lib/utils/xhprof_runs.php'
+  CodePath::getLibraryPath('xhprof').
+  '/third-party/xhprof/xhprof_lib/utils/xhprof_runs.php'
 ;
 
 use \XHProfRuns_Default;
 
+/**
+ * Before running xhprofiler with your application, be sure you have set the
+ * path to the library as noted in the above requires.
+ */
 class XHProfiler {
   private static string $_profileDir = '';
   private static bool $_isProfiling = false;

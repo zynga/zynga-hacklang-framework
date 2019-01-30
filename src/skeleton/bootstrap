@@ -9,10 +9,10 @@ use Zynga\Framework\Environment\CodePath\V1\CodePath;
 
 // Set the codepath to the root of this codebase.
 CodePath::setRoot(dirname(__FILE__));
+CodePath::setLibraryPath('xhprof', dirname(__FILE__));
 
 // Stand up the bootstrap for all of our tests.
 BootStrap::init();
 
 // Detect what development enviornment we are within.
 DevelopmentMode::detect();
-

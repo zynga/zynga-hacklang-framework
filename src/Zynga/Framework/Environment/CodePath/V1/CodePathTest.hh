@@ -6,31 +6,36 @@ use Zynga\Framework\Environment\CodePath\V1\CodePath;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 class CodePathTest extends TestCase {
-  private string $_currentRoot = '';
+  private string $currentRoot = '';
+  private string $currentExternalLibraryRoot = '';
 
-  public function captureCurrentRoot(): void {
-    $this->_currentRoot = CodePath::getRoot();
+  public function setUp(): void {
+    parent::setUp();
+    $this->currentRoot = CodePath::getRoot();
+    $this->currentExternalLibraryRoot = CodePath::getExternalLibraryRoot();
   }
 
-  public function restoreCurrentRoot(): void {
-    CodePath::setRoot($this->_currentRoot);
+  public function tearDown(): void {
+    CodePath::setRoot($this->currentRoot);
+    CodePath::setExternalLibraryRoot($this->currentExternalLibraryRoot);
+    parent::tearDown();
   }
 
-  /**
-   * Are we able to set a new root and return it
-   */
-  public function testChangeRoot(): void {
-
-    $this->captureCurrentRoot();
-
+  public function testRootPathIsSet(): void {
     $expected = '/monkey';
 
     CodePath::setRoot($expected);
     $value = CodePath::getRoot();
 
     $this->assertEquals($expected, $value);
+  }
 
-    $this->restoreCurrentRoot();
+  public function testExternalLibraryPathIsSet(): void {
+    $expected = '/its-ya-boy-lib';
 
+    CodePath::setExternalLibraryRoot($expected);
+    $value = CodePath::getExternalLibraryRoot();
+
+    $this->assertEquals($expected, $value);
   }
 }

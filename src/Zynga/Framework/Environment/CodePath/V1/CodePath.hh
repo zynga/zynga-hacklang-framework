@@ -19,11 +19,6 @@ class CodePath {
     return self::$root;
   }
 
-  public static function resetPaths(): void {
-    self::$root = '';
-    self::$externalLibraryPath = '';
-  }
-
   public static function getExternalLibraryPath(): string {
     return self::$externalLibraryPath;
   }

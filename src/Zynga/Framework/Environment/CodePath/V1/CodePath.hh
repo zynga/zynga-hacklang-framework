@@ -19,11 +19,11 @@ class CodePath {
     return self::$root;
   }
 
-  public static function getExternalLibraryPath(): string {
+  public static function getExternalLibraryRoot(): string {
     return self::$externalLibraryPath;
   }
 
-  public static function setExternalLibraryPath(string $path): void {
+  public static function setExternalLibraryRoot(string $path): void {
     self::$externalLibraryPath = $path;
   }
 }

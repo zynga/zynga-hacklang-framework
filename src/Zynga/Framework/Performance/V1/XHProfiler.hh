@@ -5,11 +5,11 @@ namespace Zynga\Framework\Performance\V1;
 use Zynga\Framework\Environment\CodePath\V1\CodePath;
 
 require_once
-  CodePath::getExternalLibraryPath().
+  CodePath::getExternalLibraryRoot().
   '/xhprof/xhprof_lib/utils/xhprof_lib.php'
 ;
 require_once
-  CodePath::getExternalLibraryPath().
+  CodePath::getExternalLibraryRoot().
   '/xhprof/xhprof_lib/utils/xhprof_runs.php'
 ;
 

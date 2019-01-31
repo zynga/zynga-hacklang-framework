@@ -7,18 +7,18 @@ use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 class CodePathTest extends TestCase {
   private string $currentRoot = '';
-  private string $currentExternalLibraryPath = '';
+  private string $currentExternalLibraryRoot = '';
 
   public function setUp(): void {
     parent::setUp();
     $this->currentRoot = CodePath::getRoot();
-    $this->currentExternalLibraryPath = CodePath::getExternalLibraryPath();
+    $this->currentExternalLibraryRoot = CodePath::getExternalLibraryRoot();
   }
 
   public function tearDown(): void {
-    parent::tearDown();
     CodePath::setRoot($this->currentRoot);
-    CodePath::setExternalLibraryPath($this->currentExternalLibraryPath);
+    CodePath::setExternalLibraryRoot($this->currentExternalLibraryRoot);
+    parent::tearDown();
   }
 
   public function testRootPathIsSet(): void {
@@ -33,8 +33,8 @@ class CodePathTest extends TestCase {
   public function testExternalLibraryPathIsSet(): void {
     $expected = '/its-ya-boy-lib';
 
-    CodePath::setExternalLibraryPath($expected);
-    $value = CodePath::getExternalLibraryPath();
+    CodePath::setExternalLibraryRoot($expected);
+    $value = CodePath::getExternalLibraryRoot();
 
     $this->assertEquals($expected, $value);
   }

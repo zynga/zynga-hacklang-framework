@@ -10,7 +10,7 @@ use Zynga\Framework\Environment\CodePath\V1\Exceptions\PathNotFoundException;
  */
 class CodePath {
   private static string $root = '';
-  private static ?Map<string, string> $libraryPathMap = null;
+  private static string $externalLibraryPath = '';
 
   public static function setRoot(string $path): bool {
     self::$root = $path;
@@ -23,38 +23,14 @@ class CodePath {
 
   public static function resetPaths(): void {
     self::$root = '';
-    self::$libraryPathMap = null;
+    self::$externalLibraryPath = '';
   }
 
-  public static function getLibraryPath(string $library): string {
-    $localPathMap = self::$libraryPathMap;
-
-    if ($localPathMap !== null && $localPathMap->contains($library)) {
-      return $localPathMap[$library];
-    }
-
-    throw new PathNotFoundException(
-      'Library path not found. Library='.
-      $library.
-      ' knownLibraries='.
-      json_encode($localPathMap),
-    );
+  public static function getExternalLibraryPath(): string {
+    return self::$externalLibraryPath;
   }
 
-  public static function setLibraryPath(string $library, string $path): void {
-    if (self::$libraryPathMap === null) {
-      self::$libraryPathMap = Map {};
-    }
-    self::$libraryPathMap[$library] = $path;
-  }
-
-  public static function getLibraryPathMap(): ?Map<string, string> {
-    return self::$libraryPathMap;
-  }
-
-  public static function setLibraryPathMap(
-    ?Map<string, string> $libraryPathMap,
-  ): void {
-    self::$libraryPathMap = $libraryPathMap;
+  public static function setExternalLibraryPath(string $path): void {
+    self::$externalLibraryPath = $path;
   }
 }

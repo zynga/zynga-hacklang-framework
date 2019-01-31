@@ -8,21 +8,21 @@ use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 class CodePathTest extends TestCase {
   private string $currentRoot = '';
-  private ?Map<string, string> $currentLibraryPathMap = null;
+  private string $currentExternalLibraryPath = '';
 
   public function setUp(): void {
     parent::setUp();
     $this->currentRoot = CodePath::getRoot();
-    $this->currentLibraryPathMap = CodePath::getLibraryPathMap();
+    $this->currentExternalLibraryPath = CodePath::getExternalLibraryPath();
   }
 
   public function tearDown(): void {
     parent::tearDown();
     CodePath::setRoot($this->currentRoot);
-    CodePath::setLibraryPathMap($this->currentLibraryPathMap);
+    CodePath::setExternalLibraryPath($this->currentExternalLibraryPath);
   }
 
-  public function testChangeRoot(): void {
+  public function testRootPathIsSet(): void {
     $expected = '/monkey';
 
     CodePath::setRoot($expected);
@@ -31,34 +31,12 @@ class CodePathTest extends TestCase {
     $this->assertEquals($expected, $value);
   }
 
-  public function testUnknownLibraryThrowsExceptionWhenNoDataSet(): void {
-    CodePath::resetPaths();
+  public function testExternalLibraryPathIsSet(): void {
+    $expected = '/its-ya-boy-lib';
 
-    $this->expectException(PathNotFoundException::class);
-    CodePath::getLibraryPath('what up it\'s ya boy some lib');
+    CodePath::setExternalLibraryPath($expected);
+    $value = CodePath::getExternalLibraryPath();
+
+    $this->assertEquals($expected, $value);
   }
-
-  public function testUknownLibraryThrowsExceptionWhenLibraryNotFound(): void {
-    CodePath::resetPaths();
-
-    CodePath::setLibraryPath('aylmao something', 'buzz');
-
-    $this->expectException(PathNotFoundException::class);
-    CodePath::getLibraryPath('what up it\'s ya boy some lib');
-  }
-
-  public function testSetLibraryPathIsReturned(): void {
-    CodePath::resetPaths();
-
-    $library = 'fizz';
-    $path = 'buzz';
-    CodePath::setLibraryPath($library, $path);
-
-    $this->assertEquals(
-      $path,
-      CodePath::getLibraryPath($library),
-      'Previously set library path should be returned on fetch',
-    );
-  }
-
 }

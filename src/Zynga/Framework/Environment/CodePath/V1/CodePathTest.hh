@@ -3,7 +3,6 @@
 namespace Zynga\Framework\Environment\CodePath\V1;
 
 use Zynga\Framework\Environment\CodePath\V1\CodePath;
-use Zynga\Framework\Environment\CodePath\V1\Exceptions\PathNotFoundException;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 class CodePathTest extends TestCase {

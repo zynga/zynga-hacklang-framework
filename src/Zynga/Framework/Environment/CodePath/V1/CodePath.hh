@@ -2,8 +2,6 @@
 
 namespace Zynga\Framework\Environment\CodePath\V1;
 
-use Zynga\Framework\Environment\CodePath\V1\Exceptions\PathNotFoundException;
-
 /**
  * CodePath is intended to provide pathing information for your application.
  * It is recommended to use absolute paths for better performance on file inclusion.

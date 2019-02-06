@@ -98,6 +98,10 @@ class BaseTest extends ZyngaTestCase {
 
   }
 
+  public function testAssertNotSameReturnsTrueOnDifferentValues(): void {
+    $this->assertNotSame(1, 2);
+  }
+
   /**
    * testInvalidAssertClassImplements
    */

@@ -572,6 +572,23 @@ abstract class Base
   }
 
   /**
+   * Asserts that two variables have either a different type or value.
+   * Used on objects, it asserts that two variables reference
+   * different objects.
+   *
+   * @param mixed  $expected
+   * @param mixed  $actual
+   * @param string $message
+   */
+  public function assertNotSame(
+    mixed $expected,
+    mixed $actual,
+    string $message = '',
+  ): void {
+    $this->_testCaseShim->assertNotSame($expected, $actual, $message);
+  }
+
+  /**
    * Asserts that a file exists.
    *
    * @param string $filename

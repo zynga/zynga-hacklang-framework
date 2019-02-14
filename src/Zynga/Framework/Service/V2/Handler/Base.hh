@@ -41,9 +41,11 @@ abstract class Base implements HandlerInterface {
     }
 
     $response = $service->response();
-
-    $response->success()->set(true);
-
+    
+    if($response->success()->isDefaultValue()[0]) {
+      $response->success()->set(true);
+    }
+    
     return true;
 
   }

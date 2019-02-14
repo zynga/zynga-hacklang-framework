@@ -215,6 +215,15 @@ class HttpTest extends TestCase {
     $this->assertTrue($obj->handleGenericSuccess());
     $this->assertTrue($svc->response()->success()->get());
   }
+  
+  public function test_handleGenericSuccessWithSuccessFalse(): void {
+    $obj = new MockHttpHandler();
+    $svc = new ValidService();
+    $svc->response()->success()->set(false);
+    $obj->setService($svc);
+    $this->assertTrue($obj->handleGenericSuccess());
+    $this->assertFalse($svc->response()->success()->get());
+  }
 
   public function test_createHttpCodeResponseFailureSetsFailureBadRequest(
   ): void {

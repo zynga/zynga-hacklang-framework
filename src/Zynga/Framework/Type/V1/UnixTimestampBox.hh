@@ -8,6 +8,8 @@ use Zynga\Framework\Exception\V1\Exception;
 
 class UnixTimestampBox extends UInt64Box {
 
+  const int SECONDS_IN_DAY = 86400;
+
   <<__Override>>
   protected function importFromString(string $value): bool {
 
@@ -36,6 +38,19 @@ class UnixTimestampBox extends UInt64Box {
       throw $e;
     }
 
+  }
+
+  /**
+   * Computes the time difference in days. The return value is always
+   * floored instead of rounding to the Closest full day. i.e. if the difference would
+   * be 4.9999 the return value is 4.
+   * @param null|UnixTimestampBox $endTime the timestamp for which to take the difference.
+   *   if null, will be set to the current system time.
+   */
+  public function timeDifferenceInDays(?UnixTimestampBox $endTime = null): int {
+    $startTimestamp = $this->get();
+    $endTimestamp = $endTime === null ? time() : $endTime->get();
+    return (int) (($endTimestamp - $startTimestamp) / self::SECONDS_IN_DAY);
   }
 
 }

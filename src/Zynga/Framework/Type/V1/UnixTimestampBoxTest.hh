@@ -44,7 +44,7 @@ class UnixTimestampBoxTest extends TestCase {
     return $values;
   }
 
-  public function testTimeSpanInDaysReturnsTheCorrectSpan(): void {
+  public function testTimeDifferenceInDaysReturnsTheCorrectDifference(): void {
     $initialTime = 10 * UnixTimestampBox::SECONDS_IN_DAY;
     $testingBox = new UnixTimestampBox($initialTime);
 
@@ -58,8 +58,8 @@ class UnixTimestampBoxTest extends TestCase {
 
     foreach ($testCases as $case) {
       $endTime = intval($case->getInputValue());
-      $timeSpan = $testingBox->timeSpanInDays(new UnixTimestampBox($endTime));
-      $this->assertEquals($case->getExpectedValue(), $timeSpan);
+      $timeDifference = $testingBox->timeDifferenceInDays(new UnixTimestampBox($endTime));
+      $this->assertEquals($case->getExpectedValue(), $timeDifference);
     }
   }
 }

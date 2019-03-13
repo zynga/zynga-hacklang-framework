@@ -41,13 +41,13 @@ class UnixTimestampBox extends UInt64Box {
   }
 
   /**
-   * Computes the time span in days. The return value is always
-   * floored instead of rounding to the Closest full day. i.e. if the span would
+   * Computes the time difference in days. The return value is always
+   * floored instead of rounding to the Closest full day. i.e. if the difference would
    * be 4.9999 the return value is 4.
-   * @param null|UnixTimestampBox $endTime the timestamp for the end of the timespan.
+   * @param null|UnixTimestampBox $endTime the timestamp for which to take the difference.
    *   if null, will be set to the current system time.
    */
-  public function timeSpanInDays(?UnixTimestampBox $endTime = null): int {
+  public function timeDifferenceInDays(?UnixTimestampBox $endTime = null): int {
     $startTimestamp = $this->get();
     $endTimestamp = $endTime === null ? time() : $endTime->get();
     return (int) (($endTimestamp - $startTimestamp) / self::SECONDS_IN_DAY);

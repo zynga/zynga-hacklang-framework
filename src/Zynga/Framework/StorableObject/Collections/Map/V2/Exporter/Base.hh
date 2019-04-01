@@ -19,15 +19,15 @@ class Base<Tv> implements ExportInterface {
     bool $sorted = false,
   ): string {
     try {
-      $map = $this->object->items();
-      if ($map->keys()->count() == 0) {
-        return '{}';
-      }
-
       $payload = '';
 
       if ($parentFieldName !== null) {
         $payload .= json_encode($parentFieldName).':';
+      }
+
+      $map = $this->object->items();
+      if ($map->keys()->count() == 0) {
+        return $payload.'{}';
       }
 
       $payload .= '{';

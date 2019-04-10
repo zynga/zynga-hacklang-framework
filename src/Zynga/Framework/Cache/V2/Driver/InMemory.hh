@@ -38,7 +38,6 @@ class InMemory extends DriverBase {
       $obj = DynamicClassCreation::createClassByName($className, Vector {});
 
       if (!$obj instanceof StorableObjectInterface) {
-        $value = json_encode($obj);
         throw new StorableObjectRequiredException('className='.$className);
       }
 

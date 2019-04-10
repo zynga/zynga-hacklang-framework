@@ -7,9 +7,7 @@ use Zynga\Framework\Cache\V2\Config\Base as ConfigBase;
 abstract class Base extends ConfigBase {
 
   public function getServerPairings(): Map<string, int> {
-    $hosts = Map {};
-    $hosts['127.0.0.1'] = 11211;
-    return $hosts;
+    return Map {};
   }
 
   public function getDriver(): string {

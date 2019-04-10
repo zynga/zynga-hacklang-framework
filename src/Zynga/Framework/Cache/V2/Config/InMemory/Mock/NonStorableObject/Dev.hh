@@ -13,9 +13,7 @@ use Zynga\Framework\Exception\V1\Exception;
 class Dev implements DriverConfigInterface {
 
   public function getServerPairings(): Map<string, int> {
-    $hosts = Map {};
-    $hosts['127.0.0.1'] = 11211;
-    return $hosts;
+    return Map {};
   }
 
   public function getDriver(): string {

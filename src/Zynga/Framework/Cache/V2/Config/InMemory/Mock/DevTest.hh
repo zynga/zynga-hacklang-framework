@@ -31,7 +31,7 @@ class DevTest extends TestCase {
 
   public function testServerPairings(): void {
     $config = $this->createConfigUnderTest();
-    $this->assertNotEmpty($config->getServerPairings());
+    $this->assertNotNull($config->getServerPairings());
   }
 
   public function testTTL(): void {

@@ -21,15 +21,9 @@ class InMemoryTest extends TestCase {
   }
 
   <<__Override>>
-  public function setUp(): void {
-    parent::setUp();
-    InMemoryDriver::setup();
-  }
-
-  <<__Override>>
   public function tearDown(): void {
     parent::tearDown();
-    InMemoryDriver::clear();
+    CacheFactory::clear();
   }
 
   public function testGetConfig(): void {

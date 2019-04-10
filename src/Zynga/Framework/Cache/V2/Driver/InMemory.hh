@@ -15,11 +15,12 @@ use Zynga\Framework\Exception\V1\Exception;
  * Use this class when you want to mock memcache.
  */
 class InMemory extends DriverBase {
-  private static ?Map<string, mixed> $data;
+  private static ?Map<string, StorableObjectInterface> $data;
   private DriverConfigInterface $_config;
 
   public function __construct(DriverConfigInterface $config) {
     $this->_config = $config;
+    self::$data = Map {};
   }
 
   public function getConfig(): DriverConfigInterface {
@@ -37,6 +38,7 @@ class InMemory extends DriverBase {
       $obj = DynamicClassCreation::createClassByName($className, Vector {});
 
       if (!$obj instanceof StorableObjectInterface) {
+        $value = json_encode($obj);
         throw new StorableObjectRequiredException('className='.$className);
       }
 
@@ -66,11 +68,7 @@ class InMemory extends DriverBase {
         return null;
       }
 
-      if (is_string($data)) {
-        $obj->import()->fromJSON($data);
-      }
-
-      return $obj;
+      return $data;
 
     } catch (Exception $e) {
       throw $e;
@@ -86,7 +84,7 @@ class InMemory extends DriverBase {
 
       $success = false;
       if (self::$data != null) {
-        self::$data->set($key, $obj->export()->asJSON());
+        self::$data->set($key, $obj);
       }
 
       $returnedObject = null;
@@ -144,17 +142,5 @@ class InMemory extends DriverBase {
     } catch (Exception $e) {
       throw $e;
     }
-  }
-
-  public static function clear(): void {
-    self::$data = null;
-  }
-
-  public static function setup(): Map<string, mixed> {
-    if (self::$data === null) {
-      self::$data = Map {};
-    }
-
-    return self::$data;
   }
 }

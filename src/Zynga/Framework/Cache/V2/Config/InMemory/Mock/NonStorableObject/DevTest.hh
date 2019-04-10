@@ -25,7 +25,7 @@ class DevTest extends TestCase {
 
     $config = $this->createConfigUnderTest();
     $servers = $config->getServerPairings();
-    $this->assertEquals(1, $servers->keys()->count());
+    $this->assertEquals(0, $servers->keys()->count());
     $this->assertEquals('InMemory', $config->getDriver());
     $this->assertEquals(3600, $config->getTTL());
 

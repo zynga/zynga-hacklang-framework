@@ -12,7 +12,7 @@ use Zynga\Framework\Cache\V2\Driver\InMemory as InMemoryDriver;
 use Zynga\Framework\Exception\V1\Exception;
 
 /**
- * Use this class when you want to mock memcache.
+ * This is an in-memory cache that will be cleared at the end of the process lifetime
  */
 class InMemory extends DriverBase {
   private static Map<string, StorableObjectInterface> $data = Map {};

@@ -40,7 +40,16 @@ class Staging extends LocalMemcacheBase {
     throw new Exception(
       'ValidExampleObject is required obj='.get_class($obj),
     );
+  }
 
+  public function createLockKeyFromStorableObject(
+    StorableObjectInterface $obj,
+  ): string {
+    if ($obj instanceof ValidExampleObject) {
+      return 'lmc-lock-'.$obj->example_uint64->get();
+    }
+
+    throw new Exception('Unable to get generate key lock');
   }
 
 }

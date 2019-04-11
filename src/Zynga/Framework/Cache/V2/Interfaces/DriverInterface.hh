@@ -17,4 +17,7 @@ interface DriverInterface extends BaseDriverInterface {
   public function set(StorableObjectInterface $obj): bool;
   public function deleteByMap(Map<string, mixed> $data): bool;
   public function delete(StorableObjectInterface $obj): bool;
+
+  public function lock(StorableObjectInterface $obj): void;
+  public function unlock(StorableObjectInterface $obj): void;
 }

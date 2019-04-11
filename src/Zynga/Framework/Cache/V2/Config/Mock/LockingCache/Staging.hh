@@ -1,6 +1,6 @@
 <?hh // strict
 
-namespace Zynga\Framework\Cache\V2\Config\Mock;
+namespace Zynga\Framework\Cache\V2\Config\Mock\LockingCache;
 
 use Zynga\Framework\Cache\V2\Config\LocalMemcache\Base as LocalMemcacheBase;
 
@@ -11,7 +11,10 @@ use
 
 use Zynga\Framework\Exception\V1\Exception;
 
-class Production extends LocalMemcacheBase {
+class Staging extends LocalMemcacheBase {
+  public function getDriver(): string {
+    return 'LockingMemcache';
+  }
 
   public function getStorableObjectName(): string {
     return ValidExampleObject::class;
@@ -40,7 +43,6 @@ class Production extends LocalMemcacheBase {
     throw new Exception(
       'ValidExampleObject is required obj='.get_class($obj),
     );
-
   }
 
   public function createLockKeyFromStorableObject(
@@ -51,5 +53,11 @@ class Production extends LocalMemcacheBase {
     }
 
     throw new Exception('Unable to get generate key lock');
+  }
+
+  public function createLockPayloadFromStorableObject(
+    StorableObjectInterface $obj,
+  ): Map<string, string> {
+    return Map {};
   }
 }

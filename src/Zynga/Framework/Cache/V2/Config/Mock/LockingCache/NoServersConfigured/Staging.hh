@@ -1,8 +1,8 @@
 <?hh // strict
 
-namespace Zynga\Framework\Cache\V2\Config\Mock;
+namespace Zynga\Framework\Cache\V2\Config\Mock\LockingCache\NoServersConfigured;
 
-use Zynga\Framework\Cache\V2\Config\LocalMemcache\Base as LocalMemcacheBase;
+use Zynga\Framework\Cache\V2\Interfaces\DriverConfigInterface;
 
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 use
@@ -11,7 +11,16 @@ use
 
 use Zynga\Framework\Exception\V1\Exception;
 
-class Dev extends LocalMemcacheBase {
+class Staging implements DriverConfigInterface {
+
+  public function getServerPairings(): Map<string, int> {
+    $hosts = Map {};
+    return $hosts;
+  }
+
+  public function getDriver(): string {
+    return 'LockingMemcache';
+  }
 
   public function getStorableObjectName(): string {
     return ValidExampleObject::class;
@@ -20,30 +29,12 @@ class Dev extends LocalMemcacheBase {
   public function createKeyFromStorableObject(
     StorableObjectInterface $obj,
   ): string {
-
-    if ($obj instanceof ValidExampleObject) {
-
-      if ($obj->example_uint64->isDefaultValue()[0] !== true) {
-        return 'lmc-ve-'.$obj->example_uint64->get();
-      }
-
-      // --
-      // JEO: Explicitly simulating how you handle a failure if the passed in value isn't
-      // within range or a memcache key of lmc-ve-0 wouldn't be a good use case.
-      // --
-      throw new Exception(
-        'example_unit64 is set to non-valid value='.
-        $obj->example_uint64->get(),
-      );
-
-    }
-
-    throw new Exception(
-      'ValidExampleObject is required obj='.get_class($obj),
-    );
-
+    throw new Exception('not-valid-connection');
   }
 
+  public function getTTL(): int {
+    return 3600;
+  }
   public function createLockKeyFromStorableObject(
     StorableObjectInterface $obj,
   ): string {
@@ -60,4 +51,11 @@ class Dev extends LocalMemcacheBase {
     return Map {};
   }
 
+  public function getLockFlags(StorableObjectInterface $obj): int {
+    return 0;
+  }
+
+  public function getLockTTL(StorableObjectInterface $obj): int {
+    return 1;
+  }
 }

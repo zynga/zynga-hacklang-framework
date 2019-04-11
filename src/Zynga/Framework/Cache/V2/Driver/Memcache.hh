@@ -14,12 +14,13 @@ use Zynga\Framework\Cache\V2\Exceptions\NoConnectionException;
 use Zynga\Framework\Cache\V2\Exceptions\StorableObjectRequiredException;
 
 use Zynga\Framework\Exception\V1\Exception;
+use Zynga\Framework\Cache\V2\Exceptions\NotSupportedException;
 
 use \Memcache as NativeMemcacheDriver;
 
 class Memcache extends DriverBase {
-  private NativeMemcacheDriver $_memcache;
-  private DriverConfigInterface $_config;
+  protected NativeMemcacheDriver $_memcache;
+  protected DriverConfigInterface $_config;
 
   public function __construct(DriverConfigInterface $config) {
     $this->_config = $config;
@@ -183,4 +184,17 @@ class Memcache extends DriverBase {
 
   }
 
+  public function lock(StorableObjectInterface $obj): void {
+    throw new NotSupportedException(
+      __METHOD__,
+      'Not supported. Please use the LockingMemcache driver.',
+    );
+  }
+
+  public function unlock(StorableObjectInterface $obj): void {
+    throw new NotSupportedException(
+      __METHOD__,
+      'Not supported. Please use the LockingMemcache driver.',
+    );
+  }
 }

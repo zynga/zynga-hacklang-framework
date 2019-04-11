@@ -1,9 +1,13 @@
 <?hh //strict
 
-namespace Zynga\Framework\Cache\V2\Config\Mock;
+namespace Zynga\Framework\Cache\V2\Config\Mock\NonLockingCache\NoServersConfigured;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-use Zynga\Framework\Cache\V2\Config\Mock\Staging as ConfigUnderTest;
+
+use
+  Zynga\Framework\Cache\V2\Config\Mock\NonLockingCache\NoServersConfigured\Staging as ConfigUnderTest
+;
+
 use
   Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject
 ;
@@ -15,6 +19,16 @@ class StagingTest extends TestCase {
 
   public function createConfigUnderTest(): ConfigUnderTest {
     return new ConfigUnderTest();
+  }
+
+  public function testGetServerPairings(): void {
+
+    $config = $this->createConfigUnderTest();
+    $servers = $config->getServerPairings();
+    $this->assertEquals(0, $servers->keys()->count());
+    $this->assertEquals('Memcache', $config->getDriver());
+    $this->assertEquals(3600, $config->getTTL());
+
   }
 
   public function testGetStorableObjectName(): void {
@@ -30,35 +44,11 @@ class StagingTest extends TestCase {
   /**
    * @expectedException Zynga\Framework\Exception\V1\Exception
    */
-  public function testCreateKeyFromStorableObject_NotTheRightStorable(): void {
+  public function testCreateKeyFromStorableObject_ExceptionWired(): void {
 
     $obj = new ValidExampleObjectRequiredFields();
-
     $config = $this->createConfigUnderTest();
     $key = $config->createKeyFromStorableObject($obj);
-
-  }
-
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
-  public function testCreateKeyFromStorableObject_DefaultDataProvided(): void {
-
-    $obj = new ValidExampleObject();
-
-    $config = $this->createConfigUnderTest();
-    $key = $config->createKeyFromStorableObject($obj);
-
-  }
-
-  public function testCreateKeyFromStorableObject_valid(): void {
-
-    $obj = new ValidExampleObject();
-    $obj->example_uint64->set(1234);
-
-    $config = $this->createConfigUnderTest();
-    $key = $config->createKeyFromStorableObject($obj);
-    $this->assertEquals('lmc-ve-1234', $key);
 
   }
 

@@ -12,6 +12,15 @@ use Zynga\Framework\Cache\V2\Interfaces\DriverInterface;
 
 class FactoryTest extends TestCase {
 
+  const TEST_CONFIG = 'Mock';
+
+  public function setUp(): void {
+    parent::setUp();
+
+    CacheFactory::disableMockDrivers();
+    CacheFactory::clear();
+  }
+
   public function testGetClassRoot(): void {
     $this->assertEquals(
       '\Zynga\Framework\Cache\V2',
@@ -21,15 +30,13 @@ class FactoryTest extends TestCase {
 
   public function testValidExample(): void {
     $this->assertTrue(
-      CacheFactory::factory(DriverInterface::class, 'Mock') instanceof DriverInterface,
+      CacheFactory::factory(DriverInterface::class, self::TEST_CONFIG) instanceof DriverInterface,
     );
   }
 
   public function testClose(): void {
-    CacheFactory::disableMockDrivers();
-    CacheFactory::clear();
     $this->assertEquals(0, CacheFactory::getDriverCount());
-    CacheFactory::factory(DriverInterface::class, 'Mock');
+    CacheFactory::factory(DriverInterface::class, self::TEST_CONFIG);
     $this->assertEquals(1, CacheFactory::getDriverCount());
     CacheFactory::clear();
     $this->assertEquals(0, CacheFactory::getDriverCount());
@@ -39,7 +46,6 @@ class FactoryTest extends TestCase {
    * @expectedException Zynga\Framework\Factory\V2\Exceptions\FailedToLoadDriverException
    */
   public function testFactory_BadRequested(): void {
-    CacheFactory::disableMockDrivers();
     CacheFactory::factory(DriverInterface::class, 'NotReal');
   }
 

@@ -1,10 +1,12 @@
 <?hh //strict
 
-namespace Zynga\Framework\Cache\V2\Config\Mock;
+namespace Zynga\Framework\Cache\V2\Config\Mock\LockingCache;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
-use Zynga\Framework\Cache\V2\Config\Mock\Production as ConfigUnderTest;
+use
+  Zynga\Framework\Cache\V2\Config\Mock\LockingCache\Production as ConfigUnderTest
+;
 
 use
   Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject

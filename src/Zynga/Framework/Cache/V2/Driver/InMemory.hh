@@ -12,7 +12,7 @@ use Zynga\Framework\Cache\V2\Driver\InMemory as InMemoryDriver;
 use Zynga\Framework\Exception\V1\Exception;
 
 /**
- * This is an in-memory cache that will be cleared at the end of the process lifetime
+ * This is an in-memory cache for transient data. If you need to have data persist between requests, consider the Memcache driver
  */
 class InMemory extends DriverBase {
   private static Map<string, StorableObjectInterface> $data = Map {};

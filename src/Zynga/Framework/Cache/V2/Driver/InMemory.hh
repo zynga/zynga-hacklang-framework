@@ -15,12 +15,11 @@ use Zynga\Framework\Exception\V1\Exception;
  * Use this class when you want to mock memcache.
  */
 class InMemory extends DriverBase {
-  private static ?Map<string, StorableObjectInterface> $data;
+  private static Map<string, StorableObjectInterface> $data = Map {};
   private DriverConfigInterface $_config;
 
   public function __construct(DriverConfigInterface $config) {
     $this->_config = $config;
-    self::$data = Map {};
   }
 
   public function getConfig(): DriverConfigInterface {
@@ -56,11 +55,7 @@ class InMemory extends DriverBase {
     try {
 
       $key = $this->getConfig()->createKeyFromStorableObject($obj);
-
-      $data = null;
-      if (self::$data != null) {
-        $data = self::$data->get($key);
-      }
+      $data = self::$data->get($key);
 
       // no data to work with.
       if ($data === null) {
@@ -81,15 +76,8 @@ class InMemory extends DriverBase {
 
       $key = $this->getConfig()->createKeyFromStorableObject($obj);
 
-      $success = false;
-      if (self::$data != null) {
-        self::$data->set($key, $obj);
-      }
-
-      $returnedObject = null;
-      if (self::$data != null) {
-        $returnedObject = self::$data->get($key);
-      }
+      self::$data->set($key, $obj);
+      $returnedObject = self::$data->get($key);
 
       return $returnedObject === null ? false : true;
 
@@ -126,15 +114,8 @@ class InMemory extends DriverBase {
     try {
 
       $key = $this->getConfig()->createKeyFromStorableObject($obj);
-
-      $success = true;
-      if (self::$data != null) {
-        self::$data->remove($key);
-      }
-
-      if (self::$data != null) {
-        $success = !self::$data->contains($key);
-      }
+      self::$data->remove($key);
+      $success = !self::$data->contains($key);
 
       return $success;
 

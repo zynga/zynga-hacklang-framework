@@ -77,9 +77,9 @@ class InMemory extends DriverBase {
       $key = $this->getConfig()->createKeyFromStorableObject($obj);
 
       self::$data->set($key, $obj);
-      $returnedObject = self::$data->get($key);
+      $storableObject = self::$data->get($key);
 
-      return $returnedObject === null ? false : true;
+      return $storableObject === null ? false : true;
 
     } catch (Exception $e) {
       throw $e;

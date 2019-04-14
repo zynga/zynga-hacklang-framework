@@ -4,6 +4,7 @@ namespace Zynga\Framework\StorableObject\Collections\Map\V2\Importer;
 use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException;
+use Zynga\Framework\StorableObject\V1\Base as StorableObject;
 
 /**
  * Class for collection importers. This class creates object of the
@@ -39,7 +40,8 @@ class Storable<Tv> extends Base<Tv> {
       return $storable;
     }
 
-    if (get_class($item) === $this->valueType) {
+    if (get_class($item) === $this->valueType &&
+        $item instanceof StorableObject) {
       $storable->import()->fromMap($item->export()->asMap());
       return $storable;
     }

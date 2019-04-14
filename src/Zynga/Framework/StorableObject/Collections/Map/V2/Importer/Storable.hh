@@ -39,6 +39,11 @@ class Storable<Tv> extends Base<Tv> {
       return $storable;
     }
 
+    if (get_class($item) === $this->valueType) {
+      $storable->import()->fromMap($item->export()->asMap());
+      return $storable;
+    }
+
     throw new UnsupportedTypeException(
       'Unable to import item. item='.json_encode($item),
     );

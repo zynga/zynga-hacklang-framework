@@ -90,6 +90,49 @@ class Base<Tv> implements ExportInterface {
     }
   }
 
+  public function asArray(): array<string, mixed> {
+    try {
+
+      $map = array();
+
+      $fieldNum = 0;
+      $items = $this->collection->items();
+
+      foreach ($items as $storableItem) {
+        $fieldName = "".$fieldNum;
+
+        // We can skip the value if the item is still in default state.
+        list($isRequired, $isDefaultValue) =
+          FieldsGeneric::getIsRequiredAndIsDefaultValue($storableItem);
+
+        if ($isDefaultValue === true) {
+          continue;
+        }
+
+        $value = null;
+        if ($storableItem instanceof StorableObjectInterface) {
+          try {
+            $value = $storableItem->export()->asArray();
+          } catch (Exception $e) {
+            throw $e;
+          }
+        } else if ($storableItem instanceof TypeInterface) {
+          $value = $storableItem->get();
+        }
+
+        if ($value !== null) {
+          $map[$fieldName] = $value;
+          $fieldNum++;
+        }
+      }
+
+      return $map;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
   /**
    * This function returns the values in the collection as a map, recursively
    * Since this collection doesn't have field names, we use incrementing numerals for keys,

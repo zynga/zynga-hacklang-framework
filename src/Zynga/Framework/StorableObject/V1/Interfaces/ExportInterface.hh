@@ -7,6 +7,7 @@ interface ExportInterface {
     ?string $parentFieldName = null,
     bool $sorted = false,
   ): string;
+  public function asArray(): array<string, mixed>;
   public function asMap(): Map<string, mixed>;
   public function asBinary(): string;
 }

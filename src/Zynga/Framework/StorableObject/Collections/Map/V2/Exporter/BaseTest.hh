@@ -120,4 +120,26 @@ class BaseTest extends TestCase {
     $this->expectException(Exception::class);
     $collection->export()->asMap();
   }
+
+  public function testExportAsArraySucceedsForStringArray(): void {
+    $collection = StringBoxMap::getPopulatedCollectionFromMap();
+
+    $this->assertEquals(
+      StringBoxMap::getRawMap()->toArray(),
+      $collection->export()->asArray(),
+    );
+  }
+
+  public function testExportAsArraySucceedsForEmptyArray(): void {
+    $collection = StorableObjectMap::getEmptyCollection();
+
+    $this->assertEquals(array(), $collection->export()->asArray());
+  }
+
+  public function testExportAsArrayThrowsExceptionForBrokenExporter(): void {
+    $collection = StorableObjectMap::getCollectionWithBrokenExporter();
+
+    $this->expectException(Exception::class);
+    $collection->export()->asArray();
+  }
 }

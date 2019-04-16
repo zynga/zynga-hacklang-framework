@@ -131,10 +131,26 @@ class ExporterTest extends TestCase {
     $this->assertEquals('{}', $json);
   }
 
+  public function test_asArray_noFields(): void {
+    $map = new StorableMap();
+    $mapData = $map->export()->asArray();
+    $this->assertEquals(0, count($mapData));
+  }
+
   public function test_asMap_noFields(): void {
     $map = new StorableMap();
     $mapData = $map->export()->asMap();
     $this->assertEquals(0, $mapData->count());
+  }
+
+  public function test_asArray_childType(): void {
+    $testValue = 'a-weird-string-value';
+    $stringBox = new StringBox();
+    $stringBox->set($testValue);
+    $obj = new StorableMap();
+    $obj->set('a-key', $stringBox);
+    $array = $obj->export()->asArray();
+    $this->assertEquals(1, count($array));
   }
 
   public function test_asMap_childType(): void {
@@ -153,6 +169,23 @@ class ExporterTest extends TestCase {
 
   }
 
+  public function test_asArray_recursive(): void {
+
+    $map = new StorableMap();
+    $obj = new ValidStorableObject();
+    $this->assertTrue($map->set('a-key', $obj));
+
+    $targetArray = array();
+    $targetArray['a-key'] = array (
+      'example_string' => '',
+      'example_uint64' => 0,
+      'example_float' => 0,
+    );
+
+    $this->assertEquals($targetArray, $map->export()->asArray());
+
+  }
+
   public function test_asMap_recursive(): void {
 
     $map = new StorableMap();
@@ -168,6 +201,16 @@ class ExporterTest extends TestCase {
 
     $this->assertEquals($targetMap, $map->export()->asMap());
 
+  }
+
+  /**
+   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException
+   */
+  public function test_asArray_noFieldsOnChild(): void {
+    $map = new StorableMap();
+    $obj = new NofieldsStorableObject();
+    $this->assertTrue($map->set('a-key', $obj));
+    $map->export()->asArray();
   }
 
   /**

@@ -39,6 +39,7 @@ class ResponsesTest extends TestCase {
     );
     $this->assertEquals('', $obj->export()->asBinary());
     $this->assertEquals(0, $obj->export()->asMap()->count());
+    $this->assertEquals(0, count($obj->export()->asArray()));
 
     // add a failure response
     $resp = new SwaggerResponse($swag);
@@ -57,6 +58,7 @@ class ResponsesTest extends TestCase {
     );
     $this->assertEquals('', $obj->export()->asBinary());
     $this->assertEquals(0, $obj->export()->asMap()->count());
+    $this->assertEquals(0, count($obj->export()->asArray()));
 
     $this->assertEquals(
       0,

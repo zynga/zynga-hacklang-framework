@@ -96,6 +96,36 @@ class Exporter<Tv> implements ExportInterface {
     }
   }
 
+  public function asArray(): array<string, mixed> {
+
+    try {
+      $map = $this->_object->getMap();
+      $payload = array();
+
+      if ($map->count() == 0) {
+        return $payload;
+      }
+
+      foreach ($map as $fieldName => $field) {
+        $value = null;
+
+        if ($field instanceof TypeInterface) {
+          $value = $field->get();
+        } else if ($field instanceof StorableObjectInterface) {
+          $value = $field->export()->asArray();
+        }
+
+        if ($value !== null) {
+          $payload[$fieldName] = $value;
+        }
+      }
+
+      return $payload;
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
   public function asMap(): Map<string, mixed> {
 
     try {

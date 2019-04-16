@@ -142,6 +142,21 @@ class BaseTest extends TestCase {
     $this->assertEquals($targetJson, $vec->export()->asJSON());
   }
 
+  public function testAsArrayValid(): void {
+
+    $vec = $this->getCollection(ValidStorableObject::class);
+
+    $testValue = new ValidStorableObject();
+    $testValue->example_uint64->set(12);
+    $testValue->example_string->setIsRequired(false);
+    $testValue->example_float->setIsRequired(false);
+
+    $vec->add($testValue);
+
+    $targetArray = array('0' => $testValue->export()->asArray());
+    $this->assertEquals($targetArray, $vec->export()->asArray());
+  }
+
   public function testAsMapValid(): void {
 
     $vec = $this->getCollection(ValidStorableObject::class);
@@ -157,6 +172,19 @@ class BaseTest extends TestCase {
     $this->assertEquals($targetMap, $vec->export()->asMap());
   }
 
+  public function testAsArrayEmptyChild(): void {
+    $vec = $this->getCollection($this->getCollectionClassName());
+    $vec->setIsDefaultValue(false);
+
+    $c_vec = $this->getCollection(ValidStorableObject::class);
+    $c_vec->setIsDefaultValue(false);
+
+    $vec->add($c_vec);
+
+    $array = $vec->export()->asArray();
+    $this->assertEquals(array('0' => array()), $array);
+  }
+
   public function testAsMapEmptyChild(): void {
     $vec = $this->getCollection($this->getCollectionClassName());
     $vec->setIsDefaultValue(false);
@@ -170,10 +198,52 @@ class BaseTest extends TestCase {
     $this->assertEquals(Map {'0' => Map {}}, $map);
   }
 
+  public function testAsArrayNoFields(): void {
+    $vec = $this->getCollection(ValidStorableObject::class);
+    $array = $vec->export()->asArray();
+    $this->assertEquals(array(), $array);
+  }
+
   public function testAsMapNoFields(): void {
     $vec = $this->getCollection(ValidStorableObject::class);
     $map = $vec->export()->asMap();
     $this->assertEquals(Map {}, $map);
+  }
+
+  public function testAsArrayRecursiveStorable(): void {
+    $vec = $this->getCollection(ValidStorableObject::class);
+    $obj = new ValidStorableObject();
+    $vec->add($obj);
+
+    // as this is a empty object we should not see it in the realized javascript.
+    $targetArray = array();
+    $this->assertEquals($targetArray, $vec->export()->asArray());
+
+    $someString = 'how now brown cow?';
+    $someUint64 = 238472329834;
+    $someFloat = 1234.45;
+
+    $anotherObj = new ValidStorableObject();
+    $anotherObj->example_string->set($someString);
+    $anotherObj->example_uint64->set($someUint64);
+    $anotherObj->example_float->set($someFloat);
+
+    $vec->add($anotherObj);
+
+    // now we should see only one entry for the object that contains  data, the
+    // empty one gets filtered out.
+    $targetArray = array (
+      "0" => array (
+        "example_string" => $someString,
+        "example_uint64" => $someUint64,
+        "example_float" => $someFloat,
+      ),
+    );
+    $this->assertEquals($targetArray, $vec->export()->asArray());
+    $this->assertEquals(
+      json_encode($targetArray),
+      json_encode($vec->export()->asArray()),
+    );
   }
 
   public function testAsMapRecursiveStorable(): void {
@@ -220,6 +290,14 @@ class BaseTest extends TestCase {
     $this->assertEquals('[]', $json);
   }
 
+  public function testAsArrayNoFieldsOnChild(): void {
+    $vec = $this->getCollection(NofieldsStorableObject::class);
+    $obj = new NofieldsStorableObject();
+    $vec->add($obj);
+    $array = $vec->export()->asArray();
+    $this->assertEquals(array(), $array);
+  }
+
   public function testAsMapNoFieldsOnChild(): void {
     $vec = $this->getCollection(NofieldsStorableObject::class);
     $obj = new NofieldsStorableObject();
@@ -244,6 +322,17 @@ class BaseTest extends TestCase {
 
     $this->expectException(Exception::class);
     $map->export()->asJSON();
+  }
+
+  public function testAsArrayBrokenExporter(): void {
+    $obj = new ValidButBrokenExporter();
+    $obj->example_float->set(3.145);
+
+    $map = $this->getCollection(ValidButBrokenExporter::class);
+    $map->add($obj);
+
+    $this->expectException(Exception::class);
+    $map->export()->asArray();
   }
 
   public function testAsMapBrokenExporter(): void {

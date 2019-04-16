@@ -118,6 +118,43 @@ class Exporter implements ExportInterface {
     }
   }
 
+  public function asArray(): array<string, mixed> {
+
+    $fields = $this->_object->fields()->getForObject();
+
+    if ($fields->count() == 0) {
+      throw new NoFieldsFoundException('class='.get_class($this->_object));
+    }
+
+    $payload = array();
+
+    foreach ($fields as $fieldName => $field) {
+      $value = null;
+
+      if ($field instanceof TypeInterface) {
+        $value = $field->get();
+      } else if ($field instanceof StorableObjectInterface) {
+        try {
+          $value = $field->export()->asArray();
+        } catch (Exception $e) {
+          throw new Exception(
+            'fieldName='.
+            $fieldName.
+            ' e='.
+            get_class($e).
+            ' message='.
+            $e->getMessage(),
+          );
+        }
+      }
+
+      $payload[$fieldName] = $value;
+
+    }
+
+    return $payload;
+  }
+
   public function asMap(): Map<string, mixed> {
 
     $fields = $this->_object->fields()->getForObject();

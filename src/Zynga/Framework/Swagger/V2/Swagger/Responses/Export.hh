@@ -42,6 +42,11 @@ class Export implements ExportInterface {
     return $data;
   }
 
+  public function asArray(): array<string, mixed> {
+    $map = array();
+    return $map;
+  }
+
   public function asMap(): Map<string, mixed> {
     $map = Map {};
     return $map;

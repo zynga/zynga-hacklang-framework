@@ -26,30 +26,6 @@ class InMemory extends DriverBase {
     return $this->_config;
   }
 
-  public function getByMap(
-    Map<string, mixed> $data,
-  ): ?StorableObjectInterface {
-
-    try {
-
-      $className = $this->getConfig()->getStorableObjectName();
-
-      $obj = DynamicClassCreation::createClassByName($className, Vector {});
-
-      if (!$obj instanceof StorableObjectInterface) {
-        throw new StorableObjectRequiredException('className='.$className);
-      }
-
-      $obj->import()->fromMap($data);
-
-      return $this->get($obj);
-
-    } catch (Exception $e) {
-      throw $e;
-    }
-
-  }
-
   public function get(StorableObjectInterface $obj): ?StorableObjectInterface {
 
     try {
@@ -80,28 +56,6 @@ class InMemory extends DriverBase {
       $storableObject = self::$data->get($key);
 
       return $storableObject === null ? false : true;
-
-    } catch (Exception $e) {
-      throw $e;
-    }
-
-  }
-
-  public function deleteByMap(Map<string, mixed> $data): bool {
-
-    try {
-
-      $className = $this->getConfig()->getStorableObjectName();
-
-      $obj = DynamicClassCreation::createClassByName($className, Vector {});
-
-      if (!$obj instanceof StorableObjectInterface) {
-        throw new StorableObjectRequiredException('className='.$className);
-      }
-
-      $obj->import()->fromMap($data);
-
-      return $this->delete($obj);
 
     } catch (Exception $e) {
       throw $e;

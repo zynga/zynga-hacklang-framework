@@ -61,25 +61,6 @@ class InMemoryTest extends TestCase {
       $this->assertEquals($testString, $back->example_string->get());
     }
 
-    // try to pull it iva the map interface
-    $other = $cache->getByMap(Map {'example_uint64' => $testInt});
-
-    if ($other instanceof ValidStorableObject) {
-      $this->assertEquals($testInt, $other->example_uint64->get());
-      $this->assertEquals($testFloat, $other->example_float->get());
-      $this->assertEquals($testString, $other->example_string->get());
-
-      // now remove the thing we just put in.
-      $this->assertTrue($cache->delete($other));
-
-      $this->assertEquals(null, $cache->get($other));
-      $this->assertEquals(
-        null,
-        $cache->getByMap(Map {'example_uint64' => $testInt}),
-      );
-
-    }
-
     // now reinject the object back into the cache
     $this->assertTrue($cache->set($obj));
 
@@ -87,16 +68,7 @@ class InMemoryTest extends TestCase {
 
     if ($again instanceof ValidStorableObject) {
 
-      // now remove the thing we just put in.
-      $this->assertTrue(
-        $cache->deleteByMap(Map {'example_uint64' => $testInt}),
-      );
-
-      $this->assertEquals(null, $cache->get($again));
-      $this->assertEquals(
-        null,
-        $cache->getByMap(Map {'example_uint64' => $testInt}),
-      );
+      $this->assertTrue(true);
 
     }
 
@@ -136,28 +108,6 @@ class InMemoryTest extends TestCase {
     $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
     $cache->delete($obj);
 
-  }
-
-  /**
-   * @expectedException Zynga\Framework\Cache\V2\Exceptions\StorableObjectRequiredException
-   */
-  public function testGetByMap_StorableObjectRequired(): void {
-    $cache = CacheFactory::factory(
-      InMemoryDriver::class,
-      'InMemory_Mock_NonStorableObject',
-    );
-    $cache->getByMap(Map {'foo' => 'bar'});
-  }
-
-  /**
-   * @expectedException Zynga\Framework\Cache\V2\Exceptions\StorableObjectRequiredException
-   */
-  public function testDeleteByMap_StorableObjectRequired(): void {
-    $cache = CacheFactory::factory(
-      InMemoryDriver::class,
-      'InMemory_Mock_NonStorableObject',
-    );
-    $cache->deleteByMap(Map {'foo' => 'bar'});
   }
 
 }

@@ -98,7 +98,6 @@ class InMemory extends DriverBase {
 
     try {
 
-      
       $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
       self::$data->set($key, $obj);
@@ -121,10 +120,15 @@ class InMemory extends DriverBase {
 
       $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
-      self::$data->remove($key);
-      $success = !self::$data->contains($key);
+      $data = self::$data->get($key);
 
-      return $success;
+      if (!$data instanceof StorableObjectInterface) {
+        return false;
+      }
+
+      self::$data->remove($key);
+
+      return true;
 
     } catch (Exception $e) {
       throw $e;

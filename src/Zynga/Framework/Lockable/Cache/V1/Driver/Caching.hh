@@ -134,13 +134,17 @@ class Caching extends FactoryDriverBase implements DriverInterface {
    * established on fetch.
    *
    * @param StorableObjectInterface $obj
+   * @param bool $getLocked Establish a lock for he object at the sime time a get is done.
    * @return bool object return
    */
-  public function get(StorableObjectInterface $obj): ?StorableObjectInterface {
+  public function get(
+    StorableObjectInterface $obj,
+    bool $getLocked = false,
+  ): ?StorableObjectInterface {
 
     try {
 
-      if ($this->lock($obj) !== true) {
+      if ($getLocked === true && $this->lock($obj) !== true) {
         // could not establish a lock, read consistency not guarenteed.
         throw new UnableToEstablishLockException(
           'Unable to establish lock lockKey='.
@@ -237,6 +241,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
     } catch (Exception $e) {
       throw $e;
     }
+
   }
 
 }

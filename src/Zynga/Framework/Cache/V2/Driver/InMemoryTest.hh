@@ -110,4 +110,63 @@ class InMemoryTest extends TestCase {
 
   }
 
+  public function testAdd_Valid(): void {
+
+    // stand up a normal, valid object.
+    $obj = new ValidStorableObject();
+    $obj->example_uint64->set(120330908743);
+
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+
+    // add the object into the cache.
+    $this->assertTrue($cache->add($obj));
+
+    // if this item is laready in the cache, it shouldn't be.
+    $this->assertFalse($cache->add($obj));
+
+  }
+
+  /**
+   * @expectedException Zynga\Framework\Exception\V1\Exception
+   */
+  public function testAdd_InvalidKeyCondition(): void {
+
+    // stand up a empty storable object
+    $obj = new ValidStorableObject();
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $cache->add($obj);
+
+  }
+
+  public function testGet_NotSetYet(): void {
+
+    // stand up a empty storable object
+    $obj = new ValidStorableObject();
+    $obj->example_uint64->set(12989745);
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $this->assertEquals(null, $cache->get($obj));
+
+  }
+
+  public function testDelete_Valid(): void {
+
+    // stand up a empty storable object
+    $obj = new ValidStorableObject();
+    $obj->example_uint64->set(12989745);
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $this->assertTrue($cache->set($obj));
+    $this->assertTrue($cache->delete($obj));
+
+  }
+
+  public function testDelete_NotSetYet(): void {
+
+    // stand up a empty storable object
+    $obj = new ValidStorableObject();
+    $obj->example_uint64->set(12989745);
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $this->assertFalse($cache->delete($obj));
+
+  }
+
 }

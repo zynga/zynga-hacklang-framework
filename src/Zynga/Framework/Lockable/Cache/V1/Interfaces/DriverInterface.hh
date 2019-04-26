@@ -47,7 +47,10 @@ interface DriverInterface extends BaseDriverInterface {
    * @param StorableObjectInterface $obj
    * @return bool object return
    */
-  public function get(StorableObjectInterface $obj): ?StorableObjectInterface;
+  public function get(
+    StorableObjectInterface $obj,
+    bool $getLocked = false,
+  ): ?StorableObjectInterface;
 
   /**
    *

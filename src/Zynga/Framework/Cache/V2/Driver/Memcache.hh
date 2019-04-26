@@ -71,11 +71,54 @@ class Memcache extends DriverBase {
 
   }
 
-  public function get(StorableObjectInterface $obj): ?StorableObjectInterface {
+  private function getKeySupportingOverride(
+    StorableObjectInterface $obj,
+    string $keyOverride,
+  ): string {
+
+    $key = $keyOverride;
+
+    if ($keyOverride == '') {
+      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+    }
+
+    return $key;
+
+  }
+
+  public function add(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): bool {
 
     try {
 
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
+
+      $this->connect();
+
+      $return = $this->_memcache->add($key, $obj);
+
+      if ($return == true) {
+        return true;
+      }
+
+      return false;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
+
+  public function get(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): ?StorableObjectInterface {
+
+    try {
+
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
       $this->connect();
 
@@ -96,11 +139,14 @@ class Memcache extends DriverBase {
 
   }
 
-  public function set(StorableObjectInterface $obj): bool {
+  public function set(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): bool {
 
     try {
 
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
       $this->connect();
 
@@ -119,11 +165,14 @@ class Memcache extends DriverBase {
 
   }
 
-  public function delete(StorableObjectInterface $obj): bool {
+  public function delete(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): bool {
 
     try {
 
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
       $this->connect();
 

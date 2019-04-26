@@ -26,11 +26,56 @@ class InMemory extends DriverBase {
     return $this->_config;
   }
 
-  public function get(StorableObjectInterface $obj): ?StorableObjectInterface {
+  private function getKeySupportingOverride(
+    StorableObjectInterface $obj,
+    string $keyOverride,
+  ): string {
+
+    $key = $keyOverride;
+
+    if ($keyOverride == '') {
+      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+    }
+
+    return $key;
+
+  }
+
+  public function add(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): bool {
 
     try {
 
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
+
+      $value = self::$data->get($key);
+
+      // mimic the atomic lock of memcache, if there's a value it's already set.
+      if ($value !== null) {
+        return false;
+      }
+
+      self::$data->set($key, $obj);
+
+      return true;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
+
+  public function get(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): ?StorableObjectInterface {
+
+    try {
+
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
+
       $storableObject = self::$data->get($key);
 
       // no data to work with.
@@ -46,11 +91,15 @@ class InMemory extends DriverBase {
 
   }
 
-  public function set(StorableObjectInterface $obj): bool {
+  public function set(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): bool {
 
     try {
 
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
       self::$data->set($key, $obj);
       $storableObject = self::$data->get($key);
@@ -63,11 +112,15 @@ class InMemory extends DriverBase {
 
   }
 
-  public function delete(StorableObjectInterface $obj): bool {
+  public function delete(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): bool {
 
     try {
 
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
+
       self::$data->remove($key);
       $success = !self::$data->contains($key);
 

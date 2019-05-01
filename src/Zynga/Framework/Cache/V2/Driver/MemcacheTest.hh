@@ -141,7 +141,7 @@ class MemcacheTest extends TestCase {
 
     // Purge any cache entries first.
     $cache->delete($obj);
-    
+
     // add the object into the cache.
     $this->assertTrue($cache->add($obj));
 

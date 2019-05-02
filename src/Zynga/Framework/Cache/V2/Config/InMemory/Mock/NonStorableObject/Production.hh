@@ -2,6 +2,7 @@
 
 namespace Zynga\Framework\Cache\V2\Config\InMemory\Mock\NonStorableObject;
 
+use Zynga\Framework\Cache\V2\Exceptions\InvalidObjectForKeyCreationException;
 use Zynga\Framework\Cache\V2\Interfaces\DriverConfigInterface;
 
 use Zynga\Framework\Factory\V2\Config\Base as FactoryBaseConfig;
@@ -20,14 +21,10 @@ class Production implements DriverConfigInterface {
     return 'InMemory';
   }
 
-  public function getStorableObjectName(): string {
-    return self::class;
-  }
-
   public function createKeyFromStorableObject(
     StorableObjectInterface $obj,
   ): string {
-    throw new Exception('not-valid-connection');
+    throw new InvalidObjectForKeyCreationException('not-valid-connection');
   }
 
   public function getTTL(): int {

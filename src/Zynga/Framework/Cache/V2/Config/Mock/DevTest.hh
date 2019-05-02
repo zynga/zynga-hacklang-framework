@@ -19,16 +19,6 @@ class DevTest extends TestCase {
     return new ConfigUnderTest();
   }
 
-  public function testGetStorableObjectName(): void {
-
-    $config = $this->createConfigUnderTest();
-    $this->assertEquals(
-      ValidExampleObject::class,
-      $config->getStorableObjectName(),
-    );
-
-  }
-
   /**
    * @expectedException Zynga\Framework\Exception\V1\Exception
    */
@@ -60,7 +50,7 @@ class DevTest extends TestCase {
 
     $config = $this->createConfigUnderTest();
     $key = $config->createKeyFromStorableObject($obj);
-    $this->assertEquals('lmc-ve-1234', $key);
+    $this->assertEquals('lmc-mock-dev-1234', $key);
 
   }
 

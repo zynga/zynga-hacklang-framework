@@ -25,10 +25,6 @@ class Staging implements DriverConfigInterface {
     return 'Memcache';
   }
 
-  public function getStorableObjectName(): string {
-    return ValidExampleObject::class;
-  }
-
   public function createKeyFromStorableObject(
     StorableObjectInterface $obj,
   ): string {

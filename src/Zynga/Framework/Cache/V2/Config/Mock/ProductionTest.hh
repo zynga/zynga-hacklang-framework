@@ -1,6 +1,6 @@
 <?hh //strict
 
-namespace Zynga\Framework\Cache\V2\Config\ValidExample;
+namespace Zynga\Framework\Cache\V2\Config\Mock;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
@@ -17,16 +17,6 @@ class ProductionTest extends TestCase {
 
   public function createConfigUnderTest(): ConfigUnderTest {
     return new ConfigUnderTest();
-  }
-
-  public function testGetStorableObjectName(): void {
-
-    $config = $this->createConfigUnderTest();
-    $this->assertEquals(
-      ValidExampleObject::class,
-      $config->getStorableObjectName(),
-    );
-
   }
 
   /**
@@ -60,7 +50,7 @@ class ProductionTest extends TestCase {
 
     $config = $this->createConfigUnderTest();
     $key = $config->createKeyFromStorableObject($obj);
-    $this->assertEquals('lmc-ve-1234', $key);
+    $this->assertEquals('lmc-mock-production-1234', $key);
 
   }
 

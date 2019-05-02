@@ -2,22 +2,33 @@
 
 namespace Zynga\Framework\PgData\V1\Test\ExampleFeature\Model;
 
+use Zynga\Framework\Cache\V2\Factory as CacheFactory;
 use Zynga\Framework\Database\V2\Factory as DatabaseFactory;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
+use Zynga\Framework\Lockable\Cache\V1\Factory as LockableCacheFactory;
 
+use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\InventoryModel;
 use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\Inventory\ItemType;
 
 class InventoryModelTest extends TestCase {
 
   public function doSetUpBeforeClass(): bool {
+
+    parent::doSetUpBeforeClass();
+
+    CacheFactory::disableMockDrivers();
     DatabaseFactory::disableMockDrivers();
+    LockableCacheFactory::disableMockDrivers();
+
     return true;
+
   }
 
-  public function doTearDownAfterClass(): bool {
-    DatabaseFactory::enableMockDrivers();
-    return true;
-  }
+  // public function doTearDownAfterClass(): bool {
+  //   CacheFactory::enableMockDrivers();
+  //   DatabaseFactory::enableMockDrivers();
+  //   return true;
+  // }
 
   public function testInventory_GetById(): void {
 

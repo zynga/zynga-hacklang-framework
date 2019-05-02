@@ -17,13 +17,12 @@ abstract class Base implements DriverConfigInterface {
    * @return string key
    *
    */
-  public function createLockKeyFromStorableObject(
-    StorableObjectInterface $obj,
-  ): string {
+  public function createLockKeyFromStorableKey(string $objKey): string {
 
     $cache = $this->getCache();
 
-    return $cache->getConfig()->createKeyFromStorableObject($obj).':lock';
+    $lockKey = $objKey.':lock';
+    return $lockKey;
 
   }
 

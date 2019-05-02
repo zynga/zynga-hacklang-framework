@@ -24,13 +24,11 @@ interface DriverConfigInterface extends ConfigInterface {
    *
    * This creates the key that is passed down into your caching layer.
    *
-   * @param StorableObjectInterface obj
+   * @param string storableObjectKeyString
    * @return string key
    *
    */
-  public function createLockKeyFromStorableObject(
-    StorableObjectInterface $obj,
-  ): string;
+  public function createLockKeyFromStorableKey(string $obj): string;
 
   /**
    *

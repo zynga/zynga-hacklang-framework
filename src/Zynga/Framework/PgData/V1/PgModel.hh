@@ -7,6 +7,10 @@ use Zynga\Framework\Database\V2\Factory as DatabaseFactory;
 use
   Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
 ;
+use Zynga\Framework\Lockable\Cache\V1\Factory as LockableCacheFactory;
+use
+  Zynga\Framework\Lockable\Cache\V1\Interfaces\DriverInterface as LockableDriverInterface
+;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\SqlGenerator;
 
@@ -16,6 +20,10 @@ abstract class PgModel {
 
   abstract public function getReadDatabaseName(): string;
 
+  abstract public function getWriteDatabaseName(): string;
+
+  abstract public function getCacheName(): string;
+
   private function getReadDatabase(): DatabaseDriverInterface {
     return DatabaseFactory::factory(
       DatabaseDriverInterface::class,
@@ -23,12 +31,17 @@ abstract class PgModel {
     );
   }
 
-  abstract public function getWriteDatabaseName(): string;
-
   private function getWriteDatabase(): DatabaseDriverInterface {
     return DatabaseFactory::factory(
       DatabaseDriverInterface::class,
       $this->getWriteDatabaseName(),
+    );
+  }
+
+  private function getLockableCache(): LockableDriverInterface {
+    return LockableCacheFactory::factory(
+      LockableDriverInterface::class,
+      $this->getCacheName(),
     );
   }
 
@@ -90,13 +103,25 @@ abstract class PgModel {
       }
 
       // 3) Get a cached version of the object if possible.
-      // @TODO
+      $cache = $this->getLockableCache();
+
+      $pk = $obj->getPrimaryKeyTyped();
+      $pk->set($id);
+
+      $cachedObj = $cache->get($obj, $getLocked);
+
+      if ($cachedObj instanceof PgRowInterface) {
+        error_log('isCached=true class='.get_class($obj).' id='.strval($id));
+        return $cachedObj;
+      }
+
+      error_log('isCached=false class='.get_class($obj).' id='.strval($id));
 
       // 4) Create sql for the ask to the db.
       $where = new WhereClause();
       $where->and($obj->getPrimaryKey(), WhereOperand::EQUALS, $id);
 
-      $sql = $this->createSql($obj, $where); // TODO: sql generator
+      $sql = $this->createSql($obj, $where);
 
       // 5) Get a database handle.
       $dbh = $this->getReadDatabase();
@@ -108,6 +133,8 @@ abstract class PgModel {
       if ($sth->wasSuccessful() === true && $sth->getNumRows() == 1) {
 
         $this->hydrateDataToRowObject($obj, $sth->fetchMap());
+
+        $cache->set($obj);
 
         return $obj;
 

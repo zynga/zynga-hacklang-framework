@@ -13,10 +13,6 @@ use Zynga\Framework\Exception\V1\Exception;
 
 class Dev extends LocalMemcacheBase {
 
-  public function getStorableObjectName(): string {
-    return ValidExampleObject::class;
-  }
-
   public function createKeyFromStorableObject(
     StorableObjectInterface $obj,
   ): string {
@@ -24,7 +20,7 @@ class Dev extends LocalMemcacheBase {
     if ($obj instanceof ValidExampleObject) {
 
       if ($obj->example_uint64->isDefaultValue()[0] !== true) {
-        return 'lmc-ve-'.$obj->example_uint64->get();
+        return 'lmc-mock-dev-'.$obj->example_uint64->get();
       }
 
       // --

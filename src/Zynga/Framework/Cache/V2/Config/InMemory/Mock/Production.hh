@@ -13,10 +13,6 @@ use Zynga\Framework\Exception\V1\Exception;
 
 class Production extends InMemoryBase {
 
-  public function getStorableObjectName(): string {
-    return ValidExampleObject::class;
-  }
-
   public function createKeyFromStorableObject(
     StorableObjectInterface $obj,
   ): string {

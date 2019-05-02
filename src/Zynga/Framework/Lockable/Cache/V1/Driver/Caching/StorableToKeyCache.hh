@@ -8,7 +8,7 @@ use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 class StorableToKeyCache {
 
   private DriverInterface $_driver;
-  private Map<string, string> $_cache;
+  private Map<string, StorableToKeyCacheEntry> $_cache;
 
   public function __construct(DriverInterface $driver) {
     $this->_driver = $driver;
@@ -19,28 +19,45 @@ class StorableToKeyCache {
     return $this->_driver;
   }
 
-  public function getHashForStorableObject(
+  public function getKeysForStorableObject(
     StorableObjectInterface $obj,
-  ): string {
+  ): StorableToKeyCacheEntry {
 
     $hash = spl_object_hash($obj);
 
-    $key = $this->_cache->get($hash);
+    var_dump($this->_cache);
 
-    if (is_string($key)) {
-      return $key;
+    $cacheEntry = $this->_cache->get($hash);
+
+    if ($cacheEntry instanceof StorableToKeyCacheEntry) {
+      return $cacheEntry;
     }
 
-    $key =
-      $this->getDriver()
-        ->getConfig()
-        ->getCache()
-        ->getConfig()
-        ->createKeyFromStorableObject($obj);
+    $cacheEntry = new StorableToKeyCacheEntry($this->getDriver(), $obj);
 
-    $this->_cache->set($hash, $key);
+    $this->_cache->set($hash, $cacheEntry);
 
-    return $key;
+    return $cacheEntry;
+
+  }
+
+  public function getCachableKeyForStorableObject(
+    StorableObjectInterface $obj,
+  ): string {
+
+    $cacheEntry = $this->getKeysForStorableObject($obj);
+
+    return $cacheEntry->getKey();
+
+  }
+
+  public function getCachableLockKeyForStorableObject(
+    StorableObjectInterface $obj,
+  ): string {
+
+    $cacheEntry = $this->getKeysForStorableObject($obj);
+
+    return $cacheEntry->getLockKey();
 
   }
 

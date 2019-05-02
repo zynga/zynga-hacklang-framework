@@ -42,7 +42,8 @@ class SqlGenerator {
       // 4) Build our where stack.
       $whereSql = $where->buildSql($dbh, $obj);
 
-      $sql = 'SELECT '.implode(', ', $selectFields).' FROM '.$tableName . $whereSql;
+      $sql =
+        'SELECT '.implode(', ', $selectFields).' FROM '.$tableName.$whereSql;
 
       return $sql;
 

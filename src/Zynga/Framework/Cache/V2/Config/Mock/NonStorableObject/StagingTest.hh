@@ -31,16 +31,6 @@ class StagingTest extends TestCase {
 
   }
 
-  public function testGetStorableObjectName(): void {
-
-    $config = $this->createConfigUnderTest();
-    $this->assertEquals(
-      ConfigUnderTest::class,
-      $config->getStorableObjectName(),
-    );
-
-  }
-
   /**
    * @expectedException Zynga\Framework\Exception\V1\Exception
    */

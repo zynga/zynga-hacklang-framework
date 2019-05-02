@@ -9,13 +9,11 @@ use
   Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject
 ;
 
+use Zynga\Framework\Cache\V2\Exceptions\InvalidObjectForKeyCreationException;
+
 use Zynga\Framework\Exception\V1\Exception;
 
 class Dev extends InMemoryBase {
-
-  public function getStorableObjectName(): string {
-    return ValidExampleObject::class;
-  }
 
   public function createKeyFromStorableObject(
     StorableObjectInterface $obj,
@@ -27,14 +25,14 @@ class Dev extends InMemoryBase {
         return 'lmc-ve-'.$obj->example_uint64->get();
       }
 
-      throw new Exception(
+      throw new InvalidObjectForKeyCreationException(
         'example_unit64 is set to non-valid value='.
         $obj->example_uint64->get(),
       );
 
     }
 
-    throw new Exception(
+    throw new InvalidObjectForKeyCreationException(
       'ValidExampleObject is required obj='.get_class($obj),
     );
 

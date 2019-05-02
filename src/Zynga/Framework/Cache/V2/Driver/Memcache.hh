@@ -58,6 +58,7 @@ class Memcache extends DriverBase {
       // add the host / port combinations to the memcache object, addserver
       //   always returns true as it lazy connects at use time.
       foreach ($serverPairs as $host => $port) {
+        error_log('addServer host='.$host.' port='.$port);
         $memcache->addserver($host, $port);
       }
 
@@ -122,13 +123,21 @@ class Memcache extends DriverBase {
 
       $this->connect();
 
+      error_log(
+        'cache::get isCached get key='.
+        $key.
+        ' mc='.
+        get_class($this->_memcache),
+      );
       $data = $this->_memcache->get($key);
 
       // no data to work with.
       if ($data === false) {
+        error_log('cache::get isCached data=null rawData='.$data);
         return null;
       }
 
+      error_log('isCached data='.$data);
       $obj->import()->fromJSON($data);
 
       return $obj;
@@ -152,10 +161,27 @@ class Memcache extends DriverBase {
 
       $flags = 0;
 
-      $ttl = time() + $this->getConfig()->getTTL();
+      $ttl = $this->getConfig()->getTTL();
 
-      $success =
-        $this->_memcache->set($key, $obj->export()->asJSON(), $flags, $ttl);
+      $jsonValue = $obj->export()->asJSON();
+
+      var_dump($key);
+      $success = $this->_memcache->set($key, $jsonValue, $flags, $ttl);
+
+      error_log(
+        'isCached set key='.
+        $key.
+        ' jsonValue='.
+        $jsonValue.
+        ' success='.
+        var_export($jsonValue, true).
+        ' flags='.
+        $flags.
+        ' ttl='.
+        $ttl.
+        ' currentTime='.
+        time(),
+      );
 
       return $success;
 

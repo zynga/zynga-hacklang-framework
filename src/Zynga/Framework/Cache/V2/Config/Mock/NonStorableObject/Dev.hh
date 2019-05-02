@@ -21,10 +21,6 @@ class Dev implements DriverConfigInterface {
     return 'Memcache';
   }
 
-  public function getStorableObjectName(): string {
-    return self::class;
-  }
-
   public function createKeyFromStorableObject(
     StorableObjectInterface $obj,
   ): string {

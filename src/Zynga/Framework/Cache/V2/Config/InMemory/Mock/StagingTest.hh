@@ -17,16 +17,6 @@ class StagingTest extends TestCase {
     return new ConfigUnderTest();
   }
 
-  public function testGetStorableObjectName(): void {
-
-    $config = $this->createConfigUnderTest();
-    $this->assertEquals(
-      ValidExampleObject::class,
-      $config->getStorableObjectName(),
-    );
-
-  }
-
   public function testServerPairings(): void {
     $config = $this->createConfigUnderTest();
     $this->assertNotNull($config->getServerPairings());

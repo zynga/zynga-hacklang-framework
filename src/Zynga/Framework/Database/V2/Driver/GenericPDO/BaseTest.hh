@@ -20,7 +20,7 @@ class BaseTest extends TestCase {
   public function testConfig(): void {
     $config = new MockConfig();
     $this->assertEquals(false, $config->isDatabaseReadOnly());
-    $this->assertEquals('GenericPDO', $config->getDriver());
+    $this->assertEquals('GenericPDO\Base', $config->getDriver());
   }
 
   public function testGetQuoter(): void {
@@ -105,7 +105,7 @@ class BaseTest extends TestCase {
   public function test_ReadOnlyConfig(): void {
     $config = new MockReadOnlyConfig();
     $this->assertTrue($config->isDatabaseReadOnly());
-    $this->assertEquals('GenericPDO', $config->getDriver());
+    $this->assertEquals('GenericPDO\Base', $config->getDriver());
     $this->assertEquals(
       'mysql:host=localhost;user=zframework;password=i-am-a-walrus;port=3306;dbname=phpunit;',
       $config->getConnectionString(),

@@ -7,13 +7,17 @@ use Zynga\Framework\Service\V2\Client\BatchContainer;
 use Zynga\Framework\Service\V2\Client\Mock\Batch as MockBatch;
 use Zynga\Framework\Service\V2\Client\Mock\BatchIsStartedBatch;
 use Zynga\Framework\Service\V2\Client\Mock\FailedBatch;
-use Zynga\Framework\Service\V2\Client\Mock\BatchContainer as MockBatchContainer;
+use
+  Zynga\Framework\Service\V2\Client\Mock\BatchContainer as MockBatchContainer
+;
 use Zynga\Framework\Service\V2\Exceptions\BatchAlreadyStartedException;
-use Zynga\Framework\Service\V2\Exceptions\BatchFailed as BatchFailedException;
+use Zynga\Framework\Service\V2\Exceptions\BatchFailedException;
 use Zynga\Framework\Service\V2\Exceptions\BatchNotStartedException;
 use Zynga\Framework\Service\V2\Test\RequestNoRequired;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-use Zynga\Framework\Service\V2\Test\Router\Services\Mock\V1\Response as MockResponse;
+use
+  Zynga\Framework\Service\V2\Test\Router\Services\Mock\V1\Response as MockResponse
+;
 
 class BatchContainerTest extends TestCase {
   public function test_validSimpleUseCase(): void {
@@ -23,9 +27,7 @@ class BatchContainerTest extends TestCase {
     // --
     $client = new Client();
     $client->setServiceUrl('http://localhost/');
-    $client->setServiceResponseObject(
-      MockResponse::class
-    );
+    $client->setServiceResponseObject(MockResponse::class);
     $this->assertTrue($client->setBatchLimit(2));
     $this->assertEquals(2, $client->getBatchLimit());
 

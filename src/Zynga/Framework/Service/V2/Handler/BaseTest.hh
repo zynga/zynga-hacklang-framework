@@ -3,7 +3,7 @@
 namespace Zynga\Framework\Service\V2\Handler;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-
+use Zynga\Framework\Service\V2\Exceptions\UnknownBatchException;
 use Zynga\Framework\Service\V2\Test\Handler\MockEmptyHandler;
 use Zynga\Framework\Service\V2\Test\Valid as ValidService;
 use Zynga\Framework\Service\V2\Interfaces\ServiceInterface;
@@ -18,10 +18,10 @@ class BaseTest extends TestCase {
     $obj = new MockEmptyHandler();
     $this->assertFalse($obj->handleGenericFailure());
     $this->assertFalse($obj->handleGenericSuccess());
-    $e = new Exception();
+    $e = new UnknownBatchException();
     $this->assertFalse($obj->handleFailureException($e));
     $this->assertEquals(
-      'Zynga\Framework\Exception\V1\Exception',
+      'UnknownBatchException',
       $obj->createShortExceptionName($e),
     );
   }
@@ -45,12 +45,12 @@ class BaseTest extends TestCase {
     $obj = new MockEmptyHandler();
     $svc = new ValidService();
     $obj->setService($svc);
-    $e = new Exception('some-error-message');
+    $e = new UnknownBatchException('some-error-message');
     $this->assertTrue($obj->handleFailureException($e));
     $message = $svc->response()->message()->at(0);
     if ($message instanceof StringBox) {
       $this->assertEquals(
-        'Zynga\Framework\Exception\V1\Exception: some-error-message',
+        'UnknownBatchException: some-error-message',
         $message->get(),
       );
     }
@@ -62,13 +62,13 @@ class BaseTest extends TestCase {
     $obj = new MockEmptyHandler();
     $svc = new ValidService();
     $obj->setService($svc);
-    $e = new Exception('some-error-message');
+    $e = new UnknownBatchException('some-error-message');
     $svc->response()->code->set(500);
     $this->assertTrue($obj->handleFailureException($e));
     $message = $svc->response()->message()->at(0);
     if ($message instanceof StringBox) {
       $this->assertEquals(
-        'Zynga\Framework\Exception\V1\Exception: some-error-message',
+        'UnknownBatchException: some-error-message',
         $message->get(),
       );
     }

@@ -1,11 +1,11 @@
 <?hh //strict
 
-namespace Zynga\Framework\Cache\V2\Config\Mock\NonStorableObject;
+namespace Zynga\Framework\Cache\V2\Config\LocalMemcache\PgDataTest;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 use
-  Zynga\Framework\Cache\V2\Config\Mock\NonStorableObject\Production as ConfigUnderTest
+  Zynga\Framework\Cache\V2\Config\LocalMemcache\PgDataTest\Dev as ConfigUnderTest
 ;
 use Zynga\Framework\Cache\V2\Exceptions\InvalidObjectForKeyCreationException;
 use
@@ -15,7 +15,7 @@ use
   Zynga\Framework\StorableObject\V1\Test\Mock\Valid as ValidExampleObjectRequiredFields
 ;
 
-class ProductionTest extends TestCase {
+class DevTest extends TestCase {
 
   public function createConfigUnderTest(): ConfigUnderTest {
     return new ConfigUnderTest();

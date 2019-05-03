@@ -4,6 +4,8 @@ namespace Zynga\Framework\Service\V2\Client;
 
 use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
 use Zynga\Framework\Exception\V1\Exception;
+use Zynga\Framework\Service\V2\Exceptions\BatchAlreadyExecutingException;
+use Zynga\Framework\Service\V2\Exceptions\NoSuchResponseException;
 use Zynga\Framework\Service\V2\Interfaces\Client\BatchInterface;
 use Zynga\Framework\Service\V2\Interfaces\RequestInterface;
 use
@@ -88,7 +90,7 @@ class Batch implements BatchInterface {
       return $this->_responses[$requestId];
     }
 
-    throw new Exception('No such response');
+    throw new NoSuchResponseException('No such response');
   }
 
   public function getBatchSize(): int {
@@ -106,7 +108,7 @@ class Batch implements BatchInterface {
 
   public function addRequest(RequestInterface $object): int {
     if ($this->isBatchStarted() === true) {
-      throw new Exception('BatchAlreadyExecuting');
+      throw new BatchAlreadyExecutingException('BatchAlreadyExecuting');
     }
 
     // increment the request id.
@@ -120,8 +122,9 @@ class Batch implements BatchInterface {
   }
 
   public function execute(?CurlOpts $curlOpts = null): bool {
+
     if ($this->isBatchStarted() === true) {
-      throw new Exception('BatchAlreadyExecuting');
+      throw new BatchAlreadyExecutingException('BatchAlreadyExecuting');
     }
 
     $this->_curlMultiHandle = curl_multi_init();

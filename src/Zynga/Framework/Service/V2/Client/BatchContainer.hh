@@ -5,9 +5,7 @@ namespace Zynga\Framework\Service\V2\Client;
 use Zynga\Framework\Service\V2\Client\Batch as ClientBatch;
 use Zynga\Framework\Service\V2\Client\CurlOpts;
 use Zynga\Framework\Service\V2\Exceptions\BatchAlreadyStartedException;
-use
-  Zynga\Framework\Service\V2\Exceptions\BatchFailed as BatchFailedException
-;
+use Zynga\Framework\Service\V2\Exceptions\BatchFailedException;
 use Zynga\Framework\Service\V2\Exceptions\BatchNotStartedException;
 use Zynga\Framework\Service\V2\Exceptions\UnknownBatchException;
 use Zynga\Framework\Service\V2\Interfaces\Client\BatchInterface;

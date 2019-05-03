@@ -5,6 +5,7 @@ namespace Zynga\Framework\PgData\V1;
 use
   Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
 ;
+use Zynga\Framework\PgData\V1\Exceptions\NoFieldsOnObjectException;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\WhereClause;
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
@@ -27,7 +28,7 @@ class SqlGenerator {
       // 1) Verify that this object has fields
       if ($fieldMap->count() == 0) {
         // this storable is invalid as it has no fields.
-        throw new Exception('Sillly rabbit');
+        throw new NoFieldsOnObjectException('obj='.get_class($obj));
       }
 
       // 2) Build a list of fields to include on the select

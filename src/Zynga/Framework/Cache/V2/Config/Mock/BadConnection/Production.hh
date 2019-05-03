@@ -3,10 +3,9 @@
 namespace Zynga\Framework\Cache\V2\Config\Mock\BadConnection;
 
 use Zynga\Framework\Cache\V2\Interfaces\DriverConfigInterface;
+use Zynga\Framework\Cache\V2\Exceptions\InvalidObjectForKeyCreationException;
 
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
-
-use Zynga\Framework\Exception\V1\Exception;
 
 use
   Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject
@@ -28,7 +27,7 @@ class Production implements DriverConfigInterface {
   public function createKeyFromStorableObject(
     StorableObjectInterface $obj,
   ): string {
-    throw new Exception('not-valid-connection');
+    throw new InvalidObjectForKeyCreationException('not-valid-connection');
   }
 
   public function getTTL(): int {

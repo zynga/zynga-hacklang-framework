@@ -11,6 +11,7 @@ use Zynga\Framework\Lockable\Cache\V1\Factory as LockableCacheFactory;
 use
   Zynga\Framework\Lockable\Cache\V1\Interfaces\DriverInterface as LockableDriverInterface
 ;
+use Zynga\Framework\PgData\V1\Exceptions\PgRowInterfaceRequiredException;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\SqlGenerator;
 
@@ -57,9 +58,7 @@ abstract class PgModel {
         return $obj;
       }
 
-      throw new Exception(
-        'InvalidObjectType needs to be PgRowInterface='.$model,
-      );
+      throw new PgRowInterfaceRequiredException('modelProvided='.$model);
 
     } catch (Exception $e) {
       throw $e;
@@ -96,38 +95,28 @@ abstract class PgModel {
       // 1) grab a copy of our object to work with.
       $obj = $this->createRowObjectFromClassName($model);
 
-      // 2) Apply a lock if asked for.
-      if ($getLocked === true) {
-        // @TODO
-        throw new Exception('FetchWithLock-Unsupported');
-      }
-
-      // 3) Get a cached version of the object if possible.
-      $cache = $this->getLockableCache();
+      // 2) Get a cached version of the object if possible.
 
       $pk = $obj->getPrimaryKeyTyped();
       $pk->set($id);
 
-      $cachedObj = $cache->get($obj, $getLocked);
+      $cache = $this->getLockableCache();
+      $cachedObj = $cache->get($obj, $getLocked); // This will apply the lock if asked for.
 
       if ($cachedObj instanceof PgRowInterface) {
-        error_log('isCached=true class='.get_class($obj).' id='.strval($id));
         return $cachedObj;
       }
 
-      error_log('isCached=false class='.get_class($obj).' id='.strval($id));
-
-      // 4) Create sql for the ask to the db.
+      // 3) Create sql for the ask to the db.
       $where = new WhereClause();
       $where->and($obj->getPrimaryKey(), WhereOperand::EQUALS, $id);
 
       $sql = $this->createSql($obj, $where);
 
-      // 5) Get a database handle.
+      // 4) Get a database handle.
       $dbh = $this->getReadDatabase();
 
-      // 6) Run the query against the database.
-      error_log($sql); // @TODO - clean this up to use the standard logger.
+      // 5) Run the query against the database.
       $sth = $dbh->query($sql);
 
       if ($sth->wasSuccessful() === true && $sth->getNumRows() == 1) {

@@ -5,6 +5,9 @@ namespace Zynga\Framework\PgData\V1;
 use
   Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
 ;
+use Zynga\Framework\PgData\V1\Exceptions\FailedToFindFieldOnObjectException;
+use Zynga\Framework\PgData\V1\Exceptions\UnsupportedOperandException;
+use Zynga\Framework\PgData\V1\Exceptions\UnsupportedValueTypeException;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\WhereOperand;
 use Zynga\Framework\PgData\V1\WhereOperand\FormatStrings;
@@ -93,7 +96,7 @@ class WhereClause {
     $field = $row->fields()->getTypedField($fieldName);
 
     if ($field === null) {
-      throw new Exception(
+      throw new FailedToFindFieldOnObjectException(
         'Failed to find field='.$fieldName.' on '.get_class($row),
       );
     }
@@ -115,11 +118,8 @@ class WhereClause {
         return sprintf(' %s NOT IN %s', $fieldName, $value);
     }
 
-    throw new Exception(
-      'Unsupported operand type='.
-      $pragma->getOperand().
-      ' model='.
-      get_class($row),
+    throw new UnsupportedOperandException(
+      'type='.$pragma->getOperand().' model='.get_class($row),
     );
 
   }
@@ -137,9 +137,7 @@ class WhereClause {
       return $dbh->quote()->intValue($value);
     }
 
-    throw new Exception(
-      'Unsupported type for quoting value='.gettype($value),
-    );
+    throw new UnsupportedValueTypeException('value='.gettype($value));
 
   }
 

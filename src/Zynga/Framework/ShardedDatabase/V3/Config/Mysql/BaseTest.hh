@@ -14,65 +14,73 @@ use
 use
   Zynga\Framework\ShardedDatabase\V3\Exceptions\InvalidShardIdException
 ;
-
-use Zynga\Poker\Type\Snid\V1\Box as SnidBox;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
+use Zynga\Framework\Type\V1\UInt64Box;
 use Zynga\Framework\ShardedDatabase\V3\ConnectionDetails;
 
-class Mock_InitFailure extends Base {
+class Mock_InitFailure extends Base<UInt64Box> {
   public function shardsInit(): bool {
     return false;
   }
-  public function getServerFromUserId(SnidBox $sn, UidBox $uid): ConnectionDetails {
+  public function getServerFromShardType(UInt64Box $shardType): ConnectionDetails {
     return new ConnectionDetails('', '', '', 0);
   }
   public function isDatabaseReadOnly(): bool {
     return false;
   }
-  public function getShardId(SnidBox $sn, UidBox $uid): int {
+  public function getShardId(UInt64Box $shardType): int {
     return 1;
   }
   public function getShardCount(): int {
     return 1;
   }
+  public function getDatabaseName(): string {
+    return 'Mock';
+  }
 }
 
-class Mock_InitFailureNoServers extends Base {
+class Mock_InitFailureNoServers extends Base<UInt64Box> {
   public function shardsInit(): bool {
     return true;
   }
-  public function getServerFromUserId(SnidBox $sn, UidBox $uid): ConnectionDetails {
+  public function getServerFromShardType(UInt64Box $shardType): ConnectionDetails {
     return new ConnectionDetails('', '', '', 0);
   }
   public function isDatabaseReadOnly(): bool {
     return false;
   }
-  public function getShardId(SnidBox $sn, UidBox $uid): int {
+  public function getShardId(UInt64Box $shardType): int {
     return 1;
   }
   public function getShardCount(): int {
     return 1;
   }
+  public function getDatabaseName(): string {
+    return 'Mock';
+  }
 }
 
-class Mock_SomeWhatValid extends Base {
+class Mock_SomeWhatValid extends Base<UInt64Box> {
   public function shardsInit(): bool {
     $this->addServer(
       new ConnectionDetails('someuser', 'somepass', 'a-server.com', 12367),
     );
     return true;
   }
-  public function getServerFromUserId(SnidBox $sn, UidBox $uid): ConnectionDetails {
+  public function getServerFromShardType(UInt64Box $shardType): ConnectionDetails {
     return new ConnectionDetails('', '', '', 0);
   }
   public function isDatabaseReadOnly(): bool {
     return false;
   }
-  public function getShardId(SnidBox $sn, UidBox $uid): int {
+  public function getShardId(UInt64Box $shardType): int {
     return 1;
   }
   public function getShardCount(): int {
     return 1;
+  }
+  public function getDatabaseName(): string {
+    return 'Mock';
   }
 }
 

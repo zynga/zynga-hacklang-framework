@@ -6,12 +6,11 @@ use Zynga\Framework\ShardedDatabase\V3\Driver\Iterator\Comparitor\Begin as Begin
 use Zynga\Framework\ShardedDatabase\V3\Driver\Iterator\Comparitor\Exception\OperationOnComparitor as OperationOnComparitorException;
 use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-use Zynga\Poker\Type\Snid\V1\BoxFactory as SnidBoxFactory;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
+use Zynga\Framework\Type\V1\UInt64Box;
 
 class BaseTest extends TestCase {
     public function testGetConfig(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -20,7 +19,7 @@ class BaseTest extends TestCase {
     }
 
     public function testQuote(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -29,7 +28,7 @@ class BaseTest extends TestCase {
     }
 
     public function testTransaction(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -37,35 +36,26 @@ class BaseTest extends TestCase {
         $beginningDriver->transaction();
     }
 
-    public function testHasValidSocialNetworkConditions(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
-        $beginningDriver = new BeginComparitorDriver($driver->getConfig());
-        $this->expectException(
-            OperationOnComparitorException::class
-        );
-        $beginningDriver->hasValidSocialNetworkConditions(SnidBoxFactory::facebook(), new UidBox(1));
-    }
-
     public function testSetSnUid(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
         );
-        $beginningDriver->setSnUid(SnidBoxFactory::facebook(), new UidBox(1));
+        $beginningDriver->setShardType(new UInt64Box(1));
     }
 
     public function testGetSnUid(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
         );
-        $beginningDriver->getSnUid();
+        $beginningDriver->getShardType();
     }
 
     public function testSetIsConnected(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -74,7 +64,7 @@ class BaseTest extends TestCase {
     }
 
     public function testGetIsConnected(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -84,7 +74,7 @@ class BaseTest extends TestCase {
     }
 
     public function testIsSqlDML(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -93,7 +83,7 @@ class BaseTest extends TestCase {
     }
 
     public function testGetQuoter(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -102,7 +92,7 @@ class BaseTest extends TestCase {
     }
 
     public function testGetTransaction(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -111,7 +101,7 @@ class BaseTest extends TestCase {
     }
 
     public function testConnectToShard(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -120,7 +110,7 @@ class BaseTest extends TestCase {
     }
 
     public function testConnect(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -129,7 +119,7 @@ class BaseTest extends TestCase {
     }
 
     public function testDisconnect(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -138,7 +128,7 @@ class BaseTest extends TestCase {
     }
 
     public function testOnDriverConnectionChange(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -147,7 +137,7 @@ class BaseTest extends TestCase {
     }
 
     public function testHadError(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -156,7 +146,7 @@ class BaseTest extends TestCase {
     }
 
     public function testGetLastError(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -165,7 +155,7 @@ class BaseTest extends TestCase {
     }
 
     public function testQuery(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class
@@ -174,7 +164,7 @@ class BaseTest extends TestCase {
     }
 
     public function testNativeQuoteString(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
+        $driver = DatabaseFactory::getMockDriver();
         $beginningDriver = new BeginComparitorDriver($driver->getConfig());
         $this->expectException(
             OperationOnComparitorException::class

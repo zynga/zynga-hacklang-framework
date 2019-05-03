@@ -3,17 +3,16 @@
 namespace Zynga\Framework\ShardedDatabase\V3\Interfaces;
 
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
-use Zynga\Poker\Type\Snid\V1\Box as SnidBox;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
-interface QuoteInterface {
+interface QuoteInterface<TType as TypeInterface> {
 
   /**
    * Creates a database sepcific quoting object
    * @param DriverInterface $driver
    * @return QuoteInterface
    */
-  public function __construct(DriverInterface $driver);
+  public function __construct(DriverInterface<TType> $driver);
 
   /**
    * Creates a sql query safe value out of a integer.
@@ -42,9 +41,7 @@ interface QuoteInterface {
    * @return string
    */
   public function textVector(
-    Vector<string> $vec,
-    SnidBox $sn = new SnidBox(0),
-    UidBox $uid = new UidBox(0),
+    Vector<string> $vec
   ): string;
 
 }

@@ -14,8 +14,8 @@ use Zynga\Framework\ShardedDatabase\V3\Driver\Mock;
 use Zynga\Framework\ShardedDatabase\V3\Driver\Mock\ResultSet;
 use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
-use Zynga\Poker\Type\Snid\V1\BoxFactory as SnidBoxFactory;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
+use Zynga\Framework\Type\V1\UInt64Box;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
 class ResultSetTest extends TestCase {
 
@@ -50,13 +50,13 @@ class ResultSetTest extends TestCase {
     $this->assertEquals(0, $obj->getNumRows());
   }
 
-  public function getMockDatabase(string $class, string $function): Mock {
+  public function getMockDatabase(string $class, string $function): Mock<UInt64Box> {
 
     try {
 
       $mock = DatabaseFactory::factory(DriverInterface::class, 'Mock');
 
-      $mock->setSnUid(SnidBoxFactory::facebook(), new UidBox(1));
+      $mock->setShardType(new UInt64Box(1));
 
       if ($mock instanceof Mock) {
 

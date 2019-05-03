@@ -3,68 +3,53 @@
 namespace Zynga\Framework\ShardedDatabase\V3\Driver;
 
 use Zynga\Framework\Database\V2\Exceptions\MissingUserIdException;
+use Zynga\Framework\Environment\ErrorCapture\V1\Handler\Noop as ErrorCaptureNoop;
+use Zynga\Framework\Environment\ErrorCapture\V1\Interfaces\ErrorCaptureInterface;
+use Zynga\Framework\ShardedDatabase\V3\Exceptions\UnknownShardTypeException;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface;
-use Zynga\Framework\Environment\ErrorCapture\V1\Handler\Noop as ErrorCaptureNoop;
-use Zynga\Framework\Environment\ErrorCapture\V1\Interfaces\ErrorCaptureInterface;
-use Zynga\Poker\Type\Snid\V1\Box as SnidBox;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
-abstract class Base implements DriverInterface {
-  private DriverConfigInterface $_config;
+abstract class Base<TType as TypeInterface> implements DriverInterface<TType> {
+  private DriverConfigInterface<TType> $_config;
   private ErrorCaptureInterface $_errorCapture;
-  private SnidBox $_sn;
-  private UidBox $_uid;
-
-  public function __construct(DriverConfigInterface $config) {
+  private ?TType $_shardType;
+  
+  public function __construct(DriverConfigInterface<TType> $config) {
     $this->_config = $config;
     $this->_errorCapture = new ErrorCaptureNoop();
-    $this->_sn = new SnidBox();
-    $this->_uid = new UidBox();
   }
 
-  public function getConfig(): DriverConfigInterface {
+  public function getConfig(): DriverConfigInterface<TType> {
     return $this->_config;
   }
 
-  public function quote(): QuoteInterface {
+  public function quote(): QuoteInterface<TType> {
     return $this->getQuoter();
   }
 
-  public function transaction(): TransactionInterface {
+  public function transaction(): TransactionInterface<TType> {
     return $this->getTransaction();
   }
-
-  public function hasValidSocialNetworkConditions(SnidBox $sn, UidBox $uid): bool {
-    if ($uid->get() <= 0) {
-      throw new MissingUserIdException('sn='.$this->_sn.' uid='.$this->_uid);
+  
+  public function setShardType(TType $shardType): bool {
+    // Nothing to validate for TypeInterface
+    $this->_shardType = $shardType;
+    return true;
+  }
+  
+  public function getShardType(): TType {
+    if($this->_shardType === null) {
+      throw new UnknownShardTypeException("Shard type is null");
     }
-
-    return true;
+    
+    return $this->_shardType;
   }
-
-  public function setSnUid(SnidBox $sn, UidBox $uid): bool {
-
-    $this->hasValidSocialNetworkConditions($sn, $uid);
-
-    $this->_sn = $sn;
-    $this->_uid = $uid;
-
-    return true;
-
-  }
-
-  public function getSnUid():(SnidBox, UidBox) {
-
-    $this->hasValidSocialNetworkConditions($this->_sn, $this->_uid);
-
-    return tuple(
-      $this->_sn,
-      $this->_uid
-    );
-
+  
+  public function onDriverConnectionChange(bool $from, bool $to): void {
+   // NOOP - for the moment.
   }
 
   abstract public function setIsConnected(bool $state): bool;

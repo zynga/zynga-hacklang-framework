@@ -7,25 +7,19 @@ use Zynga\Framework\Database\V2\Exceptions\NoPortProvidedException;
 use Zynga\Framework\Database\V2\Exceptions\NoUserNameException;
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Factory\V2\Config\Base as FactoryBaseConfig;
-
-use
-  Zynga\Framework\ShardedDatabase\V3\Exceptions\InvalidShardIdException
-;
-use
-  Zynga\Framework\ShardedDatabase\V3\Exceptions\ShardsInitFailureException
-;
-use
-  Zynga\Framework\ShardedDatabase\V3\Exceptions\ShardsInitNoServersException
-;
-use
-  Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface
-;
+use Zynga\Framework\ShardedDatabase\V3\Exceptions\InvalidShardIdException;
+use Zynga\Framework\ShardedDatabase\V3\Exceptions\ShardsInitFailureException;
+use Zynga\Framework\ShardedDatabase\V3\Exceptions\ShardsInitNoServersException;
+use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface;
 use Zynga\Framework\ShardedDatabase\V3\ConnectionDetails;
-use Zynga\Poker\Type\Snid\V1\Box as SnidBox;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
+use Zynga\Framework\Type\V1\UInt64Box;
+use Zynga\Framework\ShardedDatabase\V3\Exceptions\UnknownShardTypeException;
 
-abstract class Base extends FactoryBaseConfig
-  implements DriverConfigInterface {
+abstract class Base<TType as TypeInterface>
+  extends FactoryBaseConfig
+  implements DriverConfigInterface<TType> {
+  
   private string $_currentServer;
   private string $_currentDatabase;
   private Vector<ConnectionDetails> $_servers = Vector {};
@@ -41,6 +35,8 @@ abstract class Base extends FactoryBaseConfig
    * @return bool
    */
   final public function init(): bool {
+    $this->setCurrentDatabase($this->getDatabaseName());
+    
     // reset our servers list to empty.
     $this->_servers->clear();
 
@@ -114,9 +110,9 @@ abstract class Base extends FactoryBaseConfig
    * @param int User id, if the driver is supporting sharding by uid
    * @return string
    */
-  final public function getConnectionString(SnidBox $sn, UidBox $uid): string {
-    $server = $this->getServerFromUserId($sn, $uid);
-    return $this->getConnectionStringForServer($sn, $server);
+  final public function getConnectionString(TType $shardType): string {
+    $server = $this->getServerFromShardType($shardType);
+    return $this->getConnectionStringForServer($shardType, $server);
   }
 
   final public function clearServers(): bool {
@@ -139,6 +135,16 @@ abstract class Base extends FactoryBaseConfig
     }
     throw new InvalidShardIdException('offset='.$offset);
   }
+  
+  public function getShardId(TType $intShardType): int {
+    if ($intShardType instanceof UInt64Box) {
+      $shardCount = $this->getServerCount();
+      $shardId = $intShardType->get() % $shardCount;
+      return $shardId;
+    }
+    
+    throw new UnknownShardTypeException("Unsupported TType");
+  }
 
   /**
    * User definable and overloadable hook for initializing your cluster.
@@ -146,17 +152,14 @@ abstract class Base extends FactoryBaseConfig
    */
   abstract public function shardsInit(): bool;
 
-  abstract public function getShardId(SnidBox $sn, UidBox $uid): int;
-
-  abstract public function getServerFromUserId(
-    SnidBox $sn,
-    UidBox $uid,
-  ): ConnectionDetails;
+  abstract public function getServerFromShardType(TType $shardType): ConnectionDetails;
 
   abstract public function getShardCount(): int;
 
   abstract public function getConnectionStringForServer(
-    SnidBox $sn,
+    TType $shardType,
     ConnectionDetails $server,
   ): string;
+  
+  abstract public function getDatabaseName(): string;
 }

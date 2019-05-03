@@ -15,8 +15,7 @@ use Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface;
 use
   Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface
 ;
-use Zynga\Poker\Type\Snid\V1\BoxFactory as SnidBoxFactory;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
+use Zynga\Framework\Type\V1\UInt64Box;
 use Zynga\Framework\ShardedDatabase\V3\ConnectionDetails;
 
 class StagingTest extends BaseTest {
@@ -39,7 +38,7 @@ class StagingTest extends BaseTest {
     $config = new ConfigUnderTest();
 
     $server =
-      $config->getServerFromUserId(SnidBoxFactory::facebook(), new UidBox(1));
+      $config->getServerFromShardType(new UInt64Box(1));
 
     // run the full init.
     $config->init();
@@ -56,7 +55,7 @@ class StagingTest extends BaseTest {
     $this->assertEquals('localhost', $server->getHostname());
     $this->assertEquals(
       0,
-      $config->getShardId(SnidBoxFactory::facebook(), new UidBox(1)),
+      $config->getShardId(new UInt64Box(1)),
     );
     $this->assertEquals('mockhost', $config->getCurrentServer());
 
@@ -67,8 +66,7 @@ class StagingTest extends BaseTest {
     if (preg_match(
           '/^username\=(.*)\;password\=(.*)\;host\=(.*)\;$/',
           $config->getConnectionString(
-            SnidBoxFactory::facebook(),
-            new UidBox(1),
+            new UInt64Box(1)
           ),
           $pregs,
         )) {

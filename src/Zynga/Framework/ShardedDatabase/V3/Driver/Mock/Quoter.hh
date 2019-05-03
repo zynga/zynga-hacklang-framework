@@ -4,14 +4,12 @@ namespace Zynga\Framework\ShardedDatabase\V3\Driver\Mock;
 
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface;
-use Zynga\Poker\Type\Snid\V1\BoxFactory as SnidBoxFactory;
-use Zynga\Poker\Type\Snid\V1\Box as SnidBox;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
-class Quoter implements QuoteInterface {
-  private DriverInterface $_dbh;
+class Quoter<TType as TypeInterface> implements QuoteInterface<TType> {
+  private DriverInterface<TType> $_dbh;
 
-  public function __construct(DriverInterface $driver) {
+  public function __construct(DriverInterface<TType> $driver) {
     $this->_dbh = $driver;
   }
 
@@ -28,9 +26,7 @@ class Quoter implements QuoteInterface {
   }
 
   public function textVector(
-    Vector<string> $vec,
-    SnidBox $sn = SnidBoxFactory::facebook(),
-    UidBox $uid = new UidBox(0),
+    Vector<string> $vec
   ): string {
     $quotedString = '';
     foreach ($vec as $vecValue) {

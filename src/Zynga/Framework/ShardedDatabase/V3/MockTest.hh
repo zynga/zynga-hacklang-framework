@@ -23,12 +23,11 @@ class MockTest extends TestCase {
     DatabaseFactory::clear();
 
     return true;
-
   }
 
   public function testValid(): void {
 
-    $mock = DatabaseFactory::factory(DriverInterface::class, 'Read');
+    $mock = DatabaseFactory::factory(DriverInterface::class, 'Mock');
 
     $this->assertTrue($mock->connect());
     $this->assertTrue($mock->disconnect());
@@ -53,7 +52,7 @@ class MockTest extends TestCase {
   }
 
   public function testBrokenQuery(): void {
-    $mock = DatabaseFactory::factory(DriverInterface::class, 'Read');
+    $mock = DatabaseFactory::factory(DriverInterface::class, 'Mock');
 
     if ($mock instanceof Mock) {
       $this->assertTrue($mock->resetResultsSets());
@@ -65,7 +64,7 @@ class MockTest extends TestCase {
   }
 
   public function testLoadResultsForTestEmpty(): void {
-    $mock = DatabaseFactory::factory(DriverInterface::class, 'Read');
+    $mock = DatabaseFactory::factory(DriverInterface::class, 'Mock');
     if ($mock instanceof Mock) {
       $this->assertTrue($mock->loadResultsForTest(self::class, __FUNCTION__));
     }

@@ -51,7 +51,7 @@ class BaseTest extends TestCase {
 
     $conf = new MockValid();
 
-    $this->assertEquals('', $conf->getCurrentDatabase());
+    $this->assertEquals('Mock', $conf->getCurrentDatabase());
 
     $conf->setCurrentDatabase($expectedDatabase);
 

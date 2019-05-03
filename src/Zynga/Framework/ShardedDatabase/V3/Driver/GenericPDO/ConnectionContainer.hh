@@ -34,7 +34,7 @@ class ConnectionContainer {
       }
 
       $dbh = new PDO($dsn, $username, $password);
-
+      
       // we want our pdo connections to raise exceptions.
       $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       $dbh->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);

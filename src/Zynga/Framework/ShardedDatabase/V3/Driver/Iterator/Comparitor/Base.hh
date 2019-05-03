@@ -10,34 +10,29 @@ use Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\ResultSetInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface;
 use Zynga\Environment\V1\ErrorCapture\Handler\Noop as ErrorCaptureNoop;
-use Zynga\Poker\Type\Snid\V1\Box as SnidBox;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
 /**
  * See @Zynga\Framework\ShardedDatabase\V3\Driver\Iterator\Iterable
  */
-abstract class Base extends DriverBase {
-    public final function getConfig(): DriverConfigInterface {
+abstract class Base<TType as TypeInterface> extends DriverBase<TType> {
+    public final function getConfig(): DriverConfigInterface<TType> {
         throw new OperationOnComparitorException("Attempting to call " . __FUNCTION__ . " on a comparitor class");
     }
 
-    public final function quote(): QuoteInterface {
+    public final function quote(): QuoteInterface<TType> {
         throw new OperationOnComparitorException("Attempting to call " . __FUNCTION__ . " on a comparitor class");
     }
 
-    public final function transaction(): TransactionInterface {
+    public final function transaction(): TransactionInterface<TType> {
         throw new OperationOnComparitorException("Attempting to call " . __FUNCTION__ . " on a comparitor class");
     }
 
-    public final function hasValidSocialNetworkConditions(SnidBox $sn, UidBox $uid): bool {
+    public final function setShardType(TType $shardType): bool {
         throw new OperationOnComparitorException("Attempting to call " . __FUNCTION__ . " on a comparitor class");
     }
 
-    public final function setSnUid(SnidBox $sn, UidBox $uid): bool {
-        throw new OperationOnComparitorException("Attempting to call " . __FUNCTION__ . " on a comparitor class");
-    }
-
-    public final function getSnUid():(SnidBox, UidBox) {
+    public final function getShardType():TType {
         throw new OperationOnComparitorException("Attempting to call " . __FUNCTION__ . " on a comparitor class");
     }
 
@@ -53,11 +48,11 @@ abstract class Base extends DriverBase {
         throw new OperationOnComparitorException("Attempting to call " . __FUNCTION__ . " on a comparitor class");
     }
 
-    public function getQuoter(): QuoteInterface {
+    public function getQuoter(): QuoteInterface<TType> {
         throw new OperationOnComparitorException("Attempting to call " . __FUNCTION__ . " on a comparitor class");
     }
 
-    public function getTransaction(): TransactionInterface {
+    public function getTransaction(): TransactionInterface<TType> {
         throw new OperationOnComparitorException("Attempting to call " . __FUNCTION__ . " on a comparitor class");
     }
 

@@ -13,18 +13,18 @@ use Zynga\Framework\ShardedDatabase\V3\Driver\Iterator\Mock\FailedDisconnect as 
 use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-use Zynga\Poker\Type\Snid\V1\BoxFactory as SnidBoxFactory;
+use Zynga\Framework\Type\V1\UInt64Box;
 
 class BaseTest extends TestCase {
     public function testBeginReturnsValidDriver(): void {
-        $iterator = DatabaseFactory::getReadIterator(SnidBoxFactory::facebook());
+        $iterator = DatabaseFactory::getMockIterator();
         $driver = $iterator->begin();
         $iterator->finish();
         $this->assertTrue($driver instanceof DriverInterface);
     }
 
     public function testIteratingThroughLoopReturnsValidDrivers(): void {
-        for ($iterator = DatabaseFactory::getReadIterator(SnidBoxFactory::facebook()), $driver = $iterator->begin();
+        for ($iterator = DatabaseFactory::getMockIterator(), $driver = $iterator->begin();
             $driver !== $iterator->end();
             $driver = $iterator->next()) {
             $this->assertTrue($driver instanceof DriverInterface);
@@ -32,7 +32,7 @@ class BaseTest extends TestCase {
     }
 
     public function testCallingNextWithoutBeginThrowsException(): void {
-        $iterator = DatabaseFactory::getReadIterator(SnidBoxFactory::facebook());
+        $iterator = DatabaseFactory::getMockIterator();
         $this->expectException(
             UseBeforeCallToBeginException::class
         );
@@ -40,7 +40,7 @@ class BaseTest extends TestCase {
     }
 
     public function testIteratorOutOfBoundsException(): void {
-        $iterator = DatabaseFactory::getReadIterator(SnidBoxFactory::facebook());
+        $iterator = DatabaseFactory::getMockIterator();
         for ($driver = $iterator->begin();
             $driver !== $iterator->end();
             $driver = $iterator->next()) {
@@ -53,8 +53,8 @@ class BaseTest extends TestCase {
     }
 
     public function testIteratorDriverConnectException(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
-        $iterator = new FailedConnectMockDriverIterator($driver->getConfig(), SnidBoxFactory::facebook());
+        $driver = DatabaseFactory::getMockDriver();
+        $iterator = new FailedConnectMockDriverIterator($driver->getConfig(), new UInt64Box(1));
         $this->expectException(
             IteratorDriverConnectException::class
         );
@@ -62,8 +62,8 @@ class BaseTest extends TestCase {
     }
 
     public function testIteratorDriverDisconnectException(): void {
-        $driver = DatabaseFactory::getReadWithoutSnUid();
-        $iterator = new FailedDisconnectMockDriverIterator($driver->getConfig(), SnidBoxFactory::facebook());
+        $driver = DatabaseFactory::getMockDriver();
+        $iterator = new FailedDisconnectMockDriverIterator($driver->getConfig(), new UInt64Box(1));
         $iterator->begin();
         $this->expectException(
             IteratorDriverDisconnectException::class
@@ -72,7 +72,7 @@ class BaseTest extends TestCase {
     }
 
     public function testCallingBeginTwiceThrowsException(): void {
-        $iterator = DatabaseFactory::getReadIterator(SnidBoxFactory::facebook());
+        $iterator = DatabaseFactory::getMockIterator();
         $iterator->begin();
         $this->expectException(
             CalledBeginMultipleTimesException::class

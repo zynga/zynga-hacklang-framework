@@ -10,12 +10,15 @@ use
 ;
 use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
-use Zynga\Poker\Type\Snid\V1\BoxFactory as SnidBoxFactory;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
+use Zynga\Framework\Type\V1\UInt64Box;
 use
   Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO as GenericPDODriver
 ;
+use
+  Zynga\Framework\ShardedDatabase\V3\Driver\Mock as MockDriver
+;
 use Zynga\Framework\Database\V2\Exceptions\QueryFailedException;
+use Zynga\Framework\Database\V2\Exceptions\Mock\BadResultOffsetException;
 
 class ConnectionContainerTest extends TestCase {
 
@@ -35,16 +38,14 @@ class ConnectionContainerTest extends TestCase {
   }
 
   public function testCachingCreate(): void {
-    $dbh = DatabaseFactory::factory(DriverInterface::class, 'Read');
+    $dbh = DatabaseFactory::factory(DriverInterface::class, 'Mock');
 
-    $testSn = SnidBoxFactory::facebook();
-    $testUid = new UidBox(1);
-
+    $testShard = new UInt64Box(1);
     $config = $dbh->getConfig();
 
-    $dsn = $config->getConnectionString($testSn, $testUid);
-    $server = $config->getServerFromUserId($testSn, $testUid);
-    $shardId = $config->getShardId($testSn, $testUid);
+    $dsn = $config->getConnectionString($testShard);
+    $server = $config->getServerFromShardType($testShard);
+    $shardId = $config->getShardId($testShard);
 
     $username = $server->getUsername();
     $password = $server->getPassword();
@@ -65,18 +66,15 @@ class ConnectionContainerTest extends TestCase {
   }
 
   public function testOnDriverConnectionAndBadQuery(): void {
-    $dbh = DatabaseFactory::factory(GenericPDODriver::class, 'Read');
+    $dbh = DatabaseFactory::factory(MockDriver::class, 'Mock');
     $dbh->onDriverConnectionChange(true, true);
 
     $config = $dbh->getConfig();
-    $this->expectException(QueryFailedException::class);
-
-    $testSn = SnidBoxFactory::facebook();
-    $testUid = new UidBox(1);
-    $dsn = $config->getConnectionString($testSn, $testUid);
-    $shardId = $config->getShardId($testSn, $testUid);
-    $dbh->setSnUid($testSn, $testUid);
-
+    $testShard = new UInt64Box(1);
+    $dbh->setShardType($testShard);
+    $dsn = $config->getConnectionString($testShard);
+    $shardId = $config->getShardId($testShard);
+    $this->expectException(BadResultOffsetException::class);
     GenericPDODriver::$FORCE_COVERAGE = true;
     $dbh->query("Error");
 

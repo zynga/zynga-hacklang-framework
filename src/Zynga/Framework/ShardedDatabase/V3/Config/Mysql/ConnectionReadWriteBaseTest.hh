@@ -6,8 +6,8 @@ use Zynga\Framework\ShardedDatabase\V3\Config\Mysql\ConnectionBaseTest;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
 use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
 use Zynga\Framework\Factory\V2\Test\MockState as FactoryMockState;
-
-abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest {
+use Zynga\Framework\Type\V1\UInt64Box;
+abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest<UInt64Box> {
 
   public function doSetUpBeforeClass(): bool {
 
@@ -21,11 +21,10 @@ abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest {
 
   public function testValidInsertCommitSelectQuery(): void {
 
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getDriverName());
+    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
 
-    $randSN = $this->getRandomSocialNetwork();
-    $randUID = $this->getRandomTestUserId();
-
+    $randShard = $this->getRandomShardType();
+    
     $ts = $this->getUnitTestStamp();
 
     $expectedValue = time() - mt_rand(1, 100000);
@@ -39,7 +38,7 @@ abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest {
       $expectedValue.
       ')';
 
-    $dbh->setSnUid($randSN, $randUID);
+    $dbh->setShardType($randShard);
 
     $insSth = $dbh->query($sql);
 
@@ -54,7 +53,7 @@ abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest {
       ' WHERE unit_test_stamp = '.
       $ts;
 
-    $dbh->setSnUid($randSN, $randUID);
+    $dbh->setShardType($randShard);
 
     $selSth = $dbh->query($sql);
 
@@ -65,10 +64,9 @@ abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest {
   public function testValidInsertQuery(): void {
 
 
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getDriverName());
+    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
 
-    $randSN = $this->getRandomSocialNetwork();
-    $randUID = $this->getRandomTestUserId();
+    $randShard = $this->getRandomShardType();
 
     $ts = $this->getUnitTestStamp();
 
@@ -83,7 +81,7 @@ abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest {
       $expectedValue.
       ')';
 
-    $dbh->setSnUid($randSN, $randUID);
+    $dbh->setShardType($randShard);
 
     $insSth = $dbh->query($sql);
 
@@ -95,10 +93,10 @@ abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest {
 
   public function testValidInsertCommitQuery(): void {
 
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getDriverName());
+    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
 
     if ($dbh->getConfig()->isDatabaseReadOnly() === true) {
-      $this->markTestSkipped($this->getDriverName().'::isReadonly');
+      $this->markTestSkipped($this->getConfigName().'::isReadonly');
       return;
     }
 
@@ -116,10 +114,9 @@ abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest {
       $expectedValue.
       ')';
 
-    $testSn = $this->getRandomSocialNetwork();
-    $testUid = $this->getRandomTestUserId();
+    $randShard = $this->getRandomShardType();
 
-    $dbh->setSnUid($testSn, $testUid);
+    $dbh->setShardType($randShard);
 
     $insSth = $dbh->query($sql);
 
@@ -132,7 +129,7 @@ abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest {
   }
 
   public function testGetShardCount(): void {
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getDriverName());
+    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
     $this->assertTrue($dbh->getConfig()->getShardCount() > 0);
   }
 

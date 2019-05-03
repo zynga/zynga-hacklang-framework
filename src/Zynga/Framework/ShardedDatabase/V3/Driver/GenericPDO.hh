@@ -12,35 +12,23 @@ use Zynga\Framework\Database\V2\Exceptions\ConnectionIsReadOnly;
 use Zynga\Framework\Database\V2\Exceptions\MockQueriesRequired;
 use Zynga\Framework\ShardedDatabase\V3\Driver\Base;
 use Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\Quoter;
-use
-  Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\Transaction
-;
-use
-  Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\ResultSet
-;
-use
-  Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\ConnectionContainer
-;
-use
-  Zynga\Framework\ShardedDatabase\V3\Interfaces\ResultSetInterface
-;
-use
-  Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface
-;
+use Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\Transaction;
+use Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\ResultSet;
+use Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\ConnectionContainer;
+use Zynga\Framework\ShardedDatabase\V3\Interfaces\ResultSetInterface;
+use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface;
-use
-  Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface
-;
-use Zynga\Framework\ShardedDatabase\V3\Info as ShardInfo;
+use Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
 use \PDO;
 use \PDOException;
 
-class GenericPDO extends Base {
+class GenericPDO<TType as TypeInterface> extends Base<TType> {
 
   private ConnectionContainer $_connections;
-  private ?QuoteInterface $_quoter;
-  private ?TransactionInterface $_transaction;
+  private ?QuoteInterface<TType> $_quoter;
+  private ?TransactionInterface<TType> $_transaction;
 
   private Map<int, bool> $_connectionState;
   private bool $_hadError;
@@ -49,7 +37,7 @@ class GenericPDO extends Base {
 
   public static bool $FORCE_COVERAGE = false;
 
-  public function __construct(DriverConfigInterface $config) {
+  public function __construct(DriverConfigInterface<TType> $config) {
 
     parent::__construct($config);
 
@@ -64,7 +52,7 @@ class GenericPDO extends Base {
     $this->connectedShardId = -1;
   }
 
-  public function getQuoter(): QuoteInterface {
+  public function getQuoter(): QuoteInterface<TType> {
     if ($this->_quoter === null) {
       $this->_quoter = new Quoter($this);
     }
@@ -72,7 +60,7 @@ class GenericPDO extends Base {
     return $this->_quoter;
   }
 
-  public function getTransaction(): TransactionInterface {
+  public function getTransaction(): TransactionInterface<TType> {
     if ($this->_transaction === null) {
       $this->_transaction = new Transaction($this);
     }
@@ -81,15 +69,13 @@ class GenericPDO extends Base {
   }
 
   public function setIsConnected(bool $value): bool {
-    list($sn, $uid) = $this->getSnUid();
-    $shardId = $this->getConfig()->getShardId($sn, $uid);
+    $shardId = $this->getConfig()->getShardId( $this->getShardType());
     $this->_connectionState->set($shardId, $value);
     return true;
   }
 
   public function getIsConnected(): bool {
-    list($sn, $uid) = $this->getSnUid();
-    $shardId = $this->getConfig()->getShardId($sn, $uid);
+    $shardId = $this->getConfig()->getShardId( $this->getShardType());
     if ($this->_connectionState->containsKey($shardId) === true &&
         $this->_connectionState[$shardId] === true) {
       return true;
@@ -129,11 +115,11 @@ class GenericPDO extends Base {
       return false;
     }
     try {
-      list($sn, $uid) = $this->getSnUid();
-      $shardIndex = $this->getConfig()->getShardId($sn, $uid);
+      $shardType = $this->getShardType();
+      $shardIndex = $this->getConfig()->getShardId($shardType);
 
       // fetch the connection out of the connection pool
-      $connectionString = $this->getConfig()->getConnectionString($sn, $uid);
+      $connectionString = $this->getConfig()->getConnectionString($shardType);
       return $this->connectToShard($shardIndex, $connectionString);
     } catch (MissingUserIdException $e) {
       throw $e;
@@ -152,10 +138,6 @@ class GenericPDO extends Base {
     return true;
   }
 
-  public function onDriverConnectionChange(bool $from, bool $to): void {
-    // NOOP - for the moment.
-  }
-
   public function hadError(): bool {
     return $this->_hadError;
   }
@@ -172,14 +154,8 @@ class GenericPDO extends Base {
       }
 
       if ($this->getIsConnected() == true) {
-        list($sn, $uid) = $this->getSnUid();
-        if ($this->connectedShardId != $this->getConfig()->getShardId(
-              $sn,
-              $uid,
-            ) ||
-            $this->getConfig()->getCurrentDatabase() != ShardInfo::getDatabaseSchemaForSocialNetworkId(
-              $sn,
-            )) {
+        $shardType = $this->getShardType();
+        if ($this->connectedShardId != $this->getConfig()->getShardId($shardType)) {
           $this->disconnect();
         }
       }
@@ -209,13 +185,13 @@ class GenericPDO extends Base {
 
   public function nativeQuoteString(string $value): string {
     try {
-      list($sn, $uid) = $this->getSnUid();
+      $shardType = $this->getShardType();
 
       if ($this->getIsConnected() !== true) {
         $this->connect();
       }
 
-      $shardId = $this->getConfig()->getShardId($sn, $uid);
+      $shardId = $this->getConfig()->getShardId($shardType);
       $dbh = $this->_connections->get($shardId);
       $value = $dbh->quote($value);
 

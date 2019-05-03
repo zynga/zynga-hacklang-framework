@@ -10,8 +10,9 @@ use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
 use
   Zynga\Framework\ShardedDatabase\V3\Config\Mysql\ConnectionBaseTest
 ;
+use Zynga\Framework\Type\V1\UInt64Box;
 
-abstract class ConnectionReadDeleteBaseTest extends ConnectionBaseTest {
+abstract class ConnectionReadDeleteBaseTest extends ConnectionBaseTest<UInt64Box> {
 
   public function doSetUpBeforeClass(): bool {
     parent::doSetUpBeforeClass();
@@ -37,12 +38,11 @@ abstract class ConnectionReadDeleteBaseTest extends ConnectionBaseTest {
   public function testValidDeleteQuery(): void {
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
-    $randSN = $this->getRandomSocialNetwork();
-    $randUID = $this->getRandomTestUserId();
-    $dbh->setSnUid($randSN, $randUID);
+    $randShard = $this->getRandomShardType();
+    $dbh->setShardType($randShard);
 
     $sql =
       'DELETE FROM '.
@@ -59,7 +59,7 @@ abstract class ConnectionReadDeleteBaseTest extends ConnectionBaseTest {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
     $sql =
@@ -67,10 +67,8 @@ abstract class ConnectionReadDeleteBaseTest extends ConnectionBaseTest {
       $this->getTableNameForTests().
       ' WHERE unit_test_stamp = 0 ';
 
-    $testSn = $this->getRandomSocialNetwork();
-    $testUid = $this->getRandomTestUserId();
-
-    $dbh->setSnUid($testSn, $testUid);
+    $randShard = $this->getRandomShardType();
+    $dbh->setShardType($randShard);
 
     $delSth = $dbh->query($sql);
 

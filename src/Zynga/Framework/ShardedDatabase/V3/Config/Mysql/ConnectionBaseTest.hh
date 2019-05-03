@@ -25,34 +25,23 @@ use
   Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface
 ;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
-use Zynga\Poker\Type\Snid\V1\BoxFactory as SnidBoxFactory;
-use Zynga\Poker\Type\Snid\V1\Box as SnidBox;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
+use Zynga\Framework\Type\V1\UInt64Box;
 
-abstract class ConnectionBaseTest extends TestCase {
+abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
   private int $_unitTestStamp = 0;
   private string $_tableName = '';
 
-  abstract public function getDriverName(): string;
+  abstract public function getConfigName(): string;
 
   abstract public function getEnvironment(): int;
 
-  abstract public function getSupportedSocialNetworks(): Vector<SnidBox>;
-
-  abstract public function getTestUserIds(): Vector<UidBox>;
-
-  abstract public function getSchemaForTests(): string;
+  abstract public function getTestShardTypes(): Vector<TType>;
 
   abstract public function getTableNameForTests(): string;
 
-  public function getRandomSocialNetwork(): SnidBox {
-    $vec = $this->getSupportedSocialNetworks();
-    $vec->shuffle();
-    return $vec[0];
-  }
-
-  public function getRandomTestUserId(): UidBox {
-    $vec = $this->getTestUserIds();
+  public function getRandomShardType(): TType {
+    $vec = $this->getTestShardTypes();
     $vec->shuffle();
     return $vec[0];
   }
@@ -91,174 +80,147 @@ abstract class ConnectionBaseTest extends TestCase {
 
   public function testConnection(): void {
 
-    $sns = $this->getSupportedSocialNetworks();
-
     // Use an id of 1 to test if all the sns are okay [0 isn't allowed]
-    $testUid = new UidBox(1);
+    $testShard = new UInt64Box(1);
+    $dbh = DatabaseFactory::factory(
+      DriverInterface::class,
+      $this->getConfigName(),
+    );
 
-    foreach ($sns as $sn) {
+    $dbh->setShardType($testShard);
 
-      $dbh = DatabaseFactory::factory(
-        DriverInterface::class,
-        $this->getDriverName(),
-      );
+    // see if we have a connection string
+    $this->assertNotEmpty(
+      $dbh->getConfig()->getConnectionString($testShard)
+    );
 
-      $dbh->setSnUid($sn, $testUid);
-
-      // see if we have a connection string
-      $this->assertNotEmpty(
-        $dbh->getConfig()->getConnectionString($sn, $testUid),
-      );
-
-      // this is a misnomer as the query() call is in control off the connections.
-      $this->assertTrue($dbh->connect());
-
-    }
-
+    // this is a misnomer as the query() call is in control off the connections.
+    $this->assertTrue($dbh->connect());
   }
 
   public function testValidQuery(): void {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
-    $sns = $this->getSupportedSocialNetworks();
-    $uids = $this->getTestUserIds();
+    $shardTypes = $this->getTestShardTypes();
 
-    foreach ($sns as $sn) {
+    foreach ($shardTypes as $shardType) {
 
-      foreach ($uids as $uid) {
+      $expectedValue = time();
 
-        $expectedValue = time();
+      $dbh->setShardType($shardType);
 
-        $dbh->setSnUid($sn, $uid);
+      $sth = $dbh->query('SELECT '.$expectedValue.' as \'val\' FROM dual');
 
-        $sth = $dbh->query('SELECT '.$expectedValue.' as \'val\' FROM dual');
+      $this->assertNotFalse($sth->wasSuccessful());
+      $this->assertInstanceOf(ResultSet::class, $sth);
 
-        $this->assertNotFalse($sth->wasSuccessful());
-        $this->assertInstanceOf(ResultSet::class, $sth);
+      // this will fetch the row count un-cached
+      $cnt = $sth->getNumRows();
+      $this->assertEquals(1, $cnt);
 
-        // this will fetch the row count un-cached
-        $cnt = $sth->getNumRows();
-        $this->assertEquals(1, $cnt);
-
-        // this should be cached
-        $cnt = $sth->getNumRows();
-        $this->assertEquals(1, $cnt);
-
-      }
+      // this should be cached
+      $cnt = $sth->getNumRows();
+      $this->assertEquals(1, $cnt);
 
     }
-
   }
 
   public function testValidQueryFetchMap(): void {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
     $expectedValue = time();
-    $sns = $this->getSupportedSocialNetworks();
-    $uids = $this->getTestUserIds();
+    $shardTypes = $this->getTestShardTypes();
 
-    foreach ($sns as $sn) {
+    foreach ($shardTypes as $shardType) {
 
-      foreach ($uids as $uid) {
+      $dbh->setShardType($shardType);
 
-        $dbh->setSnUid($sn, $uid);
+      $sth = $dbh->query('SELECT '.$expectedValue.' as \'val\' FROM dual');
 
-        $sth = $dbh->query('SELECT '.$expectedValue.' as \'val\' FROM dual');
+      $this->assertTrue($sth->wasSuccessful());
 
-        $this->assertTrue($sth->wasSuccessful());
+      $this->assertTrue($sth->next());
 
-        $this->assertTrue($sth->next());
+      $map = $sth->fetchMap();
 
-        $map = $sth->fetchMap();
+      $this->assertInstanceOf(Map::class, $map);
 
-        $this->assertInstanceOf(Map::class, $map);
-
-        if ($map instanceof Map) {
-          $this->assertEquals($expectedValue, $map->get('val'));
-          $this->assertEquals($expectedValue, $map['val']);
-        }
-
-        // there should only be one row here, nothing more, nothing less.
-        $this->assertEquals(1, $sth->getNumRows());
-
-        $this->assertFalse($sth->hasMore());
-
-        // this should fail to index
-        $this->assertFalse($sth->next());
+      if ($map instanceof Map) {
+        $this->assertEquals($expectedValue, $map->get('val'));
+        $this->assertEquals($expectedValue, $map['val']);
       }
-    }
 
+      // there should only be one row here, nothing more, nothing less.
+      $this->assertEquals(1, $sth->getNumRows());
+
+      $this->assertFalse($sth->hasMore());
+
+      // this should fail to index
+      $this->assertFalse($sth->next());
+    }
   }
 
   public function testValidQueryFetchVector(): void {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
     $expectedValue = time();
 
-    $sns = $this->getSupportedSocialNetworks();
-    $uids = $this->getTestUserIds();
+    $shardTypes = $this->getTestShardTypes();
 
-    foreach ($sns as $sn) {
-      foreach ($uids as $uid) {
+    foreach ($shardTypes as $shardType) {
 
-        $dbh->setSnUid($sn, $uid);
+      $dbh->setShardType($shardType);
 
-        $sth = $dbh->query('SELECT '.$expectedValue.' as \'val\' FROM dual');
+      $sth = $dbh->query('SELECT '.$expectedValue.' as \'val\' FROM dual');
 
-        $this->assertTrue($sth->wasSuccessful());
+      $this->assertTrue($sth->wasSuccessful());
 
-        $this->assertTrue($sth->hasMore());
+      $this->assertTrue($sth->hasMore());
 
-        $this->assertTrue($sth->next());
+      $this->assertTrue($sth->next());
 
-        $vector = $sth->fetchVector();
+      $vector = $sth->fetchVector();
 
-        $this->assertInstanceOf(Vector::class, $vector);
+      $this->assertInstanceOf(Vector::class, $vector);
 
-        if ($vector instanceof Vector) {
-          $this->assertEquals($expectedValue, $vector[0]);
-        }
+      if ($vector instanceof Vector) {
+        $this->assertEquals($expectedValue, $vector[0]);
+      }
 
-        // there should only be one row here, nothing more, nothing less.
-        $this->assertEquals(1, $sth->getNumRows());
+      // there should only be one row here, nothing more, nothing less.
+      $this->assertEquals(1, $sth->getNumRows());
 
-        $this->assertFalse($sth->hasMore());
+      $this->assertFalse($sth->hasMore());
 
-        // this should fail to index
-        $this->assertFalse($sth->next());
+      // this should fail to index
+      $this->assertFalse($sth->next());
 
       }
-    }
-
   }
 
   public function testValidQueryFetchMapCursorGone(): void {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $expectedValue = time();
 
-    $sns = $this->getSupportedSocialNetworks();
-    $uids = $this->getTestUserIds();
-
-    $sns->shuffle();
-    $uids->shuffle();
-
-    $dbh->setSnUid($sns[0], $uids[0]);
+    $shardTypes = $this->getTestShardTypes();
+    $shardTypes->shuffle();
+    $dbh->setShardType($shardTypes[0]);
 
     $sth = $dbh->query('SELECT '.$expectedValue.' as \'val\' FROM dual');
 
@@ -273,17 +235,13 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $expectedValue = time();
 
-    $sns = $this->getSupportedSocialNetworks();
-    $uids = $this->getTestUserIds();
-
-    $sns->shuffle();
-    $uids->shuffle();
-
-    $dbh->setSnUid($sns[0], $uids[0]);
+    $shardTypes = $this->getTestShardTypes();
+    $shardTypes->shuffle();
+    $dbh->setShardType($shardTypes[0]);
 
     $sth = $dbh->query('SELECT '.$expectedValue.' as \'val\' FROM dual');
 
@@ -298,7 +256,7 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
     $expectedValues = array();
@@ -320,9 +278,8 @@ abstract class ConnectionBaseTest extends TestCase {
       $expectedValues[2].
       "' as 'val' FROM dual ";
 
-    $dbh->setSnUid(
-      $this->getRandomSocialNetwork(),
-      $this->getRandomTestUserId(),
+    $dbh->setShardType(
+      $this->getRandomShardType()
     );
 
     $sth = $dbh->query($sql);
@@ -372,13 +329,12 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $expectedValue = time();
 
-    $dbh->setSnUid(
-      $this->getRandomSocialNetwork(),
-      $this->getRandomTestUserId(),
+    $dbh->setShardType(
+      $this->getRandomShardType()
     );
 
     $sth = $dbh->query('SELECT '.$expectedValue.' as \'val\' FROM dual');
@@ -407,13 +363,12 @@ abstract class ConnectionBaseTest extends TestCase {
   public function testValidQueryHasCursor(): void {
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $expectedValue = time();
 
-    $dbh->setSnUid(
-      $this->getRandomSocialNetwork(),
-      $this->getRandomTestUserId(),
+    $dbh->setShardType(
+      $this->getRandomShardType()
     );
 
     $sth = $dbh->query('SELECT '.$expectedValue.' as \'val\' FROM dual');
@@ -424,7 +379,7 @@ abstract class ConnectionBaseTest extends TestCase {
   public function testValidHadError(): void {
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $this->assertFalse($dbh->hadError());
     $this->assertEquals('', $dbh->getLastError());
@@ -433,13 +388,12 @@ abstract class ConnectionBaseTest extends TestCase {
   public function testInvalidateCursor(): void {
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $expectedValue = time();
 
-    $dbh->setSnUid(
-      $this->getRandomSocialNetwork(),
-      $this->getRandomTestUserId(),
+    $dbh->setShardType(
+      $this->getRandomShardType()
     );
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
@@ -453,16 +407,14 @@ abstract class ConnectionBaseTest extends TestCase {
   public function testInvaildQuery(): void {
 
     $expectedValue = time();
-    $schema = $this->getSchemaForTests();
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
-    $dbh->setSnUid(
-      $this->getRandomSocialNetwork(),
-      $this->getRandomTestUserId(),
+    $dbh->setShardType(
+      $this->getRandomShardType()
     );
 
     $this->expectException(QueryFailedException::class);
@@ -474,18 +426,19 @@ abstract class ConnectionBaseTest extends TestCase {
   public function testHadError(): void {
 
     $expectedValue = time();
-    $schema = $this->getSchemaForTests();
+    
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
-
+    
+    $schema = $dbh->getConfig()->getCurrentDatabase();
+    
     try {
 
-      $dbh->setSnUid(
-        $this->getRandomSocialNetwork(),
-        $this->getRandomTestUserId(),
+      $dbh->setShardType(
+        $this->getRandomShardType()
       );
 
       $sth = $dbh->query(
@@ -508,13 +461,12 @@ abstract class ConnectionBaseTest extends TestCase {
   public function testInvaildQueryErrorMessage(): void {
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $expectedValue = time();
 
-    $dbh->setSnUid(
-      $this->getRandomSocialNetwork(),
-      $this->getRandomTestUserId(),
+    $dbh->setShardType(
+      $this->getRandomShardType()
     );
 
     $this->expectException(QueryFailedException::class);
@@ -539,12 +491,11 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
-    $dbh->setSnUid(
-      $this->getRandomSocialNetwork(),
-      $this->getRandomTestUserId(),
+    $dbh->setShardType(
+      $this->getRandomShardType()
     );
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
@@ -564,12 +515,11 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
-    $dbh->setSnUid(
-      $this->getRandomSocialNetwork(),
-      $this->getRandomTestUserId(),
+    $dbh->setShardType(
+      $this->getRandomShardType()
     );
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
@@ -588,12 +538,11 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
-    $dbh->setSnUid(
-      $this->getRandomSocialNetwork(),
-      $this->getRandomTestUserId(),
+    $dbh->setShardType(
+      $this->getRandomShardType()
     );
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
@@ -610,13 +559,12 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $expectedValue = time();
 
-    $dbh->setSnUid(
-      $this->getRandomSocialNetwork(),
-      $this->getRandomTestUserId(),
+    $dbh->setShardType(
+      $this->getRandomShardType()
     );
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
@@ -632,12 +580,11 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
-    $dbh->setSnUid(
-      $this->getRandomSocialNetwork(),
-      $this->getRandomTestUserId(),
+    $dbh->setShardType(
+      $this->getRandomShardType()
     );
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
@@ -651,13 +598,12 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $expectedValue = time();
 
-    $dbh->setSnUid(
-      $this->getRandomSocialNetwork(),
-      $this->getRandomTestUserId(),
+    $dbh->setShardType(
+      $this->getRandomShardType()
     );
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
@@ -673,22 +619,18 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
-    $dbh->setSnUid(SnidBoxFactory::facebook(), new UidBox(1));
+    $dbh->setShardType(new UInt64Box(1));
     $dbh->disconnect();
     $expectedValue = time();
 
-    $sns = $this->getSupportedSocialNetworks();
-    $uids = $this->getTestUserIds();
-
-    $sns->shuffle();
-    $uids->shuffle();
-
-    $dbh->setSnUid($sns[0], $uids[0]);
+    $shardTypes = $this->getTestShardTypes();
+    $shardTypes->shuffle();
+    $dbh->setShardType($shardTypes[0]);
 
     //update with wrong password
-    $server = $dbh->getConfig()->getServerFromUserId($sns[0], $uids[0]);
+    $server = $dbh->getConfig()->getServerFromShardType($shardTypes[0]);
     $server->setPassword('the-wrong-password');
 
     $this->expectException(ConnectionGoneAwayException::class);
@@ -702,23 +644,21 @@ abstract class ConnectionBaseTest extends TestCase {
     // remove the valid driver (if it exsists)
     $this->cleanDriverFromFactory();
 
-    $sns = $this->getSupportedSocialNetworks();
-    $uids = $this->getTestUserIds();
-
-    $sns->shuffle();
-    $uids->shuffle();
+    $shardTypes = $this->getTestShardTypes();
+    $shardTypes->shuffle();
+    
 
     // squidge the database connection by changing the password to invalid one.
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
-    $dbh->setSnUid(SnidBoxFactory::facebook(), new UidBox(1));
+    $dbh->setShardType($shardTypes[0]);
 
     //update with wrong password
     $server =
       $dbh->getConfig()
-        ->getServerFromUserId(SnidBoxFactory::facebook(), new UidBox(1));
+        ->getServerFromShardType($shardTypes[0]);
     $server->setPassword('some-made-up-estimate');
 
     $this->expectException(ConnectionGoneAwayException::class);
@@ -728,34 +668,12 @@ abstract class ConnectionBaseTest extends TestCase {
     $this->cleanDriverFromFactory();
   }
 
-  public function testConnectRequiredBadSocialNetwork(): void {
-    // remove the valid driver (if it exsists)
-    $this->cleanDriverFromFactory();
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getDriverName(),
-    );
-    $this->expectException(MissingUserIdException::class);
-    $dbh->connect();
-  }
-
-  public function testConnectRequiredUserid(): void {
-    // remove the valid driver (if it exsists)
-    $this->cleanDriverFromFactory();
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getDriverName(),
-    );
-    $this->expectException(MissingUserIdException::class);
-    $dbh->connect();
-  }
-
   public function testConnectRequiredBadUserid(): void {
     // remove the valid driver (if it exsists)
     $this->cleanDriverFromFactory();
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $this->expectException(MissingUserIdException::class);
     $dbh->connect();
@@ -767,15 +685,14 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $testValue = "don't";
     $expectedValue = "'don\\'t'";
+    
+    $randomTestShardType= $this->getRandomShardType();
 
-    $randoSocialNetwork = $this->getRandomSocialNetwork();
-    $randoTestUserId = $this->getRandomTestUserId();
-
-    $dbh->setSnUid($randoSocialNetwork, $randoTestUserId);
+    $dbh->setShardType($randomTestShardType);
 
     $this->assertEquals($expectedValue, $dbh->quote()->textValue($testValue));
 
@@ -791,20 +708,20 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
     // 1,1
     $testValue = "don't";
     $expectedValue = "'don\\'t'";
-    $randoSocialNetwork = $this->getRandomSocialNetwork();
-    $randoTestUserId = $this->getRandomTestUserId();
-    $dbh->setSnUid($randoSocialNetwork, $randoTestUserId);
+    $randomTestShardType= $this->getRandomShardType();
+
+    $dbh->setShardType($randomTestShardType);
 
     //update with wrong password
     $server =
       $dbh->getConfig()
-        ->getServerFromUserId($randoSocialNetwork, $randoTestUserId);
+        ->getServerFromShardType($randomTestShardType);
     $server->setPassword('something-that-we-wont-use');
 
     $this->expectException(ConnectionGoneAwayException::class);
@@ -817,7 +734,7 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $driver = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
     $quoter = $driver->getQuoter();
@@ -828,10 +745,9 @@ abstract class ConnectionBaseTest extends TestCase {
     $floatValues['0.01'] = 0.01;
     $floatValues['0.1789'] = 0.1789;
 
-    $testSn = SnidBoxFactory::facebook();
-    $testUid = new UidBox(1);
+    $testShard = new UInt64Box(1);
 
-    $driver->setSnUid($testSn, $testUid);
+    $driver->setShardType($testShard);
 
     foreach ($floatValues as $floatExpected => $floatValue) {
       $this->assertEquals($floatExpected, $quoter->floatValue($floatValue));
@@ -845,7 +761,7 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $driver = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
     $quoter = $driver->getQuoter();
@@ -858,10 +774,9 @@ abstract class ConnectionBaseTest extends TestCase {
     $rando = mt_rand(1, mt_getrandmax());
     $intValues["$rando"] = $rando;
 
-    $testSn = SnidBoxFactory::facebook();
-    $testUid = new UidBox(1);
+    $testShard = new UInt64Box(1);
 
-    $driver->setSnUid($testSn, $testUid);
+    $driver->setShardType($testShard);
 
     foreach ($intValues as $intExpected => $intValue) {
       $this->assertEquals($intExpected, $quoter->intValue($intValue));
@@ -875,15 +790,14 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $driver = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
     $quoter = $driver->getQuoter();
 
-    $testSn = SnidBoxFactory::facebook();
-    $testUid = new UidBox(1);
+    $testShard = new UInt64Box(1);
 
-    $driver->setSnUid($testSn, $testUid);
+    $driver->setShardType($testShard);
 
     $this->assertEquals(
       "'i am a teapot'",
@@ -896,7 +810,7 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $this->assertEquals(
       "'you have to catch them all', 'as you are the chosen one'",
-      $quoter->textVector($vec, $testSn, $testUid),
+      $quoter->textVector($vec),
     );
 
     $this->cleanDriverFromFactory();
@@ -907,13 +821,12 @@ abstract class ConnectionBaseTest extends TestCase {
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
 
-    $randSN = $this->getRandomSocialNetwork();
-    $randUID = $this->getRandomTestUserId();
+    $testShard = new UInt64Box(1);
 
-    $dbh->setSnUid($randSN, $randUID);
+    $dbh->setShardType($testShard);
 
     $this->assertTrue($dbh->transaction()->begin());
     $this->assertTrue($dbh->transaction()->commit());
@@ -926,7 +839,7 @@ abstract class ConnectionBaseTest extends TestCase {
   public function testBadNativeQuoteString(): void {
     $driver = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $mock = new BadPDO_Mock($driver->getConfig());
     $this->expectException(Exception::class);
@@ -936,7 +849,7 @@ abstract class ConnectionBaseTest extends TestCase {
   public function testBadBegin(): void {
     $driver = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $mock = new BadPDO_Mock($driver->getConfig());
     $this->expectException(Exception::class);
@@ -946,7 +859,7 @@ abstract class ConnectionBaseTest extends TestCase {
   public function testBadCommit(): void {
     $driver = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $mock = new BadPDO_Mock($driver->getConfig());
     $this->expectException(Exception::class);
@@ -956,7 +869,7 @@ abstract class ConnectionBaseTest extends TestCase {
   public function testBadRollback(): void {
     $driver = DatabaseFactory::factory(
       DriverInterface::class,
-      $this->getDriverName(),
+      $this->getConfigName(),
     );
     $mock = new BadPDO_Mock($driver->getConfig());
     $this->expectException(Exception::class);

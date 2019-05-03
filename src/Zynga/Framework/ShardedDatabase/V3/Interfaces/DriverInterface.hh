@@ -2,25 +2,15 @@
 
 namespace Zynga\Framework\ShardedDatabase\V3\Interfaces;
 
-use
-  Zynga\Framework\Factory\V2\Interfaces\DriverInterface as FactoryDriverInterface
-;
-
-use
-  Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface
-;
-use Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface;
-use
-  Zynga\Framework\ShardedDatabase\V3\Interfaces\ResultSetInterface
-;
-use
-  Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface
-;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
-use Zynga\Poker\Type\Snid\V1\Box as SnidBox;
 use Zynga\Framework\Database\V2\Interfaces\QueryableInterface;
+use Zynga\Framework\Factory\V2\Interfaces\DriverInterface as FactoryDriverInterface;
+use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface;
+use Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface;
+use Zynga\Framework\ShardedDatabase\V3\Interfaces\ResultSetInterface;
+use Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
-interface DriverInterface extends FactoryDriverInterface, QueryableInterface {
+interface DriverInterface<TType as TypeInterface> extends FactoryDriverInterface, QueryableInterface {
 
   /**
    * Developer productivity optimization, we allow you to set a default uid and
@@ -31,7 +21,7 @@ interface DriverInterface extends FactoryDriverInterface, QueryableInterface {
    * @param UidBox $uid
    * @return bool
    */
-  public function setSnUid(SnidBox $sn, UidBox $uid): bool;
+  public function setShardType(TType $shardType): bool;
 
   /**
    * Return the current default sn/uid for this driver.
@@ -39,9 +29,9 @@ interface DriverInterface extends FactoryDriverInterface, QueryableInterface {
    *
    * @return tuple(SnidBox, UidBox) sn, uid
    */
-  public function getSnUid(): (SnidBox, UidBox);
+  public function getShardType(): TType;
 
-  public function getConfig(): DriverConfigInterface;
+  public function getConfig(): DriverConfigInterface<TType> ;
 
   public function connect(): bool;
 
@@ -79,14 +69,14 @@ interface DriverInterface extends FactoryDriverInterface, QueryableInterface {
    * @return QuoteInterface
    * @access public
    */
-  public function quote(): QuoteInterface;
+  public function quote(): QuoteInterface<TType>;
 
   /**
    * Provides the ability to quote values into sql safe strings.
    * @return QuoteInterface
    * @access public
    */
-  public function getQuoter(): QuoteInterface;
+  public function getQuoter(): QuoteInterface<TType>;
 
   /**
    * Databases hand quoting values differently, we let the native driver
@@ -101,13 +91,13 @@ interface DriverInterface extends FactoryDriverInterface, QueryableInterface {
    * them.
    * @return TransactionInterface
    */
-  public function transaction(): TransactionInterface;
+  public function transaction(): TransactionInterface<TType>;
 
   /**
    * Provides the ability to engage with transactions if your database supports
    * them.
    * @return TransactionInterface
    */
-  public function getTransaction(): TransactionInterface;
+  public function getTransaction(): TransactionInterface<TType>;
 
 }

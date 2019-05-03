@@ -8,9 +8,9 @@ use Zynga\Framework\Factory\V2\Test\MockState as FactoryMockState;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
 use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
 use Zynga\Framework\ShardedDatabase\V3\Config\Mysql\ConnectionBaseTest;
+use Zynga\Framework\Type\V1\UInt64Box;
 
-
-abstract class ConnectionReadOnlyBaseTest extends ConnectionBaseTest {
+abstract class ConnectionReadOnlyBaseTest extends ConnectionBaseTest<UInt64Box> {
 
   public function doSetUpBeforeClass(): bool {
 
@@ -29,10 +29,7 @@ abstract class ConnectionReadOnlyBaseTest extends ConnectionBaseTest {
 
   public function testValidInsertQuery(): void {
 
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getDriverName());
-
-    $randSN = $this->getRandomSocialNetwork();
-    $randUID = $this->getRandomTestUserId();
+    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
 
     $ts = $this->getUnitTestStamp();
 
@@ -61,19 +58,12 @@ abstract class ConnectionReadOnlyBaseTest extends ConnectionBaseTest {
 
     $this->cleanDriverFromFactory();
 
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getDriverName());
+    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
 
     if ($dbh->getConfig()->isDatabaseReadOnly() === false) {
-      $this->markTestSkipped($this->getDriverName().'::isReadWrite');
+      $this->markTestSkipped($this->getConfigName().'::isReadWrite');
       return;
     }
-
-    /*
-    $dbh->setSnUid(
-      $this->getRandomSocialNetwork(),
-      $this->getRandomTestUserId()
-    );
-    */
 
     $this->expectException(ConnectionIsReadOnly::class);
     $dbh->query(
@@ -83,7 +73,7 @@ abstract class ConnectionReadOnlyBaseTest extends ConnectionBaseTest {
   }
 
   public function testGetShardCount(): void {
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getDriverName());
+    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
     $this->assertTrue($dbh->getConfig()->getShardCount() > 0);
   }
 

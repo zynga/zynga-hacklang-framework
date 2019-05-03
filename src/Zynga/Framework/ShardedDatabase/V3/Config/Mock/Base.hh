@@ -3,11 +3,9 @@
 namespace Zynga\Framework\ShardedDatabase\V3\Config\Mock;
 
 use Zynga\Framework\ShardedDatabase\V3\Config\Base as ConfigBase;
-use Zynga\Poker\Type\Snid\V1\Box as SnidBox;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
 use Zynga\Framework\ShardedDatabase\V3\ConnectionDetails;
-
-abstract class Base extends ConfigBase {
+use Zynga\Framework\Type\V1\UInt64Box;
+abstract class Base extends ConfigBase<UInt64Box> {
 
   const string SERVER_USERNAME = 'mockuser';
   const string SERVER_PASSWORD = 'mockpass';
@@ -41,7 +39,7 @@ abstract class Base extends ConfigBase {
   }
 
   public function getConnectionStringForServer(
-    SnidBox $sn,
+    UInt64Box $shardType,
     ConnectionDetails $server,
   ): string {
     $connectionString = '';
@@ -50,16 +48,19 @@ abstract class Base extends ConfigBase {
     return $connectionString;
   }
 
-  public function getServerFromUserId(SnidBox $sn, UidBox $uid): ConnectionDetails {
-    return $this->getServerByOffset(0);
+  public function getServerFromShardType(UInt64Box $shardType): ConnectionDetails {
+    return $this->getServerByOffset($this->getShardId($shardType));
   }
 
-  public function getShardId(SnidBox $sn, UidBox $uid): int {
-    return 0;
+  public function getShardId(UInt64Box $shardType): int {
+    return parent::getShardId($shardType);
   }
 
   public function getShardCount(): int {
     return 1;
   }
-
+  
+  public function getDatabaseName():string {
+    return 'Mock';
+  }
 }

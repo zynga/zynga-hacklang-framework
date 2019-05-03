@@ -6,7 +6,7 @@ use Zynga\Framework\ShardedDatabase\V3\Driver\Base as DriverBase;
 use Zynga\Framework\ShardedDatabase\V3\Driver\Iterator\Comparitor\Begin as BeginComparitorDriver;
 use Zynga\Framework\ShardedDatabase\V3\Driver\Iterator\Comparitor\End as EndComparitorDriver;
 use Zynga\Framework\ShardedDatabase\V3\Driver\Iterator\Iterable as DriverIterable;
-use Zynga\Framework\ShardedDatabase\V3\Factory as UserShardedFactory;
+use Zynga\Framework\ShardedDatabase\V3\Factory as ShardedFactory;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
 use Zynga\Framework\ShardedDatabase\V3\Driver\Iterator\Exception\CalledBeginMultipleTimes as CalledBeginMultipleTimesException;
@@ -14,36 +14,36 @@ use Zynga\Framework\ShardedDatabase\V3\Driver\Iterator\Exception\DriverConnect a
 use Zynga\Framework\ShardedDatabase\V3\Driver\Iterator\Exception\DriverDisconnect as IteratorDriverDisconnectException;
 use Zynga\Framework\ShardedDatabase\V3\Driver\Iterator\Exception\OutOfBounds as IteratorOutOfBoundsException;
 use Zynga\Framework\ShardedDatabase\V3\Driver\Iterator\Exception\UseBeforeCallToBegin as UseBeforeCallToBeginException;
-use Zynga\Poker\Type\Snid\V1\Box as SnidBox;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
 /**
- * Iterator that iterates over all user shards, handling connection and disconnection for the user.
+ * Iterator that iterates over all shards, handling connection and disconnection
  *
  * The common pattern of use is:
- * for ($iterator = DatabaseFactory::getReadIterator($sn), $driver = $iterator->begin();
+ * for ($iterator = DatabaseFactory::getReadIterator($shardType), $driver = $iterator->begin();
  *     $driver !== $iterator->end();
  *     $driver = $iterator->next()) {
  *     $driver->foo();
  * }
  */
-class Base implements DriverIterable {
+class Base<TType as TypeInterface> implements DriverIterable<TType> {
 
     private int $currentShardIndex;
-    private SnidBox $sn;
-    private DriverConfigInterface $driverConfig;
-    private DriverInterface $currentDriver;
-    private DriverInterface $beginningDriver;
-    private DriverInterface $endingDriver;
+    private TType $shardType;
+    private DriverConfigInterface<TType> $driverConfig;
+    private DriverInterface<TType> $currentDriver;
+    private DriverInterface<TType> $beginningDriver;
+    private DriverInterface<TType> $endingDriver;
     private bool $calledBegin;
 
     /**
      * @param $driverConfig Configuration to use for the drivers returned from this iterator.
      * @param $sn Social network to be used for database iteration
      */
-    public function __construct(DriverConfigInterface $driverConfig, SnidBox $sn) {
+    public function __construct(DriverConfigInterface<TType> $driverConfig, TType $shardType) {
         $this->driverConfig = $driverConfig;
         $this->currentShardIndex = -1;
-        $this->sn = $sn;
+        $this->shardType = $shardType;
         $this->beginningDriver = new BeginComparitorDriver($driverConfig);
         $this->endingDriver = new EndComparitorDriver($driverConfig);
         $this->currentDriver = $this->beginningDriver;
@@ -74,7 +74,7 @@ class Base implements DriverIterable {
      *         begin() or next() fails to be closed from the current call to this method.
      * @throws IteratorDriverConnectException if there is a failure connecting to the current shard
      */
-    public function next(): DriverInterface {
+    public function next(): DriverInterface<TType> {
         if ($this->calledBegin === false) {
             $this->finish();
             throw new UseBeforeCallToBeginException();
@@ -109,7 +109,7 @@ class Base implements DriverIterable {
      *
      * @throws CalledBeginMultipleTimesException
      */
-    public function begin(): DriverInterface {
+    public function begin(): DriverInterface<TType> {
         if ($this->calledBegin === true) {
             throw new CalledBeginMultipleTimesException();
         }
@@ -121,7 +121,7 @@ class Base implements DriverIterable {
     /**
      * See @DriverIterable
      */
-    public function end(): DriverInterface {
+    public function end(): DriverInterface<TType> {
         return $this->endingDriver;
     }
 
@@ -140,7 +140,7 @@ class Base implements DriverIterable {
 
     public function connectToShard(): bool {
         $serverName = $this->driverConfig->getServerByOffset($this->currentShardIndex + 1);
-        $connectionString = $this->driverConfig->getConnectionStringForServer($this->sn, $serverName);
+        $connectionString = $this->driverConfig->getConnectionStringForServer($this->shardType, $serverName);
 
         return $this->currentDriver->connectToShard($this->currentShardIndex + 1, $connectionString);
     }
@@ -154,9 +154,10 @@ class Base implements DriverIterable {
         return $this->currentDriver->disconnect();
     }
 
-    public function getNewDriver(): DriverInterface {
+    public function getNewDriver(): DriverInterface<TType> {
         if ($this->hasNext()) {
-           return UserShardedFactory::getReadWithoutUid($this->sn);
+           // TODO - what here?
+           // return ShardedFactory::getReadWithoutUid($this->sn);
         }
 
         return $this->end();

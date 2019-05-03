@@ -14,17 +14,19 @@ use Zynga\Framework\ShardedDatabase\V3\Driver\Mock\Transaction;
 
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Database\V2\Mock\ResultSets;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
+use Zynga\Framework\Type\V1\UInt64Box;
 
-class Mock extends Base {
+class Mock<TType as TypeInterface> extends Base<TType> {
   private int $_queryCounter;
   private bool $_isConnected;
   private bool $_hadError;
   private int $_resultOffset;
-  private ?QuoteInterface $_quoter;
-  private ?TransactionInterface $_transaction;
+  private ?QuoteInterface<TType> $_quoter;
+  private ?TransactionInterface<TType> $_transaction;
   private ResultSets $_resultSets;
 
-  public function __construct(DriverConfigInterface $config) {
+  public function __construct(DriverConfigInterface<TType> $config) {
 
     parent::__construct($config);
 
@@ -35,17 +37,16 @@ class Mock extends Base {
     $this->_quoter = null;
     $this->_transaction = null;
     $this->_resultSets = new ResultSets();
-
   }
 
-  public function getTransaction(): TransactionInterface {
+  public function getTransaction(): TransactionInterface<TType> {
     if ( $this->_transaction === null ) {
       $this->_transaction = new Transaction($this);
     }
     return $this->_transaction;
   }
 
-  public function getQuoter(): QuoteInterface {
+  public function getQuoter(): QuoteInterface<TType> {
     if ( $this->_quoter === null ) {
       $this->_quoter = new Quoter($this);
     }
@@ -57,34 +58,32 @@ class Mock extends Base {
     return true;
   }
 
-  public function connect(int $sn = 0, int $uid = 0): bool {
+  public function connect(): bool {
     $this->_isConnected = true;
     return true;
   }
 
-  public function disconnect(int $sn = 0, int $uid = 0): bool {
+  public function disconnect(): bool {
     $this->_isConnected = false;
     return true;
   }
 
   public function setIsConnected(
-    bool $state,
-    int $sn = 0,
-    int $uid = 0,
+    bool $state
   ): bool {
     $this->_isConnected = $state;
     return true;
   }
 
-  public function getIsConnected(int $sn = 0, int $uid = 0): bool {
+  public function getIsConnected(): bool {
     return $this->_isConnected;
   }
 
-  public function getLastError(int $sn = 0, int $uid = 0): string {
+  public function getLastError(): string {
     return 'NOOP';
   }
 
-  public function hadError(int $sn = 0, int $uid = 0): bool {
+  public function hadError(): bool {
     return $this->_hadError;
   }
 

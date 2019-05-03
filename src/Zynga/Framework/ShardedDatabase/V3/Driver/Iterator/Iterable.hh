@@ -3,24 +3,25 @@
 namespace Zynga\Framework\ShardedDatabase\V3\Driver\Iterator;
 
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
 /**
  * Interface for iteration across user shards drivers.
  **/
-interface Iterable {
+interface Iterable<TType as TypeInterface> {
     /**
      * Returns the next driver in the iteration, if available.
      *
      * @return The next driver in the iteration.
      */
-    public function next(): DriverInterface;
+    public function next(): DriverInterface<TType>;
 
     /**
      * See @next()
      *
      * Equivalent to a call to next(), but must be called at least once before a call to next().
      */
-    public function begin(): DriverInterface;
+    public function begin(): DriverInterface<TType>;
 
     /**
      * Returns a DriverInterface to be used for the sole purpose of comparing the value returned from
@@ -30,7 +31,7 @@ interface Iterable {
      * @return DriverInterface to be used for the sole purpose of comparing the value returned from
      *         a call to next().
      */
-    public function end(): DriverInterface;
+    public function end(): DriverInterface<TType>;
 
     /**
      * This is a convenience method. It need only be called if, in the process of iterating across drivers,

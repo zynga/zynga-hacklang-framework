@@ -3,15 +3,13 @@
 namespace Zynga\Framework\ShardedDatabase\V3\Interfaces;
 
 use Zynga\Framework\Factory\V2\Interfaces\ConfigInterface;
-
-use Zynga\Poker\Type\Snid\V1\Box as SnidBox;
-use Zynga\Poker\Type\Uid\V1\Box as UidBox;
 use Zynga\Framework\ShardedDatabase\V3\ConnectionDetails;
+use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
 /**
  * DriverConfigInterface: Responsible for the configuration contract for all database drivers.
  */
-interface DriverConfigInterface extends ConfigInterface {
+interface DriverConfigInterface<TType as TypeInterface> extends ConfigInterface {
 
   /**
    * Initializes the configuration, and verifies that all the functions have been called.
@@ -30,7 +28,7 @@ interface DriverConfigInterface extends ConfigInterface {
    * Gets the connection specific string used for the driver.
    * @type string
    */
-  public function getConnectionString(SnidBox $sn, UidBox $uid): string;
+  public function getConnectionString(TType $shardType): string;
 
   /**
    * Gets the current server you are connected to.
@@ -63,7 +61,7 @@ interface DriverConfigInterface extends ConfigInterface {
    * @param int $uid
    * @return int
    */
-  public function getShardId(SnidBox $sn, UidBox $uid): int;
+  public function getShardId(TType $shardType): int;
 
   /**
    * For sharded databases return the string hostname for your shard
@@ -71,14 +69,14 @@ interface DriverConfigInterface extends ConfigInterface {
    * @param int $uid
    * @return string
    */
-  public function getServerFromUserId(SnidBox $sn, UidBox $uid): ConnectionDetails;
+  public function getServerFromShardType(TType $shardType): ConnectionDetails;
 
   public function getShardCount(): int;
 
   public function getServerByOffset(int $offset): ConnectionDetails;
 
   public function getConnectionStringForServer(
-    SnidBox $sn,
+    TType $shardType,
     ConnectionDetails $server,
   ): string;
 }

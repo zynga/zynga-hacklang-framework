@@ -204,7 +204,15 @@ class Memcache extends DriverBase {
 
       $success = $this->_memcache->delete($key);
 
-      return $success;
+      error_log('JEO MCDriver key='.$key.' delete='.var_export($success));
+
+      if ($success == 1) {
+        error_log('JEO MCDriver delete-AOK');
+        return true;
+      }
+
+      error_log('JEO MCDriver delete-FAIL');
+      return false;
 
     } catch (Exception $e) {
       throw $e;

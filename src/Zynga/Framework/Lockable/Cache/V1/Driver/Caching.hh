@@ -61,16 +61,21 @@ class Caching extends FactoryDriverBase implements DriverInterface {
       $lockKey =
         $this->getKeyCache()->getCachableLockKeyForStorableObject($obj);
 
-      var_dump($lockKey);
       $alreadyLocked = $this->_locks->get($lockKey);
 
       // if our own lock has expired through neglect then its time to re-add it.
       if ($alreadyLocked instanceof LockPayloadInterface) {
+
+        // Check if the lock is still valid, if so we are done.
         if ($alreadyLocked->isLockStillValid(
               $this->getConfig()->getLockTTL(),
             )) {
-          $this->_locks->remove($lockKey);
+          return true;
         }
+
+        // purge the key from the local map and allow us to establish a new lock.
+        $this->_locks->remove($lockKey);
+
       }
 
       $cache = $this->getConfig()->getCache();
@@ -118,6 +123,10 @@ class Caching extends FactoryDriverBase implements DriverInterface {
       $cache = $this->getConfig()->getCache();
 
       $deleteResult = $cache->delete($obj, $lockKey);
+
+      error_log('JEO deleteResult='.var_export($deleteResult, true));
+
+      $this->_locks->remove($lockKey);
 
       if ($deleteResult === true) {
         return true;
@@ -255,12 +264,19 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
       $deleteState = $cache->delete($obj, $cacheKey);
 
+      error_log('JEO DELETE failure? deleteStat='.$deleteState);
+
       // Failed to delete the object from cache, we shouldn't release the lock.
       if ($deleteState != true) {
+        error_log(
+          'JEO DELETE deleteState != true deleteState='.
+          var_export($deleteState, true),
+        );
         return false;
       }
 
       // Purge the lock as the object is now removed also.
+      error_log('JEO DELETE attemptingToUnlock lockKey='.$lockKey);
       return $this->unlock($obj);
 
     } catch (Exception $e) {

@@ -13,11 +13,21 @@ use
 ;
 use Zynga\Framework\PgData\V1\Exceptions\PgRowInterfaceRequiredException;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
+use Zynga\Framework\PgData\V1\PgModel\Stats;
 use Zynga\Framework\PgData\V1\SqlGenerator;
 
 use \Exception;
 
 abstract class PgModel {
+  private Stats $_stats;
+
+  public function __construct() {
+    $this->_stats = new Stats();
+  }
+
+  public function stats(): Stats {
+    return $this->_stats;
+  }
 
   abstract public function getReadDatabaseName(): string;
 
@@ -104,8 +114,11 @@ abstract class PgModel {
       $cachedObj = $cache->get($obj, $getLocked); // This will apply the lock if asked for.
 
       if ($cachedObj instanceof PgRowInterface) {
+        $this->stats()->incrementCacheHits();
         return $cachedObj;
       }
+
+      $this->stats()->incrementCacheMisses();
 
       // 3) Create sql for the ask to the db.
       $where = new WhereClause();
@@ -119,19 +132,36 @@ abstract class PgModel {
       // 5) Run the query against the database.
       $sth = $dbh->query($sql);
 
-      if ($sth->wasSuccessful() === true && $sth->getNumRows() == 1) {
+      $this->stats()->incrementSqlSelects();
 
-        $this->hydrateDataToRowObject($obj, $sth->fetchMap());
+      $wasSuccessful = $sth->wasSuccessful();
+      $rowCount = $sth->getNumRows();
+
+      error_log(
+        'query wasSuccessful='.
+        var_export($wasSuccessful, true).
+        ' rowCount='.
+        var_export($rowCount, true),
+      );
+
+      if ($wasSuccessful == true) { // && $rowCount == 1) {
+
+        $rawRow = $sth->fetchMap();
+        error_log('attemptToHydrateRow='.var_export($rawRow, true));
+        $this->hydrateDataToRowObject($obj, $rawRow);
 
         $cache->set($obj);
 
         return $obj;
 
       }
-
+      error_log('getByid return null');
       return null;
 
     } catch (Exception $e) {
+      error_log(
+        'caughtException e='.$e->getMessage().' eClass='.get_class($e),
+      );
       throw $e;
     }
 

@@ -6,7 +6,10 @@ use Zynga\Framework\Cache\V2\Factory as CacheFactory;
 use Zynga\Framework\Database\V2\Factory as DatabaseFactory;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\Lockable\Cache\V1\Factory as LockableCacheFactory;
-
+use
+  Zynga\Framework\Lockable\Cache\V1\Interfaces\DriverInterface as LockableCacheDriverInterface
+;
+use Zynga\Framework\PgData\V1\PgModel;
 use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\InventoryModel;
 use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\Inventory\ItemType;
 
@@ -17,18 +20,56 @@ class InventoryModelTest extends TestCase {
     parent::doSetUpBeforeClass();
 
     CacheFactory::disableMockDrivers();
+    CacheFactory::clear();
+
     DatabaseFactory::disableMockDrivers();
+    DatabaseFactory::clear();
+
     LockableCacheFactory::disableMockDrivers();
+    LockableCacheFactory::clear();
 
     return true;
 
   }
 
-  // public function doTearDownAfterClass(): bool {
-  //   CacheFactory::enableMockDrivers();
-  //   DatabaseFactory::enableMockDrivers();
-  //   return true;
-  // }
+  public function doTearDownAfterClass(): bool {
+
+    CacheFactory::enableMockDrivers();
+    CacheFactory::clear();
+
+    DatabaseFactory::enableMockDrivers();
+    DatabaseFactory::clear();
+
+    LockableCacheFactory::enableMockDrivers();
+    LockableCacheFactory::clear();
+
+    return true;
+  }
+
+  private function removeCachedItem(int $id): void {
+
+    $lmc = LockableCacheFactory::factory(
+      LockableCacheDriverInterface::class,
+      'PgDataTest',
+    );
+
+    $obj = new ItemType();
+    $obj->id->set($id);
+
+    $lmc->delete($obj);
+
+  }
+
+  private function validateModelStats(
+    PgModel $model,
+    int $cacheHits,
+    int $cacheMisses,
+    int $sqlSelectCount,
+  ): void {
+    $this->assertEquals($cacheHits, $model->stats()->getCacheHits());
+    $this->assertEquals($cacheMisses, $model->stats()->getCacheMisses());
+    $this->assertEquals($sqlSelectCount, $model->stats()->getSqlSelects());
+  }
 
   public function testInventory_GetById(): void {
 
@@ -40,6 +81,10 @@ class InventoryModelTest extends TestCase {
     $id = 12387451;
     $name = 'this-is-a-test-valueset-1';
 
+    // As a cleanup step, we need to purge LMC from reading this item again.
+    $this->removeCachedItem($id);
+
+    // This trip should hit the database.
     $oneType = $inventory->getById(ItemType::class, $id);
 
     $this->assertInstanceOf(ItemType::class, $oneType);
@@ -47,9 +92,18 @@ class InventoryModelTest extends TestCase {
     if ($oneType instanceof ItemType) {
       $this->assertEquals($id, $oneType->id->get());
       $this->assertEquals($name, $oneType->name->get());
+      $this->validateModelStats($inventory, 0, 1, 1);
+
     } else {
       $this->fail('type returned should of been ItemType');
     }
+
+    // Cleanup after ourselves.
+    $this->removeCachedItem($id);
+
+  }
+
+  public function testInventory_GetAll(): void {
 
   }
 

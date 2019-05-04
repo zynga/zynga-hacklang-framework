@@ -46,6 +46,7 @@ class SqlGenerator {
       $sql =
         'SELECT '.implode(', ', $selectFields).' FROM '.$tableName.$whereSql;
 
+      error_log('selectSql='.$sql);
       return $sql;
 
     } catch (Exception $e) {

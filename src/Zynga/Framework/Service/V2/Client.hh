@@ -6,9 +6,7 @@ use \ReflectionClass;
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Service\V2\Client\BatchContainer;
 use Zynga\Framework\Service\V2\Client\CurlOpts;
-use
-  Zynga\Framework\Service\V2\Exceptions\InvalidServiceResponse as InvalidServiceResponseException
-;
+use Zynga\Framework\Service\V2\Exceptions\InvalidServiceResponseException;
 use Zynga\Framework\Service\V2\Interfaces\ClientInterface;
 use Zynga\Framework\Service\V2\Interfaces\RequestInterface;
 use Zynga\Framework\Service\V2\Interfaces\ResponseInterface;

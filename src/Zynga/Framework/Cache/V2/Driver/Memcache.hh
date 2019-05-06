@@ -58,6 +58,7 @@ class Memcache extends DriverBase {
       // add the host / port combinations to the memcache object, addserver
       //   always returns true as it lazy connects at use time.
       foreach ($serverPairs as $host => $port) {
+        error_log('addServer host='.$host.' port='.$port);
         $memcache->addserver($host, $port);
       }
 
@@ -71,23 +72,39 @@ class Memcache extends DriverBase {
 
   }
 
-  public function getByMap(
-    Map<string, mixed> $data,
-  ): ?StorableObjectInterface {
+  private function getKeySupportingOverride(
+    StorableObjectInterface $obj,
+    string $keyOverride,
+  ): string {
+
+    $key = $keyOverride;
+
+    if ($keyOverride == '') {
+      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+    }
+
+    return $key;
+
+  }
+
+  public function add(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): bool {
 
     try {
 
-      $className = $this->getConfig()->getStorableObjectName();
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
-      $obj = DynamicClassCreation::createClassByName($className, Vector {});
+      $this->connect();
 
-      if (!$obj instanceof StorableObjectInterface) {
-        throw new StorableObjectRequiredException('className='.$className);
+      $return = $this->_memcache->add($key, $obj);
+
+      if ($return == true) {
+        return true;
       }
 
-      $obj->import()->fromMap($data);
-
-      return $this->get($obj);
+      return false;
 
     } catch (Exception $e) {
       throw $e;
@@ -95,21 +112,32 @@ class Memcache extends DriverBase {
 
   }
 
-  public function get(StorableObjectInterface $obj): ?StorableObjectInterface {
+  public function get(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): ?StorableObjectInterface {
 
     try {
 
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
       $this->connect();
 
+      error_log(
+        'cache::get isCached get key='.
+        $key.
+        ' mc='.
+        get_class($this->_memcache),
+      );
       $data = $this->_memcache->get($key);
 
       // no data to work with.
       if ($data === false) {
+        error_log('cache::get isCached data=null rawData='.$data);
         return null;
       }
 
+      error_log('isCached data='.$data);
       $obj->import()->fromJSON($data);
 
       return $obj;
@@ -120,20 +148,40 @@ class Memcache extends DriverBase {
 
   }
 
-  public function set(StorableObjectInterface $obj): bool {
+  public function set(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): bool {
 
     try {
 
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
       $this->connect();
 
       $flags = 0;
 
-      $ttl = time() + $this->getConfig()->getTTL();
+      $ttl = $this->getConfig()->getTTL();
 
-      $success =
-        $this->_memcache->set($key, $obj->export()->asJSON(), $flags, $ttl);
+      $jsonValue = $obj->export()->asJSON();
+
+      var_dump($key);
+      $success = $this->_memcache->set($key, $jsonValue, $flags, $ttl);
+
+      error_log(
+        'isCached set key='.
+        $key.
+        ' jsonValue='.
+        $jsonValue.
+        ' success='.
+        var_export($jsonValue, true).
+        ' flags='.
+        $flags.
+        ' ttl='.
+        $ttl.
+        ' currentTime='.
+        time(),
+      );
 
       return $success;
 
@@ -143,39 +191,28 @@ class Memcache extends DriverBase {
 
   }
 
-  public function deleteByMap(Map<string, mixed> $data): bool {
+  public function delete(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): bool {
 
     try {
 
-      $className = $this->getConfig()->getStorableObjectName();
-
-      $obj = DynamicClassCreation::createClassByName($className, Vector {});
-
-      if (!$obj instanceof StorableObjectInterface) {
-        throw new StorableObjectRequiredException('className='.$className);
-      }
-
-      $obj->import()->fromMap($data);
-
-      return $this->delete($obj);
-
-    } catch (Exception $e) {
-      throw $e;
-    }
-
-  }
-
-  public function delete(StorableObjectInterface $obj): bool {
-
-    try {
-
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
       $this->connect();
 
       $success = $this->_memcache->delete($key);
 
-      return $success;
+      error_log('JEO MCDriver key='.$key.' delete='.var_export($success));
+
+      if ($success == 1) {
+        error_log('JEO MCDriver delete-AOK');
+        return true;
+      }
+
+      error_log('JEO MCDriver delete-FAIL');
+      return false;
 
     } catch (Exception $e) {
       throw $e;

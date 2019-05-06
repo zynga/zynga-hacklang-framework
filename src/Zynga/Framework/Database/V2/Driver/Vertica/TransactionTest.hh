@@ -2,26 +2,14 @@
 
 namespace Zynga\Framework\Database\V2\Driver\Vertica;
 
-use Zynga\Framework\Exception\V1\Exception;
-use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-
+use Zynga\Framework\Database\V2\Driver\Vertica;
 use Zynga\Framework\Database\V2\Factory as DatabaseFactory;
 use Zynga\Framework\Database\V2\Interfaces\DriverInterface;
-use Zynga\Framework\Database\V2\Driver\Vertica;
 use Zynga\Framework\Database\V2\Interfaces\ResultSetInterface;
+use Zynga\Framework\Database\V2\Test\Driver\Vertica\BadVertica;
+use Zynga\Framework\Database\V2\Test\Driver\Vertica\BadVerticaException;
 use Zynga\Framework\Factory\V2\Test\MockState as FactoryMockState;
-
-class BadVertica_Mock extends Vertica {
-
-  public function query(string $sql): ResultSetInterface {
-    throw new Exception('The world has ended');
-  }
-
-  public function nativeQuoteString(string $value): string {
-    throw new Exception('The quoting');
-  }
-
-}
+use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 class TransactionTest extends TestCase {
 
@@ -46,34 +34,40 @@ class TransactionTest extends TestCase {
     DatabaseFactory::clear();
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
   public function testBadVerticaBegin(): void {
+
     $driver =
       DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
-    $mock = new BadVertica_Mock($driver->getConfig());
+
+    $mock = new BadVertica($driver->getConfig());
+
+    $this->expectException(BadVerticaException::class);
     $mock->getTransaction()->begin();
+
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
   public function testBadVerticaCommit(): void {
+
     $driver =
       DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
-    $mock = new BadVertica_Mock($driver->getConfig());
+
+    $mock = new BadVertica($driver->getConfig());
+
+    $this->expectException(BadVerticaException::class);
     $mock->getTransaction()->commit();
+
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
   public function testBadVerticaRollback(): void {
+
     $driver =
       DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
-    $mock = new BadVertica_Mock($driver->getConfig());
+
+    $mock = new BadVertica($driver->getConfig());
+
+    $this->expectException(BadVerticaException::class);
     $mock->getTransaction()->rollback();
+
   }
 
 }

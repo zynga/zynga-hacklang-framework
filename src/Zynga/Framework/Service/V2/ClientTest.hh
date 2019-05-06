@@ -3,7 +3,7 @@
 namespace Zynga\Framework\Service\V2;
 
 use Zynga\Framework\Service\V2\Client;
-use Zynga\Framework\Service\V2\Exceptions\InvalidServiceResponse as InvalidServiceResponseException;
+use Zynga\Framework\Service\V2\Exceptions\InvalidServiceResponseException;
 use Zynga\Framework\Service\V2\Test\Request;
 use Zynga\Framework\Service\V2\Test\RequestNoRequired;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;

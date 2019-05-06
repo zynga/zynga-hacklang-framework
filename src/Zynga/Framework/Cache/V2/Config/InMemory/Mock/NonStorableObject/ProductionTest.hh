@@ -7,7 +7,7 @@ use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use
   Zynga\Framework\Cache\V2\Config\InMemory\Mock\NonStorableObject\Production as ConfigUnderTest
 ;
-
+use Zynga\Framework\Cache\V2\Exceptions\InvalidObjectForKeyCreationException;
 use
   Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject
 ;
@@ -31,23 +31,11 @@ class ProductionTest extends TestCase {
 
   }
 
-  public function testGetStorableObjectName(): void {
-
-    $config = $this->createConfigUnderTest();
-    $this->assertEquals(
-      ConfigUnderTest::class,
-      $config->getStorableObjectName(),
-    );
-
-  }
-
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
   public function testCreateKeyFromStorableObject_ExceptionWired(): void {
 
     $obj = new ValidExampleObjectRequiredFields();
     $config = $this->createConfigUnderTest();
+    $this->expectException(InvalidObjectForKeyCreationException::class);
     $key = $config->createKeyFromStorableObject($obj);
 
   }

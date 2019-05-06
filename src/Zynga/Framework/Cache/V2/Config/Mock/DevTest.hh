@@ -5,6 +5,7 @@ namespace Zynga\Framework\Cache\V2\Config\Mock;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 use Zynga\Framework\Cache\V2\Config\Mock\Dev as ConfigUnderTest;
+use Zynga\Framework\Cache\V2\Exceptions\InvalidObjectForKeyCreationException;
 
 use
   Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject
@@ -19,36 +20,24 @@ class DevTest extends TestCase {
     return new ConfigUnderTest();
   }
 
-  public function testGetStorableObjectName(): void {
-
-    $config = $this->createConfigUnderTest();
-    $this->assertEquals(
-      ValidExampleObject::class,
-      $config->getStorableObjectName(),
-    );
-
-  }
-
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
   public function testCreateKeyFromStorableObject_NotTheRightStorable(): void {
 
     $obj = new ValidExampleObjectRequiredFields();
 
     $config = $this->createConfigUnderTest();
+
+    $this->expectException(InvalidObjectForKeyCreationException::class);
     $key = $config->createKeyFromStorableObject($obj);
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
   public function testCreateKeyFromStorableObject_DefaultDataProvided(): void {
 
     $obj = new ValidExampleObject();
 
     $config = $this->createConfigUnderTest();
+
+    $this->expectException(InvalidObjectForKeyCreationException::class);
     $key = $config->createKeyFromStorableObject($obj);
 
   }
@@ -60,7 +49,7 @@ class DevTest extends TestCase {
 
     $config = $this->createConfigUnderTest();
     $key = $config->createKeyFromStorableObject($obj);
-    $this->assertEquals('lmc-ve-1234', $key);
+    $this->assertEquals('lmc-mock-dev-1234', $key);
 
   }
 

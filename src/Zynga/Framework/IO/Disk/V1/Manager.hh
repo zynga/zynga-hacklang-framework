@@ -5,6 +5,7 @@ namespace Zynga\Framework\IO\Disk\V1;
 use \Exception;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToCloseFileException;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToCreateDirectoryException;
+use Zynga\Framework\IO\Disk\V1\Exception\FailedToDeleteDirectoryException;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToDeleteFileException;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToOpenFileException;
 use Zynga\Framework\IO\Disk\V1\Exception\FailedToWriteToFileException;
@@ -59,7 +60,9 @@ class Manager implements DiskIOManagerInterface {
   public function deleteDirectory(string $path): void {
     try {
       if (!$this->rmdir($path)) {
-        throw new Exception("Failed to delete directory='$path'");
+        throw new FailedToDeleteDirectoryException(
+          "Failed to delete directory='$path'",
+        );
       }
     } catch (Exception $e) {
       // Not only might we throw our own exception above, but

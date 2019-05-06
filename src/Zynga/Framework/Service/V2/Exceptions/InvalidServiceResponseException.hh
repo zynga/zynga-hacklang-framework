@@ -7,4 +7,4 @@ use Zynga\Framework\Exception\V1\Exception;
 /**
  * Represents that an invalid service response was attempted to be used
  */
-class InvalidServiceResponse extends Exception {}
+class InvalidServiceResponseException extends Exception {}

@@ -44,7 +44,7 @@ abstract class Base extends ConfigBase {
   }
 
   public function getDriver(): string {
-    return 'GenericPDO';
+    return 'GenericPDO\Base';
   }
 
   /**

@@ -61,25 +61,6 @@ class InMemoryTest extends TestCase {
       $this->assertEquals($testString, $back->example_string->get());
     }
 
-    // try to pull it iva the map interface
-    $other = $cache->getByMap(Map {'example_uint64' => $testInt});
-
-    if ($other instanceof ValidStorableObject) {
-      $this->assertEquals($testInt, $other->example_uint64->get());
-      $this->assertEquals($testFloat, $other->example_float->get());
-      $this->assertEquals($testString, $other->example_string->get());
-
-      // now remove the thing we just put in.
-      $this->assertTrue($cache->delete($other));
-
-      $this->assertEquals(null, $cache->get($other));
-      $this->assertEquals(
-        null,
-        $cache->getByMap(Map {'example_uint64' => $testInt}),
-      );
-
-    }
-
     // now reinject the object back into the cache
     $this->assertTrue($cache->set($obj));
 
@@ -87,16 +68,7 @@ class InMemoryTest extends TestCase {
 
     if ($again instanceof ValidStorableObject) {
 
-      // now remove the thing we just put in.
-      $this->assertTrue(
-        $cache->deleteByMap(Map {'example_uint64' => $testInt}),
-      );
-
-      $this->assertEquals(null, $cache->get($again));
-      $this->assertEquals(
-        null,
-        $cache->getByMap(Map {'example_uint64' => $testInt}),
-      );
+      $this->assertTrue(true);
 
     }
 
@@ -138,26 +110,63 @@ class InMemoryTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Cache\V2\Exceptions\StorableObjectRequiredException
-   */
-  public function testGetByMap_StorableObjectRequired(): void {
-    $cache = CacheFactory::factory(
-      InMemoryDriver::class,
-      'InMemory_Mock_NonStorableObject',
-    );
-    $cache->getByMap(Map {'foo' => 'bar'});
+  public function testAdd_Valid(): void {
+
+    // stand up a normal, valid object.
+    $obj = new ValidStorableObject();
+    $obj->example_uint64->set(120330908743);
+
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+
+    // add the object into the cache.
+    $this->assertTrue($cache->add($obj));
+
+    // if this item is laready in the cache, it shouldn't be.
+    $this->assertFalse($cache->add($obj));
+
   }
 
   /**
-   * @expectedException Zynga\Framework\Cache\V2\Exceptions\StorableObjectRequiredException
+   * @expectedException Zynga\Framework\Exception\V1\Exception
    */
-  public function testDeleteByMap_StorableObjectRequired(): void {
-    $cache = CacheFactory::factory(
-      InMemoryDriver::class,
-      'InMemory_Mock_NonStorableObject',
-    );
-    $cache->deleteByMap(Map {'foo' => 'bar'});
+  public function testAdd_InvalidKeyCondition(): void {
+
+    // stand up a empty storable object
+    $obj = new ValidStorableObject();
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $cache->add($obj);
+
+  }
+
+  public function testGet_NotSetYet(): void {
+
+    // stand up a empty storable object
+    $obj = new ValidStorableObject();
+    $obj->example_uint64->set(12989745);
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $this->assertEquals(null, $cache->get($obj));
+
+  }
+
+  public function testDelete_Valid(): void {
+
+    // stand up a empty storable object
+    $obj = new ValidStorableObject();
+    $obj->example_uint64->set(12989745);
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $this->assertTrue($cache->set($obj));
+    $this->assertTrue($cache->delete($obj));
+
+  }
+
+  public function testDelete_NotSetYet(): void {
+
+    // stand up a empty storable object
+    $obj = new ValidStorableObject();
+    $obj->example_uint64->set(12989745);
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $this->assertFalse($cache->delete($obj));
+
   }
 
 }

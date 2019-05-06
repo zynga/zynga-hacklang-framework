@@ -26,23 +26,40 @@ class InMemory extends DriverBase {
     return $this->_config;
   }
 
-  public function getByMap(
-    Map<string, mixed> $data,
-  ): ?StorableObjectInterface {
+  private function getKeySupportingOverride(
+    StorableObjectInterface $obj,
+    string $keyOverride,
+  ): string {
+
+    $key = $keyOverride;
+
+    if ($keyOverride == '') {
+      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+    }
+
+    return $key;
+
+  }
+
+  public function add(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): bool {
 
     try {
 
-      $className = $this->getConfig()->getStorableObjectName();
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
-      $obj = DynamicClassCreation::createClassByName($className, Vector {});
+      $value = self::$data->get($key);
 
-      if (!$obj instanceof StorableObjectInterface) {
-        throw new StorableObjectRequiredException('className='.$className);
+      // mimic the atomic lock of memcache, if there's a value it's already set.
+      if ($value !== null) {
+        return false;
       }
 
-      $obj->import()->fromMap($data);
+      self::$data->set($key, $obj);
 
-      return $this->get($obj);
+      return true;
 
     } catch (Exception $e) {
       throw $e;
@@ -50,11 +67,15 @@ class InMemory extends DriverBase {
 
   }
 
-  public function get(StorableObjectInterface $obj): ?StorableObjectInterface {
+  public function get(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): ?StorableObjectInterface {
 
     try {
 
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
+
       $storableObject = self::$data->get($key);
 
       // no data to work with.
@@ -70,11 +91,14 @@ class InMemory extends DriverBase {
 
   }
 
-  public function set(StorableObjectInterface $obj): bool {
+  public function set(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): bool {
 
     try {
 
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
       self::$data->set($key, $obj);
       $storableObject = self::$data->get($key);
@@ -87,37 +111,24 @@ class InMemory extends DriverBase {
 
   }
 
-  public function deleteByMap(Map<string, mixed> $data): bool {
+  public function delete(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): bool {
 
     try {
 
-      $className = $this->getConfig()->getStorableObjectName();
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
-      $obj = DynamicClassCreation::createClassByName($className, Vector {});
+      $data = self::$data->get($key);
 
-      if (!$obj instanceof StorableObjectInterface) {
-        throw new StorableObjectRequiredException('className='.$className);
+      if (!$data instanceof StorableObjectInterface) {
+        return false;
       }
 
-      $obj->import()->fromMap($data);
-
-      return $this->delete($obj);
-
-    } catch (Exception $e) {
-      throw $e;
-    }
-
-  }
-
-  public function delete(StorableObjectInterface $obj): bool {
-
-    try {
-
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
       self::$data->remove($key);
-      $success = !self::$data->contains($key);
 
-      return $success;
+      return true;
 
     } catch (Exception $e) {
       throw $e;

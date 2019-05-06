@@ -4,8 +4,6 @@ namespace Zynga\Framework\Database\V2\Driver\Mock;
 
 use Zynga\Framework\Database\V2\Interfaces\DriverInterface;
 use Zynga\Framework\Database\V2\Interfaces\QuoteInterface;
-use Zynga\Type\V1\SnidBox;
-use Zynga\Type\V1\UidBox;
 
 class Quoter implements QuoteInterface {
   private DriverInterface $_dbh;

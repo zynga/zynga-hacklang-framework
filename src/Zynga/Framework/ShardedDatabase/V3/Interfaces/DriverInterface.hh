@@ -17,8 +17,7 @@ interface DriverInterface<TType as TypeInterface> extends FactoryDriverInterface
    * snid to be passed to queries, and the quoting interfaces.
    * [Only used on drivers that are sharded by sn]
    *
-   * @param SnidBox $sn
-   * @param UidBox $uid
+   * @param TType $shardType
    * @return bool
    */
   public function setShardType(TType $shardType): bool;
@@ -27,7 +26,7 @@ interface DriverInterface<TType as TypeInterface> extends FactoryDriverInterface
    * Return the current default sn/uid for this driver.
    * [Only used on drivers that are sharded by sn]
    *
-   * @return tuple(SnidBox, UidBox) sn, uid
+   * @return TType $shardType 
    */
   public function getShardType(): TType;
 

@@ -19,87 +19,14 @@ use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
 
 class FactoryTest extends TestCase {
 
-  // public function test_loadResultsForTest_FileNotExist(): void {
-  //   $this->expectException(LoadTestDataNoFileFoundException::class);
-  //   DatabaseFactory::loadResultsForTest(DatabaseFactory::class, __FUNCTION__);
-  // }
-  //
-  // public function testGetRead(): void {
-  //   $dbh =
-  //     DatabaseFactory::getRead(SnidBoxFactory::facebook(), new UidBox(1));
-  //   $this->assertTrue($dbh instanceof DriverInterface);
-  // }
-  //
-  // public function test_GetRead_Sn_Failure(): void {
-  //   $this->expectException(
-  //     FailedToImportInvalidSocialNetworkException::class,
-  //   );
-  //   $dbh = DatabaseFactory::getRead(new SnidBox(0), new UidBox(1));
-  //   // $dbh->query('SELECT * FROM dual');
-  // }
-  //
-  // public function testGetRead_Uid_Failure(): void {
-  //   $this->expectException(MissingUserIdException::class);
-  //   $dbh =
-  //     DatabaseFactory::getRead(SnidBoxFactory::facebook(), new UidBox(0));
-  //   // $dbh->query('SELECT * FROM dual');
-  // }
-  //
-  // public function testGetWrite(): void {
-  //   $dbh =
-  //     DatabaseFactory::getWrite(SnidBoxFactory::facebook(), new UidBox(1));
-  //   $this->assertTrue($dbh instanceof DriverInterface);
-  // }
-  //
-  // public function testGetWrite_Sn_Failure(): void {
-  //   $this->expectException(
-  //     FailedToImportInvalidSocialNetworkException::class,
-  //   );
-  //   $dbh = DatabaseFactory::getWrite(new SnidBox(0), new UidBox(1));
-  //   // $dbh->query('SELECT * FROM dual');
-  // }
-  //
-  // public function testGetWrite_Uid_Failure(): void {
-  //   $this->expectException(MissingUserIdException::class);
-  //   $dbh =
-  //     DatabaseFactory::getWrite(SnidBoxFactory::facebook(), new UidBox(0));
-  //   // $dbh->query('SELECT * FROM dual');
-  // }
-  //
-  // public function testGetReadIterator(): void {
-  //   $readIterator =
-  //     DatabaseFactory::getReadIterator(SnidBoxFactory::facebook());
-  //   $this->assertTrue($readIterator instanceof DriverIterator);
-  // }
-  //
-  // public function testGetSexyRead(): void {
-  //   $dbh =
-  //     DatabaseFactory::getSexyRead(SnidBoxFactory::facebook(), new UidBox(1));
-  //   $this->assertTrue($dbh instanceof DriverInterface);
-  // }
-  //
-  // public function testGetSexyWrite(): void {
-  //   $dbh = DatabaseFactory::getSexyWrite(
-  //     SnidBoxFactory::facebook(),
-  //     new UidBox(1),
-  //   );
-  //   $this->assertTrue($dbh instanceof DriverInterface);
-  // }
-  //
-  // public function testGetSexyGDPRRead(): void {
-  //   $dbh = DatabaseFactory::getSexyGDPRRead(
-  //     SnidBoxFactory::facebook(),
-  //     new UidBox(1),
-  //   );
-  //   $this->assertTrue($dbh instanceof DriverInterface);
-  // }
-  //
-  // public function testGetSexyGDPRWrite(): void {
-  //   $dbh = DatabaseFactory::getSexyGDPRWrite(
-  //     SnidBoxFactory::facebook(),
-  //     new UidBox(1),
-  //   );
-  //   $this->assertTrue($dbh instanceof DriverInterface);
-  // }
-
+  public function test_loadResultsForTest_FileNotExist(): void {
+    $this->expectException(LoadTestDataNoFileFoundException::class);
+    DatabaseFactory::loadResultsForTest(DatabaseFactory::class, __FUNCTION__);
+  }
+  
+  public function testGetRead(): void {
+    $dbh =
+      DatabaseFactory::getMockDriver();
+    $this->assertTrue($dbh instanceof DriverInterface);
+  }
 }

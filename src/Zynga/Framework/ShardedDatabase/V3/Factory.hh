@@ -30,20 +30,6 @@ class Factory extends FactoryBase {
   public static function getMockDriver(): DriverInterface<UInt64Box> {
     return self::getDriver('Mock', new UInt64Box(1));
   }
-
-  // TODO - can add this to poker-server later
-  // public static function getRead(string $configName, TType $shardType): DriverInterface<TType> {
-  //   return self::getDriver($configName, $shardType);
-  // }
-
-  //
-  // public static function getRead(SnidBox $sn, UidBox $uid): DriverInterface {
-  //   return self::getDriver('Read', $sn, $uid);
-  // }
-  //
-  // public static function getWrite(SnidBox $sn, UidBox $uid): DriverInterface {
-  //   return self::getDriver('Write', $sn, $uid);
-  // }
   
   public static function getIterator<TType as TypeInterface>(string $configName, TType $shardType): DriverIterable<TType> {
     $driver = self::getDriver($configName, $shardType);

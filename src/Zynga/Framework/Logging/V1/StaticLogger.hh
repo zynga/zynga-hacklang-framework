@@ -1,4 +1,4 @@
-<?hh // strict 
+<?hh // strict
 
 namespace Zynga\Framework\Logging\V1;
 
@@ -23,9 +23,9 @@ class StaticLogger {
     return $logger->critical($message, $data, $includeBacktrace);
   }
 
-  public static function error(string $message, Map<string, mixed> $data, bool $includeBacktrace = true, string $context = 'default'): bool {
+  public static function error(string $message, Map<string, mixed> $data, bool $includeBacktrace = true, string $context = 'default', float $sampleRate = 100.0): bool {
     $logger = LogFactory::factory(LoggerInterface::class, $context);
-    return $logger->error($message, $data, $includeBacktrace);
+    return $logger->error($message, $data, $includeBacktrace, $sampleRate);
   }
 
   public static function warning(string $message, Map<string, mixed> $data, bool $includeBacktrace = false, string $context = 'default'): bool {
@@ -37,7 +37,7 @@ class StaticLogger {
     $logger = LogFactory::factory(LoggerInterface::class, $context);
     return $logger->info($message, $data, $includeBacktrace);
   }
-  
+
   public static function debug(string $message, Map<string, mixed> $data, bool $includeBacktrace = false, string $context = 'default'): bool {
     $logger = LogFactory::factory(LoggerInterface::class, $context);
     return $logger->debug($message, $data, $includeBacktrace);

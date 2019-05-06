@@ -1,4 +1,4 @@
-<?hh // strict 
+<?hh // strict
 
 namespace Zynga\Framework\Logging\V1\Driver;
 
@@ -28,12 +28,12 @@ abstract class Base implements LoggerInterface, LoggerAdapterInterface {
   }
 
   public function exception(string $message, Map<string, mixed> $data, Exception $exception, bool $includeBacktrace = true): bool {
-   
+
     // Capture exception related information
     $data['exceptionClass']         = get_class($exception);
     $data['exceptionMessage']       = $exception->getMessage();
     $data['exceptionBacktrace']     = $exception->getTraceAsString();
-    
+
     return $this->_recordLogEntry(
       Level::ERROR,
       $message,
@@ -52,12 +52,13 @@ abstract class Base implements LoggerInterface, LoggerAdapterInterface {
     );
   }
 
-  public function error(string $message, Map<string, mixed> $data, bool $includeBacktrace = true): bool {
+  public function error(string $message, Map<string, mixed> $data, bool $includeBacktrace = true, float $sampleRate = 100.0): bool {
     return $this->_recordLogEntry(
       Level::ERROR,
       $message,
       $data,
-      $includeBacktrace
+      $includeBacktrace,
+      $sampleRate
     );
   }
 
@@ -79,7 +80,7 @@ abstract class Base implements LoggerInterface, LoggerAdapterInterface {
       $includeBacktrace
     );
   }
-  
+
   public function debug(string $message, Map<string, mixed> $data, bool $includeBacktrace = false): bool {
     return $this->_recordLogEntry(
       Level::DEBUG,
@@ -105,7 +106,11 @@ abstract class Base implements LoggerInterface, LoggerAdapterInterface {
     return $logString;
   }
 
-  private function _recordLogEntry(int $level, string $message, Map<string, mixed> $data, bool $includeBacktrace): bool {
+  private function _recordLogEntry(int $level, string $message, Map<string, mixed> $data, bool $includeBacktrace, float $sampleRate = 100.0): bool {
+
+    if ((mt_rand() / mt_getrandmax()) * 100.0 > $sampleRate) {
+      return false;
+    }
 
     if ( $this->_hideAllLogs === true ) {
       return false;

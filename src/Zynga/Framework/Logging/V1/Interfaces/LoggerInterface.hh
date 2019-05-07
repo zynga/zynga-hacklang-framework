@@ -1,4 +1,4 @@
-<?hh // strict 
+<?hh // strict
 
 namespace Zynga\Framework\Logging\V1\Interfaces;
 
@@ -12,7 +12,7 @@ interface LoggerInterface extends BaseDriverInterface {
   public function setHideAllLogs(bool $logState): bool;
   public function exception(string $message, Map<string, mixed> $data, Exception $exception, bool $includeBacktrace = true): bool;
   public function critical(string $message, Map<string, mixed> $data, bool $includeBacktrace = true): bool;
-  public function error(string $message, Map<string, mixed> $data, bool $includeBacktrace = true): bool;
+  public function error(string $message, Map<string, mixed> $data, bool $includeBacktrace = true, float $sampleRate = 100.0): bool;
   public function warning(string $message, Map<string, mixed> $data, bool $includeBacktrace = false): bool;
   public function info(string $message, Map<string, mixed> $data, bool $includeBacktrace = false): bool;
   public function debug(string $message, Map<string, mixed> $data, bool $includeBacktrace = false): bool;

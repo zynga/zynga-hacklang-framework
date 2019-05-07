@@ -13,7 +13,7 @@ interface DriverConfigInterface extends ConfigInterface {
 
   /**
    *
-   * Return the appropriate cache object here.
+   * Return the appropriate cache object here, where data goes.
    *
    * @return CacheDriverInterface
    *
@@ -22,13 +22,12 @@ interface DriverConfigInterface extends ConfigInterface {
 
   /**
    *
-   * This creates the key that is passed down into your caching layer.
+   * Return the appropriate cache object here, where locks go.
    *
-   * @param string storableObjectKeyString
-   * @return string key
+   * @return CacheDriverInterface
    *
    */
-  public function createLockKeyFromStorableKey(string $obj): string;
+  public function getLockCache(): CacheDriverInterface;
 
   /**
    *

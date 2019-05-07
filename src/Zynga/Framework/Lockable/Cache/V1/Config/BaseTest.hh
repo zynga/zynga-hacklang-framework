@@ -8,14 +8,6 @@ use Zynga\Framework\Lockable\Cache\V1\Interfaces\LockPayloadInterface;
 
 class BaseTest extends TestCase {
 
-  public function testCreateLockKeyFromStorableKey(): void {
-    $obj = new Dev();
-    $this->assertEquals(
-      'test-value:lock',
-      $obj->createLockKeyFromStorableKey('test-value'),
-    );
-  }
-
   public function testPayloadObject(): void {
     $obj = new Dev();
 

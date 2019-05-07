@@ -11,23 +11,6 @@ abstract class Base implements DriverConfigInterface {
 
   /**
    *
-   * This creates the key that is passed down into your caching layer.
-   *
-   * @param StorableObjectInterface obj
-   * @return string key
-   *
-   */
-  public function createLockKeyFromStorableKey(string $objKey): string {
-
-    $cache = $this->getCache();
-
-    $lockKey = $objKey.':lock';
-    return $lockKey;
-
-  }
-
-  /**
-   *
    * Most implementations use the default LockPayload, but you can overload it
    * if needed.
    *

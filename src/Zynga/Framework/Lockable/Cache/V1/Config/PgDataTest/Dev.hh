@@ -26,6 +26,13 @@ class Dev extends Base {
     );
   }
 
+  public function getLockCache(): CacheDriverInterface {
+    return CacheFactory::factory(
+      CacheDriverInterface::class,
+      'LocalMemcache\PgDataLocksTest',
+    );
+  }
+
   public function getDriver(): string {
     return 'Caching';
   }

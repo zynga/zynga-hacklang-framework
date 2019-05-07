@@ -21,7 +21,10 @@ class StorableToKeyCacheEntry {
         ->createKeyFromStorableObject($obj);
 
     $this->_lockKey =
-      $driver->getConfig()->createLockKeyFromStorableKey($this->_key);
+      $driver->getConfig()
+        ->getLockCache()
+        ->getConfig()
+        ->createKeyFromStorableObject($obj);
 
   }
 

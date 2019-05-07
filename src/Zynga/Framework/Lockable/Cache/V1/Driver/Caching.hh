@@ -78,11 +78,11 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
       }
 
-      $cache = $this->getConfig()->getCache();
+      $lockCache = $this->getConfig()->getLockCache();
 
       $lockPayload = $this->getConfig()->getPayloadObject();
 
-      $addResult = $cache->add($lockPayload, $lockKey);
+      $addResult = $lockCache->add($lockPayload, $lockKey);
 
       if ($addResult === true) {
         $this->_locks->set($lockKey, $lockPayload);
@@ -120,9 +120,9 @@ class Caching extends FactoryDriverBase implements DriverInterface {
         return true;
       }
 
-      $cache = $this->getConfig()->getCache();
+      $lockCache = $this->getConfig()->getLockCache();
 
-      $deleteResult = $cache->delete($obj, $lockKey);
+      $deleteResult = $lockCache->delete($obj, $lockKey);
 
       error_log('JEO deleteResult='.var_export($deleteResult, true));
 

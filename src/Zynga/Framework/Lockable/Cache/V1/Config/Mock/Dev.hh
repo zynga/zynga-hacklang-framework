@@ -23,6 +23,10 @@ class Dev extends Base {
     return CacheFactory::factory(CacheDriverInterface::class, 'Mock');
   }
 
+  public function getLockCache(): CacheDriverInterface {
+    return CacheFactory::factory(CacheDriverInterface::class, 'MockLock');
+  }
+
   public function getDriver(): string {
     return 'Caching';
   }

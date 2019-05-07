@@ -12,4 +12,7 @@ interface DriverConfigInterface extends ConfigInterface {
     StorableObjectInterface $obj,
   ): string;
   public function getTTL(): int;
+  public function cacheAllowsKeyOverride(): bool;
+  public function cacheAllowsTTLOverride(): bool;
+  public function cacheAllowsNonExpiringKeys(): bool;
 }

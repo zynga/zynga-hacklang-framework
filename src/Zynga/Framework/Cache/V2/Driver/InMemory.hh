@@ -26,29 +26,16 @@ class InMemory extends DriverBase {
     return $this->_config;
   }
 
-  private function getKeySupportingOverride(
-    StorableObjectInterface $obj,
-    string $keyOverride,
-  ): string {
-
-    $key = $keyOverride;
-
-    if ($keyOverride == '') {
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
-    }
-
-    return $key;
-
-  }
-
   public function add(
     StorableObjectInterface $obj,
     string $keyOverride = '',
+    int $ttlOverride = -1,
   ): bool {
 
     try {
 
       $key = $this->getKeySupportingOverride($obj, $keyOverride);
+      $ttl = $this->getTTLSupportingOverride($ttlOverride);
 
       $value = self::$data->get($key);
 
@@ -94,11 +81,13 @@ class InMemory extends DriverBase {
   public function set(
     StorableObjectInterface $obj,
     string $keyOverride = '',
+    int $ttlOverride = -1,
   ): bool {
 
     try {
 
       $key = $this->getKeySupportingOverride($obj, $keyOverride);
+      $ttl = $this->getTTLSupportingOverride($ttlOverride);
 
       self::$data->set($key, $obj);
       $storableObject = self::$data->get($key);

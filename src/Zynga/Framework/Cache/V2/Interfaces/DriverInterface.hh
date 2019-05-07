@@ -24,11 +24,13 @@ interface DriverInterface extends BaseDriverInterface {
    *
    * @param StorableObjectInterface $obj The object you want stored
    * @param string $keyOverride The string key you would like to store to in the case that config createStorableKey is needing to be overridden.
+   * @param int $ttlOverride The ttl you would like used for this key.
    * @return bool success
    */
   public function add(
     StorableObjectInterface $obj,
     string $keyOverride = '',
+    int $ttlOverride = -1,
   ): bool;
 
   /**
@@ -51,11 +53,13 @@ interface DriverInterface extends BaseDriverInterface {
    *
    * @param StorableObjectInterface $obj The object you want stored
    * @param string $keyOverride The string key you would like to store to in the case that config createStorableKey is needing to be overridden.
+   * @param int $ttlOverride The ttl you would like used for this key.
    * @return bool success
    */
   public function set(
     StorableObjectInterface $obj,
     string $keyOverride = '',
+    int $ttlOverride = -1,
   ): bool;
 
   /**

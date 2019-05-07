@@ -72,33 +72,23 @@ class Memcache extends DriverBase {
 
   }
 
-  private function getKeySupportingOverride(
-    StorableObjectInterface $obj,
-    string $keyOverride,
-  ): string {
-
-    $key = $keyOverride;
-
-    if ($keyOverride == '') {
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
-    }
-
-    return $key;
-
-  }
-
   public function add(
     StorableObjectInterface $obj,
     string $keyOverride = '',
+    int $ttlOverride = -1,
   ): bool {
 
     try {
 
       $key = $this->getKeySupportingOverride($obj, $keyOverride);
+      $ttl = $this->getTTLSupportingOverride($ttlOverride);
 
       $this->connect();
 
-      $return = $this->_memcache->add($key, $obj);
+      $jsonValue = $obj->export()->asJSON();
+
+      $flags = 0;
+      $return = $this->_memcache->add($key, $jsonValue, $flags, $ttl);
 
       if ($return == true) {
         return true;
@@ -129,6 +119,7 @@ class Memcache extends DriverBase {
         ' mc='.
         get_class($this->_memcache),
       );
+
       $data = $this->_memcache->get($key);
 
       // no data to work with.
@@ -151,21 +142,21 @@ class Memcache extends DriverBase {
   public function set(
     StorableObjectInterface $obj,
     string $keyOverride = '',
+    int $ttlOverride = -1,
   ): bool {
 
     try {
 
       $key = $this->getKeySupportingOverride($obj, $keyOverride);
+      $ttl = $this->getTTLSupportingOverride($ttlOverride);
 
       $this->connect();
-
-      $flags = 0;
-
-      $ttl = $this->getConfig()->getTTL();
 
       $jsonValue = $obj->export()->asJSON();
 
       var_dump($key);
+
+      $flags = 0;
       $success = $this->_memcache->set($key, $jsonValue, $flags, $ttl);
 
       error_log(

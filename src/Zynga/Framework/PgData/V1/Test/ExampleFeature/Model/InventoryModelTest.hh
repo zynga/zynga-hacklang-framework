@@ -12,6 +12,8 @@ use
 use Zynga\Framework\PgData\V1\PgModel;
 use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\InventoryModel;
 use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\Inventory\ItemType;
+use Zynga\Framework\PgData\V1\WhereClause;
+use Zynga\Framework\PgData\V1\WhereOperand;
 
 class InventoryModelTest extends TestCase {
 
@@ -98,12 +100,168 @@ class InventoryModelTest extends TestCase {
       $this->fail('type returned should of been ItemType');
     }
 
+    // Run the same get again, it should be cached.
+    $twoType = $inventory->getById(ItemType::class, $id);
+
+    if ($twoType instanceof ItemType) {
+      $this->assertEquals($id, $twoType->id->get());
+      $this->assertEquals($name, $twoType->name->get());
+      $this->validateModelStats($inventory, 1, 1, 1);
+
+    } else {
+      $this->fail('type returned should of been ItemType');
+    }
+
     // Cleanup after ourselves.
     $this->removeCachedItem($id);
 
   }
 
+  public function testInventory_GetById_NoRows(): void {
+
+    $inventory = new InventoryModel();
+
+    // --
+    // Read a simple item off the db.
+    // --
+    $id = 0;
+
+    // As a cleanup step, we need to purge LMC from reading this item again.
+    $this->removeCachedItem($id);
+
+    // This trip should hit the database.
+    $oneType = $inventory->getById(ItemType::class, $id);
+
+    $this->assertEquals(null, $oneType);
+    $this->validateModelStats($inventory, 0, 1, 1);
+
+    // Run the same get again, it should be not be cached.
+    $twoType = $inventory->getById(ItemType::class, $id);
+
+    $this->assertEquals(null, $twoType);
+    $this->validateModelStats($inventory, 0, 2, 2);
+
+    // Cleanup after ourselves.
+    $this->removeCachedItem($id);
+
+  }
+
+  private function doesQueryReturnExpectedValues(
+    Vector<Map<string, mixed>> $expectedResultToInclude,
+    ?WhereClause $where = null,
+  ): void {
+
+    // TODO: replace with factory.
+    $inventory = new InventoryModel();
+
+    $resultSet = $inventory->get(ItemType::class, $where);
+
+    foreach ($expectedResultToInclude as $expectedResult) {
+
+      $foundExpected = false;
+      foreach ($resultSet->items() as $resultObj) {
+        if (!$resultObj instanceof ItemType) {
+          continue;
+        }
+        if ($resultObj->id->get() == $expectedResult['id'] &&
+            $resultObj->name->get() == $expectedResult['name']) {
+          $foundExpected = true;
+          $this->assertEquals($expectedResult['id'], $resultObj->id->get());
+          $this->assertEquals(
+            $expectedResult['name'],
+            $resultObj->name->get(),
+          );
+          break;
+        }
+      }
+
+      if ($foundExpected == false) {
+        $this->fail('Failed to find '.json_encode($expectedResult));
+      }
+
+    }
+
+  }
+
+  public function testInventory_EmptySet(): void {
+
+    $where = new WhereClause();
+    $where->and('id', WhereOperand::EQUALS, 0);
+
+    $inventory = new InventoryModel();
+    $result = $inventory->get(ItemType::class, $where);
+
+    $this->assertEquals(0, $result->count());
+
+  }
+
   public function testInventory_GetAll(): void {
+
+    // --
+    // JEO: This is a kind of special test in that we have 'known' data that has to
+    // be within the set, however if other people are adding or removing values within
+    // the table at the same time, we don't want a sporadic failure.
+    // --
+    // TODO: Remove result set cache.
+
+    // This is a get-all example, get all rows on this table.
+    $where = null; // normally you use: new WhereClause() and add clauses.
+
+    $expectedResultToInclude = Vector {};
+    $expectedResultToInclude->add(
+      Map {'id' => 12387451, 'name' => 'this-is-a-test-valueset-1'},
+    );
+    $expectedResultToInclude->add(
+      Map {'id' => 12387452, 'name' => 'this-is-a-test-valueset-2'},
+    );
+    $expectedResultToInclude->add(
+      Map {'id' => 12387453, 'name' => 'this-is-a-test-valueset-3'},
+    );
+    $expectedResultToInclude->add(
+      Map {'id' => 12387454, 'name' => 'this-is-a-test-valueset-4'},
+    );
+    $expectedResultToInclude->add(
+      Map {'id' => 12387455, 'name' => 'this-is-a-test-valueset-5'},
+    );
+
+    $this->doesQueryReturnExpectedValues($expectedResultToInclude, $where);
+
+    // TODO: Remove result set cache.
+
+  }
+
+  public function testInventory_EqualsTest(): void {
+
+    $where = new WhereClause();
+    $where->and('name', WhereOperand::EQUALS, 'this-is-a-test-valueset-3');
+
+    $expectedResultToInclude = Vector {};
+
+    $expectedResultToInclude->add(
+      Map {'id' => 12387453, 'name' => 'this-is-a-test-valueset-3'},
+    );
+
+    $this->doesQueryReturnExpectedValues($expectedResultToInclude, $where);
+
+  }
+
+  public function testInventory_GreaterThanTest(): void {
+
+    $where = new WhereClause();
+    $where->and('id', WhereOperand::GREATER_THAN, 12387452);
+    $where->and('id', WhereOperand::LESS_THAN, 12387455);
+
+    $expectedResultToInclude = Vector {};
+
+    $expectedResultToInclude->add(
+      Map {'id' => 12387453, 'name' => 'this-is-a-test-valueset-3'},
+    );
+
+    $expectedResultToInclude->add(
+      Map {'id' => 12387454, 'name' => 'this-is-a-test-valueset-4'},
+    );
+
+    $this->doesQueryReturnExpectedValues($expectedResultToInclude, $where);
 
   }
 

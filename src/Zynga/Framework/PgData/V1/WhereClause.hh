@@ -70,9 +70,12 @@ class WhereClause {
       }
 
       $sql .= $this->addOperandAndValue($dbh, $row, $pragma);
+
+      $offset++;
+
     }
 
-    error_log('where='.$sql);
+    error_log('JEO where='.$sql);
 
     return $sql;
 

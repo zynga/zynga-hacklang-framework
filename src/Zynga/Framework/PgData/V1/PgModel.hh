@@ -7,91 +7,108 @@ use Zynga\Framework\Database\V2\Factory as DatabaseFactory;
 use
   Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
 ;
-use Zynga\Framework\Lockable\Cache\V1\Factory as LockableCacheFactory;
-use
-  Zynga\Framework\Lockable\Cache\V1\Interfaces\DriverInterface as LockableDriverInterface
-;
+
 use Zynga\Framework\PgData\V1\Exceptions\PgRowInterfaceRequiredException;
+use Zynga\Framework\PgData\V1\Interfaces\PgModelInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgModel\CacheInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgModel\DataInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgModel\DbInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgModel\StatsInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
+use Zynga\Framework\PgData\V1\PgModel\Cache;
+use Zynga\Framework\PgData\V1\PgModel\Data;
+use Zynga\Framework\PgData\V1\PgModel\Db;
+use Zynga\Framework\PgData\V1\PgModel\Reader;
 use Zynga\Framework\PgData\V1\PgModel\Stats;
+use Zynga\Framework\PgData\V1\PgResultSet;
 use Zynga\Framework\PgData\V1\SqlGenerator;
 
 use \Exception;
 
-abstract class PgModel {
-  private Stats $_stats;
+abstract class PgModel implements PgModelInterface {
+  private ?CacheInterface $_cache = null;
+  private ?DataInterface $_data = null;
+  private ?DbInterface $_db = null;
+  private ?StatsInterface $_stats = null;
+  private ?Reader $_reader = null;
 
-  public function __construct() {
-    $this->_stats = new Stats();
+  public function cache(): CacheInterface {
+
+    $cache = $this->_cache;
+
+    if ($cache instanceof CacheInterface) {
+      return $cache;
+    }
+
+    $cache = new Cache($this);
+
+    $this->_cache = $cache;
+
+    return $cache;
+
   }
 
-  public function stats(): Stats {
+  public function data(): DataInterface {
+
+    $data = $this->_data;
+
+    if ($data instanceof DataInterface) {
+      return $data;
+    }
+
+    $data = new Data($this);
+
+    $this->_data = $data;
+
+    return $data;
+
+  }
+
+  public function db(): DbInterface {
+
+    $db = $this->_db;
+
+    if ($db instanceof DbInterface) {
+      return $db;
+    }
+
+    $db = new Db($this);
+
+    $this->_db = $db;
+
+    return $db;
+
+  }
+
+  public function reader(): Reader {
+
+    $reader = $this->_reader;
+
+    if ($reader instanceof Reader) {
+      return $reader;
+    }
+
+    $reader = new Reader($this);
+
+    $this->_reader = $reader;
+
+    return $this->_reader;
+
+  }
+
+  public function stats(): StatsInterface {
+
+    $stats = $this->_stats;
+
+    if ($stats instanceof StatsInterface) {
+      return $stats;
+    }
+
+    $stats = new Stats($this);
+
+    $this->_stats = $stats;
+
     return $this->_stats;
-  }
-
-  abstract public function getReadDatabaseName(): string;
-
-  abstract public function getWriteDatabaseName(): string;
-
-  abstract public function getCacheName(): string;
-
-  private function getReadDatabase(): DatabaseDriverInterface {
-    return DatabaseFactory::factory(
-      DatabaseDriverInterface::class,
-      $this->getReadDatabaseName(),
-    );
-  }
-
-  private function getWriteDatabase(): DatabaseDriverInterface {
-    return DatabaseFactory::factory(
-      DatabaseDriverInterface::class,
-      $this->getWriteDatabaseName(),
-    );
-  }
-
-  private function getLockableCache(): LockableDriverInterface {
-    return LockableCacheFactory::factory(
-      LockableDriverInterface::class,
-      $this->getCacheName(),
-    );
-  }
-
-  private function createRowObjectFromClassName<TModelClass as PgRowInterface>(
-    classname<TModelClass> $model,
-  ): PgRowInterface {
-
-    try {
-      $obj =
-        DynamicClassCreation::createClassByNameGeneric($model, Vector {});
-
-      if ($obj instanceof PgRowInterface) {
-        return $obj;
-      }
-
-      throw new PgRowInterfaceRequiredException('modelProvided='.$model);
-
-    } catch (Exception $e) {
-      throw $e;
-    }
-
-  }
-
-  private function createSql(PgRowInterface $row, WhereClause $where): string {
-    return
-      SqlGenerator::getSql($this->getReadDatabase(), $this, $row, $where);
-  }
-
-  private function hydrateDataToRowObject<TModelClass>(
-    mixed $obj,
-    Map<string, mixed> $rawData,
-  ): bool {
-
-    if ($obj instanceof PgRowInterface) {
-      return $obj->import()->fromMap($rawData);
-    }
-
-    return false;
-
   }
 
   public function getById<TModelClass as PgRowInterface>(
@@ -101,80 +118,33 @@ abstract class PgModel {
   ): ?PgRowInterface {
 
     try {
-
-      // 1) grab a copy of our object to work with.
-      $obj = $this->createRowObjectFromClassName($model);
-
-      // 2) Get a cached version of the object if possible.
-
-      $pk = $obj->getPrimaryKeyTyped();
-      $pk->set($id);
-
-      $cache = $this->getLockableCache();
-      $cachedObj = $cache->get($obj, $getLocked); // This will apply the lock if asked for.
-
-      if ($cachedObj instanceof PgRowInterface) {
-        $this->stats()->incrementCacheHits();
-        return $cachedObj;
-      }
-
-      $this->stats()->incrementCacheMisses();
-
-      // 3) Create sql for the ask to the db.
-      $where = new WhereClause();
-      $where->and($obj->getPrimaryKey(), WhereOperand::EQUALS, $id);
-
-      $sql = $this->createSql($obj, $where);
-
-      // 4) Get a database handle.
-      $dbh = $this->getReadDatabase();
-
-      // 5) Run the query against the database.
-      $sth = $dbh->query($sql);
-
-      $this->stats()->incrementSqlSelects();
-
-      $wasSuccessful = $sth->wasSuccessful();
-      $rowCount = $sth->getNumRows();
-
-      error_log(
-        'query wasSuccessful='.
-        var_export($wasSuccessful, true).
-        ' rowCount='.
-        var_export($rowCount, true),
-      );
-
-      if ($wasSuccessful == true) { // && $rowCount == 1) {
-
-        $rawRow = $sth->fetchMap();
-        error_log('attemptToHydrateRow='.var_export($rawRow, true));
-        $this->hydrateDataToRowObject($obj, $rawRow);
-
-        $cache->set($obj);
-
-        return $obj;
-
-      }
-      error_log('getByid return null');
-      return null;
-
+      return $this->reader()->getById($model, $id, $getLocked);
     } catch (Exception $e) {
-      error_log(
-        'caughtException e='.$e->getMessage().' eClass='.get_class($e),
-      );
       throw $e;
     }
 
   }
 
-  public function get<TModelClass>(
+  // As this can return a result set this doesn't let you lock all the tiems within
+  // a result set as the number of edge cases introduced by that logic is not wanted.
+  public function get<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     ?WhereClause $where = null,
-    bool $getLocked = false,
-  ): Vector<TModelClass> {
-    $data = Vector {};
-    return $data;
+  ): PgResultSet<PgRowInterface> {
+
+    try {
+      return $this->reader()->get($model, $where);
+    } catch (Exception $e) {
+      throw $e;
+    }
+
   }
+
+  abstract public function getDataCacheName(): string;
+
+  abstract public function getReadDatabaseName(): string;
+
+  abstract public function getWriteDatabaseName(): string;
 
 }
 

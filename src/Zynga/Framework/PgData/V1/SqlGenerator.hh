@@ -6,6 +6,7 @@ use
   Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
 ;
 use Zynga\Framework\PgData\V1\Exceptions\NoFieldsOnObjectException;
+use Zynga\Framework\PgData\V1\Interfaces\PgModelInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\WhereClause;
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
@@ -14,9 +15,9 @@ use \Exception;
 
 class SqlGenerator {
 
-  public static function getSql(
+  public static function getSelectSql(
     DatabaseDriverInterface $dbh,
-    PgModel $model,
+    PgModelInterface $model,
     PgRowInterface $obj,
     WhereClause $where,
   ): string {

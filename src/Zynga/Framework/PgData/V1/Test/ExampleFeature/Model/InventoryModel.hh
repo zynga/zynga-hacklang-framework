@@ -6,7 +6,7 @@ use Zynga\Framework\PgData\V1\PgModel;
 
 class InventoryModel extends PgModel {
 
-  public function getCacheName(): string {
+  public function getDataCacheName(): string {
     return 'PgDataTest';
   }
 

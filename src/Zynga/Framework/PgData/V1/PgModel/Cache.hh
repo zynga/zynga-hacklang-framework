@@ -33,4 +33,16 @@ class Cache implements CacheInterface {
     }
   }
 
+  public function getResultSetCache(): LockableDriverInterface {
+    try {
+      $pgModel = $this->pgModel();
+      return LockableCacheFactory::factory(
+        LockableDriverInterface::class,
+        $pgModel->getResultSetCacheName(),
+      );
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
 }

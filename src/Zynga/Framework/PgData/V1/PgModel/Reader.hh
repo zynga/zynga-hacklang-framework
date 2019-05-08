@@ -4,13 +4,15 @@ namespace Zynga\Framework\PgData\V1\PgModel;
 
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\PgData\V1\Interfaces\PgModelInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgResultSetInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;
 use Zynga\Framework\PgData\V1\PgModel;
 use Zynga\Framework\PgData\V1\PgModel\Reader\GetById;
+use Zynga\Framework\PgData\V1\PgModel\SqlGenerator;
 use Zynga\Framework\PgData\V1\PgResultSet;
-use Zynga\Framework\PgData\V1\SqlGenerator;
-use Zynga\Framework\PgData\V1\WhereClause;
-use Zynga\Framework\PgData\V1\WhereOperand;
+use Zynga\Framework\PgData\V1\PgWhereClause;
+use Zynga\Framework\PgData\V1\PgWhereOperand;
 
 class Reader {
 
@@ -24,7 +26,10 @@ class Reader {
     return $this->_pgModel;
   }
 
-  private function createSql(PgRowInterface $row, WhereClause $where): string {
+  private function createSql(
+    PgRowInterface $row,
+    PgWhereClauseInterface $where,
+  ): string {
     try {
       $pgModel = $this->pgModel();
       return SqlGenerator::getSelectSql(
@@ -72,8 +77,8 @@ class Reader {
       // apply a lock while we deal with sql / databases.
       $cache->lock($obj);
 
-      $where = new WhereClause();
-      $where->and($obj->getPrimaryKey(), WhereOperand::EQUALS, $id);
+      $where = new PgWhereClause();
+      $where->and($obj->getPrimaryKey(), PgWhereOperand::EQUALS, $id);
 
       $sql = $this->createSql($obj, $where);
 
@@ -128,11 +133,11 @@ class Reader {
     }
   }
 
-  // As this can return a result set this doesn't let you lock all the tiems within
+  // As this can return a result set this doesn't let you lock all the items within
   // a result set as the number of edge cases introduced by that logic is not wanted.
   public function get<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
-    ?WhereClause $where = null,
+    ?PgWhereClauseInterface $where = null,
   ): PgResultSet<PgRowInterface> {
 
     try {
@@ -140,16 +145,25 @@ class Reader {
       $pgModel = $this->pgModel();
 
       if ($where == null) {
-        $where = new WhereClause();
+        $where = new PgWhereClause();
       }
 
-      // TODO: Fetch us a cached version of the dataset.
-      //$cachedResultSet = $cache->get($where);
-      // if ( $cachedResultSet instanceof ResultSet ) {
-      //   return $cachedResultSet;
-      // }
+      $cache = $pgModel->cache()->getResultSetCache();
 
-      // $cache->lock($where);
+      // TODO: Fetch us a cached version of the dataset.
+      $data = new PgResultSet($model, $where);
+
+      // --
+      // As we don't know how big the result set might be and don't want to have spanning locks.
+      // we don't allow the end developer to lock on get.
+      // --
+      $cachedResultSet = $cache->get($data, false);
+
+      if ($cachedResultSet instanceof PgResultSet) {
+        return $cachedResultSet;
+      }
+
+      $cache->lock($data);
 
       $tobj = $pgModel->data()->createRowObjectFromClassName($model);
       $sql = $this->createSql($tobj, $where);
@@ -175,8 +189,6 @@ class Reader {
 
       if ($wasSuccessful == true && $rowCount > 0) {
 
-        $data = new PgResultSet($model);
-
         while ($sth->hasMore() === true) {
 
           $sth->next();
@@ -193,10 +205,12 @@ class Reader {
 
         }
 
-        // $cache->set($obj);
+        // save the data to the caching layer
+        $cache->set($data);
 
         // explicitly unlock
-        //  $cache->unlock($where);
+        $cache->unlock($data);
+
         return $data;
 
       }
@@ -204,7 +218,7 @@ class Reader {
       // if the item is not found, unlock anyways.
       //   $cache->unlock($where);
       //
-      $data = new PgResultSet($model);
+      $data = new PgResultSet($model, $where);
       return $data;
 
     } catch (Exception $e) {

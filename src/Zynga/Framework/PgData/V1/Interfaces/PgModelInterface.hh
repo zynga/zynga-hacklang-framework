@@ -10,6 +10,7 @@ use Zynga\Framework\PgData\V1\Interfaces\PgModel\StatsInterface;
 interface PgModelInterface {
 
   public function getDataCacheName(): string;
+  public function getResultSetCacheName(): string;
   public function getReadDatabaseName(): string;
   public function getWriteDatabaseName(): string;
   public function cache(): CacheInterface;

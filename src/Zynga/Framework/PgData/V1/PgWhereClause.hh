@@ -9,42 +9,42 @@ use Zynga\Framework\PgData\V1\Exceptions\FailedToFindFieldOnObjectException;
 use Zynga\Framework\PgData\V1\Exceptions\UnsupportedOperandException;
 use Zynga\Framework\PgData\V1\Exceptions\UnsupportedValueTypeException;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
-use Zynga\Framework\PgData\V1\WhereOperand;
-use Zynga\Framework\PgData\V1\WhereOperand\FormatStrings;
-use Zynga\Framework\PgData\V1\WhereOperand\Pragma;
-use Zynga\Framework\PgData\V1\WhereOperand\PragmaType;
+use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;
+use Zynga\Framework\PgData\V1\PgWhereOperand;
+use Zynga\Framework\PgData\V1\PgWhereOperand\PgPragma;
+use Zynga\Framework\PgData\V1\PgWhereOperand\PgPragmaType;
 
 use \Exception;
 
-class WhereClause {
-  private Vector<Pragma> $_pragma;
+class PgWhereClause implements PgWhereClauseInterface {
+  private Vector<PgPragma> $_pragmas;
 
   public function __construct() {
-    $this->_pragma = Vector {};
+    $this->_pragmas = Vector {};
   }
 
   public function and(
     string $field,
-    WhereOperand $operand,
+    PgWhereOperand $operand,
     mixed $value,
   ): bool {
-    $pragma = new Pragma($field, $operand, $value, PragmaType::AND);
-    $this->_pragma->add($pragma);
+    $pragma = new PgPragma($field, $operand, $value, PgPragmaType::AND);
+    $this->_pragmas->add($pragma);
     return false;
   }
 
   public function or(
     string $field,
-    WhereOperand $operand,
+    PgWhereOperand $operand,
     mixed $value,
   ): bool {
-    $pragma = new Pragma($field, $operand, $value, PragmaType::AND);
-    $this->_pragma->add($pragma);
+    $pragma = new PgPragma($field, $operand, $value, PgPragmaType::AND);
+    $this->_pragmas->add($pragma);
     return false;
   }
 
   public function count(): int {
-    return $this->_pragma->count();
+    return $this->_pragmas->count();
   }
 
   public function buildSql(
@@ -52,7 +52,7 @@ class WhereClause {
     PgRowInterface $row,
   ): string {
 
-    $pragmaCount = $this->_pragma->count();
+    $pragmaCount = $this->count();
 
     error_log('pragmaCount='.$pragmaCount);
 
@@ -63,7 +63,7 @@ class WhereClause {
     $sql = ' WHERE';
 
     $offset = 0;
-    foreach ($this->_pragma as $pragma) {
+    foreach ($this->_pragmas as $pragma) {
 
       if ($offset != 0 && $pragmaCount > 1) {
         $sql .= $this->convertPragmaTypeToSql($pragma->getPragmaType());
@@ -81,8 +81,8 @@ class WhereClause {
 
   }
 
-  private function convertPragmaTypeToSql(PragmaType $type): string {
-    if (PragmaType::OR) {
+  private function convertPragmaTypeToSql(PgPragmaType $type): string {
+    if (PgPragmaType::OR) {
       return ' OR ';
     }
     return ' AND ';
@@ -91,7 +91,7 @@ class WhereClause {
   private function addOperandAndValue(
     DatabaseDriverInterface $dbh,
     PgRowInterface $row,
-    Pragma $pragma,
+    PgPragma $pragma,
   ): string {
 
     $fieldName = $pragma->getField();
@@ -107,17 +107,17 @@ class WhereClause {
     $value = $this->quoteValue($dbh, $pragma->getValue());
 
     switch ($pragma->getOperand()) {
-      case WhereOperand::EQUALS:
+      case PgWhereOperand::EQUALS:
         return sprintf(' %s = %s', $fieldName, $value);
-      case WhereOperand::NOT_EQUALS:
+      case PgWhereOperand::NOT_EQUALS:
         return sprintf(' %s != %s', $fieldName, $value);
-      case WhereOperand::LESS_THAN:
+      case PgWhereOperand::LESS_THAN:
         return sprintf(' %s < %s', $fieldName, $value);
-      case WhereOperand::GREATER_THAN:
+      case PgWhereOperand::GREATER_THAN:
         return sprintf(' %s > %s', $fieldName, $value);
-      case WhereOperand::IN:
+      case PgWhereOperand::IN:
         return sprintf(' %s IN %s', $fieldName, $value);
-      case WhereOperand::NOT_IN:
+      case PgWhereOperand::NOT_IN:
         return sprintf(' %s NOT IN %s', $fieldName, $value);
     }
 
@@ -142,6 +142,28 @@ class WhereClause {
 
     throw new UnsupportedValueTypeException('value='.gettype($value));
 
+  }
+
+  public function createWhereChecksum(): string {
+
+    $params = '';
+
+    foreach ($this->_pragmas as $pragma) {
+
+      $params .=
+        $pragma->getField().
+        '|'.
+        $pragma->getOperand().
+        '|'.
+        strval($pragma->getValue()).
+        "\n";
+
+    }
+
+    $checksum = md5($params);
+    error_log('createWhereChecksum params='.$params.' checksum='.$checksum);
+
+    return $checksum;
   }
 
 }

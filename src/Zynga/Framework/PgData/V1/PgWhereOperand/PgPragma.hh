@@ -1,21 +1,21 @@
 <?hh // strict
 
-namespace Zynga\Framework\PgData\V1\WhereOperand;
+namespace Zynga\Framework\PgData\V1\PgWhereOperand;
 
-use Zynga\Framework\PgData\V1\WhereOperand;
-use Zynga\Framework\PgData\V1\WhereOperand\PragmaType;
+use Zynga\Framework\PgData\V1\PgWhereOperand;
+use Zynga\Framework\PgData\V1\PgWhereOperand\PgPragmaType;
 
-class Pragma {
+class PgPragma {
   private string $_field;
-  private WhereOperand $_operand;
+  private PgWhereOperand $_operand;
   private mixed $_value;
-  private PragmaType $_type;
+  private PgPragmaType $_type;
 
   public function __construct(
     string $field,
-    WhereOperand $operand,
+    PgWhereOperand $operand,
     mixed $value,
-    PragmaType $type,
+    PgPragmaType $type,
   ) {
     $this->_field = $field;
     $this->_operand = $operand;
@@ -32,12 +32,12 @@ class Pragma {
     return $this->_field;
   }
 
-  public function setOperand(WhereOperand $operand): bool {
+  public function setOperand(PgWhereOperand $operand): bool {
     $this->_operand = $operand;
     return true;
   }
 
-  public function getOperand(): WhereOperand {
+  public function getOperand(): PgWhereOperand {
     return $this->_operand;
   }
 
@@ -50,12 +50,12 @@ class Pragma {
     return $this->_value;
   }
 
-  public function setPragmaType(PragmaType $type): bool {
+  public function setPragmaType(PgPragmaType $type): bool {
     $this->_type = $type;
     return true;
   }
 
-  public function getPragmaType(): PragmaType {
+  public function getPragmaType(): PgPragmaType {
     return $this->_type;
   }
 

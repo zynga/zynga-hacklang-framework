@@ -1,6 +1,6 @@
 <?hh // strict
 
-namespace Zynga\Framework\PgData\V1;
+namespace Zynga\Framework\PgData\V1\PgModel;
 
 use
   Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
@@ -8,6 +8,7 @@ use
 use Zynga\Framework\PgData\V1\Exceptions\NoFieldsOnObjectException;
 use Zynga\Framework\PgData\V1\Interfaces\PgModelInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;
 use Zynga\Framework\PgData\V1\WhereClause;
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
@@ -19,7 +20,7 @@ class SqlGenerator {
     DatabaseDriverInterface $dbh,
     PgModelInterface $model,
     PgRowInterface $obj,
-    WhereClause $where,
+    PgWhereClauseInterface $where,
   ): string {
 
     try {

@@ -15,6 +15,7 @@ use Zynga\Framework\PgData\V1\Interfaces\PgModel\DataInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\DbInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\StatsInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;
 use Zynga\Framework\PgData\V1\PgModel\Cache;
 use Zynga\Framework\PgData\V1\PgModel\Data;
 use Zynga\Framework\PgData\V1\PgModel\Db;
@@ -129,7 +130,7 @@ abstract class PgModel implements PgModelInterface {
   // a result set as the number of edge cases introduced by that logic is not wanted.
   public function get<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
-    ?WhereClause $where = null,
+    ?PgWhereClauseInterface $where = null,
   ): PgResultSet<PgRowInterface> {
 
     try {

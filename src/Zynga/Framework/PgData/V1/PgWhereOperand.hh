@@ -2,7 +2,7 @@
 
 namespace Zynga\Framework\PgData\V1;
 
-enum WhereOperand : int {
+enum PgWhereOperand : int {
   EQUALS = 2;
   NOT_EQUALS = 4;
   IN = 8;

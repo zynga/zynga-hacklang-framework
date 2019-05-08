@@ -8,4 +8,5 @@ use
 
 interface CacheInterface {
   public function getDataCache(): LockableDriverInterface;
+  public function getResultSetCache(): LockableDriverInterface;
 }

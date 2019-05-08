@@ -10,6 +10,10 @@ class InventoryModel extends PgModel {
     return 'PgDataTest';
   }
 
+  public function getResultSetCacheName(): string {
+    return 'PgResultSetTest';
+  }
+
   public function getReadDatabaseName(): string {
     return 'Test_Mysql';
   }

@@ -9,11 +9,12 @@ use Zynga\Framework\Lockable\Cache\V1\Factory as LockableCacheFactory;
 use
   Zynga\Framework\Lockable\Cache\V1\Interfaces\DriverInterface as LockableCacheDriverInterface
 ;
+use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;
 use Zynga\Framework\PgData\V1\PgModel;
 use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\InventoryModel;
 use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\Inventory\ItemType;
-use Zynga\Framework\PgData\V1\WhereClause;
-use Zynga\Framework\PgData\V1\WhereOperand;
+use Zynga\Framework\PgData\V1\PgWhereClause;
+use Zynga\Framework\PgData\V1\PgWhereOperand;
 
 class InventoryModelTest extends TestCase {
 
@@ -148,7 +149,7 @@ class InventoryModelTest extends TestCase {
 
   private function doesQueryReturnExpectedValues(
     Vector<Map<string, mixed>> $expectedResultToInclude,
-    ?WhereClause $where = null,
+    ?PgWhereClauseInterface $where = null,
   ): void {
 
     // TODO: replace with factory.
@@ -185,8 +186,8 @@ class InventoryModelTest extends TestCase {
 
   public function testInventory_EmptySet(): void {
 
-    $where = new WhereClause();
-    $where->and('id', WhereOperand::EQUALS, 0);
+    $where = new PgWhereClause();
+    $where->and('id', PgWhereOperand::EQUALS, 0);
 
     $inventory = new InventoryModel();
     $result = $inventory->get(ItemType::class, $where);
@@ -232,8 +233,8 @@ class InventoryModelTest extends TestCase {
 
   public function testInventory_EqualsTest(): void {
 
-    $where = new WhereClause();
-    $where->and('name', WhereOperand::EQUALS, 'this-is-a-test-valueset-3');
+    $where = new PgWhereClause();
+    $where->and('name', PgWhereOperand::EQUALS, 'this-is-a-test-valueset-3');
 
     $expectedResultToInclude = Vector {};
 
@@ -247,9 +248,9 @@ class InventoryModelTest extends TestCase {
 
   public function testInventory_GreaterThanTest(): void {
 
-    $where = new WhereClause();
-    $where->and('id', WhereOperand::GREATER_THAN, 12387452);
-    $where->and('id', WhereOperand::LESS_THAN, 12387455);
+    $where = new PgWhereClause();
+    $where->and('id', PgWhereOperand::GREATER_THAN, 12387452);
+    $where->and('id', PgWhereOperand::LESS_THAN, 12387455);
 
     $expectedResultToInclude = Vector {};
 

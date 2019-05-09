@@ -13,7 +13,7 @@ use Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
 abstract class Base<TType as TypeInterface> extends ConfigShardedBase<TType> {
-  
+
   public function getDriver(): string {
     return 'GenericPDO';
   }
@@ -22,14 +22,25 @@ abstract class Base<TType as TypeInterface> extends ConfigShardedBase<TType> {
     TType $intShardType,
     ConnectionDetails $server,
   ): string {
+
     $database = $this->getDatabaseName();
     $hostname = $server->getHostname();
+    $username = $server->getUsername();
+    $password = $server->getPassword();
     $port = $server->getPort();
+
     $this->setCurrentDatabase($database);
     $this->setCurrentServer($hostname);
-    $dsn = '';
-    $dsn = 'mysql:host='.$hostname.';dbname='.$database.';'.$port;
-    return $dsn;
+
+    $connectionString = 'mysql:';
+    $connectionString .= 'host='.$hostname.';';
+    $connectionString .= 'user='.$username.';';
+    $connectionString .= 'password='.$password.';';
+    $connectionString .= 'port='.$port.';';
+    $connectionString .= 'dbname='.$database.';';
+
+    return $connectionString;
+
   }
 
   public function getServerFromShardType(TType $shardType): ConnectionDetails {

@@ -9,7 +9,8 @@ use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 /**
  * DriverConfigInterface: Responsible for the configuration contract for all database drivers.
  */
-interface DriverConfigInterface<TType as TypeInterface> extends ConfigInterface {
+interface DriverConfigInterface<TType as TypeInterface>
+  extends ConfigInterface {
 
   /**
    * Initializes the configuration, and verifies that all the functions have been called.
@@ -79,4 +80,7 @@ interface DriverConfigInterface<TType as TypeInterface> extends ConfigInterface 
     TType $shardType,
     ConnectionDetails $server,
   ): string;
+
+  public function getDatabaseName(): string;
+
 }

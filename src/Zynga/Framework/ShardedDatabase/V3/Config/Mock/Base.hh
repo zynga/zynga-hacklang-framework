@@ -42,13 +42,25 @@ abstract class Base extends ConfigBase<UInt64Box> {
     UInt64Box $shardType,
     ConnectionDetails $server,
   ): string {
-    $connectionString = '';
-    $connectionString .= 'username='.self::SERVER_USERNAME;
-    $connectionString .= 'password='.self::SERVER_PASSWORD;
+
+    // --
+    // We are creatig a defunct DSN on purpose here in order to force a non-connection event.
+    // --
+    // Mock drivers shouldn't be talking to databases.
+    // --
+    $connectionString = 'mock:';
+    $connectionString .= 'host='.$server->getHostname().';';
+    $connectionString .= 'user='.$server->getUsername().';';
+    $connectionString .= 'password='.$server->getPassword().';';
+    $connectionString .= 'port='.$server->getPort().';';
+    $connectionString .= 'dbname='.$this->getDatabaseName().';';
+
     return $connectionString;
   }
 
-  public function getServerFromShardType(UInt64Box $shardType): ConnectionDetails {
+  public function getServerFromShardType(
+    UInt64Box $shardType,
+  ): ConnectionDetails {
     return $this->getServerByOffset($this->getShardId($shardType));
   }
 
@@ -56,11 +68,8 @@ abstract class Base extends ConfigBase<UInt64Box> {
     return parent::getShardId($shardType);
   }
 
-  public function getShardCount(): int {
-    return 1;
-  }
-  
-  public function getDatabaseName():string {
+  public function getDatabaseName(): string {
     return 'Mock';
   }
+
 }

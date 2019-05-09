@@ -5,18 +5,12 @@ namespace Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO;
 use Zynga\Framework\Database\V2\Exceptions\InvalidShardException;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
-use
-  Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\ConnectionContainer
-;
+use Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\ConnectionContainer;
 use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
 use Zynga\Framework\Type\V1\UInt64Box;
-use
-  Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO as GenericPDODriver
-;
-use
-  Zynga\Framework\ShardedDatabase\V3\Driver\Mock as MockDriver
-;
+use Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO as GenericPDODriver;
+use Zynga\Framework\ShardedDatabase\V3\Driver\Mock as MockDriver;
 use Zynga\Framework\Database\V2\Exceptions\QueryFailedException;
 use Zynga\Framework\Database\V2\Exceptions\Mock\BadResultOffsetException;
 
@@ -38,19 +32,32 @@ class ConnectionContainerTest extends TestCase {
   }
 
   public function testCachingCreate(): void {
-    $dbh = DatabaseFactory::factory(DriverInterface::class, 'Mock');
+    $dbh = DatabaseFactory::factory(DriverInterface::class, 'Test\Mysql');
 
     $testShard = new UInt64Box(1);
     $config = $dbh->getConfig();
 
     $dsn = $config->getConnectionString($testShard);
-    $server = $config->getServerFromShardType($testShard);
-    $shardId = $config->getShardId($testShard);
 
+    $server = $config->getServerFromShardType($testShard);
+
+    $hostname = $server->getHostname();
     $username = $server->getUsername();
     $password = $server->getPassword();
 
+    $this->assertEquals('localhost', $hostname);
+    $this->assertEquals('zframework', $username);
+    $this->assertEquals('i-am-a-walrus', $password);
+
+    $shardId = $config->getShardId($testShard);
+
     $con = new ConnectionContainer();
+
+    $this->assertEquals(0, $shardId);
+    $this->assertEquals(
+      'mysql:host=localhost;user=zframework;password=i-am-a-walrus;port=3306;dbname=phpunit;',
+      $dsn,
+    );
 
     // should be new
     $this->assertTrue($con->create($shardId, $dsn, $username, $password));

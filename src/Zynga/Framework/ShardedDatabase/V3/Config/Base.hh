@@ -9,17 +9,18 @@ use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Factory\V2\Config\Base as FactoryBaseConfig;
 use Zynga\Framework\ShardedDatabase\V3\Exceptions\InvalidShardIdException;
 use Zynga\Framework\ShardedDatabase\V3\Exceptions\ShardsInitFailureException;
-use Zynga\Framework\ShardedDatabase\V3\Exceptions\ShardsInitNoServersException;
+use
+  Zynga\Framework\ShardedDatabase\V3\Exceptions\ShardsInitNoServersException
+;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface;
 use Zynga\Framework\ShardedDatabase\V3\ConnectionDetails;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\UInt64Box;
 use Zynga\Framework\ShardedDatabase\V3\Exceptions\UnknownShardTypeException;
 
-abstract class Base<TType as TypeInterface>
-  extends FactoryBaseConfig
+abstract class Base<TType as TypeInterface> extends FactoryBaseConfig
   implements DriverConfigInterface<TType> {
-  
+
   private string $_currentServer;
   private string $_currentDatabase;
   private Vector<ConnectionDetails> $_servers = Vector {};
@@ -30,13 +31,15 @@ abstract class Base<TType as TypeInterface>
     $this->init();
   }
 
+  abstract public function getDatabaseName(): string;
+
   /**
    * Initializes the configuration, and verifies that all the functions have been called.
    * @return bool
    */
   final public function init(): bool {
     $this->setCurrentDatabase($this->getDatabaseName());
-    
+
     // reset our servers list to empty.
     $this->_servers->clear();
 
@@ -135,14 +138,14 @@ abstract class Base<TType as TypeInterface>
     }
     throw new InvalidShardIdException('offset='.$offset);
   }
-  
+
   public function getShardId(TType $intShardType): int {
     if ($intShardType instanceof UInt64Box) {
       $shardCount = $this->getServerCount();
       $shardId = $intShardType->get() % $shardCount;
       return $shardId;
     }
-    
+
     throw new UnknownShardTypeException("Unsupported TType");
   }
 
@@ -152,14 +155,17 @@ abstract class Base<TType as TypeInterface>
    */
   abstract public function shardsInit(): bool;
 
-  abstract public function getServerFromShardType(TType $shardType): ConnectionDetails;
+  abstract public function getServerFromShardType(
+    TType $shardType,
+  ): ConnectionDetails;
 
-  abstract public function getShardCount(): int;
+  final public function getShardCount(): int {
+    return $this->_servers->count();
+  }
 
   abstract public function getConnectionStringForServer(
     TType $shardType,
     ConnectionDetails $server,
   ): string;
-  
-  abstract public function getDatabaseName(): string;
+
 }

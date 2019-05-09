@@ -5,15 +5,11 @@ namespace Zynga\Framework\ShardedDatabase\V3\Config\Mysql;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 use Zynga\Framework\ShardedDatabase\V3\Config\Mysql\Base;
-use
-  Zynga\Framework\ShardedDatabase\V3\Exceptions\ShardsInitFailureException
-;
+use Zynga\Framework\ShardedDatabase\V3\Exceptions\ShardsInitFailureException;
 use
   Zynga\Framework\ShardedDatabase\V3\Exceptions\ShardsInitNoServersException
 ;
-use
-  Zynga\Framework\ShardedDatabase\V3\Exceptions\InvalidShardIdException
-;
+use Zynga\Framework\ShardedDatabase\V3\Exceptions\InvalidShardIdException;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\UInt64Box;
 use Zynga\Framework\ShardedDatabase\V3\ConnectionDetails;
@@ -22,16 +18,15 @@ class Mock_InitFailure extends Base<UInt64Box> {
   public function shardsInit(): bool {
     return false;
   }
-  public function getServerFromShardType(UInt64Box $shardType): ConnectionDetails {
+  public function getServerFromShardType(
+    UInt64Box $shardType,
+  ): ConnectionDetails {
     return new ConnectionDetails('', '', '', 0);
   }
   public function isDatabaseReadOnly(): bool {
     return false;
   }
   public function getShardId(UInt64Box $shardType): int {
-    return 1;
-  }
-  public function getShardCount(): int {
     return 1;
   }
   public function getDatabaseName(): string {
@@ -43,16 +38,15 @@ class Mock_InitFailureNoServers extends Base<UInt64Box> {
   public function shardsInit(): bool {
     return true;
   }
-  public function getServerFromShardType(UInt64Box $shardType): ConnectionDetails {
+  public function getServerFromShardType(
+    UInt64Box $shardType,
+  ): ConnectionDetails {
     return new ConnectionDetails('', '', '', 0);
   }
   public function isDatabaseReadOnly(): bool {
     return false;
   }
   public function getShardId(UInt64Box $shardType): int {
-    return 1;
-  }
-  public function getShardCount(): int {
     return 1;
   }
   public function getDatabaseName(): string {
@@ -67,16 +61,15 @@ class Mock_SomeWhatValid extends Base<UInt64Box> {
     );
     return true;
   }
-  public function getServerFromShardType(UInt64Box $shardType): ConnectionDetails {
+  public function getServerFromShardType(
+    UInt64Box $shardType,
+  ): ConnectionDetails {
     return new ConnectionDetails('', '', '', 0);
   }
   public function isDatabaseReadOnly(): bool {
     return false;
   }
   public function getShardId(UInt64Box $shardType): int {
-    return 1;
-  }
-  public function getShardCount(): int {
     return 1;
   }
   public function getDatabaseName(): string {

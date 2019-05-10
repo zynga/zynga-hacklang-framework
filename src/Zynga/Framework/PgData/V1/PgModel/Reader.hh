@@ -4,6 +4,7 @@ namespace Zynga\Framework\PgData\V1\PgModel;
 
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\PgData\V1\Interfaces\PgModelInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgModel\ReaderInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgResultSetInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;
@@ -14,7 +15,7 @@ use Zynga\Framework\PgData\V1\PgResultSet;
 use Zynga\Framework\PgData\V1\PgWhereClause;
 use Zynga\Framework\PgData\V1\PgWhereOperand;
 
-class Reader {
+class Reader implements ReaderInterface {
 
   private PgModelInterface $_pgModel;
 
@@ -138,7 +139,7 @@ class Reader {
   public function get<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     ?PgWhereClauseInterface $where = null,
-  ): PgResultSet<PgRowInterface> {
+  ): PgResultSetInterface<PgRowInterface> {
 
     try {
 
@@ -211,7 +212,9 @@ class Reader {
         // explicitly unlock
         $cache->unlock($data);
 
-        return $data;
+        if ($data instanceof PgResultSetInterface) {
+          return $data;
+        }
 
       }
 

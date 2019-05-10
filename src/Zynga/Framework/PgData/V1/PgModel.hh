@@ -13,9 +13,15 @@ use Zynga\Framework\PgData\V1\Interfaces\PgModelInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\CacheInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\DataInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\DbInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgModel\ReaderInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\StatsInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgResultSetInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;
+
+// --
+// Default implementations, all are bound to interfaces for overload (if needed).
+// --
 use Zynga\Framework\PgData\V1\PgModel\Cache;
 use Zynga\Framework\PgData\V1\PgModel\Data;
 use Zynga\Framework\PgData\V1\PgModel\Db;
@@ -81,11 +87,11 @@ abstract class PgModel implements PgModelInterface {
 
   }
 
-  public function reader(): Reader {
+  public function reader(): ReaderInterface {
 
     $reader = $this->_reader;
 
-    if ($reader instanceof Reader) {
+    if ($reader instanceof ReaderInterface) {
       return $reader;
     }
 
@@ -131,7 +137,7 @@ abstract class PgModel implements PgModelInterface {
   public function get<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     ?PgWhereClauseInterface $where = null,
-  ): PgResultSet<PgRowInterface> {
+  ): PgResultSetInterface<PgRowInterface> {
 
     try {
       return $this->reader()->get($model, $where);

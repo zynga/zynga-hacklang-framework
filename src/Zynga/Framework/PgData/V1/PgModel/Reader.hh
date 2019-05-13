@@ -152,7 +152,7 @@ class Reader implements ReaderInterface {
       $cache = $pgModel->cache()->getResultSetCache();
 
       // TODO: Fetch us a cached version of the dataset.
-      $data = new PgResultSet($model, $where);
+      $data = new PgResultSet($this->pgModel(), $model, $where);
 
       // --
       // As we don't know how big the result set might be and don't want to have spanning locks.
@@ -221,7 +221,7 @@ class Reader implements ReaderInterface {
       // if the item is not found, unlock anyways.
       //   $cache->unlock($where);
       //
-      $data = new PgResultSet($model, $where);
+      $data = new PgResultSet($this->pgModel(), $model, $where);
       return $data;
 
     } catch (Exception $e) {

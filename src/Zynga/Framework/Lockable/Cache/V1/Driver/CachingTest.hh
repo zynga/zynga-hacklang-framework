@@ -13,6 +13,7 @@ use
 use Zynga\Framework\Lockable\Cache\V1\Test\Mock\SimpleStorable;
 use Zynga\Framework\Lockable\Cache\V1\Test\Mock\PgDataExample;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
+use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\InventoryModel;
 
 class CachingTest extends TestCase {
   private Vector<string> $_cacheNames = Vector {'Mock', 'PgDataTest'};
@@ -104,7 +105,8 @@ class CachingTest extends TestCase {
       'PgDataTest',
     );
 
-    $pgMock = new PgDataExample();
+    $inv = new InventoryModel();
+    $pgMock = new PgDataExample($inv);
     $pgMock->id->set(time() + mt_rand());
 
     // lock the object
@@ -170,7 +172,9 @@ class CachingTest extends TestCase {
     $mockId = time() + mt_rand();
     $mockTextValue = 'this-is-a-pgdata-text-value-'.mt_rand();
 
-    $pgMock = new PgDataExample();
+    $inv = new InventoryModel();
+
+    $pgMock = new PgDataExample($inv);
     $pgMock->id->set($mockId);
     $pgMock->name->set($mockTextValue);
 

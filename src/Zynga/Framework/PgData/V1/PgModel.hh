@@ -15,6 +15,7 @@ use Zynga\Framework\PgData\V1\Interfaces\PgModel\DataInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\DbInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\ReaderInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\StatsInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgModel\WriterInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgResultSetInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;
@@ -27,6 +28,7 @@ use Zynga\Framework\PgData\V1\PgModel\Data;
 use Zynga\Framework\PgData\V1\PgModel\Db;
 use Zynga\Framework\PgData\V1\PgModel\Reader;
 use Zynga\Framework\PgData\V1\PgModel\Stats;
+use Zynga\Framework\PgData\V1\PgModel\Writer;
 use Zynga\Framework\PgData\V1\PgResultSet;
 use Zynga\Framework\PgData\V1\SqlGenerator;
 
@@ -37,9 +39,14 @@ abstract class PgModel implements PgModelInterface {
   private ?DataInterface $_data = null;
   private ?DbInterface $_db = null;
   private ?StatsInterface $_stats = null;
-  private ?Reader $_reader = null;
+  private ?ReaderInterface $_reader = null;
+  private ?WriterInterface $_writer = null;
 
-  public function cache(): CacheInterface {
+  public function createCacheObject(): CacheInterface {
+    return $cache = new Cache($this);
+  }
+
+  final public function cache(): CacheInterface {
 
     $cache = $this->_cache;
 
@@ -47,7 +54,7 @@ abstract class PgModel implements PgModelInterface {
       return $cache;
     }
 
-    $cache = new Cache($this);
+    $cache = $this->createCacheObject();
 
     $this->_cache = $cache;
 
@@ -55,7 +62,11 @@ abstract class PgModel implements PgModelInterface {
 
   }
 
-  public function data(): DataInterface {
+  public function createDataObject(): DataInterface {
+    return new Data($this);
+  }
+
+  final public function data(): DataInterface {
 
     $data = $this->_data;
 
@@ -63,7 +74,7 @@ abstract class PgModel implements PgModelInterface {
       return $data;
     }
 
-    $data = new Data($this);
+    $data = $this->createDataObject();
 
     $this->_data = $data;
 
@@ -71,7 +82,11 @@ abstract class PgModel implements PgModelInterface {
 
   }
 
-  public function db(): DbInterface {
+  public function createDbObject(): DbInterface {
+    return new Db($this);
+  }
+
+  final public function db(): DbInterface {
 
     $db = $this->_db;
 
@@ -79,7 +94,7 @@ abstract class PgModel implements PgModelInterface {
       return $db;
     }
 
-    $db = new Db($this);
+    $db = $this->createDbObject();
 
     $this->_db = $db;
 
@@ -87,7 +102,11 @@ abstract class PgModel implements PgModelInterface {
 
   }
 
-  public function reader(): ReaderInterface {
+  public function createReaderObject(): ReaderInterface {
+    return new Reader($this);
+  }
+
+  final public function reader(): ReaderInterface {
 
     $reader = $this->_reader;
 
@@ -95,11 +114,31 @@ abstract class PgModel implements PgModelInterface {
       return $reader;
     }
 
-    $reader = new Reader($this);
+    $reader = $this->createReaderObject();
 
     $this->_reader = $reader;
 
     return $this->_reader;
+
+  }
+
+  public function createWriterObject(): WriterInterface {
+    return new Writer($this);
+  }
+
+  public function writer(): WriterInterface {
+
+    $writer = $this->_writer;
+
+    if ($writer instanceof WriterInterface) {
+      return $writer;
+    }
+
+    $writer = $this->createWriterObject();
+
+    $this->_writer = $writer;
+
+    return $writer;
 
   }
 
@@ -116,6 +155,14 @@ abstract class PgModel implements PgModelInterface {
     $this->_stats = $stats;
 
     return $this->_stats;
+  }
+
+  public function add(PgRowInterface $row): bool {
+    try {
+      return $this->writer()->add($row);
+    } catch (Exception $e) {
+      throw $e;
+    }
   }
 
   public function getById<TModelClass as PgRowInterface>(

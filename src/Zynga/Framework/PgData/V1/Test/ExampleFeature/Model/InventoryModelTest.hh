@@ -56,7 +56,8 @@ class InventoryModelTest extends TestCase {
       'PgDataTest',
     );
 
-    $obj = new ItemType();
+    $inv = new InventoryModel();
+    $obj = new ItemType($inv);
     $obj->id->set($id);
 
     $lmc->delete($obj);

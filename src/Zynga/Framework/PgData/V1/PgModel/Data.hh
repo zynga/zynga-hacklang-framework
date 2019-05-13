@@ -21,18 +21,20 @@ class Data implements DataInterface {
   }
 
   public function createRowObjectFromClassName<TModelClass as PgRowInterface>(
-    classname<TModelClass> $model,
+    classname<TModelClass> $row,
   ): PgRowInterface {
 
     try {
-      $obj =
-        DynamicClassCreation::createClassByNameGeneric($model, Vector {});
+      $obj = DynamicClassCreation::createClassByNameGeneric(
+        $row,
+        Vector {$this->pgModel()},
+      );
 
       if ($obj instanceof PgRowInterface) {
         return $obj;
       }
 
-      throw new PgRowInterfaceRequiredException('modelProvided='.$model);
+      throw new PgRowInterfaceRequiredException('rowProvided='.$row);
 
     } catch (Exception $e) {
       throw $e;

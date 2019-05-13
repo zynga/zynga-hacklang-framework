@@ -172,7 +172,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
       $obj = $cache->get($obj, $cacheKey);
 
-      error_log('isCached get obj='.var_export($obj, true));
+      //error_log('isCached get obj='.var_export($obj, true));
       return $obj;
 
     } catch (Exception $e) {

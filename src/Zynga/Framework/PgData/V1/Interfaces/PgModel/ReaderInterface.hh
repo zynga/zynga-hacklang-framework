@@ -7,11 +7,10 @@ use Zynga\Framework\PgData\V1\Interfaces\PgResultSetInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;
 
 interface ReaderInterface {
-  public function getById<TModelClass as PgRowInterface>(
+  public function getByPk<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     mixed $id,
-    bool $getLocked = false,
-  ): ?PgRowInterface;
+  ): PgResultSetInterface<PgRowInterface>;
   public function get<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     ?PgWhereClauseInterface $where = null,

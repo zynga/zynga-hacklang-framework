@@ -2,9 +2,7 @@
 
 namespace Zynga\Framework\PgData\V1\Interfaces;
 
-use
-  Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
-;
+use Zynga\Framework\Database\V2\Interfaces\QueryableInterface;
 use Zynga\Framework\PgData\V1\PgWhereOperand;
 
 interface PgWhereClauseInterface {
@@ -24,7 +22,7 @@ interface PgWhereClauseInterface {
   public function count(): int;
 
   public function buildSql(
-    DatabaseDriverInterface $dbh,
+    QueryableInterface $dbh,
     PgRowInterface $row,
   ): string;
 

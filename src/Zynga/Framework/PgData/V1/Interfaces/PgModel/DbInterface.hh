@@ -2,15 +2,10 @@
 
 namespace Zynga\Framework\PgData\V1\Interfaces\PgModel;
 
-use
-  Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
-;
+use Zynga\Framework\Database\V2\Interfaces\QueryableInterface;
 
 interface DbInterface {
-  public function getReadDatabase(): DatabaseDriverInterface;
-  public function getWriteDatabase(): DatabaseDriverInterface;
-  public function quoteValue(
-    DatabaseDriverInterface $dbh,
-    mixed $value,
-  ): string;
+  public function getReadDatabase(): QueryableInterface;
+  public function getWriteDatabase(): QueryableInterface;
+  public function quoteValue(QueryableInterface $dbh, mixed $value): string;
 }

@@ -3,6 +3,7 @@
 namespace Zynga\Framework\PgData\V1\PgModel;
 
 use Zynga\Framework\Database\V2\Factory as DatabaseFactory;
+use Zynga\Framework\Database\V2\Interfaces\QueryableInterface;
 use
   Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
 ;
@@ -23,7 +24,7 @@ class Db implements DbInterface {
     return $this->_pgModel;
   }
 
-  public function getReadDatabase(): DatabaseDriverInterface {
+  public function getReadDatabase(): QueryableInterface {
     try {
 
       $pgModel = $this->pgModel();
@@ -36,7 +37,7 @@ class Db implements DbInterface {
     }
   }
 
-  public function getWriteDatabase(): DatabaseDriverInterface {
+  public function getWriteDatabase(): QueryableInterface {
     try {
       $pgModel = $this->pgModel();
       return DatabaseFactory::factory(
@@ -48,18 +49,18 @@ class Db implements DbInterface {
     }
   }
 
-  public function quoteValue(
-    DatabaseDriverInterface $dbh,
-    mixed $value,
-  ): string {
+  public function quoteValue(QueryableInterface $dbh, mixed $value): string {
 
-    if (is_string($value)) {
-      return $dbh->quote()->textValue($value);
-    } else if (is_float($value)) {
-      return $dbh->quote()->floatValue($value);
-    } else if (is_int($value)) {
-      return $dbh->quote()->intValue($value);
-    }
+    // TODO: need to fix the quote value support.
+    /*
+     if (is_string($value)) {
+     return $dbh->quote()->textValue($value);
+     } else if (is_float($value)) {
+     return $dbh->quote()->floatValue($value);
+     } else if (is_int($value)) {
+     return $dbh->quote()->intValue($value);
+     }
+     */
 
     throw new UnsupportedValueTypeException('value='.gettype($value));
 

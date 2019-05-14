@@ -18,9 +18,6 @@ interface DriverInterface extends FactoryDriverInterface, QueryableInterface {
 
   public function getConfig(): DriverConfigInterface;
 
-  public function connect(): bool;
-  public function disconnect(): bool;
-
   public function setIsConnected(bool $state): bool;
 
   public function getIsConnected(): bool;

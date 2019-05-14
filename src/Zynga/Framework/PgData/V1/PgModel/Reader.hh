@@ -44,11 +44,11 @@ class Reader implements ReaderInterface {
     }
   }
 
-  public function getById<TModelClass as PgRowInterface>(
+  public function getByPk<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     mixed $id,
     bool $getLocked = false,
-  ): ?PgRowInterface {
+  ): PgResultSetInterface<PgRowInterface> {
 
     try {
 
@@ -58,72 +58,12 @@ class Reader implements ReaderInterface {
       // 1) grab a copy of our object to work with.
       $obj = $pgModel->data()->createRowObjectFromClassName($model);
 
-      // 2) Get a cached version of the object if possible.
-      $pk = $obj->getPrimaryKeyTyped();
-      $pk->set($id);
-
-      $cache = $pgModel->cache()->getDataCache();
-      $cachedObj = $cache->get($obj, $getLocked); // This will apply the lock if asked for.
-
-      if ($cachedObj instanceof PgRowInterface) {
-        $pgModel->stats()->incrementCacheHits();
-        return $cachedObj;
-      }
-
-      $pgModel->stats()->incrementCacheMisses();
-
-      // 3) Create sql for the ask to the db.
-
-      // apply a lock while we deal with sql / databases.
-      $cache->lock($obj);
-
-      $where = new PgWhereClause($this->pgModel());
+      // 2) Stand up the where statement to get the response we want.
+      $where = new PgWhereClause($pgModel);
       $where->and($obj->getPrimaryKey(), PgWhereOperand::EQUALS, $id);
 
-      $sql = $this->createSql($obj, $where);
-
-      // 4) Get a database handle.
-      $dbh = $pgModel->db()->getReadDatabase();
-
-      // 5) Run the query against the database.
-      $sth = $dbh->query($sql);
-
-      $pgModel->stats()->incrementSqlSelects();
-
-      $wasSuccessful = $sth->wasSuccessful();
-      $rowCount = $sth->getNumRows();
-
-      error_log(
-        'query wasSuccessful='.
-        var_export($wasSuccessful, true).
-        ' rowCount='.
-        var_export($rowCount, true),
-      );
-
-      if ($wasSuccessful == true && $rowCount == 1) {
-
-        $rawRow = $sth->fetchMap();
-        error_log('attemptToHydrateRow='.var_export($rawRow, true));
-        $pgModel->data()->hydrateDataToRowObject($obj, $rawRow);
-
-        $cache->set($obj);
-
-        // explicitly unlock
-        if ($getLocked !== true) {
-          $cache->unlock($obj);
-        }
-
-        return $obj;
-
-      }
-
-      // if the item is not found, unlock anyways.
-      if ($getLocked !== true) {
-        $cache->unlock($obj);
-      }
-
-      error_log('getByid return null');
-      return null;
+      // 3) Run the query against the database.
+      return $this->get($model, $where);
 
     } catch (Exception $e) {
       error_log(

@@ -3,6 +3,13 @@
 namespace Zynga\Framework\PgData\V1\PgRow;
 
 use Zynga\Framework\Cache\V2\Driver\Memcache as CacheMemcacheDriver;
+use
+  Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
+;
+use
+  Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface as ShardedDriverInterface
+;
+
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\PgData\V1\PgRow;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
@@ -82,9 +89,27 @@ abstract class PkComesFromMemcache extends PgRow {
 
   }
 
+  public function getConnectionStringFromWriteDatabase(): string {
+    $connectionString = '';
+
+    $writeDatabase = $this->pgModel()->db()->getWriteDatabase();
+
+    if ($writeDatabase instanceof DatabaseDriverInterface) {
+      $connectionString = $writeDatabase->getConfig()->getConnectionString();
+    }
+
+    if ($connectionString == '') {
+      throw new Exception('Connection string needs to be set');
+    }
+
+    return $connectionString;
+  }
+
   public function createPkKeyForMC(): string {
     $writeDatabase = $this->pgModel()->db()->getWriteDatabase();
-    $connectionString = $writeDatabase->getConfig()->getConnectionString();
+
+    $connectionString = '';
+
     $tableName = $this->getTableName();
     $pkKey = 'pgd:'.md5($connectionString).'|'.$tableName.':pk';
     return $pkKey;

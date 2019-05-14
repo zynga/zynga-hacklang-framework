@@ -165,14 +165,13 @@ abstract class PgModel implements PgModelInterface {
     }
   }
 
-  public function getById<TModelClass as PgRowInterface>(
+  public function getByPk<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     mixed $id,
-    bool $getLocked = false,
-  ): ?PgRowInterface {
+  ): PgResultSetInterface<PgRowInterface> {
 
     try {
-      return $this->reader()->getById($model, $id, $getLocked);
+      return $this->reader()->getByPk($model, $id);
     } catch (Exception $e) {
       throw $e;
     }

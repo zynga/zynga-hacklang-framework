@@ -164,7 +164,6 @@ class ResultSets {
               // Default map
               $data = json_decode($rawData, true);
 
-              // TODO: JEO - Need a way to debug the datasets as they load.
               // var_dump($data);
 
               if ($data === null) {

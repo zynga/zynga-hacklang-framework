@@ -4,7 +4,9 @@ namespace Zynga\Framework\ShardedDatabase\V3;
 
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Factory\V2\Base as FactoryBase;
-use Zynga\Framework\ShardedDatabase\V3\Driver\Mock as UserShardedMockDatabaseDriver;
+use
+  Zynga\Framework\ShardedDatabase\V3\Driver\Mock as UserShardedMockDatabaseDriver
+;
 use Zynga\Framework\ShardedDatabase\V3\Info as ShardInfo;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
@@ -24,7 +26,7 @@ class Factory extends FactoryBase {
     $dbh->setShardType($shardType);
     return $dbh;
   }
-  
+
   public static function getMockDriver(): DriverInterface<UInt64Box> {
     return self::getDriver('Mock', new UInt64Box(1));
   }

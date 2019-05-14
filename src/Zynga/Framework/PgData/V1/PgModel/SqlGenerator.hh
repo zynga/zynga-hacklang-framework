@@ -2,9 +2,7 @@
 
 namespace Zynga\Framework\PgData\V1\PgModel;
 
-use
-  Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
-;
+use Zynga\Framework\Database\V2\Interfaces\QueryableInterface;
 use Zynga\Framework\PgData\V1\Exceptions\NoFieldsOnObjectException;
 use Zynga\Framework\PgData\V1\Interfaces\PgModelInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
@@ -18,7 +16,7 @@ use \Exception;
 class SqlGenerator {
 
   public static function getSelectSql(
-    DatabaseDriverInterface $dbh,
+    QueryableInterface $dbh,
     PgModelInterface $model,
     PgRowInterface $obj,
     PgWhereClauseInterface $where,
@@ -59,7 +57,7 @@ class SqlGenerator {
   }
 
   public static function getInsertSql(
-    DatabaseDriverInterface $dbh,
+    QueryableInterface $dbh,
     PgModelInterface $model,
     PgRowInterface $obj,
   ): string {
@@ -113,7 +111,7 @@ class SqlGenerator {
   }
 
   public static function getUpdateSql(
-    DatabaseDriverInterface $dbh,
+    QueryableInterface $dbh,
     PgModelInterface $model,
     PgRowInterface $obj,
   ): string {

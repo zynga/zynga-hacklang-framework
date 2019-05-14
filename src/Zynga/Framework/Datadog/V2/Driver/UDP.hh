@@ -285,10 +285,6 @@ class UDP extends DriverBase {
       return false;
     }
 
-    // --
-    // TODO: Again the escaping issue, this is getting kinda silly, they should
-    // have a escaper that is generic.
-    // --
     $msg = "_sc|$name|$status";
 
     if ($timestamp !== null) {
@@ -303,11 +299,6 @@ class UDP extends DriverBase {
       $tagString = '';
       $isFirst = true;
       foreach ($tags as $key => $value) {
-        // --
-        // TODO: JEO- I am pretty sure the previous developers haven't allowed
-        // for tags being something that breaks the wire protocol. Writing this
-        // loop such we could insert escaping of the key and value pairs.
-        // --
         if ($isFirst !== true) {
           $tagString .= ',';
         }
@@ -359,11 +350,6 @@ class UDP extends DriverBase {
     $tagString = '';
 
     if ($tags !== null && $tags->count() > 0) {
-      // --
-      // TODO: JEO- I am pretty sure the previous developers haven't allowed
-      // for tags being something that breaks the wire protocol. Writing this
-      // loop such we could insert escaping of the key and value pairs.
-      // --
       // append the tag values to the wire protocol.
       foreach ($tags as $tag_key => $tag_val) {
         $tagString .= '#'.$tag_key.':'.$tag_val.',';

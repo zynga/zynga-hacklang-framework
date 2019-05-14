@@ -89,7 +89,7 @@ class InventoryModelTest extends TestCase {
     $this->removeCachedItem($id);
 
     // This trip should hit the database.
-    $oneType = $inventory->getById(ItemType::class, $id);
+    $oneType = $inventory->getByPk(ItemType::class, $id);
 
     $this->assertInstanceOf(ItemType::class, $oneType);
 
@@ -103,7 +103,7 @@ class InventoryModelTest extends TestCase {
     }
 
     // Run the same get again, it should be cached.
-    $twoType = $inventory->getById(ItemType::class, $id);
+    $twoType = $inventory->getByPk(ItemType::class, $id);
 
     if ($twoType instanceof ItemType) {
       $this->assertEquals($id, $twoType->id->get());
@@ -132,13 +132,13 @@ class InventoryModelTest extends TestCase {
     $this->removeCachedItem($id);
 
     // This trip should hit the database.
-    $oneType = $inventory->getById(ItemType::class, $id);
+    $oneType = $inventory->getByPk(ItemType::class, $id);
 
     $this->assertEquals(null, $oneType);
     $this->validateModelStats($inventory, 0, 1, 1);
 
     // Run the same get again, it should be not be cached.
-    $twoType = $inventory->getById(ItemType::class, $id);
+    $twoType = $inventory->getByPk(ItemType::class, $id);
 
     $this->assertEquals(null, $twoType);
     $this->validateModelStats($inventory, 0, 2, 2);

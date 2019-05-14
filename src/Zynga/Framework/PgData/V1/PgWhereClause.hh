@@ -2,9 +2,7 @@
 
 namespace Zynga\Framework\PgData\V1;
 
-use
-  Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
-;
+use Zynga\Framework\Database\V2\Interfaces\QueryableInterface;
 use Zynga\Framework\PgData\V1\Exceptions\FailedToFindFieldOnObjectException;
 use Zynga\Framework\PgData\V1\Exceptions\UnsupportedOperandException;
 use Zynga\Framework\PgData\V1\Exceptions\UnsupportedValueTypeException;
@@ -55,7 +53,7 @@ class PgWhereClause implements PgWhereClauseInterface {
   }
 
   public function buildSql(
-    DatabaseDriverInterface $dbh,
+    QueryableInterface $dbh,
     PgRowInterface $row,
   ): string {
 
@@ -96,7 +94,7 @@ class PgWhereClause implements PgWhereClauseInterface {
   }
 
   private function addOperandAndValue(
-    DatabaseDriverInterface $dbh,
+    QueryableInterface $dbh,
     PgRowInterface $row,
     PgPragma $pragma,
   ): string {

@@ -90,7 +90,7 @@ abstract class PkComesFromMemcache extends PgRow {
     return $pkKey;
   }
 
-  private function loadIdFromDatabase(): int {
+  public function loadIdFromDatabase(): int {
     try {
 
       $writeDatabase = $this->pgModel()->db()->getWriteDatabase();

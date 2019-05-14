@@ -310,6 +310,36 @@ class InventoryModelTest extends TestCase {
     $this->assertTrue($model->add($item));
 
   }
+
+  public function testInventory_Save(): void {
+
+    // generate a test name to run against
+    $testName = 'this-is-a-phpunit-test-'.time().'-'.mt_rand(200);
+
+    // stand up the model
+    $model = new InventoryModel();
+
+    // stand up the row you'd like to add
+    $item = new ItemType($model);
+
+    // Test for the pk to be at it's default state.
+    list($isDefault, $defaultError) = $item->id->isDefaultValue();
+    $this->assertTrue($isDefault);
+
+    // Set the name
+    $item->name->set($testName);
+
+    // Save the item to the db.
+    $this->assertTrue($model->add($item));
+
+    // Now we have a target to do a update against.
+    $testName2 = 'this-is-another-phpunit-test-'.time().'-'.mt_rand(200);
+    $item->name->set($testName2);
+
+    $this->assertTrue($item->save());
+
+  }
+
   // // --
   // // Lock data, and update it.
   // // --

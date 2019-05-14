@@ -59,7 +59,6 @@ class Reader implements ReaderInterface {
       $obj = $pgModel->data()->createRowObjectFromClassName($model);
 
       // 2) Get a cached version of the object if possible.
-
       $pk = $obj->getPrimaryKeyTyped();
       $pk->set($id);
 
@@ -78,7 +77,7 @@ class Reader implements ReaderInterface {
       // apply a lock while we deal with sql / databases.
       $cache->lock($obj);
 
-      $where = new PgWhereClause();
+      $where = new PgWhereClause($this->pgModel());
       $where->and($obj->getPrimaryKey(), PgWhereOperand::EQUALS, $id);
 
       $sql = $this->createSql($obj, $where);
@@ -146,7 +145,7 @@ class Reader implements ReaderInterface {
       $pgModel = $this->pgModel();
 
       if ($where == null) {
-        $where = new PgWhereClause();
+        $where = new PgWhereClause($pgModel);
       }
 
       $cache = $pgModel->cache()->getResultSetCache();

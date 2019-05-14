@@ -9,4 +9,8 @@ use
 interface DbInterface {
   public function getReadDatabase(): DatabaseDriverInterface;
   public function getWriteDatabase(): DatabaseDriverInterface;
+   public function quoteValue(
+    DatabaseDriverInterface $dbh,
+    mixed $value,
+  ): string;
 }

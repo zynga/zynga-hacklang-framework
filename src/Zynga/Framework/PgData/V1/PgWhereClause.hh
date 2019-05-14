@@ -8,6 +8,7 @@ use
 use Zynga\Framework\PgData\V1\Exceptions\FailedToFindFieldOnObjectException;
 use Zynga\Framework\PgData\V1\Exceptions\UnsupportedOperandException;
 use Zynga\Framework\PgData\V1\Exceptions\UnsupportedValueTypeException;
+use Zynga\Framework\PgData\V1\Interfaces\PgModelInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;
 use Zynga\Framework\PgData\V1\PgWhereOperand;
@@ -18,9 +19,15 @@ use \Exception;
 
 class PgWhereClause implements PgWhereClauseInterface {
   private Vector<PgPragma> $_pragmas;
+  private PgModelInterface $_pgModel;
 
-  public function __construct() {
+  public function __construct(PgModelInterface $pgModel) {
     $this->_pragmas = Vector {};
+    $this->_pgModel = $pgModel;
+  }
+
+  private function pgModel(): PgModelInterface {
+    return $this->_pgModel;
   }
 
   public function and(
@@ -104,7 +111,7 @@ class PgWhereClause implements PgWhereClauseInterface {
       );
     }
 
-    $value = $this->quoteValue($dbh, $pragma->getValue());
+    $value = $this->pgModel()->db()->quoteValue($dbh, $pragma->getValue());
 
     switch ($pragma->getOperand()) {
       case PgWhereOperand::EQUALS:
@@ -124,23 +131,6 @@ class PgWhereClause implements PgWhereClauseInterface {
     throw new UnsupportedOperandException(
       'type='.$pragma->getOperand().' model='.get_class($row),
     );
-
-  }
-
-  private function quoteValue(
-    DatabaseDriverInterface $dbh,
-    mixed $value,
-  ): string {
-
-    if (is_string($value)) {
-      return $dbh->quote()->textValue($value);
-    } else if (is_float($value)) {
-      return $dbh->quote()->floatValue($value);
-    } else if (is_int($value)) {
-      return $dbh->quote()->intValue($value);
-    }
-
-    throw new UnsupportedValueTypeException('value='.gettype($value));
 
   }
 

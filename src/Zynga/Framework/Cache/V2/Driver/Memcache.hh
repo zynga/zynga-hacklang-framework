@@ -30,6 +30,75 @@ class Memcache extends DriverBase {
     return $this->_config;
   }
 
+  public function directIncrement(string $key, int $incrementValue = 1): int {
+
+    try {
+
+      $this->connect();
+
+      if ($incrementValue < 0 || $incrementValue == 0) {
+        throw new Exception('Increment value must be greater than 0');
+      }
+
+      $value = $this->_memcache->increment($key, $incrementValue);
+
+      if ($value === false) {
+        return 0;
+      }
+
+      return $value;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
+
+  public function directAdd(
+    string $key,
+    mixed $value,
+    int $flags = 0,
+    int $ttl = 0,
+  ): bool {
+
+    try {
+
+      $this->connect();
+
+      $value = $this->_memcache->add($key, $value, $flags, $ttl);
+
+      if ($value == true) {
+        return true;
+      }
+
+      return false;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
+
+  public function directDelete(string $key): bool {
+
+    try {
+
+      $this->connect();
+
+      $value = $this->_memcache->delete($key);
+
+      if ($value == true) {
+        return true;
+      }
+
+      return false;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
+
   public function connect(): bool {
 
     // --
@@ -83,12 +152,10 @@ class Memcache extends DriverBase {
       $key = $this->getKeySupportingOverride($obj, $keyOverride);
       $ttl = $this->getTTLSupportingOverride($ttlOverride);
 
-      $this->connect();
-
       $jsonValue = $obj->export()->asJSON();
 
       $flags = 0;
-      $return = $this->_memcache->add($key, $jsonValue, $flags, $ttl);
+      $return = $this->directAdd($key, $jsonValue, $flags, $ttl);
 
       if ($return == true) {
         return true;

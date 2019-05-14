@@ -187,11 +187,12 @@ class InventoryModelTest extends TestCase {
 
   public function testInventory_EmptySet(): void {
 
-    $where = new PgWhereClause();
+    $model = new InventoryModel();
+
+    $where = new PgWhereClause($model);
     $where->and('id', PgWhereOperand::EQUALS, 0);
 
-    $inventory = new InventoryModel();
-    $result = $inventory->get(ItemType::class, $where);
+    $result = $model->get(ItemType::class, $where);
 
     $this->assertEquals(0, $result->count());
 
@@ -234,7 +235,9 @@ class InventoryModelTest extends TestCase {
 
   public function testInventory_EqualsTest(): void {
 
-    $where = new PgWhereClause();
+    $model = new InventoryModel();
+
+    $where = new PgWhereClause($model);
     $where->and('name', PgWhereOperand::EQUALS, 'this-is-a-test-valueset-3');
 
     $expectedResultToInclude = Vector {};
@@ -249,7 +252,9 @@ class InventoryModelTest extends TestCase {
 
   public function testInventory_GreaterThanTest(): void {
 
-    $where = new PgWhereClause();
+    $model = new InventoryModel();
+
+    $where = new PgWhereClause($model);
     $where->and('id', PgWhereOperand::GREATER_THAN, 12387452);
     $where->and('id', PgWhereOperand::LESS_THAN, 12387455);
 
@@ -267,6 +272,44 @@ class InventoryModelTest extends TestCase {
 
   }
 
+  public function testInventory_IdIncrementing(): void {
+
+    // stand up the model
+    $model = new InventoryModel();
+
+    // stand up the row you'd like to add
+    $item = new ItemType($model);
+
+    $firstId = $item->getPrimaryKeyNextValue();
+
+    $this->assertGreaterThan(0, $firstId->get());
+
+    $secondId = $item->getPrimaryKeyNextValue();
+
+    $this->assertGreaterThan($firstId->get(), $secondId->get());
+
+  }
+
+  public function testInventory_Add(): void {
+
+    // generate a test name to run against
+    $testName = 'this-is-a-phpunit-test-'.time().'-'.mt_rand(200);
+
+    // stand up the model
+    $model = new InventoryModel();
+
+    // stand up the row you'd like to add
+    $item = new ItemType($model);
+
+    // Test for the pk to be at it's default state.
+    list($isDefault, $defaultError) = $item->id->isDefaultValue();
+    $this->assertTrue($isDefault);
+
+    $item->name->set($testName);
+
+    $this->assertTrue($model->add($item));
+
+  }
   // // --
   // // Lock data, and update it.
   // // --

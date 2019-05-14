@@ -7,6 +7,7 @@ use
   Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
 ;
 use Zynga\Framework\Exception\V1\Exception;
+use Zynga\Framework\PgData\V1\Exceptions\UnsupportedValueTypeException;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\DbInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModelInterface;
 
@@ -45,6 +46,23 @@ class Db implements DbInterface {
     } catch (Exception $e) {
       throw $e;
     }
+  }
+
+  public function quoteValue(
+    DatabaseDriverInterface $dbh,
+    mixed $value,
+  ): string {
+
+    if (is_string($value)) {
+      return $dbh->quote()->textValue($value);
+    } else if (is_float($value)) {
+      return $dbh->quote()->floatValue($value);
+    } else if (is_int($value)) {
+      return $dbh->quote()->intValue($value);
+    }
+
+    throw new UnsupportedValueTypeException('value='.gettype($value));
+
   }
 
 }

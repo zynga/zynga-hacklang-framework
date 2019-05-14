@@ -56,4 +56,69 @@ class SqlGenerator {
     }
 
   }
+
+  public static function getInsertSql(
+    DatabaseDriverInterface $dbh,
+    PgModelInterface $model,
+    PgRowInterface $obj,
+  ): string {
+
+    try {
+
+      // 0) Snag all the fields off the object.
+      $fieldMap = $obj->fields()->getFieldsAndTypesForObject();
+
+      // 1) Verify that this object has fields
+      if ($fieldMap->count() == 0) {
+        // this storable is invalid as it has no fields.
+        throw new NoFieldsOnObjectException('obj='.get_class($obj));
+      }
+
+      $fields = Vector {};
+      $quotedValues = Vector {};
+
+      foreach ($fieldMap as $fieldName => $fieldType) {
+
+        // push the field name onto the stack.
+        $fields->add($fieldName);
+
+        // Fetch the value for the name
+        $fieldObj = $obj->fields()->getTypedField($fieldName);
+        $fieldValue = $fieldObj->get();
+
+        // Quote the value and push it onto the insertion stack
+        $quotedValues->add($model->db()->quoteValue($dbh, $fieldValue));
+
+      }
+
+      // 3) snag the table name off the obj
+      $tableName = $obj->getTableName();
+
+      $sql =
+        'INSERT INTO '.
+        $tableName.
+        ' ( '.
+        implode(',', $fields).
+        ') VALUES ( '.
+        implode(',', $quotedValues).
+        ')';
+
+      return $sql;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
+
+  public static function getUpdateSql(
+    DatabaseDriverInterface $dbh,
+    PgModelInterface $model,
+    PgRowInterface $obj,
+  ): string {
+
+    return 'invalid-sql';
+
+  }
+
 }

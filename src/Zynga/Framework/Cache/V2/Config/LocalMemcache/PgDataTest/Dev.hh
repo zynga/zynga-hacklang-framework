@@ -4,6 +4,7 @@ namespace Zynga\Framework\Cache\V2\Config\LocalMemcache\PgDataTest;
 
 use Zynga\Framework\Cache\V2\Config\LocalMemcache\Base as LocalMemcacheBase;
 use Zynga\Framework\Cache\V2\Exceptions\InvalidObjectForKeyCreationException;
+use Zynga\Framework\PgData\V1\Exceptions\InvalidPrimaryKeyValueException;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
@@ -17,13 +18,15 @@ class Dev extends LocalMemcacheBase {
 
     if ($obj instanceof PgRowInterface) {
 
-      if ($obj->getPrimaryKeyTyped()->get() == 0) {
-        error_log('JEO id=0');
+      $pkValue = $obj->getPrimaryKeyTyped()->get();
+
+      if ($pkValue == 0) {
+        throw new InvalidPrimaryKeyValueException('id='.strval($pkValue));
       }
 
       $pk = strval($obj->getPrimaryKeyTyped()->get());
       $key = 'pg:'.md5(get_class($obj)).':'.$pk;
-      error_log('JEO keyMade='.$key);
+
       return $key;
 
     }

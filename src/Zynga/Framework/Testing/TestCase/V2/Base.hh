@@ -79,7 +79,6 @@ abstract class Base
    */
   public function doSetUpBeforeClass(): bool {
 
-    // error_log('JEO doSetUpBeforeClass=RAN');
     DevelopmentMode::reset();
 
     DynamicMethodCall::callMethod(
@@ -122,7 +121,6 @@ abstract class Base
    * @return bool doTearDownAfterClass success state
    */
   public function doTearDownAfterClass(): bool {
-    // error_log('doTearDownAfterClass=RAN');
 
     DevelopmentMode::reset();
 

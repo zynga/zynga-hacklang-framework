@@ -140,8 +140,6 @@ class Template implements FactoryTemplateInterface {
           $config =
             DynamicClassCreation::createClassByName($className, Vector {});
 
-          // error_log('config=' . $className . ' implements=' . implode(',', class_implements($config)));
-
           // JEO: We have to take the mixed value and validate it as ConfigInterface
           invariant(
             $config instanceof ConfigInterface,

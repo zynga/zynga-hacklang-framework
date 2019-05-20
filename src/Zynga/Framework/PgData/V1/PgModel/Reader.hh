@@ -78,13 +78,9 @@ class Reader implements ReaderInterface {
       if ($resultSet->count() == 1) {
         $row = $resultSet->get(0);
         if ($row instanceof PgRowInterface) {
-          if ($this->setSingleRowToDataCache($row) != true) {
-            error_log('JEO set to data cache failed, non-critical error?');
-          }
+          $this->setSingleRowToDataCache($row);
           $this->unlockRowCache($obj);
           return $row;
-        } else {
-          error_log('JEO rows returned contained a non PgRow object?');
         }
       }
 
@@ -93,9 +89,6 @@ class Reader implements ReaderInterface {
       return null;
 
     } catch (Exception $e) {
-      error_log(
-        'caughtException e='.$e->getMessage().' eClass='.get_class($e),
-      );
       throw $e;
     }
   }
@@ -364,7 +357,6 @@ class Reader implements ReaderInterface {
 
       $cache = $pgModel->cache()->getDataCache();
 
-      error_log('JEO set row='.$row->export()->asJSON());
       $cache->set($row);
 
       return true;
@@ -417,20 +409,13 @@ class Reader implements ReaderInterface {
 
       $pk = $pkId->get();
 
-      error_log('JEO thaw id='.strval($pk));
       $obj = $this->getByPk($model, $pk);
 
       if ($obj instanceof PgRowInterface) {
-        error_log('JEO adding id='.strval($pk));
-        error_log('JEO obj='.$obj->export()->asJSON());
         $rs->add($obj);
-      } else {
-        error_log('JEO failed to thaw id='.strval($pk));
       }
-    }
 
-    error_log('JEO rsCount='.$rs->count());
-    error_log('JEO thawed='.$rs->export()->asJSON());
+    }
 
     return $rs;
   }

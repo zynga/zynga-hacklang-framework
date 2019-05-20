@@ -58,10 +58,6 @@ class Exporter implements ExportInterface {
       foreach ($fields as $fieldName => $field) {
         list($isRequired, $isDefaultValue) =
           FieldsGeneric::getIsRequiredAndIsDefaultValue($field);
-        //echo "fieldName=$fieldName\n";
-        //var_dump($isRequired);
-        //var_dump($isDefaultValue);
-        //var_dump($field);
 
         // --
         // We don't dump non-changed values into our JSON

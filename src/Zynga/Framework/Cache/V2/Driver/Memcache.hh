@@ -127,7 +127,6 @@ class Memcache extends DriverBase {
       // add the host / port combinations to the memcache object, addserver
       //   always returns true as it lazy connects at use time.
       foreach ($serverPairs as $host => $port) {
-        error_log('addServer host='.$host.' port='.$port);
         $memcache->addserver($host, $port);
       }
 
@@ -180,22 +179,13 @@ class Memcache extends DriverBase {
 
       $this->connect();
 
-      error_log(
-        'cache::get isCached get key='.
-        $key.
-        ' mc='.
-        get_class($this->_memcache),
-      );
-
       $data = $this->_memcache->get($key);
 
       // no data to work with.
       if ($data === false) {
-        error_log('cache::get isCached data=null rawData='.$data);
         return null;
       }
 
-      error_log('isCached data='.$data);
       $obj->import()->fromJSON($data);
 
       return $obj;
@@ -221,25 +211,8 @@ class Memcache extends DriverBase {
 
       $jsonValue = $obj->export()->asJSON();
 
-      var_dump($key);
-
       $flags = 0;
       $success = $this->_memcache->set($key, $jsonValue, $flags, $ttl);
-
-      error_log(
-        'isCached set key='.
-        $key.
-        ' jsonValue='.
-        $jsonValue.
-        ' success='.
-        var_export($jsonValue, true).
-        ' flags='.
-        $flags.
-        ' ttl='.
-        $ttl.
-        ' currentTime='.
-        time(),
-      );
 
       return $success;
 
@@ -262,14 +235,10 @@ class Memcache extends DriverBase {
 
       $success = $this->_memcache->delete($key);
 
-      error_log('JEO MCDriver key='.$key.' delete='.var_export($success));
-
       if ($success == 1) {
-        error_log('JEO MCDriver delete-AOK');
         return true;
       }
 
-      error_log('JEO MCDriver delete-FAIL');
       return false;
 
     } catch (Exception $e) {

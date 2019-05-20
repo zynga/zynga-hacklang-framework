@@ -130,8 +130,6 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
       $deleteResult = $lockCache->delete($obj, $lockKey);
 
-      error_log('JEO deleteResult='.var_export($deleteResult, true));
-
       $this->_locks->remove($lockKey);
 
       if ($deleteResult === true) {
@@ -177,7 +175,6 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
       $obj = $cache->get($obj, $cacheKey);
 
-      //error_log('isCached get obj='.var_export($obj, true));
       return $obj;
 
     } catch (Exception $e) {
@@ -218,16 +215,11 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
       // We failed to set so the lock needs to persist.
       if ($setSuccess == false) {
-        error_log('isCached setSucces=false');
         return false;
       }
 
       // Release the lock as we are done here.
       $unlockReturn = $this->unlock($obj);
-
-      error_log(
-        'isCached setSucces=true, unlockReturn='.json_encode($unlockReturn),
-      );
 
       return $unlockReturn;
 
@@ -267,19 +259,12 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
       $deleteState = $cache->delete($obj, $cacheKey);
 
-      error_log('JEO DELETE failure? deleteStat='.$deleteState);
-
       // Failed to delete the object from cache, we shouldn't release the lock.
       if ($deleteState != true) {
-        error_log(
-          'JEO DELETE deleteState != true deleteState='.
-          var_export($deleteState, true),
-        );
         return false;
       }
 
       // Purge the lock as the object is now removed also.
-      error_log('JEO DELETE attemptingToUnlock lockKey='.$lockKey);
       return $this->unlock($obj);
 
     } catch (Exception $e) {

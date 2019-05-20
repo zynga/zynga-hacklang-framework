@@ -9,6 +9,7 @@ use Zynga\Framework\Lockable\Cache\V1\Factory as LockableCacheFactory;
 use
   Zynga\Framework\Lockable\Cache\V1\Interfaces\DriverInterface as LockableCacheDriverInterface
 ;
+use Zynga\Framework\PgData\V1\Exceptions\InvalidPrimaryKeyValueException;
 use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;
 use Zynga\Framework\PgData\V1\PgModel;
 use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\InventoryModel;
@@ -147,23 +148,9 @@ class InventoryModelTest extends TestCase {
     // --
     $id = 0;
 
-    // As a cleanup step, we need to purge LMC from reading this item again.
-    $this->removeCachedItem($id);
-
     // This trip should hit the database.
+    $this->expectException(InvalidPrimaryKeyValueException::class);
     $firstTrip = $inventory->getByPk(ItemType::class, $id);
-    $this->assertEquals(null, $firstTrip);
-
-    $this->validateModelStats($inventory, 0, 1, 1);
-
-    // Run the same get again, it should be not be cached.
-    $secondTrip = $inventory->getByPk(ItemType::class, $id);
-    $this->assertEquals(null, $secondTrip);
-
-    $this->validateModelStats($inventory, 0, 2, 2);
-
-    // Cleanup after ourselves.
-    $this->removeCachedItem($id);
 
   }
 
@@ -360,24 +347,6 @@ class InventoryModelTest extends TestCase {
     $inventory = new InventoryModel();
 
     $resultSet = $inventory->get(ItemType::class, $where);
-
-    // $this->assertGreaterThanOrEqual(
-    //   $expectedResultToInclude->count(),
-    //   $resultSet->count(),
-    //   'result_set should be bigger than exemplar',
-    // );
-
-    error_log('JEO doesQuer rsCount='.$resultSet->count());
-
-    // $this->assertEquals('', $resultSet->export()->asJSON());
-
-    foreach ($resultSet->toArray() as $resultObj) {
-      if ($resultObj instanceof ItemType) {
-        error_log('JEO id='.$resultObj->id->get());
-      } else {
-        error_log('JEO non-item-type detected');
-      }
-    }
 
     foreach ($expectedResultToInclude as $expectedResult) {
 

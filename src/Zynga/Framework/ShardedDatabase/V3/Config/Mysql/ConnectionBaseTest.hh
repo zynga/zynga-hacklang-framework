@@ -17,13 +17,9 @@ use
 ;
 
 use Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO;
-use
-  Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\ResultSet
-;
+use Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\ResultSet;
 use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
-use
-  Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface
-;
+use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\UInt64Box;
@@ -48,14 +44,11 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function doSetUpBeforeClass(): bool {
 
-    // error_log('JEO doSetupParent');
     parent::doSetUpBeforeClass();
 
     $this->switchEnvironment();
 
     DatabaseFactory::clear();
-
-    // error_log('JEO ENVMODE=' . DevelopmentMode::getModeAsString());
 
     return true;
   }
@@ -90,9 +83,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
     $dbh->setShardType($testShard);
 
     // see if we have a connection string
-    $this->assertNotEmpty(
-      $dbh->getConfig()->getConnectionString($testShard)
-    );
+    $this->assertNotEmpty($dbh->getConfig()->getConnectionString($testShard));
 
     // this is a misnomer as the query() call is in control off the connections.
     $this->assertTrue($dbh->connect());
@@ -207,7 +198,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
       // this should fail to index
       $this->assertFalse($sth->next());
 
-      }
+    }
   }
 
   public function testValidQueryFetchMapCursorGone(): void {
@@ -278,9 +269,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
       $expectedValues[2].
       "' as 'val' FROM dual ";
 
-    $dbh->setShardType(
-      $this->getRandomShardType()
-    );
+    $dbh->setShardType($this->getRandomShardType());
 
     $sth = $dbh->query($sql);
 
@@ -333,9 +322,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
     );
     $expectedValue = time();
 
-    $dbh->setShardType(
-      $this->getRandomShardType()
-    );
+    $dbh->setShardType($this->getRandomShardType());
 
     $sth = $dbh->query('SELECT '.$expectedValue.' as \'val\' FROM dual');
 
@@ -367,9 +354,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
     );
     $expectedValue = time();
 
-    $dbh->setShardType(
-      $this->getRandomShardType()
-    );
+    $dbh->setShardType($this->getRandomShardType());
 
     $sth = $dbh->query('SELECT '.$expectedValue.' as \'val\' FROM dual');
 
@@ -392,9 +377,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
     );
     $expectedValue = time();
 
-    $dbh->setShardType(
-      $this->getRandomShardType()
-    );
+    $dbh->setShardType($this->getRandomShardType());
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
     $this->assertTrue($sth->hasCursor());
@@ -413,9 +396,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
       $this->getConfigName(),
     );
 
-    $dbh->setShardType(
-      $this->getRandomShardType()
-    );
+    $dbh->setShardType($this->getRandomShardType());
 
     $this->expectException(QueryFailedException::class);
 
@@ -426,20 +407,17 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
   public function testHadError(): void {
 
     $expectedValue = time();
-    
 
     $dbh = DatabaseFactory::factory(
       DriverInterface::class,
       $this->getConfigName(),
     );
-    
+
     $schema = $dbh->getConfig()->getCurrentDatabase();
-    
+
     try {
 
-      $dbh->setShardType(
-        $this->getRandomShardType()
-      );
+      $dbh->setShardType($this->getRandomShardType());
 
       $sth = $dbh->query(
         "SELECT $expectedValue as 'val' FROM $schema.table_does_not_exist",
@@ -465,9 +443,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
     );
     $expectedValue = time();
 
-    $dbh->setShardType(
-      $this->getRandomShardType()
-    );
+    $dbh->setShardType($this->getRandomShardType());
 
     $this->expectException(QueryFailedException::class);
     $sth = $dbh->query("SELECT $expectedValue as 'val'' FROM dual");
@@ -494,9 +470,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
       $this->getConfigName(),
     );
 
-    $dbh->setShardType(
-      $this->getRandomShardType()
-    );
+    $dbh->setShardType($this->getRandomShardType());
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
 
@@ -518,9 +492,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
       $this->getConfigName(),
     );
 
-    $dbh->setShardType(
-      $this->getRandomShardType()
-    );
+    $dbh->setShardType($this->getRandomShardType());
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
 
@@ -541,9 +513,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
       $this->getConfigName(),
     );
 
-    $dbh->setShardType(
-      $this->getRandomShardType()
-    );
+    $dbh->setShardType($this->getRandomShardType());
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
 
@@ -563,9 +533,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
     );
     $expectedValue = time();
 
-    $dbh->setShardType(
-      $this->getRandomShardType()
-    );
+    $dbh->setShardType($this->getRandomShardType());
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
 
@@ -583,9 +551,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
       $this->getConfigName(),
     );
 
-    $dbh->setShardType(
-      $this->getRandomShardType()
-    );
+    $dbh->setShardType($this->getRandomShardType());
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
 
@@ -602,9 +568,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
     );
     $expectedValue = time();
 
-    $dbh->setShardType(
-      $this->getRandomShardType()
-    );
+    $dbh->setShardType($this->getRandomShardType());
 
     $sth = $dbh->query("SELECT $expectedValue as 'val' FROM dual");
 
@@ -646,7 +610,6 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
     $shardTypes = $this->getTestShardTypes();
     $shardTypes->shuffle();
-    
 
     // squidge the database connection by changing the password to invalid one.
     $dbh = DatabaseFactory::factory(
@@ -656,9 +619,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
     $dbh->setShardType($shardTypes[0]);
 
     //update with wrong password
-    $server =
-      $dbh->getConfig()
-        ->getServerFromShardType($shardTypes[0]);
+    $server = $dbh->getConfig()->getServerFromShardType($shardTypes[0]);
     $server->setPassword('some-made-up-estimate');
 
     $this->expectException(ConnectionGoneAwayException::class);
@@ -689,8 +650,8 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
     );
     $testValue = "don't";
     $expectedValue = "'don\\'t'";
-    
-    $randomTestShardType= $this->getRandomShardType();
+
+    $randomTestShardType = $this->getRandomShardType();
 
     $dbh->setShardType($randomTestShardType);
 
@@ -714,14 +675,12 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
     // 1,1
     $testValue = "don't";
     $expectedValue = "'don\\'t'";
-    $randomTestShardType= $this->getRandomShardType();
+    $randomTestShardType = $this->getRandomShardType();
 
     $dbh->setShardType($randomTestShardType);
 
     //update with wrong password
-    $server =
-      $dbh->getConfig()
-        ->getServerFromShardType($randomTestShardType);
+    $server = $dbh->getConfig()->getServerFromShardType($randomTestShardType);
     $server->setPassword('something-that-we-wont-use');
 
     $this->expectException(ConnectionGoneAwayException::class);

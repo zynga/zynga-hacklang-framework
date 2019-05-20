@@ -24,6 +24,7 @@ class XHProfiler {
   private static bool $_isProfiling = false;
 
   public static function error(string $string): bool {
+    // JEO: Resist the temptation to use the static logger here as we utilize this code to profile the rest of the stack.
     error_log($string);
     return true;
   }

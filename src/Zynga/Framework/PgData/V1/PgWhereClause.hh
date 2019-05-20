@@ -58,8 +58,6 @@ class PgWhereClause implements PgWhereClauseInterface {
 
     $pragmaCount = $this->count();
 
-    error_log('pragmaCount='.$pragmaCount);
-
     if ($pragmaCount == 0) {
       return '';
     }
@@ -78,8 +76,6 @@ class PgWhereClause implements PgWhereClauseInterface {
       $offset++;
 
     }
-
-    error_log('JEO where='.$sql);
 
     return $sql;
 
@@ -148,7 +144,6 @@ class PgWhereClause implements PgWhereClauseInterface {
     }
 
     $checksum = md5($params);
-    error_log('createWhereChecksum params='.$params.' checksum='.$checksum);
 
     return $checksum;
   }

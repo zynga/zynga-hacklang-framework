@@ -53,8 +53,6 @@ class Writer implements WriterInterface {
 
         $result = $dbh->query($insertSql);
 
-        error_log('insertSql='.$insertSql);
-
         if ($result->wasSuccessful() === true) {
           $cache->set($row);
           $cache->unlock($row);
@@ -94,7 +92,6 @@ class Writer implements WriterInterface {
 
         $updateSql = SqlGenerator::getUpdateSql($dbh, $pgModel, $obj);
 
-        error_log('JEO updateSql='.$updateSql);
         $result = $dbh->query($updateSql);
 
         if ($result->wasSuccessful() === true) {

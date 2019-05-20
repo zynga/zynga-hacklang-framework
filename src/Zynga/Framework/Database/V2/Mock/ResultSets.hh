@@ -8,6 +8,7 @@ use
   Zynga\Framework\Database\V2\Exceptions\Mock\LoadTestDataNoFileFoundException
 ;
 use Zynga\Framework\Exception\V1\Exception;
+use Zynga\Framework\Logging\V1\StaticLogger;
 
 class ResultSets {
   private ?Vector<Vector<mixed>> $_resultSets;
@@ -164,18 +165,14 @@ class ResultSets {
               // Default map
               $data = json_decode($rawData, true);
 
-              // var_dump($data);
-
               if ($data === null) {
-                error_log(
-                  'WARNING: mock data line failed to decode line='.$line,
+                // JEO, this error_log is unfortun
+                StaticLogger::warning(
+                  'WARNING: mock data line failed to decode',
+                  Map {'line' => $line},
                 );
                 continue;
               }
-
-              // JEO: We might want to trap that data === null instead of blindly injecting that into the dataset
-              // echo "rawData: $rawData\n";
-              // var_dump($data);
 
               $map = new Map($data);
 

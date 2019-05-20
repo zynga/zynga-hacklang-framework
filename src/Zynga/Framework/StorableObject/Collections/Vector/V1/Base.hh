@@ -98,6 +98,13 @@ class Base<Tv> implements StorableCollection<Tv> {
     return $this->vector->at($key);
   }
 
+  /**
+   * @throws OutOfBoundsException
+   */
+  public function get(int $key): Tv {
+    return $this->vector->at($key);
+  }
+
   public function containsKey<Tu super int>(Tu $key): bool {
     return $this->vector->containsKey($key);
   }

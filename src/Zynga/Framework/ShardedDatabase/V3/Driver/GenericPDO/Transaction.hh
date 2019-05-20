@@ -3,11 +3,11 @@
 namespace Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO;
 
 use Zynga\Framework\Exception\V1\Exception;
-use Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface;
+use Zynga\Framework\Database\V2\Interfaces\TransactionInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
-class Transaction<TType as TypeInterface> implements TransactionInterface<TType>{
+class Transaction<TType as TypeInterface> implements TransactionInterface {
   private DriverInterface<TType> $_dbh;
 
   public function __construct(DriverInterface<TType> $driver) {

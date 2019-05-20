@@ -5,7 +5,6 @@ namespace Zynga\Framework\PgData\V1;
 use Zynga\Framework\Database\V2\Interfaces\QueryableInterface;
 use Zynga\Framework\PgData\V1\Exceptions\FailedToFindFieldOnObjectException;
 use Zynga\Framework\PgData\V1\Exceptions\UnsupportedOperandException;
-use Zynga\Framework\PgData\V1\Exceptions\UnsupportedValueTypeException;
 use Zynga\Framework\PgData\V1\Interfaces\PgModelInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;

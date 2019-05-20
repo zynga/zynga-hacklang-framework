@@ -11,9 +11,11 @@ use Zynga\Framework\Exception\V1\Exception;
 
 class Data implements DataInterface {
   private PgModelInterface $_pgModel;
+  private Map<string, string> $_classNameToPkName;
 
   public function __construct(PgModelInterface $pgModel) {
     $this->_pgModel = $pgModel;
+    $this->_classNameToPkName = Map {};
   }
 
   private function pgModel(): PgModelInterface {
@@ -40,6 +42,29 @@ class Data implements DataInterface {
       throw $e;
     }
 
+  }
+
+  public function getPkFromClassName<TModelClass as PgRowInterface>(
+    classname<TModelClass> $model,
+  ): string {
+    try {
+
+      $pkName = $this->_classNameToPkName->get($model);
+
+      if (is_string($pkName)) {
+        return $pkName;
+      }
+
+      $tobj = $this->createRowObjectFromClassName($model);
+      $pkName = $tobj->getPrimaryKey();
+
+      $this->_classNameToPkName->set($model, $pkName);
+
+      return $pkName;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
   }
 
   public function hydrateDataToRowObject<TModelClass>(

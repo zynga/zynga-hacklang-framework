@@ -64,15 +64,36 @@ class InventoryModelTest extends TestCase {
 
   }
 
+  private function removeCachedResultSet(): void {
+
+    $lmc = LockableCacheFactory::factory(
+      LockableCacheDriverInterface::class,
+      'PgDataTest',
+    );
+
+  }
+
   private function validateModelStats(
     PgModel $model,
     int $cacheHits,
     int $cacheMisses,
     int $sqlSelectCount,
   ): void {
-    $this->assertEquals($cacheHits, $model->stats()->getCacheHits());
-    $this->assertEquals($cacheMisses, $model->stats()->getCacheMisses());
-    $this->assertEquals($sqlSelectCount, $model->stats()->getSqlSelects());
+    $this->assertEquals(
+      $cacheHits,
+      $model->stats()->getCacheHits(),
+      'cache_hits',
+    );
+    $this->assertEquals(
+      $cacheMisses,
+      $model->stats()->getCacheMisses(),
+      'cache_misses',
+    );
+    $this->assertEquals(
+      $sqlSelectCount,
+      $model->stats()->getSqlSelects(),
+      'sql_select_count',
+    );
   }
 
   public function testInventory_GetById(): void {
@@ -89,13 +110,12 @@ class InventoryModelTest extends TestCase {
     $this->removeCachedItem($id);
 
     // This trip should hit the database.
-    $oneType = $inventory->getByPk(ItemType::class, $id);
+    $firstTrip = $inventory->getByPk(ItemType::class, $id);
 
-    $this->assertInstanceOf(ItemType::class, $oneType);
+    if ($firstTrip instanceof ItemType) {
 
-    if ($oneType instanceof ItemType) {
-      $this->assertEquals($id, $oneType->id->get());
-      $this->assertEquals($name, $oneType->name->get());
+      $this->assertEquals($id, $firstTrip->id->get());
+      $this->assertEquals($name, $firstTrip->name->get());
       $this->validateModelStats($inventory, 0, 1, 1);
 
     } else {
@@ -103,16 +123,44 @@ class InventoryModelTest extends TestCase {
     }
 
     // Run the same get again, it should be cached.
-    $twoType = $inventory->getByPk(ItemType::class, $id);
+    $secondTrip = $inventory->getByPk(ItemType::class, $id);
 
-    if ($twoType instanceof ItemType) {
-      $this->assertEquals($id, $twoType->id->get());
-      $this->assertEquals($name, $twoType->name->get());
+    if ($secondTrip instanceof ItemType) {
+      $this->assertEquals($id, $secondTrip->id->get());
+      $this->assertEquals($name, $secondTrip->name->get());
       $this->validateModelStats($inventory, 1, 1, 1);
-
     } else {
       $this->fail('type returned should of been ItemType');
     }
+
+    // Cleanup after ourselves.
+    $this->removeCachedItem($id);
+
+  }
+
+  public function testInventory_GetById_NoId(): void {
+
+    $inventory = new InventoryModel();
+
+    // --
+    // Read a simple item off the db.
+    // --
+    $id = 0;
+
+    // As a cleanup step, we need to purge LMC from reading this item again.
+    $this->removeCachedItem($id);
+
+    // This trip should hit the database.
+    $firstTrip = $inventory->getByPk(ItemType::class, $id);
+    $this->assertEquals(null, $firstTrip);
+
+    $this->validateModelStats($inventory, 0, 1, 1);
+
+    // Run the same get again, it should be not be cached.
+    $secondTrip = $inventory->getByPk(ItemType::class, $id);
+    $this->assertEquals(null, $secondTrip);
+
+    $this->validateModelStats($inventory, 0, 2, 2);
 
     // Cleanup after ourselves.
     $this->removeCachedItem($id);
@@ -126,62 +174,25 @@ class InventoryModelTest extends TestCase {
     // --
     // Read a simple item off the db.
     // --
-    $id = 0;
+    $id = 123; // This is a invalid id on purpose
 
     // As a cleanup step, we need to purge LMC from reading this item again.
     $this->removeCachedItem($id);
 
     // This trip should hit the database.
-    $oneType = $inventory->getByPk(ItemType::class, $id);
+    $firstTrip = $inventory->getByPk(ItemType::class, $id);
+    $this->assertEquals(null, $firstTrip);
 
-    $this->assertEquals(null, $oneType);
     $this->validateModelStats($inventory, 0, 1, 1);
 
     // Run the same get again, it should be not be cached.
-    $twoType = $inventory->getByPk(ItemType::class, $id);
+    $secondTrip = $inventory->getByPk(ItemType::class, $id);
+    $this->assertEquals(null, $secondTrip);
 
-    $this->assertEquals(null, $twoType);
     $this->validateModelStats($inventory, 0, 2, 2);
 
     // Cleanup after ourselves.
     $this->removeCachedItem($id);
-
-  }
-
-  private function doesQueryReturnExpectedValues(
-    Vector<Map<string, mixed>> $expectedResultToInclude,
-    ?PgWhereClauseInterface $where = null,
-  ): void {
-
-    // TODO: replace with factory.
-    $inventory = new InventoryModel();
-
-    $resultSet = $inventory->get(ItemType::class, $where);
-
-    foreach ($expectedResultToInclude as $expectedResult) {
-
-      $foundExpected = false;
-      foreach ($resultSet->items() as $resultObj) {
-        if (!$resultObj instanceof ItemType) {
-          continue;
-        }
-        if ($resultObj->id->get() == $expectedResult['id'] &&
-            $resultObj->name->get() == $expectedResult['name']) {
-          $foundExpected = true;
-          $this->assertEquals($expectedResult['id'], $resultObj->id->get());
-          $this->assertEquals(
-            $expectedResult['name'],
-            $resultObj->name->get(),
-          );
-          break;
-        }
-      }
-
-      if ($foundExpected == false) {
-        $this->fail('Failed to find '.json_encode($expectedResult));
-      }
-
-    }
 
   }
 
@@ -340,20 +351,60 @@ class InventoryModelTest extends TestCase {
 
   }
 
-  // // --
-  // // Lock data, and update it.
-  // // --
-  // $oneType->lock(); // @TODO - will successful lock will re-read the data?
-  // $oneType->bar->set(1234);
-  // $oneType->save();
+  private function doesQueryReturnExpectedValues(
+    Vector<Map<string, mixed>> $expectedResultToInclude,
+    ?PgWhereClauseInterface $where = null,
+  ): void {
 
-  // // --
-  // // Example: Fetching one or more rows based upon condition.
-  // // Attempt to fetch where bar = 'baz'
-  // // --
-  // $where = new WhereClause(ItemType::class);
-  // $where->and('bar', WhereOperand::EQUALS, 'baz');
+    // TODO: replace with factory.
+    $inventory = new InventoryModel();
 
-  // $itemTypes = $inventory->get(ItemType::class, $where);
+    $resultSet = $inventory->get(ItemType::class, $where);
+
+    // $this->assertGreaterThanOrEqual(
+    //   $expectedResultToInclude->count(),
+    //   $resultSet->count(),
+    //   'result_set should be bigger than exemplar',
+    // );
+
+    error_log('JEO doesQuer rsCount='.$resultSet->count());
+
+    // $this->assertEquals('', $resultSet->export()->asJSON());
+
+    foreach ($resultSet->toArray() as $resultObj) {
+      if ($resultObj instanceof ItemType) {
+        error_log('JEO id='.$resultObj->id->get());
+      } else {
+        error_log('JEO non-item-type detected');
+      }
+    }
+
+    foreach ($expectedResultToInclude as $expectedResult) {
+
+      $foundExpected = false;
+      foreach ($resultSet->toArray() as $resultObj) {
+        if (!$resultObj instanceof ItemType) {
+          continue;
+        }
+
+        if ($resultObj->id->get() == $expectedResult['id'] &&
+            $resultObj->name->get() == $expectedResult['name']) {
+          $foundExpected = true;
+          $this->assertEquals($expectedResult['id'], $resultObj->id->get());
+          $this->assertEquals(
+            $expectedResult['name'],
+            $resultObj->name->get(),
+          );
+          break;
+        }
+      }
+
+      if ($foundExpected == false) {
+        $this->fail('Failed to find '.json_encode($expectedResult));
+      }
+
+    }
+
+  }
 
 }

@@ -51,16 +51,13 @@ class Db implements DbInterface {
 
   public function quoteValue(QueryableInterface $dbh, mixed $value): string {
 
-    // TODO: need to fix the quote value support.
-    /*
-     if (is_string($value)) {
-     return $dbh->quote()->textValue($value);
-     } else if (is_float($value)) {
-     return $dbh->quote()->floatValue($value);
-     } else if (is_int($value)) {
-     return $dbh->quote()->intValue($value);
-     }
-     */
+    if (is_string($value)) {
+      return $dbh->quote()->textValue($value);
+    } else if (is_float($value)) {
+      return $dbh->quote()->floatValue($value);
+    } else if (is_int($value)) {
+      return $dbh->quote()->intValue($value);
+    }
 
     throw new UnsupportedValueTypeException('value='.gettype($value));
 

@@ -8,8 +8,6 @@ use Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\Quoter;
 use Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\Transaction;
 use Zynga\Framework\ShardedDatabase\V3\Info as ShardInfo;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
-use Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface;
-use Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
 abstract class Base<TType as TypeInterface> extends ConfigShardedBase<TType> {

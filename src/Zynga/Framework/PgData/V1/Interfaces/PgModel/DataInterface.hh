@@ -10,6 +10,10 @@ interface DataInterface {
     classname<TModelClass> $model,
   ): PgRowInterface;
 
+  public function getPkFromClassName<TModelClass as PgRowInterface>(
+    classname<TModelClass> $model,
+  ): string;
+
   public function hydrateDataToRowObject<TModelClass>(
     PgRowInterface $obj,
     Map<string, mixed> $rawData,

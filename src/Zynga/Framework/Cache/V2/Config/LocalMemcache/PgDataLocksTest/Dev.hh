@@ -18,7 +18,7 @@ class Dev extends LocalMemcacheBase {
     if ($obj instanceof PgRowInterface) {
 
       $pk = strval($obj->getPrimaryKeyTyped()->get());
-      $key = 'pg:'.md5(get_class($obj).':'.$pk).':lock';
+      $key = 'pg:'.md5(get_class($obj)).':'.$pk.':lock';
       return $key;
 
     }

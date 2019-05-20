@@ -23,5 +23,12 @@ interface PgModelInterface {
   public function reader(): ReaderInterface;
   public function stats(): StatsInterface;
   public function writer(): WriterInterface;
-
+  public function getByPk<TModelClass as PgRowInterface>(
+    classname<TModelClass> $model,
+    mixed $id,
+  ): ?PgRowInterface;
+  public function get<TModelClass as PgRowInterface>(
+    classname<TModelClass> $model,
+    ?PgWhereClauseInterface $where = null,
+  ): PgResultSetInterface<PgRowInterface>;
 }

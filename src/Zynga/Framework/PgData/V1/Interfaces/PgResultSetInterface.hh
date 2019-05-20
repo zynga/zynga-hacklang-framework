@@ -8,6 +8,4 @@ use
 ;
 
 interface PgResultSetInterface<Tv as PgRowInterface>
-  extends StorableCollection<Tv> {
-  public function createChecksum(): string;
-}
+  extends StorableCollection<Tv> {}

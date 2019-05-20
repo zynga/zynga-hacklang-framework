@@ -17,8 +17,13 @@ class Dev extends LocalMemcacheBase {
 
     if ($obj instanceof PgRowInterface) {
 
+      if ($obj->getPrimaryKeyTyped()->get() == 0) {
+        error_log('JEO id=0');
+      }
+
       $pk = strval($obj->getPrimaryKeyTyped()->get());
-      $key = 'pg:'.md5(get_class($obj).':'.$pk);
+      $key = 'pg:'.md5(get_class($obj)).':'.$pk;
+      error_log('JEO keyMade='.$key);
       return $key;
 
     }

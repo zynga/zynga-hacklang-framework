@@ -2,11 +2,11 @@
 
 namespace Zynga\Framework\ShardedDatabase\V3\Driver\Mock;
 
+use Zynga\Framework\Database\V2\Interfaces\QuoteInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
-use Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
-class Quoter<TType as TypeInterface> implements QuoteInterface<TType> {
+class Quoter<TType as TypeInterface> implements QuoteInterface {
   private DriverInterface<TType> $_dbh;
 
   public function __construct(DriverInterface<TType> $driver) {
@@ -25,9 +25,7 @@ class Quoter<TType as TypeInterface> implements QuoteInterface<TType> {
     return $this->_dbh->nativeQuoteString($value);
   }
 
-  public function textVector(
-    Vector<string> $vec
-  ): string {
+  public function textVector(Vector<string> $vec): string {
     $quotedString = '';
     foreach ($vec as $vecValue) {
       if ($quotedString != '') {

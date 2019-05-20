@@ -7,13 +7,6 @@ use Zynga\Framework\Database\V2\Interfaces\DriverInterface;
 interface TransactionInterface {
 
   /**
-   * Creates a database specific transaction object.
-   * @param DriverInterface $driver
-   * @return TransactionInterface
-   */
-  public function __construct(DriverInterface $driver);
-
-  /**
    * Starts a transaction on your database.
    * @return bool
    */

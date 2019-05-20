@@ -3,10 +3,10 @@
 namespace Zynga\Framework\ShardedDatabase\V3\Driver;
 
 use Zynga\Framework\Database\V2\Exceptions\QueryFailedException;
+use Zynga\Framework\Database\V2\Interfaces\QuoteInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\ResultSetInterface;
-use Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface;
-use Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface;
+use Zynga\Framework\Database\V2\Interfaces\TransactionInterface;
 use Zynga\Framework\ShardedDatabase\V3\Driver\Base;
 use Zynga\Framework\ShardedDatabase\V3\Driver\Mock\ResultSet;
 use Zynga\Framework\ShardedDatabase\V3\Driver\Mock\Quoter;
@@ -22,8 +22,8 @@ class Mock<TType as TypeInterface> extends Base<TType> {
   private bool $_isConnected;
   private bool $_hadError;
   private int $_resultOffset;
-  private ?QuoteInterface<TType> $_quoter;
-  private ?TransactionInterface<TType> $_transaction;
+  private ?QuoteInterface $_quoter;
+  private ?TransactionInterface $_transaction;
   private ResultSets $_resultSets;
 
   public function __construct(DriverConfigInterface<TType> $config) {
@@ -39,21 +39,24 @@ class Mock<TType as TypeInterface> extends Base<TType> {
     $this->_resultSets = new ResultSets();
   }
 
-  public function getTransaction(): TransactionInterface<TType> {
-    if ( $this->_transaction === null ) {
+  public function getTransaction(): TransactionInterface {
+    if ($this->_transaction === null) {
       $this->_transaction = new Transaction($this);
     }
     return $this->_transaction;
   }
 
-  public function getQuoter(): QuoteInterface<TType> {
-    if ( $this->_quoter === null ) {
+  public function getQuoter(): QuoteInterface {
+    if ($this->_quoter === null) {
       $this->_quoter = new Quoter($this);
     }
     return $this->_quoter;
   }
 
-  public function connectToShard(int $shardIndex, string $connectionString): bool {
+  public function connectToShard(
+    int $shardIndex,
+    string $connectionString,
+  ): bool {
     $this->_isConnected = true;
     return true;
   }
@@ -68,9 +71,7 @@ class Mock<TType as TypeInterface> extends Base<TType> {
     return true;
   }
 
-  public function setIsConnected(
-    bool $state
-  ): bool {
+  public function setIsConnected(bool $state): bool {
     $this->_isConnected = $state;
     return true;
   }
@@ -143,7 +144,7 @@ class Mock<TType as TypeInterface> extends Base<TType> {
     try {
       $this->resetResultsSets();
       return $this->_resultSets->loadResultsForTest($class, $functionName);
-    } catch ( Exception $e ) {
+    } catch (Exception $e) {
       throw $e;
     }
   }

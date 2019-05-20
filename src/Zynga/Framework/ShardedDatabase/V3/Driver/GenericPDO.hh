@@ -17,8 +17,8 @@ use Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\ResultSet;
 use Zynga\Framework\ShardedDatabase\V3\Driver\GenericPDO\ConnectionContainer;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\ResultSetInterface;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface;
-use Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface;
-use Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface;
+use Zynga\Framework\Database\V2\Interfaces\QuoteInterface;
+use Zynga\Framework\Database\V2\Interfaces\TransactionInterface;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
 use \PDO;
@@ -27,8 +27,8 @@ use \PDOException;
 class GenericPDO<TType as TypeInterface> extends Base<TType> {
 
   private ConnectionContainer $_connections;
-  private ?QuoteInterface<TType> $_quoter;
-  private ?TransactionInterface<TType> $_transaction;
+  private ?QuoteInterface $_quoter;
+  private ?TransactionInterface $_transaction;
 
   private Map<int, bool> $_connectionState;
   private bool $_hadError;
@@ -52,7 +52,7 @@ class GenericPDO<TType as TypeInterface> extends Base<TType> {
     $this->connectedShardId = -1;
   }
 
-  public function getQuoter(): QuoteInterface<TType> {
+  public function getQuoter(): QuoteInterface {
     if ($this->_quoter === null) {
       $this->_quoter = new Quoter($this);
     }
@@ -60,7 +60,7 @@ class GenericPDO<TType as TypeInterface> extends Base<TType> {
     return $this->_quoter;
   }
 
-  public function getTransaction(): TransactionInterface<TType> {
+  public function getTransaction(): TransactionInterface {
     if ($this->_transaction === null) {
       $this->_transaction = new Transaction($this);
     }
@@ -69,13 +69,13 @@ class GenericPDO<TType as TypeInterface> extends Base<TType> {
   }
 
   public function setIsConnected(bool $value): bool {
-    $shardId = $this->getConfig()->getShardId( $this->getShardType());
+    $shardId = $this->getConfig()->getShardId($this->getShardType());
     $this->_connectionState->set($shardId, $value);
     return true;
   }
 
   public function getIsConnected(): bool {
-    $shardId = $this->getConfig()->getShardId( $this->getShardType());
+    $shardId = $this->getConfig()->getShardId($this->getShardType());
     if ($this->_connectionState->containsKey($shardId) === true &&
         $this->_connectionState[$shardId] === true) {
       return true;
@@ -155,7 +155,8 @@ class GenericPDO<TType as TypeInterface> extends Base<TType> {
 
       if ($this->getIsConnected() == true) {
         $shardType = $this->getShardType();
-        if ($this->connectedShardId != $this->getConfig()->getShardId($shardType)) {
+        if ($this->connectedShardId !=
+            $this->getConfig()->getShardId($shardType)) {
           $this->disconnect();
         }
       }

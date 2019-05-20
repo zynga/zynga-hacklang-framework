@@ -8,15 +8,13 @@ use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
 use Zynga\Framework\ShardedDatabase\V3\Config\Mock\Base as ConfigUnderTest;
 
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
-use Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface;
-use Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface;
 
 abstract class BaseTest extends TestCase {
 
-    public function testGetShardCount(): void {
-        $config = $this->getConfigUnderTest();
-        $this->assertTrue($config->getShardCount() > 0);
-    }
+  public function testGetShardCount(): void {
+    $config = $this->getConfigUnderTest();
+    $this->assertTrue($config->getShardCount() > 0);
+  }
 
-    abstract public function getConfigUnderTest(): ConfigUnderTest;
+  abstract public function getConfigUnderTest(): ConfigUnderTest;
 }

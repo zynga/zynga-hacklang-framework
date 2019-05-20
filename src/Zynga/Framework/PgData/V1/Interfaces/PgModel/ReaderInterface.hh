@@ -10,7 +10,7 @@ interface ReaderInterface {
   public function getByPk<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     mixed $id,
-  ): PgResultSetInterface<PgRowInterface>;
+  ): ?PgRowInterface;
   public function get<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     ?PgWhereClauseInterface $where = null,

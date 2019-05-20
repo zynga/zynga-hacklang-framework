@@ -2,7 +2,6 @@
 
 namespace Zynga\Framework\Lockable\Cache\V1\Driver;
 
-use Zynga\Framework\Lockable\Cache\V1\Driver\Caching\StorableToKeyCache;
 use Zynga\Framework\Lockable\Cache\V1\Interfaces\DriverInterface;
 use Zynga\Framework\Lockable\Cache\V1\Interfaces\DriverConfigInterface;
 use Zynga\Framework\Lockable\Cache\V1\Interfaces\LockPayloadInterface;
@@ -15,12 +14,10 @@ use Zynga\Framework\Factory\V2\Driver\Base as FactoryDriverBase;
 use \Exception;
 
 class Caching extends FactoryDriverBase implements DriverInterface {
-  private ?StorableToKeyCache $_keyCache;
   private DriverConfigInterface $_config;
   private Map<string, LockPayloadInterface> $_locks;
 
   public function __construct(DriverConfigInterface $config) {
-    $this->_keyCache = null;
     $this->_config = $config;
     $this->_locks = Map {};
   }
@@ -35,15 +32,26 @@ class Caching extends FactoryDriverBase implements DriverInterface {
     return $this->_config;
   }
 
-  public function getKeyCache(): StorableToKeyCache {
-
-    if ($this->_keyCache instanceof StorableToKeyCache) {
-      return $this->_keyCache;
+  private function getCacheKeyFromStorableObject(
+    StorableObjectInterface $obj,
+  ): string {
+    try {
+      $cache = $this->getConfig()->getCache();
+      return $cache->getConfig()->createKeyFromStorableObject($obj);
+    } catch (Exception $e) {
+      throw $e;
     }
+  }
 
-    $this->_keyCache = new StorableToKeyCache($this);
-    return $this->_keyCache;
-
+  private function getLockCacheKeyFromStorableObject(
+    StorableObjectInterface $obj,
+  ): string {
+    try {
+      $cache = $this->getConfig()->getLockCache();
+      return $cache->getConfig()->createKeyFromStorableObject($obj);
+    } catch (Exception $e) {
+      throw $e;
+    }
   }
 
   /**
@@ -58,8 +66,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
     try {
 
-      $lockKey =
-        $this->getKeyCache()->getCachableLockKeyForStorableObject($obj);
+      $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
 
       $alreadyLocked = $this->_locks->get($lockKey);
 
@@ -110,8 +117,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
     try {
 
-      $lockKey =
-        $this->getKeyCache()->getCachableLockKeyForStorableObject($obj);
+      $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
 
       $alreadyLocked = $this->_locks->get($lockKey);
 
@@ -156,8 +162,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
     try {
 
-      $lockKey =
-        $this->getKeyCache()->getCachableLockKeyForStorableObject($obj);
+      $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
 
       if ($getLocked === true && $this->lock($obj) !== true) {
         // could not establish a lock, read consistency not guarenteed.
@@ -168,7 +173,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
       $cache = $this->getConfig()->getCache();
 
-      $cacheKey = $this->getKeyCache()->getCachableKeyForStorableObject($obj);
+      $cacheKey = $this->getCacheKeyFromStorableObject($obj);
 
       $obj = $cache->get($obj, $cacheKey);
 
@@ -197,8 +202,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
     try {
 
-      $lockKey =
-        $this->getKeyCache()->getCachableLockKeyForStorableObject($obj);
+      $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
 
       if ($this->lock($obj) !== true) {
         throw new UnableToEstablishLockException(
@@ -208,7 +212,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
       $cache = $this->getConfig()->getCache();
 
-      $cacheKey = $this->getKeyCache()->getCachableKeyForStorableObject($obj);
+      $cacheKey = $this->getCacheKeyFromStorableObject($obj);
 
       $setSuccess = $cache->set($obj, $cacheKey);
 
@@ -249,8 +253,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
   ): bool {
     try {
 
-      $lockKey =
-        $this->getKeyCache()->getCachableLockKeyForStorableObject($obj);
+      $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
 
       if ($this->lock($obj) !== true) {
         throw new UnableToEstablishLockException(
@@ -260,7 +263,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
       $cache = $this->getConfig()->getCache();
 
-      $cacheKey = $this->getKeyCache()->getCachableKeyForStorableObject($obj);
+      $cacheKey = $this->getCacheKeyFromStorableObject($obj);
 
       $deleteState = $cache->delete($obj, $cacheKey);
 

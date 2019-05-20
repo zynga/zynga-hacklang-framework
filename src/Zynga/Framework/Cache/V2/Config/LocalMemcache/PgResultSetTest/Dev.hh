@@ -4,7 +4,7 @@ namespace Zynga\Framework\Cache\V2\Config\LocalMemcache\PgResultSetTest;
 
 use Zynga\Framework\Cache\V2\Config\LocalMemcache\Base as LocalMemcacheBase;
 use Zynga\Framework\Cache\V2\Exceptions\InvalidObjectForKeyCreationException;
-use Zynga\Framework\PgData\V1\Interfaces\PgResultSetInterface;
+use Zynga\Framework\PgData\V1\PgCachedResultSet;
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 use \Exception;
@@ -15,7 +15,7 @@ class Dev extends LocalMemcacheBase {
     StorableObjectInterface $obj,
   ): string {
 
-    if ($obj instanceof PgResultSetInterface) {
+    if ($obj instanceof PgCachedResultSet) {
 
       $checksum = $obj->createChecksum();
 
@@ -26,7 +26,7 @@ class Dev extends LocalMemcacheBase {
     }
 
     throw new InvalidObjectForKeyCreationException(
-      'PgDataTest only supports pgResultSetInterface objects.',
+      'PgDataTest only supports PgCachedResultSet objects.',
     );
 
   }

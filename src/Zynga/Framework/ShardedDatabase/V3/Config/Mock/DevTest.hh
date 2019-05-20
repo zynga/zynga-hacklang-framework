@@ -3,18 +3,10 @@
 namespace Zynga\Framework\ShardedDatabase\V3\Config\Mock;
 
 use Zynga\Framework\ShardedDatabase\V3\Config\Mock\BaseTest;
-use
-  Zynga\Framework\ShardedDatabase\V3\Config\Mock\Base as BaseConfig
-;
-use
-  Zynga\Framework\ShardedDatabase\V3\Config\Mock\Dev as ConfigUnderTest
-;
+use Zynga\Framework\ShardedDatabase\V3\Config\Mock\Base as BaseConfig;
+use Zynga\Framework\ShardedDatabase\V3\Config\Mock\Dev as ConfigUnderTest;
 use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
-use Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface;
-use
-  Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface
-;
 use Zynga\Framework\ShardedDatabase\V3\ConnectionDetails;
 use Zynga\Framework\Type\V1\UInt64Box;
 class DevTest extends BaseTest {
@@ -40,8 +32,7 @@ class DevTest extends BaseTest {
     // run the full init.
     $config->init();
 
-    $server =
-      $config->getServerFromShardType(new UInt64Box(1));
+    $server = $config->getServerFromShardType(new UInt64Box(1));
 
     $this->assertEquals(
       ConfigUnderTest::SERVER_USERNAME,
@@ -53,10 +44,7 @@ class DevTest extends BaseTest {
     );
 
     $this->assertEquals('localhost', $server->getHostname());
-    $this->assertEquals(
-      0,
-      $config->getShardId(new UInt64Box(1)),
-    );
+    $this->assertEquals(0, $config->getShardId(new UInt64Box(1)));
     $this->assertEquals('mockhost', $config->getCurrentServer());
 
     $pregs = array();
@@ -65,9 +53,7 @@ class DevTest extends BaseTest {
 
     if (preg_match(
           '/^username\=(.*)\;password\=(.*)\;host\=(.*)\;$/',
-          $config->getConnectionString(
-            new UInt64Box(1)
-          ),
+          $config->getConnectionString(new UInt64Box(1)),
           $pregs,
         )) {
       $this->assertEquals(ConfigUnderTest::SERVER_USERNAME, $pregs[1]);
@@ -80,11 +66,11 @@ class DevTest extends BaseTest {
     // This is special as this isn't a legit driver, so we fake it for coverage.
     $driver = DatabaseFactory::factory(DriverInterface::class, 'Mock');
     $this->assertClassImplements(
-      'Zynga\Framework\ShardedDatabase\V3\Interfaces\QuoteInterface',
+      'Zynga\Framework\Database\V2\Interfaces\QuoteInterface',
       $driver->getQuoter(),
     );
     $this->assertClassImplements(
-      'Zynga\Framework\ShardedDatabase\V3\Interfaces\TransactionInterface',
+      'Zynga\Framework\Database\V2\Interfaces\TransactionInterface',
       $driver->getTransaction(),
     );
   }

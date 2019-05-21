@@ -26,6 +26,10 @@ class DevTest extends TestCase {
 
     $config = $this->createConfigUnderTest();
 
+    $this->assertTrue($config->cacheAllowsKeyOverride());
+    $this->assertFalse($config->cacheAllowsNonExpiringKeys());
+    $this->assertTrue($config->cacheAllowsTTLOverride());
+
     $this->expectException(InvalidObjectForKeyCreationException::class);
     $key = $config->createKeyFromStorableObject($obj);
 

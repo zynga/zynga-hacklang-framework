@@ -1,15 +1,18 @@
 <?hh // strict
 
-namespace Zynga\Framework\Cache\V2\Config\Mock;
+namespace Zynga\Framework\Cache\V2\Config\Mock\NoCacheKeyOverride;
 
 use Zynga\Framework\Cache\V2\Config\LocalMemcache\Base as LocalMemcacheBase;
 use Zynga\Framework\Cache\V2\Exceptions\InvalidObjectForKeyCreationException;
+
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 use
   Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidExampleObject
 ;
 
-class Staging extends LocalMemcacheBase {
+use Zynga\Framework\Exception\V1\Exception;
+
+class Dev extends LocalMemcacheBase {
 
   public function createKeyFromStorableObject(
     StorableObjectInterface $obj,
@@ -18,8 +21,9 @@ class Staging extends LocalMemcacheBase {
     if ($obj instanceof ValidExampleObject) {
 
       if ($obj->example_uint64->isDefaultValue()[0] !== true) {
-        return 'lmc-mock-staging-'.$obj->example_uint64->get();
+        return 'lmc-mock-dev-'.$obj->example_uint64->get();
       }
+
       // --
       // JEO: Explicitly simulating how you handle a failure if the passed in value isn't
       // within range or a memcache key of lmc-ve-0 wouldn't be a good use case.
@@ -37,7 +41,7 @@ class Staging extends LocalMemcacheBase {
 
   }
 
-    public function cacheAllowsKeyOverride(): bool {
+  public function cacheAllowsKeyOverride(): bool {
     return false;
   }
 

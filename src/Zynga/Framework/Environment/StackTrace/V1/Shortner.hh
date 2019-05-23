@@ -1,36 +1,8 @@
 <?hh // strict
 
-namespace Zynga\Framework\Environment\Stacktrace\V1;
+namespace Zynga\Framework\Environment\StackTrace\V1;
 
-class FrameBuffer {
-  private string $_buffer;
-
-  public function __construct() {
-    $this->_buffer = '';
-  }
-
-  public function get(): string {
-    return $this->_buffer;
-  }
-
-  public function addFragment(string $fragment): bool {
-    if ($this->_buffer != '') {
-      $this->_buffer .= '::';
-    }
-    $this->_buffer .= $fragment;
-    return true;
-  }
-
-  public function addFromFrame(
-    array<string, mixed> $frame,
-    string $elem,
-  ): void {
-    if (array_key_exists($elem, $frame)) {
-      $this->addFragment($elem.'='.strval($frame[$elem]));
-    }
-  }
-
-}
+use Zynga\Framework\Environment\StackTrace\V1\FrameBuffer;
 
 class Shortner {
 

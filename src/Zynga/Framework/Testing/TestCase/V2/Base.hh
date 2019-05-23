@@ -81,26 +81,29 @@ abstract class Base
 
     DevelopmentMode::reset();
 
-    DynamicMethodCall::callMethod(
-      'Zynga\Framework\Testing\MockState\V2\MockState',
-      'enableMocks',
-      Vector {},
-      true,
-    );
+    try {
+      DynamicMethodCall::callMethod(
+        'Zynga\Framework\Testing\MockState\V2\MockState',
+        'enableMocks',
+        Vector {},
+        true,
+      );
 
-    DynamicMethodCall::callMethod(
-      'Zynga\Legacy\Log',
-      'setHideAllLogs',
-      Vector {true},
-      true,
-    );
+      DynamicMethodCall::callMethod(
+        'Zynga\Legacy\Log',
+        'setHideAllLogs',
+        Vector {true},
+        true,
+      );
 
-    DynamicMethodCall::callMethod(
-      'Zynga\Framework\Database\V2\Factory',
-      'resetResultSets',
-      Vector {},
-      true,
-    );
+      DynamicMethodCall::callMethod(
+        'Zynga\Framework\Database\V2\Factory',
+        'resetResultSets',
+        Vector {},
+        true,
+      );
+    } catch (Exception $e) {
+    }
 
     return true;
 
@@ -124,19 +127,23 @@ abstract class Base
 
     DevelopmentMode::reset();
 
-    DynamicMethodCall::callMethod(
-      'Zynga\Framework\Testing\MockState\V2\MockState',
-      'enableMocks',
-      Vector {},
-      true,
-    );
+    try {
 
-    DynamicMethodCall::callMethod(
-      'Zynga\Framework\Database\V2\Factory',
-      'resetResultSets',
-      Vector {},
-      true,
-    );
+      DynamicMethodCall::callMethod(
+        'Zynga\Framework\Testing\MockState\V2\MockState',
+        'enableMocks',
+        Vector {},
+        true,
+      );
+
+      DynamicMethodCall::callMethod(
+        'Zynga\Framework\Database\V2\Factory',
+        'resetResultSets',
+        Vector {},
+        true,
+      );
+    } catch (Exception $e) {
+    }
 
     return true;
 
@@ -152,12 +159,15 @@ abstract class Base
   public function setUp(): void {
     if ($this->hideLogs() === true) {
       ob_start();
-      DynamicMethodCall::callMethod(
-        'Zynga\Legacy\V1\Log',
-        'setHideAllLogs',
-        Vector {true},
-        true,
-      );
+      try {
+        DynamicMethodCall::callMethod(
+          'Zynga\Legacy\V1\Log',
+          'setHideAllLogs',
+          Vector {true},
+          true,
+        );
+      } catch (Exception $e) {
+      }
     }
 
     if ($this->isEnabled() !== true) {
@@ -170,12 +180,15 @@ abstract class Base
   public function tearDown(): void {
     if ($this->hideLogs() === true) {
       ob_end_clean();
-      DynamicMethodCall::callMethod(
-        'Zynga\Legacy\V1\Log',
-        'setHideAllLogs',
-        Vector {false},
-        true,
-      );
+      try {
+        DynamicMethodCall::callMethod(
+          'Zynga\Legacy\V1\Log',
+          'setHideAllLogs',
+          Vector {false},
+          true,
+        );
+      } catch (Exception $e) {
+      }
     }
   }
 

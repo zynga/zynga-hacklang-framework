@@ -2,8 +2,12 @@
 
 namespace Zynga\Framework\Environment\HTTP\HeaderContainer\V2;
 
-use Zynga\Framework\Environment\HTTP\HeaderContainer\V2\Interfaces\HeaderContainerInterface;
-use Zynga\Framework\Environment\HTTP\HeaderContainer\V2\Exceptions\UnknownHeaderException;
+use
+  Zynga\Framework\Environment\HTTP\HeaderContainer\V2\Interfaces\HeaderContainerInterface
+;
+use
+  Zynga\Framework\Environment\HTTP\HeaderContainer\V2\Exceptions\UnknownHeaderException
+;
 
 class HeaderContainer implements HeaderContainerInterface {
 
@@ -37,21 +41,29 @@ class HeaderContainer implements HeaderContainerInterface {
     return true;
   }
 
+  public function headersSent(): bool {
+    return headers_sent();
+  }
+
+  public function sendHeader(string $header): bool {
+    // We supress the internal header error via the @ symbol, we know we're being bad here.
+    @header($header);
+    return true;
+  }
+
   /**
    * PHP + hhvm do not provide a easy way to overload internal functions that
    * impact the outputstream.
-   *
-   * @codeCoverageIgnore
    */
   public function send(): bool {
 
-    if (headers_sent() === true) {
+    if ($this->headersSent() === true) {
       return false;
     }
 
     if ($this->_headers->count() > 0) {
       foreach ($this->_headers as $header => $value) {
-        header($header.': '.$value);
+        $this->sendHeader($header.': '.$value);
       }
     }
 

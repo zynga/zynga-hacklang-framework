@@ -8,7 +8,8 @@ use Zynga\Framework\Database\V2\Driver\Vertica as BaseDriver;
 use Zynga\Framework\Database\V2\Exceptions\QueryFailedException;
 use Zynga\Framework\Database\V2\Interfaces\QuoteInterface;
 use Zynga\Framework\Database\V2\Interfaces\TransactionInterface;
-
+use Zynga\Framework\Database\V2\Exceptions\MockQueriesRequired;
+use Zynga\Framework\Database\V2\Exceptions\ConnectionGoneAwayException;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 class VerticaTest extends TestCase {
@@ -119,6 +120,27 @@ class VerticaTest extends TestCase {
 
     $this->assertTrue($driver->hadError());
     $this->assertNotEmpty($driver->getLastError());
+
+  }
+
+  public function test_query_NotRespectingMock(): void {
+
+    $config = new MockConfig();
+    $driver = new BaseDriver($config);
+    $driver->enableRequireMockQueries();
+    $this->assertTrue($driver->getRequiresMockQueries());
+    $this->expectException(MockQueriesRequired::class);
+    $driver->query('SELECT FROM pht.hands');
+
+  }
+
+  public function test_query_ConnectedButNot(): void {
+
+    $config = new MockConfig();
+    $driver = new BaseDriver($config);
+    $driver->setIsConnected(true);
+    $this->expectException(ConnectionGoneAwayException::class);
+    $driver->query('SELECT FROM pht.hands');
 
   }
 

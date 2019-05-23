@@ -50,4 +50,16 @@ class BaseTest extends TestCase {
 
   }
 
+  public function test_isSqlDML(): void {
+
+    $config = new DevCluster();
+    $driver = new Mock($config);
+
+    $this->assertTrue($driver->isSqlDML('INSERT'));
+    $this->assertTrue($driver->isSqlDML('UPDATE'));
+    $this->assertTrue($driver->isSqlDML('DELETE'));
+    $this->assertFalse($driver->isSqlDML('SELECT'));
+    
+  }
+
 }

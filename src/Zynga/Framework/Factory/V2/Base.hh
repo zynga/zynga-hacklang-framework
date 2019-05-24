@@ -8,6 +8,7 @@ use Zynga\Framework\Factory\V2\Template as FactoryTemplate;
 use Zynga\Framework\Factory\V2\Exceptions\FailedToLoadDriverException;
 use Zynga\Framework\Factory\V2\Interfaces\FactoryInterface;
 use Zynga\Framework\Factory\V2\Interfaces\FactoryTemplateInterface;
+use Zynga\Framework\Factory\V2\Interfaces\DriverInterface;
 
 /**
  * Base level factory class for the generic factory framework we have in
@@ -30,6 +31,24 @@ abstract class Base implements FactoryInterface {
 
   }
 
+  public static function clearFactoryTemplates(): bool {
+    self::$_template->clear();
+    return true;
+  }
+
+  public static function setFactoryTemplate(
+    string $classRoot,
+    FactoryTemplateInterface $fti,
+  ): bool {
+
+    $templateMap = self::$_template;
+
+    $templateMap->set($classRoot, $fti);
+
+    return true;
+
+  }
+
   public static function getFactoryTemplate(): FactoryTemplateInterface {
 
     $classRoot = static::getClassRoot();
@@ -44,15 +63,13 @@ abstract class Base implements FactoryInterface {
     // if not cached create a factory for this context
     $template = new FactoryTemplate(static::getClassRoot());
 
-    $templateMap->set($classRoot, $template);
-
-    self::$_template = $templateMap;
+    self::setFactoryTemplate($classRoot, $template);
 
     return $templateMap[$classRoot];
 
   }
 
-  public static function factory<TDriver>(
+  public static function factory<TDriver as DriverInterface>(
     classname<TDriver> $driverName,
     string $name,
   ): TDriver {

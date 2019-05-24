@@ -80,6 +80,11 @@ class Base<Tv> implements StorableCollection<Tv> {
     $this->vector->addAll($traversable);
     return $this;
   }
+  
+  public function set(int $key, Tv $item): this {
+    $this->vector->set($key, $item);
+    return $this;
+  }
 
   public function setAll(?KeyedTraversable<int, Tv> $traversable): this {
     $this->vector->setAll($traversable);

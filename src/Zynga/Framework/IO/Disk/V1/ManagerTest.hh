@@ -13,31 +13,28 @@ use Zynga\Framework\IO\Disk\V1\Exception\InvalidFileNameException;
 use Zynga\Framework\IO\Disk\V1\Exception\ReadPermissionsException;
 use Zynga\Framework\IO\Disk\V1\Exception\WritePermissionsException;
 use Zynga\Framework\IO\Disk\V1\Manager as DiskIOManager;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithDoesFileExistFalse;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFailedBZOpen;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFailedCheckOrCreatePath;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFailedFileOpen;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFailedReadPermissions;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFailedToCloseFile;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFailedToWriteToFile;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFailedWritePermissions;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnce;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnceBzcloseFails;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFeofFalseOnceFcloseFails;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithFileWriteZeroBytes;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithDoesFileExistFalse;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithFailedBZClose;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithFailedBZOpen;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithFailedCheckOrCreatePath;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithFailedFileOpen;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithFailedReadPermissions;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithFailedToCloseFile;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithFailedToWriteToFile;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithFailedWritePermissions;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithFeofFalseOnce;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithFeofFalseOnceFcloseFails;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithFileWriteZeroBytes;
 use
-  Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsDirectoryTrueAndScanDirectoryReturnsNonsense
+  Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrue
 ;
 use
-  Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrue
+  Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue
 ;
-use
-  Zynga\Framework\IO\Disk\V1\Mock\ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue
-;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithRmdirFalse;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithRmdirFalse;
+use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithTarballValidFalse;
+
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-use Zynga\Framework\IO\Disk\V1\Mock\ManagerWithTarballValidFalse;
-use Zynga\Framework\ReflectionCache\V1\ReflectionClasses;
 
 class ManagerTest extends TestCase {
 
@@ -60,129 +57,71 @@ class ManagerTest extends TestCase {
   }
 
   public function testDoesFileExistReturnsFalseOnEmptyString(): void {
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('doesFileExist');
-    $method->setAccessible(true);
-    $fileExists = $method->invoke(DiskIOManager::instance(), '');
-    $this->assertFalse($fileExists);
+    $manager = DiskIOManager::instance();
+    $this->assertFalse($manager->doesFileExist(''));
   }
 
   public function testFileOpenWithBadModeReturnsFalse(): void {
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('fileOpen');
-    $method->setAccessible(true);
-    $handle = $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/1',
-      'y',
-    );
-    $this->assertFalse($handle);
+    $manager = DiskIOManager::instance();
+    $handle = $manager->fileOpen($this->getTempTestDir().'/1', 'y');
 
-    // Just in case it didn't fail opening
-    if (is_resource($handle)) {
-      fclose($handle);
+    if (is_bool($handle)) {
+      $this->assertFalse($handle);
+    } else {
+      $this->fail('Expected no handle for this run');
     }
+
   }
 
   public function testDirectoryNameReturnsCorrectDirectory(): void {
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('directoryName');
-    $method->setAccessible(true);
-    $directory = $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/2',
-    );
+
+    $manager = DiskIOManager::instance();
+    $directory = $manager->directoryName($this->getTempTestDir().'/2');
     $this->assertEquals($this->getTempTestDir(), $directory);
+
   }
 
   public function testMakeDirectoryReturnsFalseOnExistingDirectory(): void {
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('makeDirectory');
-    $method->setAccessible(true);
-    $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/3',
-      0000,
-      false,
-    );
-    $success = $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/3',
-      0000,
-      false,
-    );
+
+    $manager = DiskIOManager::instance();
+    $manager->makeDirectory($this->getTempTestDir().'/3', 0000, false);
+    $success =
+      $manager->makeDirectory($this->getTempTestDir().'/3', 0000, false);
     $this->assertFalse($success);
+
   }
 
   public function testUnlinkNonexistentFileReturnsFalse(): void {
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('unlink');
-    $method->setAccessible(true);
-    $success = $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/4',
-    );
+    $manager = DiskIOManager::instance();
+    $success = $manager->unlink($this->getTempTestDir().'/4');
     $this->assertFalse($success);
   }
 
   public function testFwriteWithValidHandleReturnsCorrectCount(): void {
     mkdir($this->getTempTestDir().'/5', 0777, true);
     $handle = fopen($this->getTempTestDir().'/5/1', 'w');
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('fwrite');
-    $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), $handle, 'test');
+
+    $manager = DiskIOManager::instance();
+    $result = $manager->fwrite($handle, 'test');
+
+    // cleanup
     fclose($handle);
     unlink($this->getTempTestDir().'/5/1');
     rmdir($this->getTempTestDir().'/5');
+
     $this->assertEquals($result, 4);
   }
 
   public function testFCloseWithValidHanldeReturnsTrue(): void {
     mkdir($this->getTempTestDir().'/6', 0777, true);
     $handle = fopen($this->getTempTestDir().'/6', 'r');
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('fclose');
-    $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), $handle);
+
+    $manager = DiskIOManager::instance();
+    $result = $manager->fclose($handle);
+
     $this->assertTrue($result);
 
-    // Just in case it failed to close
+    // cleanup: Just in case it failed to close
     if (!$result) {
       fclose($handle);
     }
@@ -191,74 +130,39 @@ class ManagerTest extends TestCase {
   }
 
   public function testIsReadableWithInvalidFilenameReturnsFalse(): void {
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('isReadable');
-    $method->setAccessible(true);
-    $result = $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/7',
-    );
+    $manager = DiskIOManager::instance();
+    $result = $manager->isReadable($this->getTempTestDir().'/7');
     $this->assertFalse($result);
   }
 
   public function testIsWriteableWithInvalidFilenameReturnsFalse(): void {
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('isReadable');
-    $method->setAccessible(true);
-    $result = $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/8',
-    );
+    $manager = DiskIOManager::instance();
+    $result = $manager->isReadable($this->getTempTestDir().'/8');
     $this->assertFalse($result);
   }
 
   public function testBzopenWithBadModeReturnsFalse(): void {
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('bzopen');
-    $method->setAccessible(true);
-    $handle = $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/9',
-      'y',
-    );
-    $this->assertFalse($handle);
 
-    // Just in case it didn't fail opening
-    if (is_resource($handle)) {
-      bzclose($handle);
+    $manager = DiskIOManager::instance();
+
+    $handle = $manager->bzopen($this->getTempTestDir().'/9', 'y');
+
+    if (is_bool($handle)) {
+      $this->assertFalse($handle);
+    } else {
+      $this->fail('expected false return');
     }
+
   }
 
   public function testBzopenWithValidModeReturnsResource(): void {
+
     mkdir($this->getTempTestDir().'/10', 0777, true);
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('bzopen');
-    $method->setAccessible(true);
-    $handle = $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/10/1.tar.bz2',
-      'w',
-    );
+
+    $manager = DiskIOManager::instance();
+
+    $handle = $manager->bzopen($this->getTempTestDir().'/10/1.tar.bz2', 'w');
+
     $this->assertTrue(is_resource($handle));
 
     if ($handle !== false) {
@@ -270,215 +174,196 @@ class ManagerTest extends TestCase {
   }
 
   public function testBzcloseWithValidHandleReturnsTrue(): void {
+
     mkdir($this->getTempTestDir().'/11', 0777, true);
     $handle = bzopen($this->getTempTestDir().'/11/1.tar.bz2', 'w');
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('bzclose');
-    $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), $handle);
+
+    $manager = DiskIOManager::instance();
+    $result = $manager->bzclose($handle);
+
     $this->assertTrue($result);
+
     unlink($this->getTempTestDir().'/11/1.tar.bz2');
     rmdir($this->getTempTestDir().'/11');
+
   }
 
   public function testCheckOrCreatePathWithNewPathReturnsTrue(): void {
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('checkOrCreatePath');
-    $method->setAccessible(true);
-    $result = $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/12',
-      0777,
-    );
+
+    $manager = DiskIOManager::instance();
+
+    $result =
+      $manager->checkOrCreatePath($this->getTempTestDir().'/12', 0777);
+
     $this->assertTrue($result);
+
     rmdir($this->getTempTestDir().'/12');
+
   }
 
   public function testCheckOrCreatePathWithExistingPathReturnsTrue(): void {
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('checkOrCreatePath');
-    $method->setAccessible(true);
-    $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/13',
-      0777,
-    );
-    $result = $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/13',
-      0777,
-    );
+
+    $manager = DiskIOManager::instance();
+
+    $manager->checkOrCreatePath($this->getTempTestDir().'/13', 0777);
+
+    $result =
+      $manager->checkOrCreatePath($this->getTempTestDir().'/13', 0777);
+
     $this->assertTrue($result);
+
     rmdir($this->getTempTestDir().'/13');
+
   }
 
   public function testDeleteFileWithExistingFileReturnsTrue(): void {
+
     mkdir($this->getTempTestDir().'/14', 0777, true);
     touch($this->getTempTestDir().'/14/1');
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('deleteFile');
-    $method->setAccessible(true);
-    $result = $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/14/1',
-    );
+
+    $manager = DiskIOManager::instance();
+
+    $result = $manager->deleteFile($this->getTempTestDir().'/14/1');
+
     $this->assertTrue($result);
+
     rmdir($this->getTempTestDir().'/14');
+
   }
 
   public function testDeleteFileWithNonexistingFileReturnsTrue(): void {
+
     mkdir($this->getTempTestDir().'/15', 0777, true);
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('deleteFile');
-    $method->setAccessible(true);
-    $result = $method->invoke(
-      DiskIOManager::instance(),
-      $this->getTempTestDir().'/15/1',
-    );
+
+    $manager = DiskIOManager::instance();
+
+    $result = $manager->deleteFile($this->getTempTestDir().'/15/1');
+
     $this->assertTrue($result);
+
     rmdir($this->getTempTestDir().'/15');
+
   }
 
   public function testFeofReturnsFalseForResourceWithMoreToRead(): void {
+
     mkdir($this->getTempTestDir().'/16', 0777, true);
     touch($this->getTempTestDir().'/16/1');
     $handle = fopen($this->getTempTestDir().'/16/1', 'wr');
     fwrite($handle, '12345');
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('feof');
-    $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), $handle);
+
+    $manager = DiskIOManager::instance();
+
+    $result = $manager->feof($handle);
     $this->assertFalse($result);
+
     unlink($this->getTempTestDir().'/16/1');
     rmdir($this->getTempTestDir().'/16');
+
   }
 
   public function testFgetsReturnsValidCountForResource(): void {
+
     mkdir($this->getTempTestDir().'/17', 0777, true);
     touch($this->getTempTestDir().'/17/1');
     $handle = fopen($this->getTempTestDir().'/17/1', 'w');
     fwrite($handle, '12345');
     fclose($handle);
     $handle = fopen($this->getTempTestDir().'/17/1', 'r');
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(true, 'Failed to reflect className='.$className);
-      return;
-    }
-    $method = $class->getMethod('fgets');
-    $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), $handle, 20);
+
+    $manager = DiskIOManager::instance();
+
+    $result = $manager->fgets($handle, 20);
     $this->assertEquals('12345', $result);
+
     fclose($handle);
     unlink($this->getTempTestDir().'/17/1');
     rmdir($this->getTempTestDir().'/17');
+
   }
 
   public function testBZWriteReturnsValidCountForResource(): void {
+
     mkdir($this->getTempTestDir().'/18', 0777, true);
     $handle = bzopen($this->getTempTestDir().'/18/1', 'w');
-    $className = 'Zynga\Framework\IO\Disk\V1\Manager';
-    $class = ReflectionClasses::getReflection($className);
-    if (!$class instanceof ReflectionClass) {
-      $this->assertTrue(false, 'Failed to reflect class='.$className);
-      return;
-    }
-    $method = $class->getMethod('bzwrite');
-    $method->setAccessible(true);
-    $result = $method->invoke(DiskIOManager::instance(), $handle, '1', 20);
+
+    $manager = DiskIOManager::instance();
+
+    $result = $manager->bzwrite($handle, '1', 20);
+
     $this->assertEquals(1, $result);
+
     bzclose($handle);
     unlink($this->getTempTestDir().'/18/1');
     rmdir($this->getTempTestDir().'/18');
+
   }
 
   public function testWriteFileThrowsFailedToCreateDirectoryException(): void {
     $this->expectException(FailedToCreateDirectoryException::class);
-    ManagerWithFailedCheckOrCreatePath::instance()
-      ->writeFile('', '', 0777, true);
+    $manager = new ManagerWithFailedCheckOrCreatePath();
+    $manager->writeFile('', '', 0777, true);
   }
 
   public function testWriteFileThrowsFailedToOpenFileException(): void {
     $this->expectException(FailedToOpenFileException::class);
-    ManagerWithFailedFileOpen::instance()->writeFile('', '', 0777, true);
+    $manager = new ManagerWithFailedFileOpen();
+    $manager->writeFile('', '', 0777, true);
   }
 
   public function testWriteFileThrowsFailedToWriteToFileException(): void {
     $this->expectException(FailedToWriteToFileException::class);
-    ManagerWithFailedToWriteToFile::instance()->writeFile('', '', 0777, true);
+    $manager = new ManagerWithFailedToWriteToFile();
+    $manager->writeFile('', '', 0777, true);
   }
 
   public function testWriteToFileWithIncorrectBytesThrowsFailedToWriteToFileException(
   ): void {
     $this->expectException(FailedToWriteToFileException::class);
-    ManagerWithFileWriteZeroBytes::instance()
-      ->writeFile('', 'asdf', 0777, true);
+    $manager = new ManagerWithFileWriteZeroBytes();
+    $manager->writeFile('', 'asdf', 0777, true);
   }
 
   public function testWriteFileThrowsFailedToCloseFileException(): void {
     $this->expectException(FailedToCloseFileException::class);
-    ManagerWithFailedToCloseFile::instance()->writeFile('', '', 0777, true);
+    $manager = new ManagerWithFailedToCloseFile();
+    $manager->writeFile('', '', 0777, true);
   }
 
   public function testBZip2ThrowsReadPermissionsException(): void {
     $this->expectException(ReadPermissionsException::class);
-    ManagerWithFailedReadPermissions::instance()->bzip2('', '');
+    $manager = new ManagerWithFailedReadPermissions();
+    $manager->bzip2('', '');
   }
 
   public function testBZip2ThrowsWritePermissionsException(): void {
     $this->expectException(WritePermissionsException::class);
-    ManagerWithFailedWritePermissions::instance()->bzip2('', '');
+    $manager = new ManagerWithFailedWritePermissions();
+    $manager->bzip2('', '');
   }
 
   public function testBZip2ThrowsFailedToOpenFileExceptionForFOpen(): void {
     $this->expectException(FailedToOpenFileException::class);
-    ManagerWithFailedFileOpen::instance()->bzip2('', '');
+    $manager = new ManagerWithFailedFileOpen();
+    $manager->bzip2('', '');
   }
 
   public function testBZip2ThrowsFailedToOpenFileExceptionForBZOpen(): void {
     $this->expectException(FailedToOpenFileException::class);
-    ManagerWithFailedBZOpen::instance()->bzip2('', '');
+    $manager = new ManagerWithFailedBZOpen();
+    $manager->bzip2('', '');
   }
 
   public function testBZip2ThrowsFailedToCloseFileExceptionForFclose(): void {
     $this->expectException(FailedToCloseFileException::class);
-    ManagerWithFeofFalseOnceFcloseFails::instance()->bzip2('', '');
+    $manager = new ManagerWithFeofFalseOnceFcloseFails();
+    $manager->bzip2('', '');
   }
 
   public function testBZip2ThrowsFailedToCloseFileExceptionForBzclose(): void {
     $this->expectException(FailedToCloseFileException::class);
-    ManagerWithFeofFalseOnceFcloseFails::instance()->bzip2('', '');
+    $manager = new ManagerWithFeofFalseOnceFcloseFails();
+    $manager->bzip2('', '');
   }
 
   public function testChown(): void {
@@ -538,9 +423,9 @@ class ManagerTest extends TestCase {
   public function testRecursivelyDeleteDirectoryWithRmdirFailureReturns0(
   ): void {
     mkdir($this->getTempTestDir().'/23', 0777, true);
+    $manager = new ManagerWithRmdirFalse();
     $result =
-      ManagerWithRmdirFalse::instance()
-        ->recursivelyDeleteDirectory($this->getTempTestDir().'/23');
+      $manager->recursivelyDeleteDirectory($this->getTempTestDir().'/23');
     $this->assertEquals(0, $result);
     rmdir($this->getTempTestDir().'/23');
   }
@@ -600,21 +485,24 @@ class ManagerTest extends TestCase {
   public function testTarballWithDoesFileExistFalseThrowsReadPermissionsException(
   ): void {
     $this->expectException(ReadPermissionsException::class);
-    ManagerWithDoesFileExistFalse::instance()->tarball('', '');
+    $manager = new ManagerWithDoesFileExistFalse();
+    $manager->tarball('', '');
   }
 
   public function testTarballWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrueThrowsWritePermissionsException(
   ): void {
     $this->expectException(WritePermissionsException::class);
-    ManagerWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrue::instance()
-      ->tarball('', '');
+    $manager =
+      new ManagerWithIsWriteableFalseAndDoesFileExistTrueAndIsReadableTrue();
+    $manager->tarball('', '');
   }
 
   public function testTarballWithQuotesInFileNamesThrowsInvalidFileNameException(
   ): void {
     $this->expectException(InvalidFileNameException::class);
-    ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue::instance()
-      ->tarball('\'', '\'');
+    $manager =
+      new ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue();
+    $manager->tarball('\'', '\'');
   }
 
   public function testTarballWithExistingFileThrowsInvalidFileNameException(
@@ -622,11 +510,12 @@ class ManagerTest extends TestCase {
     mkdir($this->getTempTestDir().'/26/0', 0777, true);
     touch($this->getTempTestDir().'/26/0.tar', 0777, true);
     try {
-      ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue::instance()
-        ->tarball(
-          $this->getTempTestDir().'/26/0',
-          $this->getTempTestDir().'/26/0.tar',
-        );
+      $manager =
+        new ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue();
+      $manager->tarball(
+        $this->getTempTestDir().'/26/0',
+        $this->getTempTestDir().'/26/0.tar',
+      );
       $this->fail();
     } catch (InvalidFileNameException $e) {
     }
@@ -640,8 +529,9 @@ class ManagerTest extends TestCase {
   ): void {
     mkdir($this->getTempTestDir().'/27/0', 0777, true);
     try {
-      ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue::instance()
-        ->tarball('', '');
+      $manager =
+        new ManagerWithIsWriteableTrueAndDoesFileExistTrueAndIsReadableTrue();
+      $manager->tarball('', '');
       $this->fail();
     } catch (FailedToWriteToFileException $e) {
     }
@@ -654,7 +544,8 @@ class ManagerTest extends TestCase {
   ): void {
     mkdir($this->getTempTestDir().'/28/0', 0777, true);
     try {
-      ManagerWithTarballValidFalse::instance()->tarball(
+      $manager = new ManagerWithTarballValidFalse();
+      $manager->tarball(
         $this->getTempTestDir().'/28/0',
         $this->getTempTestDir().'/28/0.tar',
       );
@@ -665,6 +556,59 @@ class ManagerTest extends TestCase {
     unlink($this->getTempTestDir().'/28/0.tar');
     rmdir($this->getTempTestDir().'/28/0');
     rmdir($this->getTempTestDir().'/28');
+  }
+
+  public function testManagerTarballDoesNotExist(): void {
+    $this->assertFalse(
+      DiskIOManager::instance()
+        ->isTarballValid('/dev/null/file-does-not-exist'),
+    );
+  }
+
+  public function testManagerBzipWithFailedClose(): void {
+    $this->expectException(FailedToCloseFileException::class);
+    $manager = new ManagerWithFailedBZClose();
+    $manager->bzip2($this->getTempTestDir().'/29.bz', '');
+  }
+
+  public function testChownFailure(): void {
+    // --
+    // On most secure unixes this will be false
+    // --
+    $testFile = $this->getTempTestDir().'/30.testfile';
+    touch($testFile);
+    $manager = DiskIOManager::instance();
+    $this->assertFalse($manager->chown($testFile, "root"));
+    unlink($testFile);
+  }
+
+  public function testBzipWriteFailureTrap(): void {
+
+    $testFile = $this->getTempTestDir().'/31.testfile';
+
+    $manager = DiskIOManager::instance();
+    $fh = $manager->fileOpen($testFile, 'w');
+
+    if (is_resource($fh)) {
+      fclose($fh);
+      $this->assertEquals(0, $manager->bzwrite($fh, 'some-data-here', 12));
+    } else {
+      $this->fail('setup task did not make a fh');
+    }
+
+    // cleanup
+    unlink($testFile);
+
+  }
+
+  public function testScandirInvalidDir(): void {
+
+    $testDir = $this->getTempTestDir().'/32';
+
+    $manager = DiskIOManager::instance();
+    $vec = $manager->scanDirectory($testDir);
+    $this->assertEquals(0, $vec->count());
+
   }
 
 }

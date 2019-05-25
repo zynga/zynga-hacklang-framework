@@ -1,6 +1,6 @@
 <?hh // strict
 
-namespace Zynga\Framework\IO\Disk\V1;
+namespace Zynga\Framework\IO\Disk\V1\Interfaces;
 
 /**
  * Interface for managing Disk IO
@@ -101,4 +101,43 @@ interface ManagerInterface {
    * @throws FailedToWriteToFileException
    */
   public function tarball(string $in, string $out): void;
+
+  /**
+   *
+   */
+  public function isDirectory(string $path): bool;
+  public function feof(resource $handle): bool;
+  public function fgets(resource $handle, int $maxBytesToRead): string;
+  public function doesFileExist(string $fileName): bool;
+  public function fileOpen(string $fileName, string $mode): mixed;
+  public function directoryName(string $fileName): string;
+  public function makeDirectory(
+    string $path,
+    int $permissions,
+    bool $recursivePermissions,
+  ): bool;
+  public function unlink(string $fileName): bool;
+  public function fwrite(resource $handle, string $dataToWrite): mixed;
+  public function fclose(resource $handle): bool;
+  public function isReadable(string $fileName): bool;
+  public function isWriteable(string $fileName): bool;
+  public function bzopen(string $fileName, string $mode): mixed;
+  public function bzclose(resource $handle): bool;
+  public function bzwrite(
+    resource $handle,
+    string $dataToWrite,
+    int $maxBytesToRead,
+  ): int;
+
+  public function rmdir(string $path): bool;
+
+  public function scanDirectory(string $path): Vector<resource>;
+
+  /**
+   * Test a given filename for validity as a tarball.
+   *
+   * @return bool $validTarball
+   */
+  public function isTarballValid(string $filename): bool;
+
 }

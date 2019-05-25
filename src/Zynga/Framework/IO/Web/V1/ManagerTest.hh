@@ -7,11 +7,11 @@ use Zynga\Framework\Type\V1\UrlBox;
 
 use Zynga\Framework\Environment\CodePath\V1\CodePath;
 use Zynga\Framework\IO\Web\V1\Curl\CurlRequest;
-use Zynga\Framework\IO\Web\V1\Curl\MockedCurlRequest;
+use Zynga\Framework\IO\Web\V1\Exceptions\UnexpectedHttpCodeException;
+use Zynga\Framework\IO\Web\V1\Exceptions\FailedExecutionException;
 use Zynga\Framework\IO\Web\V1\Curl\CurlResponsePayload;
+use Zynga\Framework\IO\Web\V1\Curl\MockedCurlRequest;
 use Zynga\Framework\IO\Web\V1\Interfaces\CurlInterface;
-use Zynga\Framework\IO\Web\V1\Exception\UnexpectedHttpCode;
-use Zynga\Framework\IO\Web\V1\Exception\FailedExecution;
 
 class ManagerTest extends TestCase {
 
@@ -153,7 +153,7 @@ class ManagerTest extends TestCase {
 
     $mimeType = 'text/plain';
 
-    $this->expectException(UnexpectedHttpCode::class);
+    $this->expectException(UnexpectedHttpCodeException::class);
     Manager::putFile($url, $testFile, $mimeType);
 
   }
@@ -174,7 +174,7 @@ class ManagerTest extends TestCase {
 
     $mimeType = 'text/plain';
 
-    $this->expectException(FailedExecution::class);
+    $this->expectException(FailedExecutionException::class);
     Manager::putFile($url, $testFile, $mimeType);
 
   }

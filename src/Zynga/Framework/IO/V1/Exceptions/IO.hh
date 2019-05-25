@@ -1,6 +1,6 @@
 <?hh // strict
 
-namespace Zynga\Framework\IO\V1\Exception;
+namespace Zynga\Framework\IO\V1\Exceptions;
 
 use Zynga\Framework\Exception\V1\Exception;
 

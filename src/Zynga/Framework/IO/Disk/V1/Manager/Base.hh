@@ -4,15 +4,15 @@ namespace Zynga\Framework\IO\Disk\V1\Manager;
 
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\IO\Disk\V1\Interfaces\ManagerInterface;
-use Zynga\Framework\IO\Disk\V1\Exception\FailedToCloseFileException;
-use Zynga\Framework\IO\Disk\V1\Exception\FailedToCreateDirectoryException;
-use Zynga\Framework\IO\Disk\V1\Exception\FailedToDeleteDirectoryException;
-use Zynga\Framework\IO\Disk\V1\Exception\FailedToDeleteFileException;
-use Zynga\Framework\IO\Disk\V1\Exception\FailedToOpenFileException;
-use Zynga\Framework\IO\Disk\V1\Exception\FailedToWriteToFileException;
-use Zynga\Framework\IO\Disk\V1\Exception\InvalidFileNameException;
-use Zynga\Framework\IO\Disk\V1\Exception\ReadPermissionsException;
-use Zynga\Framework\IO\Disk\V1\Exception\WritePermissionsException;
+use Zynga\Framework\IO\Disk\V1\Exceptions\FailedToCloseFileException;
+use Zynga\Framework\IO\Disk\V1\Exceptions\FailedToCreateDirectoryException;
+use Zynga\Framework\IO\Disk\V1\Exceptions\FailedToDeleteDirectoryException;
+use Zynga\Framework\IO\Disk\V1\Exceptions\FailedToDeleteFileException;
+use Zynga\Framework\IO\Disk\V1\Exceptions\FailedToOpenFileException;
+use Zynga\Framework\IO\Disk\V1\Exceptions\FailedToWriteToFileException;
+use Zynga\Framework\IO\Disk\V1\Exceptions\InvalidFileNameException;
+use Zynga\Framework\IO\Disk\V1\Exceptions\ReadPermissionsException;
+use Zynga\Framework\IO\Disk\V1\Exceptions\WritePermissionsException;
 
 abstract class Base implements ManagerInterface {
 

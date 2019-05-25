@@ -4,15 +4,9 @@ namespace Zynga\Framework\IO\Web\V1;
 
 use \CURLFile;
 use \resource;
-use
-  Zynga\Framework\IO\Web\V1\Exception\FailedExecution as FailedExecutionException
-;
-use
-  Zynga\Framework\IO\Web\V1\Exception\FailedInitialization as FailedInitializationException
-;
-use
-  Zynga\Framework\IO\Web\V1\Exception\UnexpectedHttpCode as UnexpectedHttpCodeException
-;
+use Zynga\Framework\IO\Web\V1\Exceptions\FailedExecutionException;
+use Zynga\Framework\IO\Web\V1\Exceptions\FailedInitializationException;
+use Zynga\Framework\IO\Web\V1\Exceptions\UnexpectedHttpCodeException;
 use Zynga\Framework\Type\V1\UrlBox;
 use Zynga\Framework\IO\Web\V1\Curl\CurlRequest;
 use Zynga\Framework\IO\Web\V1\Curl\MockedCurlRequest;

@@ -25,6 +25,11 @@ class Manager {
 
   }
 
+  public static function clear(): bool {
+    self::$instance = null;
+    return true;
+  }
+
   // --
   // JEO: We didn't need this after all.
   // --

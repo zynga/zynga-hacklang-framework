@@ -33,6 +33,7 @@ use
 ;
 use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithRmdirFalse;
 use Zynga\Framework\IO\Disk\V1\Test\Mock\ManagerWithTarballValidFalse;
+use Zynga\Framework\IO\Disk\V1\Interfaces\ManagerInterface;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
@@ -611,4 +612,11 @@ class ManagerTest extends TestCase {
 
   }
 
+  public function testManagerClear(): void {
+
+    $this->assertInstanceOf(ManagerInterface::class, Manager::instance());
+    $this->assertTrue(Manager::clear());
+    $this->assertInstanceOf(ManagerInterface::class, Manager::instance());
+
+  }
 }

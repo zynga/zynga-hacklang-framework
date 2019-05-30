@@ -573,6 +573,11 @@ class ManagerTest extends TestCase {
   }
 
   public function testChownFailure(): void {
+    if (get_current_user() == 'root') {
+      $this->markTestSkipped(
+        'This will not fail for a root user, please run tests as a user and not root.',
+      );
+    }
     // --
     // On most secure unixes this will be false
     // --

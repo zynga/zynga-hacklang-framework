@@ -153,4 +153,8 @@ class BaseTest extends TestCase {
 
   }
 
+  public function testFactoryClearTemplates(): void {
+    $this->assertTrue(TestFactory::clearFactoryTemplates());
+  }
+
 }

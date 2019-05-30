@@ -13,7 +13,7 @@ class SimpleCapture extends Base {
     string $err_file,
     int $err_line,
   ): void {
-    file_put_contents('/tmp/jeo-test.txt', $err_str);
+    //file_put_contents('/tmp/jeo-test.txt', $err_str);
     $this->_errorMessages->add($err_str);
   }
 

@@ -175,7 +175,17 @@ abstract class PgModel implements PgModelInterface {
     } catch (Exception $e) {
       throw $e;
     }
-
+  }
+  
+  public function deleteByPk<TModelClass as PgRowInterface>(
+    classname<TModelClass> $model,
+    mixed $id,
+  ): bool {
+    try {
+      return $this->writer()->deleteByPk($model, $id);
+    } catch (Exception $e) {
+      throw $e;
+    }
   }
 
   // As this can return a result set this doesn't let you lock all the tiems within
@@ -200,4 +210,3 @@ abstract class PgModel implements PgModelInterface {
   abstract public function getWriteDatabaseName(): string;
 
 }
-

@@ -287,6 +287,31 @@ class InventoryModelTest extends TestCase {
     $this->assertGreaterThan($firstId->get(), $secondId->get());
 
   }
+  
+  public function testInventory_Delete(): void {
+    $testName = 'this-is-a-phpunit-test-'.time().'-'.mt_rand(200);
+    $model = new InventoryModel();
+    $item = new ItemType($model);
+
+    $item->name->set($testName);
+    $this->assertTrue($model->add($item));
+    
+    $resultSet = $model->get(ItemType::class, null);
+    $lastItem = $resultSet->at($resultSet->count() - 1);
+    $lastItemId = -1;
+    if($lastItem instanceof ItemType) {
+      $this->assertEquals($testName, $lastItem->name->get());
+      $lastItemId = $lastItem->id->get();
+      
+      $model->deleteByPk(ItemType::class, $lastItemId);
+    }
+    
+    $resultSet = $model->get(ItemType::class, null);
+    $lastItem = $resultSet->at($resultSet->count() - 1);
+    if($lastItem instanceof ItemType) {
+      $this->assertNotSame($lastItemId, $lastItem->id->get());
+    }
+  }
 
   public function testInventory_Add(): void {
 

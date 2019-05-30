@@ -17,6 +17,9 @@ until mysqladmin ping --silent > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
   sleep 1
 done
 
+# Recreate the testing schema.
+cat ./tests/sql/mysql/create_test_database.sql | mysql phpunit
+
 mysql -e 'SHOW DATABASES' && \
 mysql -e 'SHOW TABLES' phpunit
 
@@ -30,6 +33,9 @@ until psql --user=zframework --host=localhost -d phpunit -c 'select 1' > /dev/nu
   RETRIES=$((RETRIES-=1))
   sleep 1
 done
+
+# Recreate the testing schema.
+cat ./tests/sql/postgresql/create_test_database.sql | psql --user=zframework --host=localhost phpunit 
 
 echo '\d' | psql --user=zframework --host=localhost phpunit
 

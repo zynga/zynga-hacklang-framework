@@ -4,6 +4,7 @@ namespace Zynga\Framework\IO\Web\V1;
 
 use \CURLFile;
 use \resource;
+use Zynga\Framework\Environment\Command\Finder\V1\Finder as CommandFinder;
 use Zynga\Framework\IO\Web\V1\Exceptions\FailedExecutionException;
 use Zynga\Framework\IO\Web\V1\Exceptions\FailedInitializationException;
 use Zynga\Framework\IO\Web\V1\Exceptions\UnexpectedHttpCodeException;
@@ -89,18 +90,31 @@ class Manager {
     string $fileName,
     string $mimeType,
   ): bool {
+
     $returnCode = 0;
     $returnCodes = array();
 
+    $curlCommand = CommandFinder::find('curl-upload-file.sh');
+
     // TODO: This is calling out to curl on the commandline, we should use the curl_* instead.
-    $cmd = 'set -o pipefail; ';
-    $cmd .= "curl -s -o /dev/null -w '%{http_code}' -T";
+    $cmd = $curlCommand;
     $cmd .= ' ';
     $cmd .= escapeshellarg($fileName);
     $cmd .= ' ';
     $cmd .= escapeshellarg($uploadUrl->get());
-    $cmd .= ' ';
-    $cmd .= "| awk {'print $1'}";
+
+    // --
+    // JEO: retaining the original code jic.
+    // --
+    // $cmd = 'set -o pipefail; ';
+    // $cmd .= "curl -s -o /dev/null -w '%{http_code}' -T";
+    // $cmd .= ' ';
+    // $cmd .= escapeshellarg($fileName);
+    // $cmd .= ' ';
+    // $cmd .= escapeshellarg($uploadUrl->get());
+    // $cmd .= ' ';
+    // $cmd .= "| awk {'print $1'}";
+
     exec($cmd, $returnCodes, $returnCode);
 
     if ($returnCode !== 0 || count($returnCodes) === 0) {

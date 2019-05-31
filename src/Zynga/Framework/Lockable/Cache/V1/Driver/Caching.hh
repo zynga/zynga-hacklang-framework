@@ -32,7 +32,11 @@ class Caching extends FactoryDriverBase implements DriverInterface {
     return $this->_config;
   }
 
-  private function getCacheKeyFromStorableObject(
+  public function getActiveLocks(): Map<string, LockPayloadInterface> {
+    return $this->_locks;
+  }
+
+  public function getCacheKeyFromStorableObject(
     StorableObjectInterface $obj,
   ): string {
     try {
@@ -43,7 +47,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
     }
   }
 
-  private function getLockCacheKeyFromStorableObject(
+  public function getLockCacheKeyFromStorableObject(
     StorableObjectInterface $obj,
   ): string {
     try {
@@ -214,9 +218,9 @@ class Caching extends FactoryDriverBase implements DriverInterface {
       $setSuccess = $cache->set($obj, $cacheKey);
 
       // We failed to set so the lock needs to persist.
-      if ($setSuccess == false) {
-        return false;
-      }
+      //if ($setSuccess == false) {
+      //  return false;
+      //}
 
       // Release the lock as we are done here.
       $unlockReturn = $this->unlock($obj);

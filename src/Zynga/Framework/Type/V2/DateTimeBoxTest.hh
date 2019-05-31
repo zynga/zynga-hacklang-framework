@@ -1,37 +1,37 @@
 <?hh //strict
 
-namespace Zynga\Framework\Type\V1;
+namespace Zynga\Framework\Type\V2;
 
 use \DateTime;
-use Zynga\Framework\Type\V1\DateTimeBox;
+use Zynga\Framework\Type\V2\DateTimeBox;
 use Zynga\Framework\Type\V1\Exceptions\FailedToImportFromBoolException;
 use Zynga\Framework\Type\V1\Exceptions\FailedToImportFromFloatException;
 use Zynga\Framework\Type\V1\Exceptions\FailedToImportFromIntegerException;
 use Zynga\Framework\Type\V1\Exceptions\FailedToImportFromStringException;
 use Zynga\Framework\Type\V1\StringBoxTest;
 
-class DateTimeStringBoxTest extends StringBoxTest {
+class DateTimeBoxTest extends StringBoxTest {
 
   public function testCannotImportFromInt(): void {
-    $dateTimeBox = new DateTimeStringBox();
+    $dateTimeBox = new DateTimeBox();
     $this->expectException(FailedToImportFromIntegerException::class);
     $dateTimeBox->set(1234);
   }
 
   public function testCannotImportFromBool(): void {
-    $dateTimeBox = new DateTimeStringBox();
+    $dateTimeBox = new DateTimeBox();
     $this->expectException(FailedToImportFromBoolException::class);
     $dateTimeBox->set(true);
   }
 
   public function testIsStringValid(): void {
-    $dateTimeBox = new DateTimeStringBox();
+    $dateTimeBox = new DateTimeBox();
     $this->assertTrue($dateTimeBox->isStringValid('1970'));
     $this->assertFalse($dateTimeBox->isStringValid('198.161.0.0'));
   }
 
   public function testCannotImportFromFloat(): void {
-    $dateTimeBox = new DateTimeStringBox();
+    $dateTimeBox = new DateTimeBox();
     $this->expectException(FailedToImportFromFloatException::class);
     $dateTimeBox->set(1.1234);
   }
@@ -39,11 +39,11 @@ class DateTimeStringBoxTest extends StringBoxTest {
   public function testCannotImportFromInvalidString(): void {
     $data = $this->getInvalidStrings();
     foreach ($data as $stringValue => $stringMessage) {
-      // We can't use $this->expectException instead of this try/catch block
+      // We can't use $this->expectException instead of this try/catch blockDateTimeBox
       // because the resulting assertion will only be made once rather than
       // for each instantiation of a DateTimeBox
       try {
-        $dateTimeBox = new DateTimeStringBox();
+        $dateTimeBox = new DateTimeBox();
         $dateTimeBox->set($stringValue);
         $this->assertTrue(false);
       } catch (FailedToImportFromStringException $e) {
@@ -56,7 +56,7 @@ class DateTimeStringBoxTest extends StringBoxTest {
     $data = $this->getValidStrings();
     foreach ($data as $stringValue) {
       try {
-        $dateTimeBox = new DateTimeStringBox();
+        $dateTimeBox = new DateTimeBox();
         $this->assertTrue($dateTimeBox->set($stringValue));
       } catch (FailedToImportFromStringException $e) {
         $this->assertTrue(false);
@@ -65,22 +65,22 @@ class DateTimeStringBoxTest extends StringBoxTest {
   }
 
   public function testCanImportFromDateTime(): void {
-    $dateTimeBox = new DateTimeStringBox();
+    $dateTimeBox = new DateTimeBox();
     $this->assertTrue($dateTimeBox->set(DateTime::createFromFormat('U', time())));
   }
 
   public function testToStringDefaultValueIsUnknownDateTime(): void {
-    $dateTimeBox = new DateTimeStringBox();
+    $dateTimeBox = new DateTimeBox();
     $this->assertEquals("Unknown DateTime", $dateTimeBox->__toString());
   }
 
   public function testResetSucceeds(): void {
-    $dateTimeBox = new DateTimeStringBox();
+    $dateTimeBox = new DateTimeBox();
     $this->assertTrue($dateTimeBox->reset());
   }
 
   public function testGetReturnsCorrectValue(): void {
-    $dateTimeBox = new DateTimeStringBox();
+    $dateTimeBox = new DateTimeBox();
     $dateTimeBox->set("2005-08-15T15:52:01+00:00");
     $expected = new DateTime("2005-08-15T15:52:01+00:00");
     $actual = $dateTimeBox->get();

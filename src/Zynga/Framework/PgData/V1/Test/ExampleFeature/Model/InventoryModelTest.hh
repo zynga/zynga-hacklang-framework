@@ -288,7 +288,7 @@ class InventoryModelTest extends TestCase {
 
   }
   
-  public function testInventory_Delete(): void {
+  public function testInventory_DeleteSucceeds(): void {
     $testName = 'this-is-a-phpunit-test-'.time().'-'.mt_rand(200);
     $model = new InventoryModel();
     $item = new ItemType($model);
@@ -302,8 +302,7 @@ class InventoryModelTest extends TestCase {
     if($lastItem instanceof ItemType) {
       $this->assertEquals($testName, $lastItem->name->get());
       $lastItemId = $lastItem->id->get();
-      
-      $model->deleteByPk(ItemType::class, $lastItemId);
+      $this->assertTrue($lastItem->delete());
     }
     
     $resultSet = $model->get(ItemType::class, null);

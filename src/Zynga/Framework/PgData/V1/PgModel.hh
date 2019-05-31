@@ -176,17 +176,6 @@ abstract class PgModel implements PgModelInterface {
       throw $e;
     }
   }
-  
-  public function deleteByPk<TModelClass as PgRowInterface>(
-    classname<TModelClass> $model,
-    mixed $id,
-  ): bool {
-    try {
-      return $this->writer()->deleteByPk($model, $id);
-    } catch (Exception $e) {
-      throw $e;
-    }
-  }
 
   // As this can return a result set this doesn't let you lock all the tiems within
   // a result set as the number of edge cases introduced by that logic is not wanted.

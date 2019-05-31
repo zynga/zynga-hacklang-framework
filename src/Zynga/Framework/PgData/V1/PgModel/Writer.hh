@@ -114,44 +114,41 @@ class Writer implements WriterInterface {
 
   }
   
-  public function deleteByPk<TModelClass as PgRowInterface>(
-    classname<TModelClass> $model,
-    mixed $id,
-  ): bool {
-    
+  public function delete(PgRowInterface $obj): bool {
     try {
 
-      // Snag a reference to the model.
-      $pgModel = $this->pgModel();
-      
-      $cache = $pgModel->cache()->getDataCache();
-      
-      $obj = $pgModel->data()->createRowObjectFromClassName($model);
       $pk = $obj->getPrimaryKeyTyped();
-      $pk->set($id);
-      
+
+      if ($pk->isDefaultValue() === true) {
+        throw new Exception(
+          'Primary key is default value still. value='.strval($pk->get()),
+        );
+      }
+
+      $pgModel = $this->pgModel();
+
+      $cache = $pgModel->cache()->getDataCache();
+
       if ($cache->lock($obj) === true) {
-
-        $dbh = $pgModel->db()->getWriteDatabase();
         
-        $where = new PgWhereClause($pgModel);
-        $where->and($obj->getPrimaryKey(), PgWhereOperand::EQUALS, $id);
-        $updateSql = SqlGenerator::getDeleteSql($dbh, $pgModel, $obj, $where);
+        // Delete from cache first
+        if ($cache->delete($obj) === true) {
+          $dbh = $pgModel->db()->getWriteDatabase();
 
-        $result = $dbh->query($updateSql);
+          $where = new PgWhereClause($pgModel);
+          $where->and($obj->getPrimaryKey(), PgWhereOperand::EQUALS, $pk->get());
+          $deleteSql = SqlGenerator::getDeleteSql($dbh, $pgModel, $obj, $where);
 
-        if ($result->wasSuccessful() === true) {
-
-          $cache->delete($obj);
-
-          $cache->unlock($obj);
-          return true;
+          $result = $dbh->query($deleteSql);
+          if ($result->wasSuccessful() === true) {
+            $cache->unlock($obj);
+            return true;
+          } 
         }
-
-        $cache->unlock($obj);
       }
 
       return false;
+
     } catch (Exception $e) {
       throw $e;
     }

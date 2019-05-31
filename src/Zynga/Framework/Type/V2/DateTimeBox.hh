@@ -1,6 +1,6 @@
 <?hh //strict
 
-namespace Zynga\Framework\Type\V1;
+namespace Zynga\Framework\Type\V2;
 
 use \DateTime;
 use \Exception;
@@ -14,7 +14,7 @@ use Zynga\Framework\Type\V1\Exceptions\FailedToImportFromStringException;
  * Given a string, this will ensure that it is a valid DateTime format.
  * This box ensures we export the box in the format('Y-m-d H:i:s')
  */
-class DateTimeStringBox extends BaseBox {
+class DateTimeBox extends BaseBox {
 
   protected DateTime $value;
 

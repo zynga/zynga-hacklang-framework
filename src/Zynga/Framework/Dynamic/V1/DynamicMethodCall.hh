@@ -21,24 +21,9 @@ class DynamicMethodCall {
     bool $allowMissingClass = false,
   ): mixed {
 
-    if (class_exists($className, true) != true) {
-
-      // toss a exception at the user if the class is not autoloadable.
-      if ($allowMissingClass === false) {
-        throw new UnableToFindClassException(
-          'Failed to find className='.$className,
-        );
-      }
-
-      // sorry no class to work with.
-      return null;
-
-    }
-
     try {
 
       // pull a reflection of the class
-      $class = ReflectionClasses::getReflection($className);
       $refClass = ReflectionClasses::getReflection($className);
 
       if (!$refClass instanceof ReflectionClass) {
@@ -81,6 +66,11 @@ class DynamicMethodCall {
         return $refMethod->invoke(null);
       }
 
+    } catch (UnableToReflectClassException $e) {
+      if ($allowMissingClass === true) {
+        return null;
+      }
+      throw $e;
     } catch (Exception $e) {
       throw $e;
     }

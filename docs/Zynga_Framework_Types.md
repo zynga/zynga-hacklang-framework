@@ -164,12 +164,6 @@ FixedLengthStringBox | Enforcing string values that are fixed in length, by defa
 1. Regex - No generic regex builder. Whomp whomp.
 
 # TODO
-1. AsciiToUnicodeTransform.php
-1. AsciiUnicodeEntEscapeTransform.php
-1. Base64.php
-1. ByteArray.php
-1. Checkbox.php
-1. DateTime.php
 1. DomainName.php
 1. EmailSecure.php
 1. Enum.php
@@ -185,23 +179,9 @@ FixedLengthStringBox | Enforcing string values that are fixed in length, by defa
 1. LocKey.php
 1. Locale.php
 1. MobilePurchaseItemCode.php
-1. NoScriptTags.php
-1. Object.php
-1. PHPLocKey.php
-1. PassArrayValidator.php
-1. Range.php
-1. RangeObject.php
 1. SrcTrackingString.php
 1. TimeZone.php
-1. UInt24.php
-1. UnifiedLocKey.php
 1. UnixFilename.php
 1. UnixPathname.php
 1. UnixTimestamp.php
-1. Uri.php
-1. UriPath.php
 1. UserAgent.php
-1. WebPurchaseItemCode.php
-1. ZTrackCreativeTag.php
-1. ZYSendKey.php
-1. Zid.php

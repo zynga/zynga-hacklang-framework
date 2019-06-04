@@ -153,14 +153,6 @@ class Reader implements ReaderInterface {
       $pkTyped = $tobj->getPrimaryKeyTyped();
       $pkType = get_class($pkTyped);
 
-      $backtrace = debug_backtrace();
-
-      if (count($backtrace) > 30) {
-        print StacktraceShortner::toString(0, "\n");
-        print "\n";
-        exit();
-      }
-
       $cache = new PgCachedResultSet(UInt64Box::class, $pgWhere);
 
       return $cache;

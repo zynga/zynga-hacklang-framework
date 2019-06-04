@@ -2,15 +2,20 @@
 
 namespace Zynga\Framework\Cache\V2\Driver;
 
-use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-
+use Zynga\Framework\Cache\V2\Driver\Memcache as MemcacheDriver;
+use Zynga\Framework\Cache\V2\Exceptions\CacheDoesNotSupportKeyOverride;
+use Zynga\Framework\Cache\V2\Exceptions\CacheDoesNotSupportTTLOverride;
+use Zynga\Framework\Cache\V2\Exceptions\CacheRequiresTTLException;
+use Zynga\Framework\Cache\V2\Exceptions\CacheTTLExceededException;
+use Zynga\Framework\Cache\V2\Exceptions\InvalidIncrementStepException;
+use Zynga\Framework\Cache\V2\Exceptions\NoServerPairsProvidedException;
 use Zynga\Framework\Cache\V2\Factory as CacheFactory;
 use Zynga\Framework\Cache\V2\Interfaces\DriverConfigInterface;
-use Zynga\Framework\Cache\V2\Driver\Memcache as MemcacheDriver;
-
+use Zynga\Framework\Exception\V1\Exception;
 use
   Zynga\Framework\StorableObject\V1\Test\Mock\ValidNoRequired as ValidStorableObject
 ;
+use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 class MemcacheTest extends TestCase {
 
@@ -40,9 +45,6 @@ class MemcacheTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Cache\V2\Exceptions\NoServerPairsProvidedException
-   */
   public function testConnect_NoServersConfigured(): void {
 
     $obj = CacheFactory::factory(
@@ -51,6 +53,7 @@ class MemcacheTest extends TestCase {
     );
 
     if ($obj instanceof MemcacheDriver) {
+      $this->expectException(NoServerPairsProvidedException::class);
       $obj->connect();
     }
 
@@ -119,14 +122,13 @@ class MemcacheTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
   public function testDelete_InvalidKeyCondition(): void {
 
     // stand up a empty storable object
     $obj = new ValidStorableObject();
     $cache = CacheFactory::factory(MemcacheDriver::class, 'Mock');
+
+    $this->expectException(Exception::class);
     $cache->delete($obj);
 
   }
@@ -150,14 +152,13 @@ class MemcacheTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
   public function testAdd_InvalidKeyCondition(): void {
 
     // stand up a empty storable object
     $obj = new ValidStorableObject();
     $cache = CacheFactory::factory(MemcacheDriver::class, 'Mock');
+
+    $this->expectException(Exception::class);
     $cache->add($obj);
 
   }
@@ -180,6 +181,89 @@ class MemcacheTest extends TestCase {
     $cache = CacheFactory::factory(MemcacheDriver::class, 'Mock');
     $this->assertFalse($cache->delete($obj));
 
+  }
+
+  public function testIncrement_BadIncrementValue(): void {
+    $cache = CacheFactory::factory(MemcacheDriver::class, 'Mock');
+    $this->expectException(InvalidIncrementStepException::class);
+    $cache->directIncrement('some-key-'.mt_rand(), 0);
+  }
+
+  public function testIncrement(): void {
+    $cache = CacheFactory::factory(
+      MemcacheDriver::class,
+      'LocalMemcache_PgDataTest',
+    );
+    $this->assertEquals(
+      0,
+      $cache->directIncrement('inc-test-some-key-'.mt_rand()),
+    );
+  }
+
+  public function testErrorTrap_DirectAdd(): void {
+    $cache = CacheFactory::factory(
+      MemcacheDriver::class,
+      'Mock_NoServersConfigured',
+    );
+    $this->expectException(NoServerPairsProvidedException::class);
+    $cache->directAdd('bc-test-some-key-'.mt_rand(), 'some-value-'.mt_rand());
+  }
+
+  public function testErrorTrap_DirectDelete(): void {
+    $cache = CacheFactory::factory(
+      MemcacheDriver::class,
+      'Mock_NoServersConfigured',
+    );
+    $this->expectException(NoServerPairsProvidedException::class);
+    $cache->directDelete('bc-test-some-key-'.mt_rand());
+
+  }
+
+  public function testDirectDelete(): void {
+    $cache = CacheFactory::factory(
+      MemcacheDriver::class,
+      'LocalMemcache_PgDataTest',
+    );
+
+    $randomKey = 'tdd-some-key-'.mt_rand();
+
+    $this->assertFalse($cache->directDelete($randomKey));
+
+    $this->assertTrue($cache->directAdd($randomKey, 1));
+
+    $this->assertTrue($cache->directDelete($randomKey));
+
+  }
+
+  public function testCacheAllowsKeyOverride_Fail(): void {
+    $cache =
+      CacheFactory::factory(MemcacheDriver::class, 'Mock_NoCacheKeyOverride');
+    $obj = new ValidStorableObject();
+    $obj->example_uint64->set(12989745);
+    $someOtherKey = 'cas-some-other-key-'.mt_rand();
+    $this->expectException(CacheDoesNotSupportKeyOverride::class);
+    $cache->getKeySupportingOverride($obj, $someOtherKey);
+  }
+
+  public function testCacheAllowsTTLOverride_Fail(): void {
+    $cache =
+      CacheFactory::factory(MemcacheDriver::class, 'Mock_NoCacheKeyOverride');
+    $this->expectException(CacheDoesNotSupportTTLOverride::class);
+    $cache->getTTLSupportingOverride(1234874);
+  }
+
+  public function testCacheRequiresTTLOverride_Fail(): void {
+    $cache = CacheFactory::factory(MemcacheDriver::class, 'Mock');
+    $this->expectException(CacheRequiresTTLException::class);
+    $cache->getTTLSupportingOverride(0);
+  }
+
+  public function testCacheExceedsTTLOverride_Fail(): void {
+    $cache = CacheFactory::factory(MemcacheDriver::class, 'Mock');
+    $ttl = $cache->getConfig()->getTTL();
+    $ttl += 1;
+    $this->expectException(CacheTTLExceededException::class);
+    $cache->getTTLSupportingOverride($ttl);
   }
 
 }

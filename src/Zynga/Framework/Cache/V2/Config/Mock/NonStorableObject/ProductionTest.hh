@@ -28,7 +28,9 @@ class ProductionTest extends TestCase {
     $this->assertEquals(1, $servers->keys()->count());
     $this->assertEquals('Memcache', $config->getDriver());
     $this->assertEquals(3600, $config->getTTL());
-
+    $this->assertFalse($config->cacheAllowsKeyOverride());
+    $this->assertFalse($config->cacheAllowsNonExpiringKeys());
+    $this->assertFalse($config->cacheAllowsTTLOverride());
   }
 
   public function testCreateKeyFromStorableObject_ExceptionWired(): void {

@@ -12,8 +12,15 @@ use Zynga\Framework\Database\V2\Interfaces\TransactionInterface;
 use Zynga\Framework\Database\V2\Driver\Mock as MockDriver;
 use Zynga\Framework\Database\V2\Driver\Mock\Quoter as MockQuoter;
 use Zynga\Framework\Database\V2\Driver\Mock\Transaction as MockTransaction;
-
+use
+  Zynga\Framework\Database\V2\Config\Mock\Cluster\Broken\Dev as BrokenClusterInit
+;
 use Zynga\Framework\Database\V2\Config\Mock\Cluster\Dev as MockCluster;
+use Zynga\Framework\Database\V2\Exceptions\ClusterInitFailureException;
+use Zynga\Framework\Database\V2\Exceptions\ClusterInitNoServersException;
+use
+  Zynga\Framework\Database\V2\Config\Mock\Cluster\NoServersAdded\Dev as BrokenClusterNoServers
+;
 
 class ClusterBaseTest extends TestCase {
 
@@ -116,6 +123,20 @@ class ClusterBaseTest extends TestCase {
     // if we clear the servers random should return a empty string
     $config->clearServers();
     $this->assertEmpty($config->getRandomServer());
+
+  }
+
+  public function testClusterInitFailure(): void {
+
+    $this->expectException(ClusterInitFailureException::class);
+    $config = new BrokenClusterInit();
+
+  }
+
+  public function testClusterNoServersAdded(): void {
+
+    $this->expectException(ClusterInitNoServersException::class);
+    $config = new BrokenClusterNoServers();
 
   }
 

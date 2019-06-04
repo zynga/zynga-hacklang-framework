@@ -21,7 +21,7 @@ abstract class Base extends ConfigBase {
   }
 
   public function cacheAllowsKeyOverride(): bool {
-    return false;
+    return true;
   }
 
   public function cacheAllowsNonExpiringKeys(): bool {

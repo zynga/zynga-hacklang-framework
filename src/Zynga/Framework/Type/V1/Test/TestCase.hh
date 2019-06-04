@@ -69,16 +69,9 @@ abstract class TestCase extends ZyngaTestCase {
 
   }
 
-  public function testInvalidValues(): void {
-    $invalidValues = $this->generateInvalidValues();
-    // --
-    // Every type check should have some version of a set of data that is bad
-    // for it.
-    // --
-    if ($invalidValues->count() == 0) {
-      $this->fail('all type check tests should have invalid values');
-    }
-
+  public function doTestInvalidValues_Against_Set(
+    Vector<mixed> $invalidValues,
+  ): void {
     foreach ($invalidValues as $invalidValue) {
       // do it in the native test type first.
       try {
@@ -90,6 +83,14 @@ abstract class TestCase extends ZyngaTestCase {
       } catch (Exception $e) {
         $this->assertTrue(true);
       }
+    }
+  }
+
+  public function doTestInvalidValues_Against_Strval(
+    Vector<mixed> $invalidValues,
+  ): void {
+
+    foreach ($invalidValues as $invalidValue) {
 
       // now convert the value into a string, and test again.
       try {
@@ -100,7 +101,13 @@ abstract class TestCase extends ZyngaTestCase {
       } catch (Exception $e) {
         $this->assertTrue(true);
       }
+
     }
+  }
+
+  public function doTestInvalidValues_Against_SetDefaultValue(
+    Vector<mixed> $invalidValues,
+  ): void {
 
     foreach ($invalidValues as $invalidValue) {
       // do it in the native test type first.
@@ -116,6 +123,25 @@ abstract class TestCase extends ZyngaTestCase {
         $this->assertTrue(true);
       }
     }
+
+  }
+
+  public function testInvalidValues(): void {
+
+    $invalidValues = $this->generateInvalidValues();
+
+    // --
+    // Every type check should have some version of a set of data that is bad
+    // for it.
+    // --
+    if ($invalidValues->count() == 0) {
+      $this->fail('all type check tests should have invalid values');
+    }
+
+    $this->doTestInvalidValues_Against_Set($invalidValues);
+    $this->doTestInvalidValues_Against_Strval($invalidValues);
+    $this->doTestInvalidValues_Against_SetDefaultValue($invalidValues);
+
   }
 
   protected function createInjectedValues(
@@ -155,50 +181,51 @@ abstract class TestCase extends ZyngaTestCase {
 
   public function testFacebookTagInjection(): void {
     $badData = Vector {};
-    $badData[] = '<fb:';
+    $badData->add('<fb:');
     $this->injectionTestScaffold($badData);
   }
 
   public function testImgTagInjection(): void {
     $badData = Vector {};
-    $badData[] = '<img';
+    $badData->add('<img');
     $this->injectionTestScaffold($badData);
   }
 
   public function testOnLoadInjection(): void {
     $badData = Vector {};
-    $badData[] =
-      "<tag src=\"htttp://www.example.com/image.jpeg\" onload = \"javascript:alert('xss');\">";
-    $badData[] = "onLoad='exploit'";
+    $badData->add(
+      "<tag src=\"htttp://www.example.com/image.jpeg\" onload = \"javascript:alert('xss');\">",
+    );
+    $badData->add("onLoad='exploit'");
     $this->injectionTestScaffold($badData);
   }
 
   public function testScriptTagInjection(): void {
     $badData = Vector {};
-    $badData[] = '<script';
-    $badData[] = '<a href="script:';
-    $badData[] = 'script=';
+    $badData->add('<script');
+    $badData->add('<a href="script:');
+    $badData->add('script=');
     $this->injectionTestScaffold($badData);
   }
 
   public function testOnFocusInjection(): void {
     $badData = Vector {};
-    $badData[] = '<img onfocus="script:';
-    $badData[] = '<obj onFocus=';
+    $badData->add('<img onfocus="script:');
+    $badData->add('<obj onFocus=');
     $this->injectionTestScaffold($badData);
   }
 
   public function testIFrameTagInjection(): void {
     $badData = Vector {};
-    $badData[] = '<iframe';
-    $badData[] = '<fb:iframe';
+    $badData->add('<iframe');
+    $badData->add('<fb:iframe');
     $this->injectionTestScaffold($badData);
   }
 
   public function testFromCharCodeInjection(): void {
     $badData = Vector {};
-    $badData[] = 'String.fromCharCode(65, 66, 67);';
-    $badData[] = urlencode('String.fromCharCode(65, 66, 67);');
+    $badData->add('String.fromCharCode(65, 66, 67);');
+    $badData->add(urlencode('String.fromCharCode(65, 66, 67);'));
     $this->injectionTestScaffold($badData);
   }
 

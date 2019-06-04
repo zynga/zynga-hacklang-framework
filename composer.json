@@ -11,6 +11,9 @@
     "hhvm": "^3.12",
     "zynga/phpunit": "^2.0"
   },
+  "bin": [
+    "bin/curl-upload-file.sh"
+  ],
   "autoload": {
     "psr-4": {
       "Zynga\\Framework\\": "src/Zynga/Framework/"

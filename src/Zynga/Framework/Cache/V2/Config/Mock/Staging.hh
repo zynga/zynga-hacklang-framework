@@ -37,4 +37,16 @@ class Staging extends LocalMemcacheBase {
 
   }
 
+    public function cacheAllowsKeyOverride(): bool {
+    return false;
+  }
+
+  public function cacheAllowsNonExpiringKeys(): bool {
+    return false;
+  }
+
+  public function cacheAllowsTTLOverride(): bool {
+    return false;
+  }
+
 }

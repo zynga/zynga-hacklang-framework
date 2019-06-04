@@ -70,4 +70,16 @@ class TransactionTest extends TestCase {
 
   }
 
+  public function testBadVerticaNativeQuoteString(): void {
+
+    $driver =
+      DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
+
+    $mock = new BadVertica($driver->getConfig());
+
+    $this->expectException(BadVerticaException::class);
+    $mock->nativeQuoteString('a bad string');
+
+  }
+
 }

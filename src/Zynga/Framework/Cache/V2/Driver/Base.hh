@@ -17,8 +17,8 @@ abstract class Base extends FactoryDriverBase implements DriverInterface {
     string $keyOverride,
   ): string {
 
-    if ($this->getConfig()->cacheAllowsKeyOverride() === true &&
-        $keyOverride != '') {
+    $cacheAllowsKeyOverride = $this->getConfig()->cacheAllowsKeyOverride();
+    if ($cacheAllowsKeyOverride === false && $keyOverride != '') {
       throw new CacheDoesNotSupportKeyOverride(
         'cache='.get_class($this->getConfig()).' key='.$keyOverride,
       );
@@ -36,7 +36,7 @@ abstract class Base extends FactoryDriverBase implements DriverInterface {
 
   public function getTTLSupportingOverride(int $ttlOverride): int {
 
-    if ($this->getConfig()->cacheAllowsTTLOverride() === true &&
+    if ($this->getConfig()->cacheAllowsTTLOverride() === false &&
         $ttlOverride != -1) {
       throw new CacheDoesNotSupportTTLOverride(
         'cache='.get_class($this->getConfig()).' key='.$ttlOverride,

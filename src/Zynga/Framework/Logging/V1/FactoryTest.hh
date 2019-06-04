@@ -7,6 +7,7 @@ use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\Logging\V1\Factory as LoggingFactory;
 use Zynga\Framework\Logging\V1\Interfaces\LoggerInterface;
 use Zynga\Framework\Logging\V1\Level;
+use Zynga\Framework\Logging\V1\Driver\Base as DriverBase;
 
 class FactoryTest extends TestCase {
 
@@ -46,6 +47,37 @@ class FactoryTest extends TestCase {
     $this->assertFalse($driver->getConfig()->unsetLogLevel(3));
 
     LoggingFactory::clear();
+  }
+
+  public function test_backtraceEmpty(): void {
+    $driver = LoggingFactory::factory(LoggerInterface::class, 'default');
+
+    if ($driver instanceof DriverBase) {
+      $this->assertEquals('', $driver->formatBacktrace(null));
+    }
+
+  }
+
+  public function test_loggingFilters(): void {
+
+    $driver = LoggingFactory::factory(LoggerInterface::class, 'NoLevelsSet');
+
+    $this->assertFalse(
+      $driver->error(
+        'this shoul not get logged - sample rate lower than pct',
+        Map {},
+        false,
+        0.0,
+      ),
+    );
+
+    $this->assertFalse(
+      $driver->error(
+        'this shoul not get logged - no level to make it log',
+        Map {},
+      ),
+    );
+
   }
 
 }

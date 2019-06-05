@@ -47,5 +47,9 @@ abstract class PgRow extends StorableObject implements PgRowInterface {
   public function save(): bool {
     return $this->pgModel()->writer()->save($this);
   }
+  
+  public function delete(): bool {
+    return $this->pgModel()->writer()->delete($this);
+  }
 
 }

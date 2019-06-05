@@ -159,5 +159,31 @@ class SqlGenerator {
       throw $e;
     }
   }
+  
+  public static function getDeleteSql(
+    QueryableInterface $dbh,
+    PgModelInterface $model,
+    PgRowInterface $obj,
+    PgWhereClauseInterface $where,
+  ): string {
+
+    try {
+      $fieldMap = $obj->fields()->getFieldsAndTypesForObject();
+      if ($fieldMap->count() == 0) {
+        throw new NoFieldsOnObjectException('obj='.get_class($obj));
+      }
+
+      $tableName = $obj->getTableName();
+
+      $whereSql = $where->buildSql($dbh, $obj);
+
+      $sql = 'DELETE FROM '.$tableName.$whereSql;
+
+      return $sql;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
 
 }

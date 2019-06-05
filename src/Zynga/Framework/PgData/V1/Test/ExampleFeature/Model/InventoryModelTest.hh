@@ -297,7 +297,7 @@ class InventoryModelTest extends TestCase {
     $this->assertTrue($model->add($item));
     
     $where = new PgWhereClause($model);
-    $where->and('item_type', PgWhereOperand::EQUALS, $testName);
+    $where->and('name', PgWhereOperand::EQUALS, $testName);
     
     $resultSet = $model->get(ItemType::class, $where);
     $this->assertTrue($resultSet->count() === 1);

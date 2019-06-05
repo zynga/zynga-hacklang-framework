@@ -296,20 +296,19 @@ class InventoryModelTest extends TestCase {
     $item->name->set($testName);
     $this->assertTrue($model->add($item));
     
-    $resultSet = $model->get(ItemType::class, null);
-    $lastItem = $resultSet->at($resultSet->count() - 1);
-    $lastItemId = -1;
-    if($lastItem instanceof ItemType) {
-      $this->assertEquals($testName, $lastItem->name->get());
-      $lastItemId = $lastItem->id->get();
-      $this->assertTrue($lastItem->delete());
+    $where = new PgWhereClause($model);
+    $where->and('name', PgWhereOperand::EQUALS, $testName);
+    
+    $resultSet = $model->get(ItemType::class, $where);
+    $this->assertTrue($resultSet->count() === 1);
+    $newItem = $resultSet->at(0);
+    if($newItem instanceof ItemType) {
+      $lastItemId = $newItem->id->get();
+      $this->assertTrue($newItem->delete());
     }
     
-    $resultSet = $model->get(ItemType::class, null);
-    $lastItem = $resultSet->at($resultSet->count() - 1);
-    if($lastItem instanceof ItemType) {
-      $this->assertNotSame($lastItemId, $lastItem->id->get());
-    }
+    $resultSet = $model->get(ItemType::class, $where);
+    $this->assertTrue($resultSet->count() === 0);
   }
 
   public function testInventory_Add(): void {

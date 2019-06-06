@@ -41,4 +41,17 @@ class Dev extends LocalMemcacheBase {
 
   }
 
+  public function cacheAllowsKeyOverride(): bool {
+    // JEO: This is true to support lockable memcache mock being able to work.
+    return true;
+  }
+
+  public function cacheAllowsNonExpiringKeys(): bool {
+    return false;
+  }
+
+  public function cacheAllowsTTLOverride(): bool {
+    return true;
+  }
+
 }

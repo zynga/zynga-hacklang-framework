@@ -13,7 +13,6 @@ abstract class PgModel extends PgModelBase implements PgModelInterface {
 
   public function __construct(TypeInterface $shardId) {
     $this->_shardId = $shardId;
-
   }
 
   public function getShardId(): TypeInterface {

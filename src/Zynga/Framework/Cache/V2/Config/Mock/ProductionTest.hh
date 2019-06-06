@@ -24,6 +24,10 @@ class ProductionTest extends TestCase {
 
     $config = $this->createConfigUnderTest();
 
+    $this->assertFalse($config->cacheAllowsKeyOverride());
+    $this->assertFalse($config->cacheAllowsNonExpiringKeys());
+    $this->assertFalse($config->cacheAllowsTTLOverride());
+
     $this->expectException(InvalidObjectForKeyCreationException::class);
     $key = $config->createKeyFromStorableObject($obj);
 

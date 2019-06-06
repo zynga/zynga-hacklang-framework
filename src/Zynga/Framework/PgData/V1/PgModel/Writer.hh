@@ -113,5 +113,45 @@ class Writer implements WriterInterface {
     }
 
   }
+  
+  public function delete(PgRowInterface $obj): bool {
+    try {
+
+      $pk = $obj->getPrimaryKeyTyped();
+
+      if ($pk->isDefaultValue() === true) {
+        throw new Exception(
+          'Primary key is default value still. value='.strval($pk->get()),
+        );
+      }
+
+      $pgModel = $this->pgModel();
+
+      $cache = $pgModel->cache()->getDataCache();
+
+      if ($cache->lock($obj) === true) {
+        
+        // Delete from cache first
+        if ($cache->delete($obj) === true) {
+          $dbh = $pgModel->db()->getWriteDatabase();
+
+          $where = new PgWhereClause($pgModel);
+          $where->and($obj->getPrimaryKey(), PgWhereOperand::EQUALS, $pk->get());
+          $deleteSql = SqlGenerator::getDeleteSql($dbh, $pgModel, $obj, $where);
+
+          $result = $dbh->query($deleteSql);
+          if ($result->wasSuccessful() === true) {
+            $cache->unlock($obj);
+            return true;
+          } 
+        }
+      }
+
+      return false;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
 
 }

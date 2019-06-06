@@ -2,18 +2,16 @@
 
 namespace Zynga\Framework\Cache\V2\Driver;
 
-use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
-
-use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
-
 use Zynga\Framework\Cache\V2\Driver\Base as DriverBase;
-use Zynga\Framework\Cache\V2\Interfaces\DriverConfigInterface;
-use Zynga\Framework\Cache\V2\Interfaces\DriverInterface;
+use Zynga\Framework\Cache\V2\Exceptions\InvalidIncrementStepException;
 use Zynga\Framework\Cache\V2\Exceptions\NoServerPairsProvidedException;
 use Zynga\Framework\Cache\V2\Exceptions\NoConnectionException;
 use Zynga\Framework\Cache\V2\Exceptions\StorableObjectRequiredException;
-
+use Zynga\Framework\Cache\V2\Interfaces\DriverConfigInterface;
+use Zynga\Framework\Cache\V2\Interfaces\DriverInterface;
+use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
 use Zynga\Framework\Exception\V1\Exception;
+use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 use \Memcache as NativeMemcacheDriver;
 
@@ -37,7 +35,9 @@ class Memcache extends DriverBase {
       $this->connect();
 
       if ($incrementValue < 0 || $incrementValue == 0) {
-        throw new Exception('Increment value must be greater than 0');
+        throw new InvalidIncrementStepException(
+          'Increment value must be greater than 0',
+        );
       }
 
       $value = $this->_memcache->increment($key, $incrementValue);

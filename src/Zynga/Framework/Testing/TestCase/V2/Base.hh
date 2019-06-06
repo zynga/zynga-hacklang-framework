@@ -7,7 +7,8 @@ use Zynga\Framework\Performance\V1\Tracker as PerformanceTracker;
 use Zynga\Framework\Environment\DevelopmentMode\V1\DevelopmentMode;
 use Zynga\Framework\Testing\TestCase\V2\Config\Manager as TestManager;
 use Zynga\Framework\Testing\MockState\V2\MockState;
-
+use Zynga\Framework\Database\V2\Factory as DatabaseFactory;
+use Zynga\Framework\Performance\V1\XHProfiler as PerformanceProfiler;
 use Zynga\Framework\Testing\TestCase\V2\TestCaseShim;
 
 // --
@@ -33,6 +34,7 @@ use \PHPUnit_Framework_TestCase;
 
 use Zynga\Framework\Exception\V1\Exception;
 use Zynga\Framework\Dynamic\V1\DynamicMethodCall;
+use \ReflectionClass;
 
 abstract class Base
   implements PHPUnit_Framework_Test, PHPUnit_Framework_SelfDescribing {
@@ -57,11 +59,25 @@ abstract class Base
     return true;
   }
 
-  /*
-   public function __construct(string $name = null, mixed $data = [], string $dataName = '' ) {
-   parent::__construct($name, $data, $dataName);
-   }
-   */
+  public function doHideLogs(): void {
+
+    // --
+    // Zynga specific log trap, where we turn off our old logger
+    //
+    // Feel free to overload this functionality with whatever you need.
+    // --
+
+    try {
+      DynamicMethodCall::callMethod(
+        'Zynga\Legacy\Log',
+        'setHideAllLogs',
+        Vector {true},
+      );
+    } catch (Exception $e) {
+      // The legacy logger is not present, and thats okay.
+    }
+
+  }
 
   /**
    * We do not support the static method version of setUpBeforeClass, we
@@ -69,6 +85,45 @@ abstract class Base
    */
   final public static function setUpBeforeClass(): void {}
 
+  public function doDevelopmentModeReset(): void {
+    DevelopmentMode::reset();
+  }
+
+  public function doEnableMocks(): void {
+    MockState::enableMocks();
+  }
+
+  public function doDatabaseFactoryResultSetReset(): void {
+    DatabaseFactory::resetResultSets();
+  }
+
+  public function resetTestingEnvironment(): void {
+
+    try {
+      $this->doDevelopmentModeReset();
+    } catch (Exception $e) {
+      // Noop - do nothing.
+    }
+
+    try {
+      $this->doEnableMocks();
+    } catch (Exception $e) {
+      // Noop - do nothing.
+    }
+
+    try {
+      $this->doDatabaseFactoryResultSetReset();
+    } catch (Exception $e) {
+      // Noop - do nothing.
+    }
+
+    try {
+
+      $this->doHideLogs();
+    } catch (Exception $e) {
+      // noop - do nothing,
+    }
+  }
   /**
    * A hookable function that runs before any of your tests run.
    *
@@ -79,28 +134,7 @@ abstract class Base
    */
   public function doSetUpBeforeClass(): bool {
 
-    DevelopmentMode::reset();
-
-    DynamicMethodCall::callMethod(
-      'Zynga\Framework\Testing\MockState\V2\MockState',
-      'enableMocks',
-      Vector {},
-      true,
-    );
-
-    DynamicMethodCall::callMethod(
-      'Zynga\Legacy\Log',
-      'setHideAllLogs',
-      Vector {true},
-      true,
-    );
-
-    DynamicMethodCall::callMethod(
-      'Zynga\Framework\Database\V2\Factory',
-      'resetResultSets',
-      Vector {},
-      true,
-    );
+    $this->resetTestingEnvironment();
 
     return true;
 
@@ -122,21 +156,7 @@ abstract class Base
    */
   public function doTearDownAfterClass(): bool {
 
-    DevelopmentMode::reset();
-
-    DynamicMethodCall::callMethod(
-      'Zynga\Framework\Testing\MockState\V2\MockState',
-      'enableMocks',
-      Vector {},
-      true,
-    );
-
-    DynamicMethodCall::callMethod(
-      'Zynga\Framework\Database\V2\Factory',
-      'resetResultSets',
-      Vector {},
-      true,
-    );
+    $this->resetTestingEnvironment();
 
     return true;
 
@@ -150,14 +170,10 @@ abstract class Base
    *
    */
   public function setUp(): void {
+
     if ($this->hideLogs() === true) {
       ob_start();
-      DynamicMethodCall::callMethod(
-        'Zynga\Legacy\V1\Log',
-        'setHideAllLogs',
-        Vector {true},
-        true,
-      );
+      $this->doHideLogs();
     }
 
     if ($this->isEnabled() !== true) {
@@ -165,17 +181,13 @@ abstract class Base
       $testReason = TestManager::getReason($context);
       $this->markTestSkipped($testReason);
     }
+
   }
 
   public function tearDown(): void {
     if ($this->hideLogs() === true) {
       ob_end_clean();
-      DynamicMethodCall::callMethod(
-        'Zynga\Legacy\V1\Log',
-        'setHideAllLogs',
-        Vector {false},
-        true,
-      );
+      $this->doHideLogs();
     }
   }
 
@@ -249,14 +261,32 @@ abstract class Base
     $this->assertLessThan($timeout, $delta);
   }
 
-  public function startProfiling(): void {
-    // TODO: xhprofiler needs to be brought up into the fold.
-    // zyCasino_App_Performance_XHProfiler::startProfiling();
+  public function getProfileDirectory(): string {
+    return CodePath::getRoot().'/tmp/xh-profiles';
+
   }
 
-  public function stopProfiling(string $name): void {
-    // TODO: xhprofiler needs to be brought up into the fold.
-    // zyCasino_App_Performance_XHProfiler::stopProfiling($name);
+  public function startProfiling(): void {
+    PerformanceProfiler::setProfileDir($this->getProfileDirectory());
+    PerformanceProfiler::startProfiling();
+  }
+
+  public function stopProfiling(): void {
+    $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+
+    $frame = $backtrace[1];
+
+    $name = 'UNKNOWN';
+    if (array_key_exists('class', $frame)) {
+      $name = $frame['class'];
+    }
+
+    if (array_key_exists('function', $frame)) {
+      $name .= '_'.$frame['function'];
+    }
+
+    PerformanceProfiler::stopProfiling($name);
+
   }
 
   protected function expectOutput(string $expected): void {
@@ -293,9 +323,9 @@ abstract class Base
    *
    * @since Method available since Release 3.0.0
    */
-  public function markTestSkipped(string $message = ''): bool {
+  public function markTestSkipped(string $message = ''): void {
+    // This internal actually throws a exception to be caught by phpunit to mark the test / halt execution.
     $this->_testCaseShim->markTestSkipped($message);
-    return true;
   }
 
   /**
@@ -392,17 +422,17 @@ abstract class Base
 
     $runResult = $this->_testCaseShim->run($result);
 
-    if ($runResult instanceof PHPUnit_Framework_TestResult) {
-      return $runResult;
-    }
+    return $runResult;
 
-    /*
-     if ( $result instanceof PHPUnit_Framework_TestResult ) {
-     return $result;
-     }
-     */
+    // --
+    // JEO: Unsure of why I added this type refinement check in here.
+    //     leaving it here jic we see issues in production.
+    // --
+    // if ($runResult instanceof PHPUnit_Framework_TestResult) {
+    //   return $runResult;
+    // }
 
-    throw new Exception('run failure both runResult and result were null');
+    // throw new Exception('run failure both runResult and result were null');
 
   }
 
@@ -623,6 +653,10 @@ abstract class Base
     }
   }
 
+  public function getGroups(): array<string> {
+    return $this->_testCaseShim->getGroups();
+  }
+
   /**
    * Returns the size of the test.
    *
@@ -685,60 +719,8 @@ abstract class Base
     }
   }
 
-  /**
-   * @param bool $beStrictAboutChangesToGlobalState
-   *
-   * @since Method available since Release 4.6.0
-   */
-  public function setBeStrictAboutChangesToGlobalState(mixed $strict): void {
-    if (is_bool($strict)) {
-      $this->_testCaseShim->setBeStrictAboutChangesToGlobalState($strict);
-    }
-  }
-
-  /**
-   * Calling this method in setUp() has no effect!
-   *
-   * @param bool $backupGlobals
-   *
-   * @since Method available since Release 3.3.0
-   */
-  public function setBackupGlobals(mixed $backupGlobals): void {
-    if (is_bool($backupGlobals)) {
-      $this->_testCaseShim->setBackupGlobals($backupGlobals);
-    }
-  }
-
-  /**
-   * Calling this method in setUp() has no effect!
-   *
-   * @param bool $backupStaticAttributes
-   *
-   * @since Method available since Release 3.4.0
-   */
-  public function setBackupStaticAttributes(
-    mixed $backupStaticAttributes,
-  ): void {
-    if (is_bool($backupStaticAttributes)) {
-      $this->_testCaseShim
-        ->setBackupStaticAttributes($backupStaticAttributes);
-    }
-  }
-
-  /**
-   * @param bool $runTestInSeparateProcess
-   *
-   * @throws PHPUnit_Framework_Exception
-   *
-   * @since Method available since Release 3.4.0
-   */
-  public function setRunTestInSeparateProcess(
-    mixed $runTestInSeparateProcess,
-  ): void {
-    if (is_bool($runTestInSeparateProcess)) {
-      $this->_testCaseShim
-        ->setRunTestInSeparateProcess($runTestInSeparateProcess);
-    }
+  public function hasDependencies(): bool {
+    return $this->_testCaseShim->hasDependencies();
   }
 
   /**
@@ -767,7 +749,11 @@ abstract class Base
    * @since Method available since Release 3.1.0
    */
   public function getStatus(): int {
-    return $this->_testCaseShim->getStatus();
+    $status = $this->_testCaseShim->getStatus();
+    if (is_int($status)) {
+      return $status;
+    }
+    return -1;
   }
 
   /**

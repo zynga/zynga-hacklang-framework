@@ -15,18 +15,20 @@ use
   Zynga\Framework\Factory\V2\Test\Interfaces\ConfigInterface as TestDriverConfigInterface
 ;
 use Zynga\Framework\Factory\V2\Exceptions\FailedToLoadDriverException;
+use Zynga\Framework\Database\V2\Factory as DatabaseFactory;
+use Zynga\Framework\Factory\V2\Test\Mock\TemplateReturningWrongDriver;
 
 class BaseTest extends TestCase {
 
   public function doSetUpBeforeClass(): bool {
     parent::doSetUpBeforeClass();
-    TestFactory::clear();
+    TestFactory::clearFactoryTemplates();
     return true;
   }
 
   public function doTearDownAfterClass(): bool {
     parent::doTearDownAfterClass();
-    TestFactory::clear();
+    TestFactory::clearFactoryTemplates();
     return true;
   }
 
@@ -123,6 +125,36 @@ class BaseTest extends TestCase {
 
     DevelopmentMode::setMode($currentMode);
 
+  }
+
+  public function testAddClassRoot(): void {
+    $this->assertTrue(TestFactory::addClassRoot('\\SomeOther\ClassRoot'));
+  }
+
+  public function testFactoryLoadWithWrongInterface(): void {
+
+    // --
+    // Descructive test here basically overloading the internal factory template object in
+    // order to get a type violation that should never happen in the real world.
+    // --
+    TestFactory::clear();
+    DatabaseFactory::clear();
+
+    TestFactory::setFactoryTemplate(
+      TestFactory::getClassRoot(),
+      new TemplateReturningWrongDriver(DatabaseFactory::getClassRoot()),
+    );
+
+    $this->expectException(FailedToLoadDriverException::class);
+    TestFactory::factory(TestDriverInterface::class, 'Test_Mysql');
+
+    // clear the bad template.
+    TestFactory::clearFactoryTemplates();
+
+  }
+
+  public function testFactoryClearTemplates(): void {
+    $this->assertTrue(TestFactory::clearFactoryTemplates());
   }
 
 }

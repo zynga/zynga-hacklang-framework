@@ -123,4 +123,9 @@ class InMemory extends DriverBase {
       throw $e;
     }
   }
+  
+  public function clearInMemoryCache(): bool {
+    self::$data = Map {};
+    return true;
+  }
 }

@@ -168,5 +168,10 @@ class InMemoryTest extends TestCase {
     $this->assertFalse($cache->delete($obj));
 
   }
+  
+  public function testClearInMemoryCacheWorks(): void {
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $cache->clearInMemoryCache();
+  }
 
 }

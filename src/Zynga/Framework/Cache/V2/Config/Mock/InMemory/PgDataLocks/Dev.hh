@@ -2,14 +2,14 @@
 
 namespace Zynga\Framework\Cache\V2\Config\Mock\InMemory\PgDataLocks;
 
-use Zynga\Framework\Cache\V2\Config\InMemory\Base as InMemoryBase;
+use Zynga\Framework\Cache\V2\Config\Mock\InMemory\PgDataBase;
 use Zynga\Framework\Cache\V2\Exceptions\InvalidObjectForKeyCreationException;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 use \Exception;
 
-class Dev extends InMemoryBase {
+class Dev extends PgDataBase {
 
   public function createKeyFromStorableObject(
     StorableObjectInterface $obj,

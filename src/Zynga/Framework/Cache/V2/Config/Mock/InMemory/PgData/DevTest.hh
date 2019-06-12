@@ -5,7 +5,7 @@ namespace Zynga\Framework\Cache\V2\Config\Mock\InMemory\PgData;
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 use
-  Zynga\Framework\Cache\V2\Config\LocalMemcache\PgDataTest\Dev as ConfigUnderTest
+  Zynga\Framework\Cache\V2\Config\Mock\InMemory\PgData\Dev as ConfigUnderTest
 ;
 use Zynga\Framework\Cache\V2\Exceptions\InvalidObjectForKeyCreationException;
 use
@@ -25,8 +25,8 @@ class DevTest extends TestCase {
 
     $config = $this->createConfigUnderTest();
     $servers = $config->getServerPairings();
-    $this->assertEquals(1, $servers->keys()->count());
-    $this->assertEquals('Memcache', $config->getDriver());
+    $this->assertEquals(0, $servers->keys()->count());
+    $this->assertEquals('InMemory', $config->getDriver());
     $this->assertEquals(3600, $config->getTTL());
 
   }
@@ -38,6 +38,12 @@ class DevTest extends TestCase {
     $this->expectException(InvalidObjectForKeyCreationException::class);
     $key = $config->createKeyFromStorableObject($obj);
 
+  }
+  
+  public function testCacheAllowsKeyOverride(): void {
+    $config = $this->createConfigUnderTest();
+    $this->assertTrue($config->cacheAllowsKeyOverride());
+    
   }
 
 }

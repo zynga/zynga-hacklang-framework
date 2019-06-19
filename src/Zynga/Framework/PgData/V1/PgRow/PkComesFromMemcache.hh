@@ -59,7 +59,7 @@ abstract class PkComesFromMemcache extends PgRow {
 
       // 6) If the value is not bigger than 0, attempt to load it from the db.
       $pkKeyLock = $pkKey.':lock';
-      $pkLock = $cache->directAdd($pkKeyLock, 0, 300);
+      $pkLock = $cache->directAdd($pkKeyLock, 0, 0, 30);
 
       if ($pkLock !== true) {
         throw new Exception('Failed to create pk lock='.$pkKeyLock);
@@ -70,6 +70,9 @@ abstract class PkComesFromMemcache extends PgRow {
 
       // 8) Save the item to memcache
       if ($cache->directAdd($pkKey, $value) != true) {
+        // Unlock the lock if there was some exception here.
+        $cache->directDelete($pkKeyLock);
+        
         throw new Exception(
           'Failed to save pkKey='.$pkKey.' to memcache value='.$value,
         );

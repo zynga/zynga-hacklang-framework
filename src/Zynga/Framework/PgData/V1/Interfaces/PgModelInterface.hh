@@ -26,6 +26,7 @@ interface PgModelInterface {
   public function getByPk<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     mixed $id,
+    bool $shouldLock
   ): ?PgRowInterface;
   public function get<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,

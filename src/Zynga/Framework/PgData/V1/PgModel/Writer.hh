@@ -42,11 +42,11 @@ class Writer implements WriterInterface {
       }
 
       $pgModel = $this->pgModel();
-
-      $cache = $pgModel->cache()->getDataCache();
-
-      if ($cache->lock($row) === true) {
-
+      $pgCache = $pgModel->cache();
+      
+      $locked = $pgCache->lockRowCache($row);
+      if ($locked === true) {
+        $dataCache = $pgCache->getDataCache();
         $dbh = $pgModel->db()->getWriteDatabase();
 
         $insertSql = SqlGenerator::getInsertSql($dbh, $pgModel, $row);
@@ -54,12 +54,12 @@ class Writer implements WriterInterface {
         $result = $dbh->query($insertSql);
 
         if ($result->wasSuccessful() === true) {
-          $cache->set($row);
-          $cache->unlock($row);
+          $dataCache->set($row);
+          $pgCache->unlockRowCache($row);
           return true;
         }
 
-        $cache->unlock($row);
+        $pgCache->unlockRowCache($row);
 
       }
 
@@ -83,10 +83,12 @@ class Writer implements WriterInterface {
       }
 
       $pgModel = $this->pgModel();
+      
+      $pgCache = $pgModel->cache();
+      $pgCache = $pgModel->cache();
+      $dataCache = $pgCache->getDataCache();
 
-      $cache = $pgModel->cache()->getDataCache();
-
-      if ($cache->lock($obj) === true) {
+      if ($pgCache->lockRowCache($obj) === true) {
 
         $dbh = $pgModel->db()->getWriteDatabase();
 
@@ -96,13 +98,13 @@ class Writer implements WriterInterface {
 
         if ($result->wasSuccessful() === true) {
 
-          $cache->set($obj);
+          $dataCache->set($obj);
 
-          $cache->unlock($obj);
+          $pgCache->unlockRowCache($obj);
           return true;
         }
 
-        $cache->unlock($obj);
+        $pgCache->unlockRowCache($obj);
 
       }
 
@@ -126,13 +128,13 @@ class Writer implements WriterInterface {
       }
 
       $pgModel = $this->pgModel();
+      $pgCache = $pgModel->cache();
+      $dataCache = $pgCache->getDataCache();
 
-      $cache = $pgModel->cache()->getDataCache();
-
-      if ($cache->lock($obj) === true) {
+      if ($pgCache->lockRowCache($obj) === true) {
         
         // Delete from cache first
-        if ($cache->delete($obj) === true) {
+        if ($dataCache->delete($obj) === true) {
           $dbh = $pgModel->db()->getWriteDatabase();
 
           $where = new PgWhereClause($pgModel);
@@ -141,9 +143,9 @@ class Writer implements WriterInterface {
 
           $result = $dbh->query($deleteSql);
           if ($result->wasSuccessful() === true) {
-            $cache->unlock($obj);
+            $pgCache->unlockRowCache($obj);
             return true;
-          } 
+          }
         }
       }
 

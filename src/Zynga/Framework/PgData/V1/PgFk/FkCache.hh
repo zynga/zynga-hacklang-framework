@@ -29,7 +29,7 @@ class FkCache<TModel as PgModelInterface, TRow as PgRowInterface> {
       $model = DynamicClassCreation::createClassByName($fkModel, Vector {});
 
       if ($model instanceof PgModelInterface) {
-        $actualFkRow = $model->getByPk($fkRow, $fkId);
+        $actualFkRow = $model->getByPk($fkRow, $fkId, false);
         self::$_cache->set($cacheKey, $actualFkRow);
         return $actualFkRow;
       }

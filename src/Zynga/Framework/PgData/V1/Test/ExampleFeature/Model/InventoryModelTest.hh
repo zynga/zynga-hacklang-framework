@@ -17,85 +17,7 @@ use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\Inventory\ItemType;
 use Zynga\Framework\PgData\V1\PgWhereClause;
 use Zynga\Framework\PgData\V1\PgWhereOperand;
 
-class InventoryModelTest extends TestCase {
-
-  public function doSetUpBeforeClass(): bool {
-
-    parent::doSetUpBeforeClass();
-
-    CacheFactory::disableMockDrivers();
-    CacheFactory::clear();
-
-    DatabaseFactory::disableMockDrivers();
-    DatabaseFactory::clear();
-
-    LockableCacheFactory::disableMockDrivers();
-    LockableCacheFactory::clear();
-
-    return true;
-
-  }
-
-  public function doTearDownAfterClass(): bool {
-
-    CacheFactory::enableMockDrivers();
-    CacheFactory::clear();
-
-    DatabaseFactory::enableMockDrivers();
-    DatabaseFactory::clear();
-
-    LockableCacheFactory::enableMockDrivers();
-    LockableCacheFactory::clear();
-
-    return true;
-  }
-
-  private function removeCachedItem(int $id): void {
-
-    $lmc = LockableCacheFactory::factory(
-      LockableCacheDriverInterface::class,
-      'PgDataTest',
-    );
-
-    $inv = new InventoryModel();
-    $obj = new ItemType($inv);
-    $obj->id->set($id);
-
-    $lmc->delete($obj);
-
-  }
-
-  private function removeCachedResultSet(): void {
-
-    $lmc = LockableCacheFactory::factory(
-      LockableCacheDriverInterface::class,
-      'PgDataTest',
-    );
-
-  }
-
-  private function validateModelStats(
-    PgModel $model,
-    int $cacheHits,
-    int $cacheMisses,
-    int $sqlSelectCount,
-  ): void {
-    $this->assertEquals(
-      $cacheHits,
-      $model->stats()->getCacheHits(),
-      'cache_hits',
-    );
-    $this->assertEquals(
-      $cacheMisses,
-      $model->stats()->getCacheMisses(),
-      'cache_misses',
-    );
-    $this->assertEquals(
-      $sqlSelectCount,
-      $model->stats()->getSqlSelects(),
-      'sql_select_count',
-    );
-  }
+class InventoryModelTest extends BaseInventoryTest {
 
   public function testInventory_GetById(): void {
 
@@ -111,7 +33,7 @@ class InventoryModelTest extends TestCase {
     $this->removeCachedItem($id);
 
     // This trip should hit the database.
-    $firstTrip = $inventory->getByPk(ItemType::class, $id);
+    $firstTrip = $inventory->getByPk(ItemType::class, $id, false);
 
     if ($firstTrip instanceof ItemType) {
 
@@ -124,7 +46,7 @@ class InventoryModelTest extends TestCase {
     }
 
     // Run the same get again, it should be cached.
-    $secondTrip = $inventory->getByPk(ItemType::class, $id);
+    $secondTrip = $inventory->getByPk(ItemType::class, $id, false);
 
     if ($secondTrip instanceof ItemType) {
       $this->assertEquals($id, $secondTrip->id->get());
@@ -150,7 +72,7 @@ class InventoryModelTest extends TestCase {
 
     // This trip should hit the database.
     $this->expectException(InvalidPrimaryKeyValueException::class);
-    $firstTrip = $inventory->getByPk(ItemType::class, $id);
+    $firstTrip = $inventory->getByPk(ItemType::class, $id, false);
 
   }
 
@@ -167,13 +89,13 @@ class InventoryModelTest extends TestCase {
     $this->removeCachedItem($id);
 
     // This trip should hit the database.
-    $firstTrip = $inventory->getByPk(ItemType::class, $id);
+    $firstTrip = $inventory->getByPk(ItemType::class, $id, false);
     $this->assertEquals(null, $firstTrip);
 
     $this->validateModelStats($inventory, 0, 1, 1);
 
     // Run the same get again, it should be not be cached.
-    $secondTrip = $inventory->getByPk(ItemType::class, $id);
+    $secondTrip = $inventory->getByPk(ItemType::class, $id, false);
     $this->assertEquals(null, $secondTrip);
 
     $this->validateModelStats($inventory, 0, 2, 2);

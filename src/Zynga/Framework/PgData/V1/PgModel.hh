@@ -101,7 +101,7 @@ abstract class PgModel implements PgModelInterface {
     return $db;
 
   }
-
+  
   public function createReaderObject(): ReaderInterface {
     return new Reader($this);
   }
@@ -164,14 +164,31 @@ abstract class PgModel implements PgModelInterface {
       throw $e;
     }
   }
-
+  
+  public function lockRowCache(PgRowInterface $row): bool {
+    try {
+      return $this->cache()->lockRowCache($row);
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+  
+  public function unlockRowCache(PgRowInterface $row): bool {
+    try {
+      return $this->cache()->unlockRowCache($row);
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+  
   public function getByPk<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     mixed $id,
+    bool $shouldLock
   ): ?PgRowInterface {
 
     try {
-      return $this->reader()->getByPk($model, $id);
+      return $this->reader()->getByPk($model, $id, $shouldLock);
     } catch (Exception $e) {
       throw $e;
     }

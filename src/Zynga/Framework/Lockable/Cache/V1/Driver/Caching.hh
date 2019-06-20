@@ -71,7 +71,6 @@ class Caching extends FactoryDriverBase implements DriverInterface {
     try {
 
       $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
-
       $alreadyLocked = $this->_locks->get($lockKey);
 
       // if our own lock has expired through neglect then its time to re-add it.

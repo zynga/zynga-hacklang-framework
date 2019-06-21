@@ -157,9 +157,9 @@ abstract class PgModel implements PgModelInterface {
     return $this->_stats;
   }
 
-  public function add(PgRowInterface $row): bool {
+  public function add(PgRowInterface $row, bool $shouldUnlock): bool {
     try {
-      return $this->writer()->add($row);
+      return $this->writer()->add($row, $shouldUnlock);
     } catch (Exception $e) {
       throw $e;
     }

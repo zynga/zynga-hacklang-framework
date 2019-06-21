@@ -6,6 +6,7 @@ use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
 use Zynga\Framework\Cache\V2\Driver\Base as DriverBase;
 use Zynga\Framework\Cache\V2\Interfaces\DriverConfigInterface;
+use Zynga\Framework\Cache\V2\Interfaces\MemcacheDriverInterface;
 use Zynga\Framework\Cache\V2\Interfaces\DriverInterface;
 use Zynga\Framework\Cache\V2\Exceptions\StorableObjectRequiredException;
 use Zynga\Framework\Cache\V2\Driver\InMemory as InMemoryDriver;
@@ -14,8 +15,8 @@ use Zynga\Framework\Exception\V1\Exception;
 /**
  * This is an in-memory cache for transient data. If you need to have data persist between requests, consider the Memcache driver
  */
-class InMemory extends DriverBase {
-  private static Map<string, StorableObjectInterface> $data = Map {};
+class InMemory extends DriverBase implements MemcacheDriverInterface{
+  private static Map<string, mixed> $data = Map {};
   private DriverConfigInterface $_config;
 
   public function __construct(DriverConfigInterface $config) {
@@ -24,6 +25,44 @@ class InMemory extends DriverBase {
 
   public function getConfig(): DriverConfigInterface {
     return $this->_config;
+  }
+  
+  public function directIncrement(string $key, int $incrementValue = 1): int {
+    $value = self::$data->get($key);
+    if(is_int($value)) {
+      $value = $value + $incrementValue;
+      self::$data->set($key, $value);
+      return $value;
+    }
+    
+    return 0;
+  }
+  
+  public function directAdd(
+    string $key,
+    mixed $value,
+    int $flags = 0,
+    int $ttl = 0,
+  ): bool {
+    self::$data->set($key, $value);
+    $valueSet = self::$data->get($key);
+    return $valueSet === null ? false : true;
+  }
+  
+  public function directDelete(string $key): bool {
+    $data = self::$data->get($key);
+
+    if($data === null){
+      return false;
+    }
+
+    self::$data->remove($key);
+
+    return true;
+  }
+  
+  public function connect(): bool  {
+    return true;
   }
 
   public function add(
@@ -66,7 +105,7 @@ class InMemory extends DriverBase {
       $storableObject = self::$data->get($key);
 
       // no data to work with.
-      if ($storableObject === null) {
+      if ($storableObject === null || !$storableObject instanceof StorableObjectInterface) {
         return null;
       }
 

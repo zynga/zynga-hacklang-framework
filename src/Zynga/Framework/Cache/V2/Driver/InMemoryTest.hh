@@ -173,5 +173,33 @@ class InMemoryTest extends TestCase {
     $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
     $this->assertTrue($cache->clearInMemoryCache());
   }
-
+  
+  public function testConnect(): void {
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $this->assertTrue($cache->connect());
+  }
+  
+  public function testDirectIncrementFails(): void {
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $cache->directDelete('test');
+    $this->assertEquals(0, $cache->directIncrement('test', 1));
+  }
+  
+  public function directDirectIncrementIncrements(): void {
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $cache->directAdd('test', 1);
+    $this->assertEquals(2, $cache->directIncrement('test', 1));
+    $this->assertTrue($cache->directDelete('test'));
+  }
+  
+  public function testDirectAddAndDeleteSucceeds(): void {
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $this->assertTrue($cache->directAdd('test', 1));
+    $this->assertTrue($cache->directDelete('test'));
+  }
+  
+  public function testDirectDeleteFails(): void {
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $this->assertFalse($cache->directDelete('test'));
+  }
 }

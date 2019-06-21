@@ -216,7 +216,7 @@ class InventoryModelTest extends BaseInventoryTest {
     $item = new ItemType($model);
 
     $item->name->set($testName);
-    $this->assertTrue($model->add($item));
+    $this->assertTrue($model->add($item, true));
     
     $where = new PgWhereClause($model);
     $where->and('name', PgWhereOperand::EQUALS, $testName);
@@ -226,7 +226,7 @@ class InventoryModelTest extends BaseInventoryTest {
     $newItem = $resultSet->at(0);
     if($newItem instanceof ItemType) {
       $lastItemId = $newItem->id->get();
-      $this->assertTrue($newItem->delete());
+      $this->assertTrue($newItem->delete(true));
     }
     
     $resultSet = $model->get(ItemType::class, $where);
@@ -250,7 +250,7 @@ class InventoryModelTest extends BaseInventoryTest {
 
     $item->name->set($testName);
 
-    $this->assertTrue($model->add($item));
+    $this->assertTrue($model->add($item, true));
 
   }
 
@@ -273,13 +273,13 @@ class InventoryModelTest extends BaseInventoryTest {
     $item->name->set($testName);
 
     // Save the item to the db.
-    $this->assertTrue($model->add($item));
+    $this->assertTrue($model->add($item, true));
 
     // Now we have a target to do a update against.
     $testName2 = 'this-is-another-phpunit-test-'.time().'-'.mt_rand(200);
     $item->name->set($testName2);
 
-    $this->assertTrue($item->save());
+    $this->assertTrue($item->save(true));
 
   }
 

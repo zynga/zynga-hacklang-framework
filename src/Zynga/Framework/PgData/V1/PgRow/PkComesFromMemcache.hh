@@ -2,7 +2,7 @@
 
 namespace Zynga\Framework\PgData\V1\PgRow;
 
-use Zynga\Framework\Cache\V2\Driver\Memcache as CacheMemcacheDriver;
+use Zynga\Framework\Cache\V2\Driver\Memcache as MemcacheDriverInterface;
 use
   Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
 ;
@@ -36,56 +36,56 @@ abstract class PkComesFromMemcache extends PgRow {
       $cache =
         $this->pgModel()->cache()->getDataCache()->getConfig()->getCache();
 
-      if (!$cache instanceof CacheMemcacheDriver) {
-        throw new Exception(
-          'We only support memcache as a driver for PkgComesFromMemcache',
-        );
-      }
+      if ($cache instanceof MemcacheDriverInterface) {
+        // 2) Pull the write database in
+        $writeDatabase = $this->pgModel()->db()->getWriteDatabase();
 
-      // 2) Pull the write database in
-      $writeDatabase = $this->pgModel()->db()->getWriteDatabase();
+        // 3) Make a md5(connection string)|table:pk
+        $pkKey = $this->createPkKeyForMC();
 
-      // 3) Make a md5(connection string)|table:pk
-      $pkKey = $this->createPkKeyForMC();
+        // 4) Attempt to increment via the memcache driver.
+        $value = $cache->directIncrement($pkKey);
 
-      // 4) Attempt to increment via the memcache driver.
-      $value = $cache->directIncrement($pkKey);
+        // 5) All is well if the value is bigger than 0
+        if ($value > 0) {
+          $id->set($value);
+          return $id;
+        }
 
-      // 5) All is well if the value is bigger than 0
-      if ($value > 0) {
+        // 6) If the value is not bigger than 0, attempt to load it from the db.
+        $pkKeyLock = $pkKey.':lock';
+        $pkLock = $cache->directAdd($pkKeyLock, 0, 0, 30);
+
+        if ($pkLock !== true) {
+          throw new Exception('Failed to create pk lock='.$pkKeyLock);
+        }
+
+        // 7) Load the value from the db
+        $value = $this->loadIdFromDatabase();
+
+        // 8) Save the item to memcache
+        if ($cache->directAdd($pkKey, $value) != true) {
+          // Unlock the lock if there was some exception here.
+          $cache->directDelete($pkKeyLock);
+          
+          throw new Exception(
+            'Failed to save pkKey='.$pkKey.' to memcache value='.$value,
+          );
+        }
+
+        $cache->directDelete($pkKeyLock);
+
+        // 9) Pull a new value off mc
+        $value = $cache->directIncrement($pkKey);
         $id->set($value);
+
         return $id;
       }
 
-      // 6) If the value is not bigger than 0, attempt to load it from the db.
-      $pkKeyLock = $pkKey.':lock';
-      $pkLock = $cache->directAdd($pkKeyLock, 0, 0, 30);
-
-      if ($pkLock !== true) {
-        throw new Exception('Failed to create pk lock='.$pkKeyLock);
-      }
-
-      // 7) Load the value from the db
-      $value = $this->loadIdFromDatabase();
-
-      // 8) Save the item to memcache
-      if ($cache->directAdd($pkKey, $value) != true) {
-        // Unlock the lock if there was some exception here.
-        $cache->directDelete($pkKeyLock);
-        
-        throw new Exception(
-          'Failed to save pkKey='.$pkKey.' to memcache value='.$value,
-        );
-      }
-
-      $cache->directDelete($pkKeyLock);
-
-      // 9) Pull a new value off mc
-      $value = $cache->directIncrement($pkKey);
-      $id->set($value);
-
-      return $id;
-
+    
+      throw new Exception(
+        'We only support memcache as a driver for PkgComesFromMemcache',
+      );
     } catch (Exception $e) {
       throw $e;
     }

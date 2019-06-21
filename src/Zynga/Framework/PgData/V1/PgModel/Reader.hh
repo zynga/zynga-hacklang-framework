@@ -56,6 +56,8 @@ class Reader implements ReaderInterface {
         $pgModel->stats()->incrementCacheHits();
         return $cached;
       }
+      
+      error_log("NO DATA IN CACHE");
 
       // --
       // Note: the by data caching is handled within the ->get() call so don't duplicate

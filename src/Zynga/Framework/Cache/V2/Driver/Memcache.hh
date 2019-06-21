@@ -18,10 +18,13 @@ use \Memcache as NativeMemcacheDriver;
 class Memcache extends DriverBase {
   private NativeMemcacheDriver $_memcache;
   private DriverConfigInterface $_config;
+  // Map used to keep track of hosts that have been registered to avoid duplicates
+  private Map<string, int> $_registeredHosts;
 
   public function __construct(DriverConfigInterface $config) {
     $this->_config = $config;
     $this->_memcache = new NativeMemcacheDriver();
+    $this->_registeredHosts = Map {};
   }
 
   public function getConfig(): DriverConfigInterface {
@@ -79,6 +82,40 @@ class Memcache extends DriverBase {
 
   }
 
+  public function directSet(
+    string $key,
+    mixed $value,
+    int $flags = 0,
+    int $ttl = 0,
+  ): bool {
+
+    try {
+
+      $this->connect();
+
+      $success = $this->_memcache->set($key, $value, $flags, $ttl);
+
+      return $success;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
+
+  public function directGet(string $key, int $count = 1): array<mixed> {
+    try {
+      $this->connect();
+
+      $keyArray = array($key, $count);
+      $items = $this->_memcache->get($keyArray);
+
+      return $items;
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
   public function directDelete(string $key): bool {
 
     try {
@@ -125,9 +162,14 @@ class Memcache extends DriverBase {
       }
 
       // add the host / port combinations to the memcache object, addserver
-      //   always returns true as it lazy connects at use time.
+      // always returns true as it lazy connects at use time.
       foreach ($serverPairs as $host => $port) {
-        $memcache->addserver($host, $port);
+
+        // addserver does not check for duplicates
+        if ($this->_registeredHosts->containsKey($host) === false) {
+          $memcache->addserver($host, $port);
+          $this->_registeredHosts[$host] = $port;
+        }
       }
 
       $this->_memcache = $memcache;
@@ -212,7 +254,7 @@ class Memcache extends DriverBase {
       $jsonValue = $obj->export()->asJSON();
 
       $flags = 0;
-      $success = $this->_memcache->set($key, $jsonValue, $flags, $ttl);
+      $success = $this->directSet($key, $jsonValue, $flags, $ttl);
 
       return $success;
 
@@ -245,6 +287,11 @@ class Memcache extends DriverBase {
       throw $e;
     }
 
+  }
+
+  public function close(): bool {
+    $closed = $this->_memcache->close();
+    return $closed;
   }
 
 }

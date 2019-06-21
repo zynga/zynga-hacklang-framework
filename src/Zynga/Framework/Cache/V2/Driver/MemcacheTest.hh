@@ -45,6 +45,12 @@ class MemcacheTest extends TestCase {
 
   }
 
+  public function testClose(): void {
+    $cache = CacheFactory::factory(MemcacheDriver::class, 'Mock');
+    $this->assertTrue($cache->connect());
+    $this->assertTrue($cache->close());
+  }
+
   public function testConnect_NoServersConfigured(): void {
 
     $obj = CacheFactory::factory(
@@ -209,6 +215,24 @@ class MemcacheTest extends TestCase {
     $cache->directAdd('bc-test-some-key-'.mt_rand(), 'some-value-'.mt_rand());
   }
 
+  public function testErrorTrap_DirectSet(): void {
+    $cache = CacheFactory::factory(
+      MemcacheDriver::class,
+      'Mock_NoServersConfigured',
+    );
+    $this->expectException(NoServerPairsProvidedException::class);
+    $cache->directSet('test-some-key-'.mt_rand(), 'some-value-'.mt_rand());
+  }
+
+  public function testErrorTrap_DirectGet(): void {
+    $cache = CacheFactory::factory(
+      MemcacheDriver::class,
+      'Mock_NoServersConfigured',
+    );
+    $this->expectException(NoServerPairsProvidedException::class);
+    $cache->directGet('test-some-key-'.mt_rand());
+  }
+
   public function testErrorTrap_DirectDelete(): void {
     $cache = CacheFactory::factory(
       MemcacheDriver::class,
@@ -233,6 +257,20 @@ class MemcacheTest extends TestCase {
 
     $this->assertTrue($cache->directDelete($randomKey));
 
+  }
+
+  public function testDirectSetGetCycle(): void {
+    $cache = CacheFactory::factory(MemcacheDriver::class, 'Mock');
+
+    $key = 'demo';
+    $value = '{"test":"data"}';
+
+    $this->assertTrue($cache->directSet($key, $value));
+    $cachedValueArray = $cache->directGet($key);
+    $cachedValuesAsVector = new Vector($cachedValueArray);
+
+    $this->assertCount(1, $cachedValuesAsVector);
+    $this->assertEquals($value, $cachedValuesAsVector[0]);
   }
 
   public function testCacheAllowsKeyOverride_Fail(): void {

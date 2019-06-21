@@ -224,6 +224,10 @@ class InventoryModelTest extends BaseInventoryTest {
     $resultSet = $model->get(ItemType::class, $where);
     $this->assertTrue($resultSet->count() === 1);
     $newItem = $resultSet->at(0);
+    
+    // Get a lock
+    $this->assertTrue($model->lockRowCache($newItem));
+    
     if($newItem instanceof ItemType) {
       $lastItemId = $newItem->id->get();
       $this->assertTrue($newItem->delete(true));
@@ -278,7 +282,9 @@ class InventoryModelTest extends BaseInventoryTest {
     // Now we have a target to do a update against.
     $testName2 = 'this-is-another-phpunit-test-'.time().'-'.mt_rand(200);
     $item->name->set($testName2);
-
+    
+    // Get a lock
+    $this->assertTrue($model->lockRowCache($item));
     $this->assertTrue($item->save(true));
 
   }

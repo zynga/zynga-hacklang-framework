@@ -45,12 +45,6 @@ class MemcacheTest extends TestCase {
 
   }
 
-  public function testClose(): void {
-    $cache = CacheFactory::factory(MemcacheDriver::class, 'Mock');
-    $this->assertTrue($cache->connect());
-    $this->assertTrue($cache->close());
-  }
-
   public function testConnect_NoServersConfigured(): void {
 
     $obj = CacheFactory::factory(
@@ -266,11 +260,9 @@ class MemcacheTest extends TestCase {
     $value = '{"test":"data"}';
 
     $this->assertTrue($cache->directSet($key, $value));
-    $cachedValueArray = $cache->directGet($key);
-    $cachedValuesAsVector = new Vector($cachedValueArray);
+    $cachedValue = $cache->directGet($key);
 
-    $this->assertCount(1, $cachedValuesAsVector);
-    $this->assertEquals($value, $cachedValuesAsVector[0]);
+    $this->assertEquals($value, $cachedValue);
   }
 
   public function testCacheAllowsKeyOverride_Fail(): void {

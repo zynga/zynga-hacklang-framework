@@ -103,14 +103,13 @@ class Memcache extends DriverBase {
 
   }
 
-  public function directGet(string $key, int $count = 1): array<mixed> {
+  public function directGet(string $key): mixed {
     try {
       $this->connect();
 
-      $keyArray = array($key, $count);
-      $items = $this->_memcache->get($keyArray);
+      $item = $this->_memcache->get($key);
 
-      return $items;
+      return $item;
     } catch (Exception $e) {
       throw $e;
     }
@@ -221,14 +220,14 @@ class Memcache extends DriverBase {
 
       $this->connect();
 
-      $data = $this->_memcache->get($key);
+      $data = $this->directGet($key);
 
       // no data to work with.
       if ($data === false) {
         return null;
       }
 
-      $obj->import()->fromJSON($data);
+      $obj->import()->fromJSON(strval($data));
 
       return $obj;
 
@@ -287,11 +286,6 @@ class Memcache extends DriverBase {
       throw $e;
     }
 
-  }
-
-  public function close(): bool {
-    $closed = $this->_memcache->close();
-    return $closed;
   }
 
 }

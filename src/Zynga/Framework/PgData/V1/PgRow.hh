@@ -44,11 +44,11 @@ abstract class PgRow extends StorableObject implements PgRowInterface {
 
   }
 
-  public function save(bool $shouldUnlock): bool {
+  public function save(bool $shouldUnlock = true): bool {
     return $this->pgModel()->writer()->save($this, $shouldUnlock);
   }
   
-  public function delete(bool $shouldUnlock): bool {
+  public function delete(bool $shouldUnlock = true): bool {
     return $this->pgModel()->writer()->delete($this, $shouldUnlock);
   }
 

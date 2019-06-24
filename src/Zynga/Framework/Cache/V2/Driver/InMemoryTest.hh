@@ -185,7 +185,7 @@ class InMemoryTest extends TestCase {
     $this->assertEquals(0, $cache->directIncrement('test', 1));
   }
   
-  public function directDirectIncrementIncrements(): void {
+  public function testDirectIncrementIncrements(): void {
     $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
     $cache->directAdd('test', 1);
     $this->assertEquals(2, $cache->directIncrement('test', 1));

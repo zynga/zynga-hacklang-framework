@@ -106,10 +106,8 @@ class Caching extends FactoryDriverBase implements DriverInterface {
       $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
       $alreadyLocked = $this->_locks->get($lockKey);
       
-      error_log("Lockign with key $lockKey");
       // if our own lock has expired through neglect then its time to re-add it.
       if ($alreadyLocked instanceof LockPayloadInterface) {
-        error_log("Already locked ");
         // Check if the lock is still valid, if so we are done.
         if ($alreadyLocked->isLockStillValid(
               $this->getConfig()->getLockTTL(),

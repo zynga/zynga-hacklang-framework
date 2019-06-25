@@ -10,6 +10,7 @@ use
 ;
 use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 use Zynga\Framework\Factory\V2\Driver\Base as FactoryDriverBase;
+use Zynga\Framework\Lockable\Cache\V1\LockPayload;
 
 use \Exception;
 
@@ -57,6 +58,38 @@ class Caching extends FactoryDriverBase implements DriverInterface {
       throw $e;
     }
   }
+  
+  public function isLocked(StorableObjectInterface $obj): bool {
+
+    try {
+      $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
+      $alreadyLocked = $this->_locks->get($lockKey);
+    
+      // Check my thead already has a lock
+      if ($alreadyLocked instanceof LockPayloadInterface) {
+        // Check if the lock is still valid, if so we are done.
+        if ($alreadyLocked->isLockStillValid($this->getConfig()->getLockTTL())) {
+          return true;
+        }
+      }
+      
+      // Check if any other thread has a lock
+      $lockCache = $this->getConfig()->getLockCache();
+      
+      $lockPayload = new LockPayload();
+
+      $lockPayload = $lockCache->get($lockPayload, $lockKey);
+      if($lockPayload === null) {
+        return false;
+      }
+      
+      return $lockPayload->isDefaultValue()[0];
+      
+    } catch (Exception $e) {
+      throw $e;
+    }
+  
+  }
 
   /**
    *
@@ -71,12 +104,10 @@ class Caching extends FactoryDriverBase implements DriverInterface {
     try {
 
       $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
-
       $alreadyLocked = $this->_locks->get($lockKey);
-
+      
       // if our own lock has expired through neglect then its time to re-add it.
       if ($alreadyLocked instanceof LockPayloadInterface) {
-
         // Check if the lock is still valid, if so we are done.
         if ($alreadyLocked->isLockStillValid(
               $this->getConfig()->getLockTTL(),

@@ -17,7 +17,9 @@ interface DriverInterface extends BaseDriverInterface {
    * @return DriverConfigInterface
    */
   public function getConfig(): DriverConfigInterface;
-
+  
+  public function isLocked(StorableObjectInterface $obj): bool;
+  
   /**
    *
    * Locking a existing object if possible, exception if not capable.

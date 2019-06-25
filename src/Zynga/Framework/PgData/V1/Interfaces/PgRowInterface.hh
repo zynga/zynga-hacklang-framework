@@ -12,6 +12,6 @@ interface PgRowInterface extends StorableObjectInterface {
   public function getPrimaryKey(): string;
   public function getPrimaryKeyTyped(): TypeInterface;
   public function getTableName(): string;
-  public function save(): bool;
-  public function delete(): bool;
+  public function save(bool $shouldUnlock = true): bool;
+  public function delete(bool $shouldUnlock = true): bool;
 }

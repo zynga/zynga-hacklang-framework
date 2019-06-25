@@ -9,6 +9,8 @@ use
 ;
 use Zynga\Framework\PgData\V1\Interfaces\PgModelInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\CacheInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;
 
 class Cache implements CacheInterface {
   private PgModelInterface $_pgModel;
@@ -44,5 +46,67 @@ class Cache implements CacheInterface {
       throw $e;
     }
   }
+  
+  public function lockRowCache(PgRowInterface $row): bool {
 
+    try {
+      $cache = $this->getDataCache();
+
+      return $cache->lock($row);
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+  
+  public function unlockRowCache(PgRowInterface $row): bool {
+
+    try {
+      $cache = $this->getDataCache();
+
+      return $cache->unlock($row);
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
+
+  public function lockResultSetCache<TModelClass as PgRowInterface>(
+    classname<TModelClass> $model,
+    PgWhereClauseInterface $where,
+  ): bool {
+    try {
+      $pgModel = $this->pgModel();
+
+      // Create a cachedRs out of the result set that was given.
+      $cachedRs = $pgModel->reader()->createCachedResultSet($model, $where);
+
+      $cache = $this->getResultSetCache();
+
+      return $cache->lock($cachedRs);
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+  public function unlockResultSetCache<TModelClass as PgRowInterface>(
+    classname<TModelClass> $model,
+    PgWhereClauseInterface $where,
+  ): bool {
+    try {
+      $pgModel = $this->pgModel();
+
+      // Create a cachedRs out of the result set that was given.
+      $cachedRs = $pgModel->reader()->createCachedResultSet($model, $where);
+
+      $cache = $this->getResultSetCache();
+
+      return $cache->unlock($cachedRs);
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
 }

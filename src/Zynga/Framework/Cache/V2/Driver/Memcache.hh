@@ -8,6 +8,7 @@ use Zynga\Framework\Cache\V2\Exceptions\NoServerPairsProvidedException;
 use Zynga\Framework\Cache\V2\Exceptions\NoConnectionException;
 use Zynga\Framework\Cache\V2\Exceptions\StorableObjectRequiredException;
 use Zynga\Framework\Cache\V2\Interfaces\DriverConfigInterface;
+use Zynga\Framework\Cache\V2\Interfaces\MemcacheDriverInterface;
 use Zynga\Framework\Cache\V2\Interfaces\DriverInterface;
 use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
 use Zynga\Framework\Exception\V1\Exception;
@@ -15,7 +16,7 @@ use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 use \Memcache as NativeMemcacheDriver;
 
-class Memcache extends DriverBase {
+class Memcache extends DriverBase implements MemcacheDriverInterface {
   private NativeMemcacheDriver $_memcache;
   private DriverConfigInterface $_config;
   // Map used to keep track of hosts that have been registered to avoid duplicates

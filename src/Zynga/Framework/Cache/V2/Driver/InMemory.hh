@@ -61,17 +61,15 @@ class InMemory extends DriverBase implements MemcacheDriverInterface {
     return true;
   }
 
-  /**
-   * Equivalent to directAdd for the InMemory driver because
-   * Map's set and add methods are equivalent.
-   */
   public function directSet(
     string $key,
     mixed $value,
     int $flags = 0,
     int $ttl = 0,
   ): bool {
-    return $this->directAdd($key, $value, $flags, $ttl);
+    self::$data->set($key, $value);
+    $valueSet = $this->directGet($key);
+    return $valueSet === null ? false : true;
   }
 
   public function directGet(string $key): mixed {

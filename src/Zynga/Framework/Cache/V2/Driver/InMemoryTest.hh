@@ -168,36 +168,59 @@ class InMemoryTest extends TestCase {
     $this->assertFalse($cache->delete($obj));
 
   }
-  
+
   public function testClearInMemoryCacheWorks(): void {
     $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
     $this->assertTrue($cache->clearInMemoryCache());
   }
-  
+
   public function testConnect(): void {
     $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
     $this->assertTrue($cache->connect());
   }
-  
+
   public function testDirectIncrementFails(): void {
     $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
     $cache->directDelete('test');
     $this->assertEquals(0, $cache->directIncrement('test', 1));
   }
-  
+
   public function testDirectIncrementIncrements(): void {
     $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
     $cache->directAdd('test', 1);
     $this->assertEquals(2, $cache->directIncrement('test', 1));
     $this->assertTrue($cache->directDelete('test'));
   }
-  
+
   public function testDirectAddAndDeleteSucceeds(): void {
     $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
     $this->assertTrue($cache->directAdd('test', 1));
     $this->assertTrue($cache->directDelete('test'));
   }
-  
+
+  public function testDirectSetOverwritesPreviousValue(): void {
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $this->assertTrue($cache->directSet('test', 1));
+    $this->assertEquals(1, $cache->directGet('test'));
+    // overwrite the previous value
+    $this->assertTrue($cache->directSet('test', 2));
+    $this->assertEquals(2, $cache->directGet('test'));
+
+    $this->assertTrue($cache->directDelete('test'));
+  }
+
+  public function testDirectGetReturnsExpectedValueAfterAdd(): void {
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $this->assertTrue($cache->directAdd('test', 'value'));
+    $this->assertEquals('value', $cache->directGet('test'));
+    $this->assertTrue($cache->directDelete('test'));
+  }
+
+  public function testDirectGetReturnsNullForNonexistentKey(): void {
+    $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
+    $this->assertEquals(null, $cache->directGet('test'));
+  }
+
   public function testDirectDeleteFails(): void {
     $cache = CacheFactory::factory(InMemoryDriver::class, 'InMemory_Mock');
     $this->assertFalse($cache->directDelete('test'));

@@ -2,7 +2,7 @@
 
 namespace Zynga\Framework\PgData\V1\PgRow;
 
-use Zynga\Framework\Cache\V2\Driver\Memcache as MemcacheDriverInterface;
+use Zynga\Framework\Cache\V2\Interfaces\MemcacheDriverInterface;
 use
   Zynga\Framework\Database\V2\Interfaces\DriverInterface as DatabaseDriverInterface
 ;
@@ -132,7 +132,7 @@ abstract class PkComesFromMemcache extends PgRow {
 
       $sth = $writeDatabase->query($sql);
 
-      if ($sth->hasMore() === true) {
+      if ($sth->hasMore() === true && $sth->next() === true) {
         list($id) = $sth->fetchVector();
         return intval($id);
       }

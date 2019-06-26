@@ -44,9 +44,13 @@ class InMemory extends DriverBase implements MemcacheDriverInterface{
     int $flags = 0,
     int $ttl = 0,
   ): bool {
+    $getValue = self::$data->get($key);
+    if($getValue !== null) {
+      return false;
+    }
+  
     self::$data->set($key, $value);
-    $valueSet = self::$data->get($key);
-    return $valueSet === null ? false : true;
+    return true;
   }
   
   public function directDelete(string $key): bool {

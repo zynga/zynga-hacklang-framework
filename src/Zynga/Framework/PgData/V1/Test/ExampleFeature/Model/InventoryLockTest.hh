@@ -41,17 +41,22 @@ class InventoryLockTest extends BaseInventoryTest {
       $this->assertEquals($id, $firstTrip->id->get());
       $this->assertEquals($name, $firstTrip->name->get());
       $this->validateModelStats($inventory, 0, 1, 1);
-  
+      
+      // Should already be locked now
+      $this->assertTrue($inventory->cache()->getDataCache()->isLocked($firstTrip));
+      
     } else {
       $this->fail('type returned should of been ItemType');
     }
   
-  
     // unlock your obj
     if ($firstTrip instanceof ItemType) {
       $this->assertTrue($inventory->unlockRowCache($firstTrip));
+      
+      // Should not be locked now
+      $this->assertFalse($inventory->cache()->getDataCache()->isLocked($firstTrip));
     }
-  
+    
     $this->removeCachedItem($id);
   }
   

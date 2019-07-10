@@ -12,7 +12,7 @@ interface ReaderInterface {
   public function getByPk<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     mixed $id,
-    bool $shouldLock
+    bool $getLocked
   ): ?PgRowInterface;
   
   public function get<TModelClass as PgRowInterface>(

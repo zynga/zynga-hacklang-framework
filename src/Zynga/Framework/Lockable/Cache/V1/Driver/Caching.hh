@@ -254,9 +254,12 @@ class Caching extends FactoryDriverBase implements DriverInterface {
       //}
 
       // Release the lock as we are done here.
-      $unlockReturn = $this->unlock($obj);
-
-      return $unlockReturn;
+      $unlockSuccess = true;
+      if($releaseLockOnSet === true) {
+        $unlockSuccess = $this->unlock($obj);
+      }
+      
+      return $setSuccess || $unlockSuccess;
 
     } catch (Exception $e) {
       throw $e;

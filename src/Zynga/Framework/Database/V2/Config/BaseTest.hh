@@ -20,32 +20,48 @@ class BaseTest extends TestCase {
 
   /**
    * Test the object stands up without any values
-   * @expectedException Zynga\Framework\Database\V2\Exceptions\NoUserNameException
    */
+  <<
+  expectedException(
+    "Zynga\Framework\Database\V2\Exceptions\NoUserNameException",
+  )
+  >>
   public function testConstruct(): void {
     $obj = new MockEmptyConfig();
   }
 
   /**
    * Test the lack of a username is emitting exceptions
-   * @expectedException Zynga\Framework\Database\V2\Exceptions\NoUserNameException
    */
+  <<
+  expectedException(
+    "Zynga\Framework\Database\V2\Exceptions\NoUserNameException",
+  )
+  >>
   public function testNoUsername(): void {
     $obj = new MockNoUserName();
   }
 
   /**
    * Test the lack of a password is emitting exceptions
-   * @expectedException Zynga\Framework\Database\V2\Exceptions\NoPasswordException
    */
+  <<
+  expectedException(
+    "Zynga\Framework\Database\V2\Exceptions\NoPasswordException",
+  )
+  >>
   public function testNoPassword(): void {
     $obj = new MockNoPassword();
   }
 
   /**
    * Test the lack of a port is emitting exceptions
-   * @expectedException Zynga\Framework\Database\V2\Exceptions\NoPortProvidedException
    */
+  <<
+  expectedException(
+    "Zynga\Framework\Database\V2\Exceptions\NoPortProvidedException",
+  )
+  >>
   public function testNoPort(): void {
     $obj = new MockNoPort();
   }

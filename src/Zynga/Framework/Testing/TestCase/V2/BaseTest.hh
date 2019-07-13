@@ -18,11 +18,10 @@ use Zynga\Framework\Testing\TestCase\V2\Test\Mock\NotEnabled;
 use Zynga\Framework\Testing\TestCase\V2\Test\Mock\RiggedGetStatus;
 use Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseTestExample;
 use Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseTestNoImplement;
+use Zynga\PHPUnit\V2\Exceptions\AssertionFailedException;
+use Zynga\PHPUnit\V2\Exceptions\TestError\SkippedException;
 
 use \Exception as RawException;
-use \PHPUnit_Framework_AssertionFailedError;
-use \PHPUnit_Framework_ExpectationFailedException;
-use \PHPUnit_Framework_SkippedTestError;
 
 class TestCaseMock extends ZyngaTestCase {}
 
@@ -55,7 +54,7 @@ class BaseTest extends ZyngaTestCase {
 
   public function test_expectOutputPregMatch(): void {
     echo "some-content";
-    $this->expectOutputPregMatch('/some/', ob_get_contents());
+    $this->expectOutputPregMatch('/some/');
   }
 
   /**
@@ -77,15 +76,6 @@ class BaseTest extends ZyngaTestCase {
   public function testInvalidObjectForClassImplements(): void {
     $this->assertionFailureExpected();
     $this->assertClassImplements('not-a-real-object', null);
-  }
-
-  /**
-   * Testing the noop built in test.
-   */
-  public function testBaseNoop(): bool {
-    $rv = $this->testNoop();
-    $this->assertTrue($rv);
-    return true;
   }
 
   /**
@@ -198,7 +188,8 @@ class BaseTest extends ZyngaTestCase {
 
     $this->assertFalse($test->isEnabled());
 
-    $this->expectException(PHPUnit_Framework_SkippedTestError::class);
+    $this->expectException(SkippedException::class);
+
     $test->setUp();
 
   }
@@ -217,9 +208,7 @@ class BaseTest extends ZyngaTestCase {
   public function testAssertCount(): void {
     $mock = new TestCaseMock('TestCaseMock');
 
-    $this->expectException(
-      PHPUnit_Framework_ExpectationFailedException::class,
-    );
+    $this->expectException(AssertionFailedException::class);
     $mock->assertCount(3, array(1, 3));
 
   }
@@ -244,7 +233,7 @@ class BaseTest extends ZyngaTestCase {
   public function testFail(): void {
 
     $mock = new TestCaseMock('TestCaseMock');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $mock->fail();
 
   }
@@ -252,7 +241,7 @@ class BaseTest extends ZyngaTestCase {
   public function testAssertNotFalse(): void {
 
     $mock = new TestCaseMock('TestCaseMock');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $mock->assertNotFalse(false);
 
   }
@@ -279,7 +268,7 @@ class BaseTest extends ZyngaTestCase {
 
   public function testDependencies(): void {
 
-    $deps = array('dep1', 'dep2');
+    $deps = Vector {'dep1', 'dep2'};
 
     $mock = new TestCaseMock('TestCaseMock');
     $mock->setDependencies($deps);
@@ -311,7 +300,7 @@ class BaseTest extends ZyngaTestCase {
 
   public function testAssertStringStartsWith(): void {
     $mock = new TestCaseMock('TestCaseMock');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $mock->assertStringStartsWith('boo', 'foo');
   }
 
@@ -322,43 +311,44 @@ class BaseTest extends ZyngaTestCase {
 
   public function testAssertNotNull(): void {
     $mock = new TestCaseMock('TestCaseMock');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $mock->assertNotNull(null);
   }
 
   public function testAssertNotEmpty(): void {
+    $foo = null;
     $mock = new TestCaseMock('TestCaseMock');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
-    $mock->assertNotEmpty(null);
+    $this->expectException(AssertionFailedException::class);
+    $mock->assertNotEmpty($foo);
   }
 
   public function testAssertEmpty(): void {
     $mock = new TestCaseMock('TestCaseMock');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $mock->assertEmpty('i am not empty');
   }
 
   public function testAssertGreaterThan(): void {
     $mock = new TestCaseMock('TestCaseMock');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $mock->assertGreaterThan(2, 1);
   }
 
   public function testAssertNull(): void {
     $mock = new TestCaseMock('TestCaseMock');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $mock->assertNull('i am not null');
   }
 
   public function testAssertSame(): void {
     $mock = new TestCaseMock('TestCaseMock');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $mock->assertSame(1, 2);
   }
 
   public function testAssertFileExists(): void {
     $mock = new TestCaseMock('TestCaseMock');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $mock->assertFileExists(
       '/tmp/jeo-'.mt_rand().'-file-does-not-exist-'.mt_rand(),
     );

@@ -44,8 +44,13 @@ check-exceptions:
 	ack 'use \\Exception' include/ | grep -v 'Test.hh'
 	ack 'new Exception' include/ | grep -v 'Test.hh'
 
+test: hack-restart hack-lint check-strict test-single-canary test-all
+	echo "DONE"
 
-test: hack-restart hack-lint check-strict
+test-single-canary:
+	time ./vendor/bin/run-single-test ./src/Zynga/Framework/ELO/V1/Chess/MatchTest.hh
+
+test-all:
 	time ./vendor/bin/phpunit --testsuite framework-tests,phpunit-tests
 
 test-framework:

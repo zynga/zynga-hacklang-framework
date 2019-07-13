@@ -57,9 +57,11 @@ class BoolArgumentTest extends TestCase {
     $this->assertTrue($arg->parseArgument('--another-argument'));
   }
 
-  /**
-   * @expectedException Zynga\Framework\Type\V1\Exceptions\FailedToImportFromFloatException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Type\V1\Exceptions\FailedToImportFromFloatException",
+  )
+  >>
   public function testInvalidArg(): void {
     $argName = 'testing';
     $argDescription = 'this is a test of the emergency broadcast system';

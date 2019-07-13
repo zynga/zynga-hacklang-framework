@@ -14,6 +14,80 @@ use \ReflectionMethod;
 
 class DynamicMethodCall {
 
+  public static function callMethodOnObject(
+    mixed $object,
+    string $method,
+    Vector<mixed> $params,
+    bool $allowMissingClass = false,
+    bool $allowMissingMethod = false,
+  ): mixed {
+
+    try {
+
+      if (!is_object($object)) {
+        if ($allowMissingClass == true) {
+          return null;
+        }
+        throw new UnableToReflectClassException(
+          'Failed to reflect non-object object='.json_encode($object),
+        );
+      }
+
+      $className = get_class($object);
+
+      // pull a reflection of the class
+      $refClass = ReflectionClasses::getReflection($object);
+
+      if (!$refClass instanceof ReflectionClass) {
+        if ($allowMissingClass == true) {
+          return null;
+        }
+        throw new UnableToReflectClassException(
+          'Failed to reflect className='.$className,
+        );
+      }
+
+      if ($refClass->hasMethod($method) !== true) {
+        if ($allowMissingMethod == true) {
+          return null;
+        }
+        throw new UnableToFindMethodException(
+          'class='.$className.' method='.$method,
+        );
+      }
+
+      // pull a reflection of the method
+      $refMethod = $refClass->getMethod($method);
+
+      // pull the parameter count off the method we are calling.
+      $paramCount = $refMethod->getNumberOfRequiredParameters();
+
+      if ($paramCount != $params->count()) {
+        throw new MissingRequiredParametersException(
+          'className='.
+          $className.
+          ' got='.
+          $params->count().
+          ' expected='.
+          $paramCount.
+          ' params='.
+          json_encode($params),
+        );
+      }
+
+      // run the targeted item
+      $paramArray = $params->toArray();
+
+      return $refMethod->invokeArgs($object, $paramArray);
+
+    } catch (UnableToReflectClassException $e) {
+      throw $e;
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
+
   public static function callMethod(
     string $className,
     string $method,

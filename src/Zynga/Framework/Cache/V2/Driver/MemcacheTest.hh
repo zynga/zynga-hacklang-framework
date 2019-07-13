@@ -98,9 +98,7 @@ class MemcacheTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function testGet_InvalidKeyCondition(): void {
 
     // stand up a empty storable object
@@ -110,9 +108,7 @@ class MemcacheTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function testSet_InvalidKeyCondition(): void {
 
     // stand up a empty storable object

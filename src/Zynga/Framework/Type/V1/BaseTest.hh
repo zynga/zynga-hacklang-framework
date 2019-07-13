@@ -2,6 +2,7 @@
 
 namespace Zynga\Framework\Type\V1;
 
+use Zynga\PHPUnit\V2\Exceptions\AssertionFailedException;
 use Zynga\Framework\Type\V1\Test\TestBox;
 use Zynga\Framework\Testing\TestCase\V2\Base as ZyngaTestCase;
 use Zynga\Framework\Type\V1\Test\Mock\ValueGeneratorMock;
@@ -9,8 +10,6 @@ use Zynga\Framework\Type\V1\Test\Mock\BadBox;
 use Zynga\Framework\Type\V1\Test\ValidValue;
 
 use \Exception as RawException;
-
-use \PHPUnit_Framework_AssertionFailedError;
 
 /**
  * This class tests some functions in BaseTest
@@ -77,13 +76,13 @@ class BaseTest extends ZyngaTestCase {
 
   public function testGenerateValidValuesFailure_NoneProvided(): void {
     $obj = new ValueGeneratorMock('testValidValues');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $obj->testValidValues();
   }
 
   public function testGenerateValidInvaluesFailure_NoneProvided(): void {
     $obj = new ValueGeneratorMock('testInvalidValues');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $obj->testInvalidValues();
   }
 
@@ -92,25 +91,25 @@ class BaseTest extends ZyngaTestCase {
     $obj->setGenerateValidValues(
       Vector {new ValidValue('not-a-real-value', true)},
     );
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $obj->testValidValues();
   }
 
   public function testBadBox_InvalidValue_Catch_Set(): void {
     $obj = new ValueGeneratorMock('testInvalidValues');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $obj->doTestInvalidValues_Against_Set(Vector {'not-a-real-value'});
   }
 
   public function testBadBox_InvalidValue_Catch_Strval(): void {
     $obj = new ValueGeneratorMock('testInvalidValues');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $obj->doTestInvalidValues_Against_Strval(Vector {'not-a-real-value'});
   }
 
   public function testBadBox_InvalidValue_SetDefaultValuesCatch(): void {
     $obj = new ValueGeneratorMock('testInvalidValues');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $obj->doTestInvalidValues_Against_SetDefaultValue(
       Vector {'not-a-real-value'},
     );

@@ -6,19 +6,19 @@ use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use Zynga\Framework\Type\V1\Test\Ranged\RangedValueGeneratorMock;
 use Zynga\Framework\Type\V1\Test\ValidValue;
 
-use \PHPUnit_Framework_AssertionFailedError;
+use Zynga\PHPUnit\V2\Exceptions\AssertionFailedException;
 
 class TestCaseTest extends TestCase {
 
   public function test_OOB_Min_Failure(): void {
     $mock = new RangedValueGeneratorMock('testOOBMin');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $mock->testOOBMin();
   }
 
   public function test_OOB_Max_Failure(): void {
     $mock = new RangedValueGeneratorMock('testOOBMax');
-    $this->expectException(PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedException::class);
     $mock->testOOBMax();
   }
 

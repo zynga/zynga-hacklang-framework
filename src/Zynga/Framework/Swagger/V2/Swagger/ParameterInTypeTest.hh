@@ -25,9 +25,11 @@ class ParameterInTypeTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Swagger\V2\Exceptions\UnSupportedTypeException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Swagger\V2\Exceptions\UnSupportedTypeException",
+  )
+  >>
   public function testInvalid(): void {
     $obj = new ParameterInType();
     $obj->set('kansas');

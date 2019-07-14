@@ -68,17 +68,21 @@ class ClientTest extends TestCase {
     $this->assertEquals(0, $batches->count());
   }
 
-  /**
-   * @expectedException Zynga\Framework\Service\V2\Exceptions\UnknownBatchException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Service\V2\Exceptions\UnknownBatchException",
+  )
+  >>
   public function test_executeBatch_invalidBatch(): void {
     $client = new Client();
     $client->executeBatch(1);
   }
 
-  /**
-   * @expectedException Zynga\Framework\Service\V2\Exceptions\UnknownBatchException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Service\V2\Exceptions\UnknownBatchException",
+  )
+  >>
   public function test_isBatchStillRunning_invalidBatch(): void {
     $client = new Client();
     $client->isBatchStillRunning(1);

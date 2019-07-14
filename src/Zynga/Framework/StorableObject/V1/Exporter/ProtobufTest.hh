@@ -72,34 +72,42 @@ class ProtobufTest extends TestCase {
     $this->assertEquals($referenceHex, $testHex);
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException",
+  )
+  >>
   public function testProfobufNoFields(): void {
     $obj = new Nofields();
     $obj->export()->asBinary();
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException",
+  )
+  >>
   public function testProtobufInvalidUnsupportedType(): void {
     $obj = new InvalidUnsupportedType();
     $obj->export()->asBinary();
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException",
+  )
+  >>
   public function testProtobuf_String(): void {
     // JEO: Currently these are unsupported with protobuf encoder.
     $obj = new Valid();
     $obj->export()->asBinary();
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException",
+  )
+  >>
   public function testProtobuf_NestedMap(): void {
     // JEO: Currently these are unsupported with our protobuf encoder.
     $obj = new ValidNestedMap();

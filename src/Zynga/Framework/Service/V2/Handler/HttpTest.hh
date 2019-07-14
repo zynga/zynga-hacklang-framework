@@ -155,9 +155,7 @@ class HttpTest extends TestCase {
     $this->assertTrue($obj->parseRequest());
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function test_parseRequestExceptionTrap(): void {
     $obj = new MockHttpBrokenGetServiceHandler();
     $svc = new ValidNoFieldsService();
@@ -215,7 +213,7 @@ class HttpTest extends TestCase {
     $this->assertTrue($obj->handleGenericSuccess());
     $this->assertTrue($svc->response()->success()->get());
   }
-  
+
   public function test_handleGenericSuccessWithSuccessFalse(): void {
     $obj = new MockHttpHandler();
     $svc = new ValidService();

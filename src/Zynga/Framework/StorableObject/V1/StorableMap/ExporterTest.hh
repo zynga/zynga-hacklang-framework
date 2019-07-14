@@ -63,9 +63,11 @@ class ExporterTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException",
+  )
+  >>
   public function test_asJSON_noFields(): void {
     $map = new StorableMap();
     $map->export()->asJSON();
@@ -102,9 +104,7 @@ class ExporterTest extends TestCase {
     $this->assertEquals($targetJson, $map->export()->asJSON());
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function test_asJSON_brokenExporter(): void {
 
     $obj = new ValidButBrokenExporter();
@@ -176,7 +176,7 @@ class ExporterTest extends TestCase {
     $this->assertTrue($map->set('a-key', $obj));
 
     $targetArray = array();
-    $targetArray['a-key'] = array (
+    $targetArray['a-key'] = array(
       'example_string' => '',
       'example_uint64' => 0,
       'example_float' => 0,
@@ -203,9 +203,11 @@ class ExporterTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException",
+  )
+  >>
   public function test_asArray_noFieldsOnChild(): void {
     $map = new StorableMap();
     $obj = new NofieldsStorableObject();
@@ -213,9 +215,11 @@ class ExporterTest extends TestCase {
     $map->export()->asArray();
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException",
+  )
+  >>
   public function test_asMap_noFieldsOnChild(): void {
     $map = new StorableMap();
     $obj = new NofieldsStorableObject();

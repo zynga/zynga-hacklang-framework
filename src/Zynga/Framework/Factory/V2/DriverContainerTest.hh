@@ -60,9 +60,11 @@ class DriverContainerTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Factory\V2\Exceptions\DriverContainer\DriverNotInCacheException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Factory\V2\Exceptions\DriverContainer\DriverNotInCacheException",
+  )
+  >>
   public function test_getDriverFromCache_Failure(): void {
     $obj = $this->createTestContainer();
 
@@ -83,9 +85,11 @@ class DriverContainerTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Factory\V2\Exceptions\DriverContainer\DriverAlreadyInCacheException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Factory\V2\Exceptions\DriverContainer\DriverAlreadyInCacheException",
+  )
+  >>
   public function test_addDriverToCache_Failure(): void {
     $obj = $this->createTestContainer();
 
@@ -117,9 +121,11 @@ class DriverContainerTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Factory\V2\Exceptions\DriverContainer\DriverNotInCacheException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Factory\V2\Exceptions\DriverContainer\DriverNotInCacheException",
+  )
+  >>
   public function test_removeDriverFromCache_Failure(): void {
     $obj = $this->createTestContainer();
 

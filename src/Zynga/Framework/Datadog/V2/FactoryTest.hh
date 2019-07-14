@@ -220,9 +220,11 @@ class FactoryTest extends TestCase {
     $this->assertTrue($dog->incrementStats($stats, 1.0, $tags));
   }
 
-  /**
-   * @expectedException Zynga\Framework\Factory\V2\Exceptions\FailedToLoadDriverException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Factory\V2\Exceptions\FailedToLoadDriverException",
+  )
+  >>
   public function test_bad_factory(): void {
     $dog = DatadogFactory::factory(
       DatadogDriverInterface::class,

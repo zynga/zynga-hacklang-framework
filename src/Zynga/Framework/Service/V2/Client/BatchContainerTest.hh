@@ -63,9 +63,11 @@ class BatchContainerTest extends TestCase {
     $this->assertEquals(0, $client->getBatchCount());
   }
 
-  /**
-   * @expectedException Zynga\Framework\Service\V2\Exceptions\UnknownBatchException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Service\V2\Exceptions\UnknownBatchException",
+  )
+  >>
   public function test_wasRequestSuccessful_unknownBatch(): void {
     $batchId = 1;
     $requestId = 1;
@@ -74,9 +76,11 @@ class BatchContainerTest extends TestCase {
     $client->wasRequestSuccessful($batchId, $requestId);
   }
 
-  /**
-   * @expectedException Zynga\Framework\Service\V2\Exceptions\UnknownBatchException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Service\V2\Exceptions\UnknownBatchException",
+  )
+  >>
   public function test_getBatchResults_unknownBatch(): void {
     $batchId = 1;
     $requestId = 1;
@@ -85,9 +89,11 @@ class BatchContainerTest extends TestCase {
     $client->getBatchResults($batchId);
   }
 
-  /**
-   * @expectedException Zynga\Framework\Service\V2\Exceptions\UnknownBatchException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Service\V2\Exceptions\UnknownBatchException",
+  )
+  >>
   public function test_getRequestResult_unknownBatch(): void {
     $batchId = 1;
     $requestId = 1;
@@ -96,9 +102,11 @@ class BatchContainerTest extends TestCase {
     $client->getRequestResult($batchId, $requestId);
   }
 
-  /**
-   * @expectedException Zynga\Framework\Service\V2\Exceptions\UnknownBatchException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Service\V2\Exceptions\UnknownBatchException",
+  )
+  >>
   public function test_executeBatch_unknownBatch(): void {
     $batchId = 1;
     $requestId = 1;
@@ -107,9 +115,11 @@ class BatchContainerTest extends TestCase {
     $client->executeBatch($batchId);
   }
 
-  /**
-   * @expectedException Zynga\Framework\Service\V2\Exceptions\UnknownBatchException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Service\V2\Exceptions\UnknownBatchException",
+  )
+  >>
   public function test_isBatchStillRunning_unknownBatch(): void {
     $batchId = 1;
     $requestId = 1;

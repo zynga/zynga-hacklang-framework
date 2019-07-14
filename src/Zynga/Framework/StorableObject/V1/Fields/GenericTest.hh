@@ -33,9 +33,11 @@ class GenericTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\InvalidObjectException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\InvalidObjectException",
+  )
+  >>
   public function testGetForObject_InvalidObject(): void {
     $nonObject = 'ThisIsNotAnObject';
     FieldGeneric::getForObject($nonObject);
@@ -86,20 +88,11 @@ class GenericTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException
-   */
-  // JEO: This test is dead, as I added support in many other places to enable us to
-  // properly handle this via native types.
-  /*
-   public function testGetShortNameForTypeBoxName_Unsupported(): void {
-   FieldGeneric::getShortNameForTypeBoxName('SomeUnknownTypeString');
-   }
-   */
-
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\InvalidObjectException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\InvalidObjectException",
+  )
+  >>
   public function testGetFieldsAndTypesForObject_Unsupported(): void {
     FieldGeneric::getFieldsAndTypesForObject('SomeUnknownTypeString');
   }
@@ -114,16 +107,20 @@ class GenericTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\InvalidObjectException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\InvalidObjectException",
+  )
+  >>
   public function testGetIsRequiredAndIsDefaultValue_Unsupported(): void {
     FieldGeneric::getIsRequiredAndIsDefaultValue('SomeUnknownTypeString');
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException",
+  )
+  >>
   public function testGetIsRequiredAndIsDefaultValue_UnsupportedType(): void {
     FieldGeneric::getIsRequiredAndIsDefaultValue($this);
   }
@@ -186,33 +183,25 @@ class GenericTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function test_broken_fields_getForObject(): void {
     $obj = new ValidButBrokenFields();
     $obj->fields()->getForObject();
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function test_broken_fields_getTypedField(): void {
     $obj = new ValidButBrokenFields();
     $obj->fields()->getTypedField('field');
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function test_broken_fields_getFieldsAndTypesForObject(): void {
     $obj = new ValidButBrokenFields();
     $obj->fields()->getFieldsAndTypesForObject();
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function test_broken_fields_getRequiredFieldsWithDefaultValues(
   ): void {
     $obj = new ValidButBrokenFields();

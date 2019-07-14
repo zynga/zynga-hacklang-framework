@@ -45,27 +45,21 @@ class ExporterTest extends TestCase {
     $this->assertEquals('{}', $emptyObj->export()->asJSON());
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function test_asJSON_invalidNested(): void {
     $obj = new InvalidNested();
     $obj->brokenExporterObj->example_float->setIsDefaultValue(false);
     $obj->export()->asJSON();
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function test_asBinary_invalidNested(): void {
     $obj = new InvalidNested();
     $obj->brokenExporterObj->example_float->setIsDefaultValue(false);
     $obj->export()->asBinary();
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function test_asJSON_invalidNestedWithRequiredChildField(): void {
     $obj = new Valid();
     $obj->example_float->setIsRequired(true);
@@ -94,36 +88,32 @@ class ExporterTest extends TestCase {
     $this->assertEquals($testFloatValue, $mapData['example_float']);
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function test_asMap_catchesError(): void {
     $obj = new Valid();
     $exp = new BrokenExporter($obj);
     $exp->asMap();
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function test_asBinary_catchesError(): void {
     $obj = new Valid();
     $exp = new BrokenExporter($obj);
     $exp->asBinary();
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function test_asMap_invalidNested(): void {
     $obj = new InvalidNested();
     $obj->brokenExporterObj->example_float->setIsDefaultValue(false);
     $obj->export()->asMap();
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException",
+  )
+  >>
   public function test_asMap_invalidUnsupportedType(): void {
     $obj = new InvalidUnsupportedType();
     $this->assertEquals(

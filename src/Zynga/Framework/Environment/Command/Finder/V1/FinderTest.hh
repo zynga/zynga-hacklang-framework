@@ -25,9 +25,11 @@ class FinderTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Environment\Command\Finder\V1\Exceptions\CommandNotFoundException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Environment\Command\Finder\V1\Exceptions\CommandNotFoundException",
+  )
+  >>
   public function testNotFound(): void {
     CommandFinder::get('not-a-real-command');
   }

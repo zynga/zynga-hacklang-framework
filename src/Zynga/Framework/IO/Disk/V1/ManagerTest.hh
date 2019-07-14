@@ -40,7 +40,7 @@ use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 class ManagerTest extends TestCase {
 
   private function getTempTestDir(): string {
-    return CodePath::getRoot().'/tmp/ManagerTest';
+    return CodePath::getRoot().'/tmp/Disk-IO-ManagerTest/';
   }
 
   <<__Override>>
@@ -52,8 +52,14 @@ class ManagerTest extends TestCase {
 
   <<__Override>>
   public function doTearDownAfterClass(): bool {
-    DiskIOManager::instance()
-      ->recursivelyDeleteDirectory($this->getTempTestDir());
+
+    // @TODO: clean up this hack to make the issue of partial failure a non issue.
+    //   currently it is leaving residue of tests in the tmp dir chmod'd to 0000
+    system("chmod -R 0755 ".escapeshellarg($this->getTempTestDir()));
+    system("rm -rf ".escapeshellarg($this->getTempTestDir()));
+    // DiskIOManager::instance()
+    //   ->recursivelyDeleteDirectory($this->getTempTestDir());
+
     return parent::doTearDownAfterClass();
   }
 

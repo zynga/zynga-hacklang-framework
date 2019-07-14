@@ -9,7 +9,9 @@ use Zynga\Framework\Service\V2\Test\Request;
 
 use Zynga\Framework\StorableObject\V1\Test\Mock\Valid;
 use Zynga\Framework\StorableObject\V1\Test\Mock\Nofields;
-use Zynga\Framework\StorableObject\V1\Test\Mock\Broken\ValidButBrokenExporter;
+use
+  Zynga\Framework\StorableObject\V1\Test\Mock\Broken\ValidButBrokenExporter
+;
 
 class BaseTest extends TestCase {
 
@@ -33,9 +35,11 @@ class BaseTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Type\V1\Exceptions\FailedToImportFromFloatException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Type\V1\Exceptions\FailedToImportFromFloatException",
+  )
+  >>
   public function testInvalidRequest_FloatToInt(): void {
     // Test basic object working.
     $testKey = 'id';
@@ -48,9 +52,11 @@ class BaseTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Type\V1\Exceptions\FailedToImportFromStringException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Type\V1\Exceptions\FailedToImportFromStringException",
+  )
+  >>
   public function testInvalidRequest_FloatStringToInt(): void {
     // Test basic object working.
     $testKey = 'id';
@@ -75,9 +81,7 @@ class BaseTest extends TestCase {
     $this->assertTrue($obj->consumeStorableObject($data));
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function testConsumeStorable_ExceptionTrap(): void {
     $data = new ValidButBrokenExporter();
     $obj = new Request();

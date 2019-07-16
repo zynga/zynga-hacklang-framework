@@ -83,6 +83,9 @@ class ManagerTest extends TestCase {
 
   public function testGettingHttpCodeOnCurlReturns200(): void {
     $curlRequest = $this->getCurlRequest(false);
+    $this->assertTrue(
+      $curlRequest->setOptionsArray(array(CURLOPT_RETURNTRANSFER => true)),
+    );
     $curlRequest->execute();
     $curlHttpCode = $curlRequest->getInfo(CURLINFO_HTTP_CODE);
     $this->assertEquals(200, $curlHttpCode);
@@ -94,6 +97,8 @@ class ManagerTest extends TestCase {
   }
 
   private function getCurlRequest(bool $useMock): CurlInterface {
+
+    Manager::clear();
 
     Manager::setUseMock($useMock);
 

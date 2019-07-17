@@ -60,16 +60,19 @@ class DynamicMethodCall {
       $refMethod = $refClass->getMethod($method);
 
       // pull the parameter count off the method we are calling.
-      $paramCount = $refMethod->getNumberOfRequiredParameters();
+      $requiredParamCount = $refMethod->getNumberOfRequiredParameters();
+      $paramCount = $params->count();
 
-      if ($paramCount != $params->count()) {
+      // JEO: Allow for optional parameters at the end of the function.
+      if ($requiredParamCount > 0 && $paramCount < $requiredParamCount) {
+
         throw new MissingRequiredParametersException(
           'className='.
           $className.
           ' got='.
-          $params->count().
-          ' expected='.
           $paramCount.
+          ' expected='.
+          $requiredParamCount.
           ' params='.
           json_encode($params),
         );
@@ -116,16 +119,17 @@ class DynamicMethodCall {
       $refMethod = $refClass->getMethod($method);
 
       // pull the parameter count off the method we are calling.
-      $paramCount = $refMethod->getNumberOfRequiredParameters();
+      $requiredParamCount = $refMethod->getNumberOfRequiredParameters();
+      $paramCount = $params->count();
 
-      if ($paramCount != $params->count()) {
+      if ($requiredParamCount > 0 && $paramCount < $requiredParamCount) {
         throw new MissingRequiredParametersException(
           'className='.
           $className.
           ' got='.
-          $params->count().
-          ' expected='.
           $paramCount.
+          ' expected='.
+          $requiredParamCount.
           ' params='.
           json_encode($params),
         );

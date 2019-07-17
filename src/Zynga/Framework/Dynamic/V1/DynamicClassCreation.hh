@@ -41,9 +41,7 @@ class DynamicClassCreation {
     return in_array($interfaceName, $reflected->getInterfaceNames());
   }
 
-  public static function isClassAbstract(
-    string $className,
-  ): bool {
+  public static function isClassAbstract(string $className): bool {
     if (DynamicClassCreation::doesClassExist($className) === false) {
       throw new UnableToFindClassException('class='.$className);
     }
@@ -63,7 +61,7 @@ class DynamicClassCreation {
     string $name,
     Vector<mixed> $params,
   ): Tv {
-    
+
     try {
 
       $obj = null;
@@ -78,21 +76,21 @@ class DynamicClassCreation {
 
       $constructor = $reflected->getConstructor();
 
-      $constructorParamCount = 0;
+      $requiredParamCount = 0;
+      $paramCount = $params->count();
 
       if ($constructor instanceof ReflectionMethod) {
-        $constructorParamCount =
-          $constructor->getNumberOfRequiredParameters();
+        $requiredParamCount = $constructor->getNumberOfRequiredParameters();
       }
 
-      if ($constructorParamCount != $params->count()) {
+      if ($requiredParamCount > 0 && $paramCount < $requiredParamCount) {
         throw new MissingRequiredParametersException(
           'string='.
           $name.
           ' got='.
-          count($params).
+          $paramCount.
           ' expected='.
-          $constructorParamCount.
+          $requiredParamCount.
           ' params='.
           json_encode($params),
         );

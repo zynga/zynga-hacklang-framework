@@ -20,10 +20,9 @@ use Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseTestExample;
 use Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseTestNoImplement;
 use Zynga\PHPUnit\V2\Exceptions\AssertionFailedException;
 use Zynga\PHPUnit\V2\Exceptions\TestError\SkippedException;
+use Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseMock;
 
 use \Exception as RawException;
-
-class TestCaseMock extends ZyngaTestCase {}
 
 class BaseTest extends ZyngaTestCase {
 

@@ -84,6 +84,7 @@ class BaseTest extends TestCase {
   public function testHandleExceptionTrap(): void {
     $testArgs = array();
     $obj = new TossedException();
+    $obj->enableQuietMode();
     //$obj->handleRun();
     $this->assertEquals(255, $obj->run());
   }

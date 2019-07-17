@@ -21,163 +21,171 @@ class ResultSetTest extends TestCase {
 
   }
 
-  public function getDriverForTest(): DriverInterface {
+  public static function goodDriverForTestProvider(): DriverInterface {
     DatabaseFactory::clear();
     // JEO: We need a testing configuration for vertica.
     return DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
   }
 
-  public function testWasSuccessfulFalse(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testWasSuccessfulFalse(DriverInterface $dbh): void {
     $sth = $dbh->query('SELECT 1');
     $sth->freeCursor();
     $this->assertFalse($sth->wasSuccessful());
   }
 
-  public function testWasSuccessfulTrue(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testWasSuccessfulTrue(DriverInterface $dbh): void {
     $sth = $dbh->query('SELECT 1 WHERE 1 = 2');
     $this->assertTrue($sth->wasSuccessful());
   }
 
-  public function testFreeCursorTrue(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testFreeCursorTrue(DriverInterface $dbh): void {
     $sth = $dbh->query('SELECT 1 WHERE 1 = 2');
     $this->assertTrue($sth->wasSuccessful());
     $this->assertTrue($sth->freeCursor());
   }
 
-  public function testFreeCursorFalse(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testFreeCursorFalse(DriverInterface $dbh): void {
     $sth = $dbh->query('SELECT 1 WHERE 1 = 2');
     $this->assertTrue($sth->wasSuccessful());
     $this->assertTrue($sth->freeCursor());
     $this->assertFalse($sth->freeCursor());
   }
 
-  public function testGetNumRowsZero(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testGetNumRowsZero(DriverInterface $dbh): void {
     $sth = $dbh->query('SELECT 1 WHERE 1 = 2');
     $this->assertEquals(0, $sth->getNumRows());
   }
 
-  public function testGetNumRowsNoActiveCursorException(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testGetNumRowsNoActiveCursorException(
+    DriverInterface $dbh,
+  ): void {
     $sth = $dbh->query('SELECT 1 WHERE 1 = 2');
     $sth->freeCursor();
     $this->expectException(NoActiveCursorException::class);
     $sth->getNumRows();
   }
 
-  public function testGetNumRowsZeroTwice(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testGetNumRowsZeroTwice(DriverInterface $dbh): void {
     $sth = $dbh->query('SELECT 1 WHERE 1 = 2');
     $this->assertEquals(0, $sth->getNumRows());
     $this->assertEquals(0, $sth->getNumRows());
   }
 
-  public function testRewindNoActiveCursorException(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testRewindNoActiveCursorException(
+    DriverInterface $dbh,
+  ): void {
     $sth = $dbh->query('SELECT 1 WHERE 1 = 2');
     $sth->freeCursor();
     $this->expectException(NoActiveCursorException::class);
     $sth->rewind(0);
   }
 
-  public function testRewindNegativePosition(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testRewindNegativePosition(DriverInterface $dbh): void {
     $sth = $dbh->query('SELECT 1');
     $this->expectException(OutOfBoundsForCursorException::class);
     $sth->rewind(-1);
   }
 
-  public function testValidRewind(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testValidRewind(DriverInterface $dbh): void {
     $sth = $dbh->query('SELECT 1');
     $this->assertTrue($sth->rewind(0));
   }
 
-  public function testHasMoreFalse(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testHasMoreFalse(DriverInterface $dbh): void {
     $sth = $dbh->query('SELECT 1 WHERE 1 = 2');
     $this->assertFalse($sth->hasMore());
   }
 
-  public function testNextNoActiveCursorException(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testNextNoActiveCursorException(DriverInterface $dbh): void {
     $sth = $dbh->query('SELECT 1 WHERE 1 = 2');
     $sth->freeCursor();
     $this->expectException(NoActiveCursorException::class);
     $sth->next();
   }
 
-  public function testNextNoneLeft(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testNextNoneLeft(DriverInterface $dbh): void {
     $sth = $dbh->query('SELECT 1');
     $this->assertTrue($sth->next());
     $this->assertFalse($sth->next());
   }
 
-  public function testFetchMapNoActiveCursorException(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testFetchMapNoActiveCursorException(
+    DriverInterface $dbh,
+  ): void {
     $sth = $dbh->query('SELECT 1');
     $sth->freeCursor();
     $this->expectException(NoActiveCursorException::class);
     $sth->fetchMap();
   }
 
-  public function testFetchMapOneResult(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testFetchMapOneResult(DriverInterface $dbh): void {
     $sth = $dbh->query('SELECT 1 as "monkey"');
     $sth->next();
     $this->assertEquals(1, count($sth->fetchMap()));
   }
 
-  public function testFetchVectorNoActiveCursorException(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testFetchVectorNoActiveCursorException(
+    DriverInterface $dbh,
+  ): void {
     $sth = $dbh->query("SELECT 1");
     $sth->freeCursor();
     $this->expectException(NoActiveCursorException::class);
     $sth->fetchVector();
   }
 
-  public function testFetchVectorOneResult(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testFetchVectorOneResult(DriverInterface $dbh): void {
     $sth = $dbh->query("SELECT 1");
     $sth->next();
     $this->assertEquals(1, count($sth->fetchVector()));
   }
 
-  public function testFetchVectorTwoResult(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testFetchVectorTwoResult(DriverInterface $dbh): void {
     $sth = $dbh->query("SELECT 1, 2");
     $sth->next();
     $this->assertEquals(2, count($sth->fetchVector()));
   }
 
-  public function testSetSqlSuccess(): void {
-    $dbh = $this->getDriverForTest();
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testSetSqlSuccess(DriverInterface $dbh): void {
     $sth = $dbh->query("SELECT 1");
     $this->assertTrue($sth->setSql(''));
   }
 
-  public function testGetSqlSuccess(): void {
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testGetSqlSuccess(DriverInterface $dbh): void {
     $sql = 'SELECT 1';
-    $dbh = $this->getDriverForTest();
     $sth = $dbh->query($sql);
     $this->assertEquals($sql, $sth->getSql());
   }
 
-  public function testWasSqlDMLFalse(): void {
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testWasSqlDMLFalse(DriverInterface $dbh): void {
     $sql = 'SELECT 1';
-    $dbh = $this->getDriverForTest();
     $sth = $dbh->query($sql);
     $this->assertFalse($sth->wasSqlDML());
   }
 
-  public function testWasSqlDMLTrue(): void {
+  <<dataProvider("goodDriverForTestProvider")>>
+  public function testWasSqlDMLTrue(DriverInterface $dbh): void {
     $sql = 'INSERT INTO dual (baz) VALUES (123)';
-    $dbh = $this->getDriverForTest();
     $sth = $dbh->query('SELECT 1');
     // yea you can do this currently.
     $sth->setSql($sql);

@@ -17,7 +17,7 @@ use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\Inventory\ItemType;
 use Zynga\Framework\PgData\V1\PgWhereClause;
 use Zynga\Framework\PgData\V1\PgWhereOperand;
 
-class BaseInventoryTest extends TestCase {
+abstract class BaseInventoryTest extends TestCase {
 
   public function doSetUpBeforeClass(): bool {
 
@@ -49,7 +49,7 @@ class BaseInventoryTest extends TestCase {
 
     return true;
   }
-  
+
   protected function removeCachedItem(int $id): void {
 
     $lmc = LockableCacheFactory::factory(
@@ -96,6 +96,6 @@ class BaseInventoryTest extends TestCase {
       'sql_select_count',
     );
   }
-  
+
 }
-  
+

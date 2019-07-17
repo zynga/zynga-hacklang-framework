@@ -97,20 +97,28 @@ class BaseTest extends TestCase {
 
   }
 
-  public function test_debugMessage(): void {
+  public function test_debugMessage_stdout(): void {
 
     $obj = new MockAutoLoader();
     $this->assertTrue($obj->enableDebug());
     $this->assertTrue($obj->setDebugTarget('stdout'));
 
-    $this->expectOutput('');
+    $this->expectOutput(get_class($obj)." testing-debugMessage\n");
     $obj->debugMessage('testing-debugMessage');
 
+  }
+
+  public function test_debugMessage_error_log(): void {
+
+    $obj = new MockAutoLoader();
+    $this->assertTrue($obj->enableDebug());
+
     $this->assertTrue($obj->setDebugTarget('error_log'));
+
     $errorCapture = new SimpleCapture();
 
     $errorCapture->start();
-    $obj->debugMessage('testing-debugMessageErrorLog');
+    $obj->debugMessage(get_class($obj).' testing-debugMessageErrorLog');
     $errorCapture->stop();
 
     $this->assertEquals(1, $errorCapture->getErrorMessages()->count());

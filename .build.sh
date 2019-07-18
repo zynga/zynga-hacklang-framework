@@ -81,7 +81,7 @@ echo '<?php if (!extension_loaded("pgsql")) { echo "no-pgsql\n"; exit(255); } ec
 
 make test
 
-if [ $? -ne 0 ]; then
+if [ $$? -ne 0 ]; then
   echo "Make test failure"
   exit $?
 fi

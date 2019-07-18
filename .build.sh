@@ -81,10 +81,11 @@ echo '<?php if (!extension_loaded("pgsql")) { echo "no-pgsql\n"; exit(255); } ec
 
 make test
 
-if [ $? != 0 ]; then
+if [ $? -eq 0 ]; then
+  echo "BUILD: OK"
+  exit 0
+else
   echo "Make test failure"
   exit $?
 fi
 
-echo "BUILD: OK"
-exit 0

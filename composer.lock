@@ -4,25 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d7881faaa09bf8f5496d31d45c91509",
+    "content-hash": "1496cd95f46d231ad87efcafe85aa31e",
     "packages": [
         {
             "name": "zynga/phpunit",
-            "version": "v2.0.9",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zynga/zynga-hhvm-phpunit.git",
-                "reference": "21eedafa03b01e6c1111751d81923890ea702f54"
+                "reference": "fac5f5c752a3df62301e29aebda469e1bb9a40dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/21eedafa03b01e6c1111751d81923890ea702f54",
-                "reference": "21eedafa03b01e6c1111751d81923890ea702f54",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/fac5f5c752a3df62301e29aebda469e1bb9a40dd",
+                "reference": "fac5f5c752a3df62301e29aebda469e1bb9a40dd",
                 "shasum": ""
             },
             "require": {
                 "hhvm": "^3.18",
-                "zynga/phpunit-hhi": "@dev"
+                "zynga/phpunit-hhi": "^2.0"
             },
             "bin": [
                 "bin/phpunit",
@@ -39,6 +39,8 @@
                     "PHPUnit\\Tests\\": "tests/phpunit/PHPUnit/Tests/",
                     "SebastianBergmann\\CodeCoverage\\": "src/SebastianBergmann/CodeCoverage/",
                     "SebastianBergmann\\Environment\\": "src/SebastianBergmann/Environment/",
+                    "SebastianBergmann\\Exporter\\": "src/SebastianBergmann/Exporter/",
+                    "SebastianBergmann\\PHPUnit\\": "src/SebastianBergmann/PHPUnit/",
                     "SebastianBergmann\\TextTemplate\\": "src/SebastianBergmann/TextTemplate/",
                     "SebastianBergmann\\TokenStream\\": "src/SebastianBergmann/TokenStream/",
                     "SebastianBergmann\\TokenStream\\Tests\\": "tests/token-stream/SebastianBergmann/TokenStream/Tests/",
@@ -53,23 +55,23 @@
                 "xunit"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v2.0.9",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v2.1.0",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit/issues"
             },
-            "time": "2018-11-02T17:14:45+00:00"
+            "time": "2019-07-18T20:33:32+00:00"
         },
         {
             "name": "zynga/phpunit-hhi",
-            "version": "v1.0.2",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zynga/zynga-hhvm-phpunit-hhi.git",
-                "reference": "3c6bedfd8f66b86150aa1367d02ce94ac110e299"
+                "reference": "11edcffd48cc20885f7b2fab2a0fc50d1e6ce2aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit-hhi/zipball/3c6bedfd8f66b86150aa1367d02ce94ac110e299",
-                "reference": "3c6bedfd8f66b86150aa1367d02ce94ac110e299",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit-hhi/zipball/11edcffd48cc20885f7b2fab2a0fc50d1e6ce2aa",
+                "reference": "11edcffd48cc20885f7b2fab2a0fc50d1e6ce2aa",
                 "shasum": ""
             },
             "require": {
@@ -91,10 +93,10 @@
                 "testing"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/tree/master",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/tree/v2.0.0",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/issues"
             },
-            "time": "2018-07-28T04:06:10+00:00"
+            "time": "2019-07-18T20:30:34+00:00"
         }
     ],
     "packages-dev": [],
@@ -104,7 +106,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "hhvm": "^3.12"
+        "hhvm": "^3.18"
     },
     "platform-dev": []
 }

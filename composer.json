@@ -8,8 +8,8 @@
     "framework"
   ],
   "require": {
-    "hhvm": "^3.12",
-    "zynga/phpunit": "^2.0"
+    "hhvm": "^3.18",
+    "zynga/phpunit": "^2.1"
   },
   "bin": [
     "bin/curl-upload-file.sh"

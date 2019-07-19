@@ -80,12 +80,19 @@ touch /opt/zynga/is_development
 echo '<?php if (!extension_loaded("pgsql")) { echo "no-pgsql\n"; exit(255); } echo "pgsql-available\n"; exit(0);' | hhvm --php
 
 make test
+MAKE_RESULT=$?
 
-if [ "$?" -eq 0 ]; then
+if [ $MAKE_RESULT -eq 0 ]; then
   echo "BUILD: OK"
   exit 0
 else
   echo "Make test failure"
+  PHP_LOG=/var/source/log/php.log
+  if [ -f "$PHP_LOG" ]; then
+    cat $PHP_LOG
+  else 
+    echo "WARNING: no php log to work with $PHP_LOG"
+  fi
   exit $?
 fi
 

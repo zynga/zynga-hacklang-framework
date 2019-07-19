@@ -81,7 +81,7 @@ echo '<?php if (!extension_loaded("pgsql")) { echo "no-pgsql\n"; exit(255); } ec
 
 function debugMake() {
   echo "Make test failure"
-  PHP_LOG=/var/source/log/php.log
+  PHP_LOG=/var/source/tmp/php.log
   if [ -f "$PHP_LOG" ]; then
     cat $PHP_LOG
   else 

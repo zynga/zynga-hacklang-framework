@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "zynga/phpunit",
-            "version": "v2.1.1",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zynga/zynga-hhvm-phpunit.git",
-                "reference": "07c1eb2e3bcdb4b5ff0cf890de337f482f55c9f6"
+                "reference": "b1e57f5342c16335a1e72aa3803cdb801326783b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/07c1eb2e3bcdb4b5ff0cf890de337f482f55c9f6",
-                "reference": "07c1eb2e3bcdb4b5ff0cf890de337f482f55c9f6",
+                "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/b1e57f5342c16335a1e72aa3803cdb801326783b",
+                "reference": "b1e57f5342c16335a1e72aa3803cdb801326783b",
                 "shasum": ""
             },
             "require": {
@@ -55,10 +55,10 @@
                 "xunit"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v2.1.1",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v2.1.2",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit/issues"
             },
-            "time": "2019-07-19T01:12:31+00:00"
+            "time": "2019-07-19T17:14:51+00:00"
         },
         {
             "name": "zynga/phpunit-hhi",

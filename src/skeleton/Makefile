@@ -51,6 +51,7 @@ test-single-canary:
 	time ./vendor/bin/run-single-test ./src/Zynga/Framework/ELO/V1/Chess/MatchTest.hh
 
 test-all:
+	chmod -R 0755 tmp/Disk-IO-ManagerTest ; rm -rf tmp/Disk-IO-ManagerTest
 	time ./vendor/bin/phpunit --testsuite framework-tests,phpunit-tests
 
 test-framework:

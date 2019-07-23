@@ -2,8 +2,8 @@
 
 namespace Zynga\Framework\Environment\ErrorCapture\V1\Handler;
 
+use Zynga\Framework\Environment\ErrorCapture\V1\Exceptions\ErrorException;
 use Zynga\Framework\Environment\ErrorCapture\V1\Handler\Base;
-use \Exception;
 
 class ConvertErrorsToExceptions extends Base {
 
@@ -13,7 +13,13 @@ class ConvertErrorsToExceptions extends Base {
     string $err_file,
     int $err_line,
   ): void {
-    throw new Exception($err_str, $err_no);
+    throw new ErrorException(
+      $err_str.' file='.$err_file.':'.$err_line,
+      $err_no,
+      null,
+      $err_file,
+      $err_line,
+    );
   }
 
 }

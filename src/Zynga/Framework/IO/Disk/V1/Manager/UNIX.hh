@@ -33,7 +33,7 @@ class UNIX extends Base {
 
   public function fileOpen(string $fileName, string $mode): mixed {
     try {
-      return fopen($fileName, $mode);
+      return @fopen($fileName, $mode);
     } catch (Exception $e) {
       return false;
     }
@@ -50,7 +50,7 @@ class UNIX extends Base {
   ): bool {
     $old = umask(0);
     try {
-      $rv = mkdir($path, $permissions, $recursivePermissions);
+      $rv = @mkdir($path, $permissions, $recursivePermissions);
       umask($old);
       return $rv;
     } catch (Exception $e) {
@@ -61,7 +61,10 @@ class UNIX extends Base {
 
   public function unlink(string $fileName): bool {
     try {
-      return unlink($fileName);
+      if (!is_file($fileName) && !is_dir($fileName) && !is_link($fileName)) {
+        return false;
+      }
+      return @unlink($fileName);
     } catch (Exception $e) {
       return false;
     }
@@ -85,7 +88,7 @@ class UNIX extends Base {
 
   public function bzopen(string $fileName, string $mode): mixed {
     try {
-      return bzopen($fileName, $mode);
+      return @bzopen($fileName, $mode);
     } catch (Exception $e) {
       return false;
     }

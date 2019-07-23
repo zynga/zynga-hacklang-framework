@@ -216,7 +216,7 @@ class BaseTest extends ZyngaTestCase {
 
     $mock = new TestCaseMock('TestCaseMock');
     $mock->assertEquals(
-      'Zynga\Framework\Testing\TestCase\V2\TestCaseMock::TestCaseMock',
+      'Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseMock::TestCaseMock',
       $mock->toString(),
     );
 
@@ -247,7 +247,7 @@ class BaseTest extends ZyngaTestCase {
 
   public function testSetGroups(): void {
 
-    $testGroups = array('how', 'now');
+    $testGroups = Vector {'how', 'now'};
 
     $mock = new TestCaseMock('TestCaseMock');
     $mock->setGroups($testGroups);

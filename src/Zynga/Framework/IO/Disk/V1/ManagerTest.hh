@@ -69,7 +69,9 @@ class ManagerTest extends TestCase {
   }
 
   public function testFileOpenWithBadModeReturnsFalse(): void {
+
     $manager = DiskIOManager::instance();
+
     $handle = $manager->fileOpen($this->getTempTestDir().'/1', 'y');
 
     if (is_bool($handle)) {
@@ -84,7 +86,7 @@ class ManagerTest extends TestCase {
 
     $manager = DiskIOManager::instance();
     $directory = $manager->directoryName($this->getTempTestDir().'/2');
-    $this->assertEquals($this->getTempTestDir(), $directory);
+    $this->assertEquals(rtrim($this->getTempTestDir(), "/"), $directory);
 
   }
 
@@ -579,11 +581,20 @@ class ManagerTest extends TestCase {
   }
 
   public function testChownFailure(): void {
-    if (get_current_user() == 'root') {
+
+    // error_log('JEO - startChown');
+    $currentUser = get_current_user();
+
+    if ($currentUser == 'root') {
+      // error_log('JEO - markingSkipped='.$currentUser);
       $this->markTestSkipped(
-        'This will not fail for a root user, please run tests as a user and not root.',
+        'This test will not fail for a root user, please run tests as a normal user and not root.',
       );
     }
+
+    // error_log('JEO run test as user=' . $currentUser);
+
+    $this->assertTrue(true);
     // --
     // On most secure unixes this will be false
     // --

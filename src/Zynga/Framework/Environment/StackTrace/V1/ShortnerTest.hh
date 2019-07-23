@@ -16,10 +16,11 @@ class ShortnerTest extends TestCaseBase {
   }
 
   public function testTrimmedTrace(): void {
-    $stacktrace =
-      'class=Zynga\Framework\Environment\StackTrace\V1\Shortner::function=toString::line=22|class=Zynga\Framework\Environment\StackTrace\V1\ShortnerTest::function=testTrimmedTrace';
 
-    $this->assertStringStartsWith($stacktrace, Shortner::toString(13));
+    $stacktrace =
+      'class=Zynga\Framework\Environment\StackTrace\V1\Shortner::function=toString::line=23|class=Zynga\Framework\Environment\StackTrace\V1\ShortnerTest::function=testTrimmedTrace';
+
+    $this->assertStringStartsWith($stacktrace, Shortner::toString(12));
   }
 
 }

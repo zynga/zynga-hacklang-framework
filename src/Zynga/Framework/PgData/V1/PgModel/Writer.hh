@@ -172,6 +172,10 @@ class Writer implements WriterInterface {
           return true;
         }
       }
+
+      if($shouldUnlock === true) {
+        $pgCache->unlockRowCache($obj);
+      }
       
       return false;
 

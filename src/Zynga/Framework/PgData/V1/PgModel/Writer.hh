@@ -20,12 +20,13 @@ class Writer implements WriterInterface {
   private function pgModel(): PgModelInterface {
     return $this->_pgModel;
   }
-  
+
   /**
    * Add a new item. Will always try to take a look but will only unlock if the api dev asks it
    */
   public function add(PgRowInterface $row, bool $shouldUnlock): bool {
 
+    $pgCache = null;
     try {
 
       $pk = $row->getPrimaryKeyTyped();
@@ -46,7 +47,7 @@ class Writer implements WriterInterface {
 
       $pgModel = $this->pgModel();
       $pgCache = $pgModel->cache();
-      
+
       $locked = $pgCache->lockRowCache($row);
       if ($locked === true) {
         $dataCache = $pgCache->getDataCache();
@@ -58,23 +59,21 @@ class Writer implements WriterInterface {
 
         if ($result->wasSuccessful() === true) {
           $dataCache->set($row);
-          if($shouldUnlock === true) {
-            $pgCache->unlockRowCache($row);
-          }
-          
+
           return true;
         }
-        
-        if($shouldUnlock === true) {
-          $pgCache->unlockRowCache($row);
-        }
-
       }
 
       return false;
 
     } catch (Exception $e) {
       throw $e;
+    } finally {
+      if ($shouldUnlock === true &&
+          $pgCache !== null &&
+          $pgCache->getDataCache()->isLocked($row) === true) {
+        $pgCache->unlockRowCache($row);
+      }
     }
 
   }
@@ -85,6 +84,7 @@ class Writer implements WriterInterface {
    * Will only unlock if the api dev asks it
    */
   public function save(PgRowInterface $obj, bool $shouldUnlock): bool {
+    $pgCache = null;
     try {
 
       $pk = $obj->getPrimaryKeyTyped();
@@ -96,14 +96,17 @@ class Writer implements WriterInterface {
       }
 
       $pgModel = $this->pgModel();
-      
+
       $pgCache = $pgModel->cache();
       $dataCache = $pgCache->getDataCache();
-      
-      if($dataCache->isLocked($obj) === false) {
-        throw new Exception('No lock acquired before calling save on obj=' . $obj->export()->asJSON());
+
+      if ($dataCache->isLocked($obj) === false) {
+        throw new Exception(
+          'No lock acquired before calling save on obj='.
+          $obj->export()->asJSON(),
+        );
       }
-      
+
       $dbh = $pgModel->db()->getWriteDatabase();
 
       $updateSql = SqlGenerator::getUpdateSql($dbh, $pgModel, $obj);
@@ -113,31 +116,30 @@ class Writer implements WriterInterface {
       if ($result->wasSuccessful() === true) {
 
         $dataCache->set($obj);
-        if($shouldUnlock === true) {
-          $pgCache->unlockRowCache($obj);
-        }
-        
+
         return true;
       }
-      
-      if($shouldUnlock === true) {
-        $pgCache->unlockRowCache($obj);
-      }
-      
+
       return false;
 
     } catch (Exception $e) {
       throw $e;
+    } finally {
+      if ($shouldUnlock === true &&
+          $pgCache !== null &&
+          $pgCache->getDataCache()->isLocked($obj) === true) {
+        $pgCache->unlockRowCache($obj);
+      }
     }
-
   }
-  
+
   /**
    * Deletes an item.
    * Expects the api dev to have a lock already.
    * Will only unlock if the api dev asks it
    */
   public function delete(PgRowInterface $obj, bool $shouldUnlock): bool {
+    $pgCache = null;
     try {
 
       $pk = $obj->getPrimaryKeyTyped();
@@ -151,36 +153,41 @@ class Writer implements WriterInterface {
       $pgModel = $this->pgModel();
       $pgCache = $pgModel->cache();
       $dataCache = $pgCache->getDataCache();
-      
-      if($dataCache->isLocked($obj) === false) {
-        throw new Exception('No lock acquired before calling save on obj=' . $obj->export()->asJSON());
+
+      if ($dataCache->isLocked($obj) === false) {
+        throw new Exception(
+          'No lock acquired before calling save on obj='.
+          $obj->export()->asJSON(),
+        );
       }
-      
+
       // Delete from cache first
       if ($dataCache->delete($obj) === true) {
         $dbh = $pgModel->db()->getWriteDatabase();
 
         $where = new PgWhereClause($pgModel);
-        $where->and($obj->getPrimaryKey(), PgWhereOperand::EQUALS, $pk->get());
+        $where->and(
+          $obj->getPrimaryKey(),
+          PgWhereOperand::EQUALS,
+          $pk->get(),
+        );
         $deleteSql = SqlGenerator::getDeleteSql($dbh, $pgModel, $obj, $where);
 
         $result = $dbh->query($deleteSql);
         if ($result->wasSuccessful() === true) {
-          if($shouldUnlock === true) {
-            $pgCache->unlockRowCache($obj);
-          }
           return true;
         }
       }
-
-      if($shouldUnlock === true) {
-        $pgCache->unlockRowCache($obj);
-      }
-      
       return false;
 
     } catch (Exception $e) {
       throw $e;
+    } finally {
+      if ($shouldUnlock === true &&
+          $pgCache !== null &&
+          $pgCache->getDataCache()->isLocked($obj) === true) {
+        $pgCache->unlockRowCache($obj);
+      }
     }
   }
 

@@ -41,8 +41,9 @@ class PgCachedResultSet<Tv as TypeInterface> extends Base<Tv> {
     $rawType = $this->_rawType;
     $typeChecksum = md5($this->_rawType);
     $whereChecksum = $this->_where->createWhereChecksum();
+    $modelChecksum = md5($this->_model);
 
-    $this->_checksum = $typeChecksum.'|'.$whereChecksum.'|'.$this->_model;
+    $this->_checksum = $typeChecksum.'|'.$whereChecksum.'|'.$modelChecksum;
 
     return $this->_checksum;
 

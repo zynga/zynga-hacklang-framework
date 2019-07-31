@@ -15,7 +15,7 @@
       <directory suffix="Test.hh">./src/*</directory>
     </testsuite>
     <testsuite name="phpunit-tests">
-      <directory suffix="Test.hh">./vendor/zynga/phpunit/src/Zynga/PHPUnit/V2/Tests</directory>
+      <directory suffix="Test.hh">./vendor/zynga/phpunit/src/Zynga/PHPUnit/V2/Tests/System</directory>
     </testsuite>
   </testsuites>
   <filter>

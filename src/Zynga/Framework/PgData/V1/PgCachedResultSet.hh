@@ -2,6 +2,7 @@
 
 namespace Zynga\Framework\PgData\V1;
 
+use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgWhereClauseInterface;
 use Zynga\Framework\StorableObject\Collections\Vector\V1\Base;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
@@ -13,11 +14,13 @@ use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 class PgCachedResultSet<Tv as TypeInterface> extends Base<Tv> {
   private PgWhereClauseInterface $_where;
   private classname<Tv> $_rawType;
+  private classname<PgRowInterface> $_model;
   private string $_checksum;
 
   public function __construct(
     classname<Tv> $rawType,
     PgWhereClauseInterface $where,
+    classname<PgRowInterface> $model
   ) {
 
     parent::__construct($rawType);
@@ -25,6 +28,7 @@ class PgCachedResultSet<Tv as TypeInterface> extends Base<Tv> {
     $this->_where = $where;
     $this->_rawType = $rawType;
     $this->_checksum = '';
+    $this->_model = $model;
 
   }
 
@@ -34,11 +38,9 @@ class PgCachedResultSet<Tv as TypeInterface> extends Base<Tv> {
       return $this->_checksum;
     }
 
-    $rawType = $this->_rawType;
-    $typeChecksum = md5($this->_rawType);
     $whereChecksum = $this->_where->createWhereChecksum();
-
-    $this->_checksum = $typeChecksum.'|'.$whereChecksum;
+    $this->_checksum =
+      md5($this->_rawType.'|'.$whereChecksum.'|'.$this->_model);
 
     return $this->_checksum;
 

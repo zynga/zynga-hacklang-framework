@@ -108,7 +108,7 @@ class Reader implements ReaderInterface {
           }
           if ($cache->getDataCache()->isLocked($resultObj) === true) {
             // 6) Don't unlock if asked not to.
-            if ($idx = 0 && $getLocked === false) {
+            if ($idx === 0 && $getLocked === false) {
               $pgModel->cache()->unlockRowCache($resultObj);
               continue;
             }
@@ -119,7 +119,8 @@ class Reader implements ReaderInterface {
           }
         }
         // 8) row not found by pk. Always unlock in this case
-        if ($obj != null && $cache->getDataCache()->isLocked($obj) === true) {
+        if ($obj !== null &&
+            $cache->getDataCache()->isLocked($obj) === true) {
           $cache->unlockRowCache($obj);
         }
       }
@@ -170,7 +171,7 @@ class Reader implements ReaderInterface {
       throw $e;
     } finally {
       // 6) Unlock the dataset
-      if ($pgModel != null && $where != null) {
+      if ($pgModel !== null && $where !== null) {
         $pgModel->cache()->unlockResultSetCache($model, $where);
       }
     }

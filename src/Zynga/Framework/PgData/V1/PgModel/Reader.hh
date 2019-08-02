@@ -40,7 +40,6 @@ class Reader implements ReaderInterface {
   ): ?PgRowInterface {
 
     $pgModel = null;
-    $obj = null;
     $resultSet = null;
     try {
 
@@ -68,17 +67,12 @@ class Reader implements ReaderInterface {
       // 1) grab a copy of our object to work with.
       $pgModel->stats()->incrementCacheMisses();
       $obj = $pgModel->data()->createRowObjectFromClassName($model);
-      $pk = $obj->getPrimaryKeyTyped();
-      $pk->set($id);
 
-      // 2) Lock the row for update from the db data.
-      $pgModel->cache()->lockRowCache($obj);
-
-      // 3) Stand up the where statement to get the response we want.
+      // 2) Stand up the where statement to get the response we want.
       $where = new PgWhereClause($pgModel);
       $where->and($obj->getPrimaryKey(), PgWhereOperand::EQUALS, $id);
 
-      // 4) Run the query against the database and dont release any of the lock yet
+      // 3) Run the query against the database and dont release any of the lock yet
       $resultSet = $this->fetchResultSetFromDatabase($model, $where, false);
 
       // 4) We expect a result set of 1 for return.
@@ -106,22 +100,16 @@ class Reader implements ReaderInterface {
           if (!$resultObj instanceof PgRowInterface) {
             continue;
           }
-          if ($cache->getDataCache()->isLocked($resultObj) === true) {
-            // 6) Don't unlock if asked not to.
-            if ($idx === 0 && $getLocked === false) {
+          // 6) Don't unlock if asked not to.
+          if ($idx === 0) {
+            if ($getLocked === false) {
               $pgModel->cache()->unlockRowCache($resultObj);
-              continue;
             }
-
-            // 7) If we got more than 1 result,
-            // then release lock for all of them acquired by fetchResultSetFromDatabase
-            $cache->unlockRowCache($resultObj);
+            continue;
           }
-        }
-        // 8) row not found by pk. Always unlock in this case
-        if ($obj !== null &&
-            $cache->getDataCache()->isLocked($obj) === true) {
-          $cache->unlockRowCache($obj);
+          // 7) If we got more than 1 result,
+          // then release lock for all of them acquired by fetchResultSetFromDatabase
+          $cache->unlockRowCache($resultObj);
         }
       }
     }

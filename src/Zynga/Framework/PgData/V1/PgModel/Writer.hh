@@ -69,9 +69,7 @@ class Writer implements WriterInterface {
     } catch (Exception $e) {
       throw $e;
     } finally {
-      if ($shouldUnlock === true &&
-          $pgCache !== null &&
-          $pgCache->getDataCache()->isLocked($row) === true) {
+      if ($shouldUnlock === true && $pgCache !== null) {
         $pgCache->unlockRowCache($row);
       }
     }
@@ -125,9 +123,7 @@ class Writer implements WriterInterface {
     } catch (Exception $e) {
       throw $e;
     } finally {
-      if ($shouldUnlock === true &&
-          $pgCache !== null &&
-          $pgCache->getDataCache()->isLocked($obj) === true) {
+      if ($shouldUnlock === true && $pgCache !== null) {
         $pgCache->unlockRowCache($obj);
       }
     }
@@ -183,9 +179,7 @@ class Writer implements WriterInterface {
     } catch (Exception $e) {
       throw $e;
     } finally {
-      if ($shouldUnlock === true &&
-          $pgCache !== null &&
-          $pgCache->getDataCache()->isLocked($obj) === true) {
+      if ($shouldUnlock === true && $pgCache !== null) {
         $pgCache->unlockRowCache($obj);
       }
     }

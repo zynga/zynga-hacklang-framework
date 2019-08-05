@@ -290,5 +290,5 @@ abstract class Base extends TestCase
     $this->assertEquals(9223372036854775807, $memory_limit);
     return true;
   }
-  
+
 }

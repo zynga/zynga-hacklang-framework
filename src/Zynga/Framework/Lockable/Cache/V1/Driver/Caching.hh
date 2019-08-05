@@ -59,68 +59,6 @@ class Caching extends FactoryDriverBase implements DriverInterface {
     }
   }
 
-  public function isLocked(StorableObjectInterface $obj): bool {
-
-    try {
-      $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
-      $alreadyLocked = $this->_locks->get($lockKey);
-
-      // Check my thead already has a lock
-      if ($alreadyLocked instanceof LockPayloadInterface) {
-        // Check if the lock is still valid, if so we are done.
-        if ($alreadyLocked->isLockStillValid(
-              $this->getConfig()->getLockTTL(),
-            )) {
-          return true;
-        }
-      }
-
-      // Check if any other thread has a lock
-      $lockCache = $this->getConfig()->getLockCache();
-
-      $lockPayload = new LockPayload();
-
-      $lockPayload = $lockCache->get($lockPayload, $lockKey);
-      if ($lockPayload === null) {
-        return false;
-      }
-
-      return $lockPayload->isDefaultValue()[0];
-
-    } catch (Exception $e) {
-      throw $e;
-    }
-
-  }
-
-  public function isLockedByAnotherThread(StorableObjectInterface $obj): bool {
-
-    try {
-      $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
-      $alreadyLocked = $this->_locks->get($lockKey);
-
-      // Check if my thead already has a lock
-      if ($alreadyLocked instanceof LockPayloadInterface) {
-        return false;
-      }
-
-      // Check if any other thread has a lock
-      $lockCache = $this->getConfig()->getLockCache();
-
-      $lockPayload = new LockPayload();
-
-      $lockPayload = $lockCache->get($lockPayload, $lockKey);
-      if ($lockPayload === null) {
-        return false;
-      }
-
-      return !$lockPayload->isDefaultValue()[0];
-
-    } catch (Exception $e) {
-      throw $e;
-    }
-  }
-
   /**
    *
    * Locking a existing object if possible, exception if not capable.

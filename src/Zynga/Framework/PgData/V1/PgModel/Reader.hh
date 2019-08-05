@@ -41,6 +41,7 @@ class Reader implements ReaderInterface {
 
     $pgModel = null;
     $resultSet = null;
+    $isException = false;
     try {
 
       // Snag a reference to the model.
@@ -88,28 +89,28 @@ class Reader implements ReaderInterface {
       return null;
 
     } catch (Exception $e) {
-      // unlock the result obj even asked for not to unlock when an exception happens
-      $getLocked = false;
+      // 5) unlock the result set obj when an exception happens even asked for not to unlock
+      $isException = true;
       throw $e;
     } finally {
       // release all the possible locks
       if ($pgModel !== null && $resultSet !== null) {
         $cache = $pgModel->cache();
-        foreach ($resultSet->toArray() as $idx => $resultObj) {
 
-          if (!$resultObj instanceof PgRowInterface) {
-            continue;
+        //6) getByPk operation successfull and just release the lock on single row if not asked to hold
+        if ($resultSet->count() === 1 && $isException === false) {
+          if ($getLocked === false) {
+            $pgModel->cache()->unlockRowCache($resultSet->get(0));
           }
-          // 6) Don't unlock if asked not to.
-          if ($idx === 0) {
-            if ($getLocked === false) {
-              $pgModel->cache()->unlockRowCache($resultObj);
-            }
-            continue;
-          }
-          // 7) If we got more than 1 result,
+        } else {
+          //7) either exception case or db retured more rows
           // then release lock for all of them acquired by fetchResultSetFromDatabase
-          $cache->unlockRowCache($resultObj);
+          foreach ($resultSet->toArray() as $resultObj) {
+            if (!$resultObj instanceof PgRowInterface) {
+              continue;
+            }
+            $cache->unlockRowCache($resultObj);
+          }
         }
       }
     }

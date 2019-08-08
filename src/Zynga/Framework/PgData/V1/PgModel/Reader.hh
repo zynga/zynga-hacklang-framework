@@ -311,6 +311,8 @@ class Reader implements ReaderInterface {
     mixed $id,
     bool $shouldLock,
   ): ?PgRowInterface {
+    $cache = null;
+    $obj = null;
     try {
 
       $pgModel = $this->pgModel();
@@ -330,6 +332,10 @@ class Reader implements ReaderInterface {
       return null;
 
     } catch (Exception $e) {
+      //unlock the obj if any exception occurs, get & getByPK will take care of happy path & other scenario's
+      if ($cache !== null && $obj !== null) {
+        $cache->unlock($obj);
+      }
       throw $e;
     }
   }

@@ -269,10 +269,13 @@ class Caching extends FactoryDriverBase implements DriverInterface {
       if ($deleteState != true) {
         return false;
       }
-
-      // Purge the lock as the object is now removed also.
-      return $this->unlock($obj);
-
+      
+      if($releaseLockOnDelete === true) {
+        // Purge the lock as the object is now removed also.
+        return $this->unlock($obj);
+      }
+       
+      return true;
     } catch (Exception $e) {
       throw $e;
     }

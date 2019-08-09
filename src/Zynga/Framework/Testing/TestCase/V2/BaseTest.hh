@@ -21,6 +21,7 @@ use Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseTestNoImplement;
 use Zynga\PHPUnit\V2\Exceptions\AssertionFailedException;
 use Zynga\PHPUnit\V2\Exceptions\TestError\SkippedException;
 use Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseMock;
+use Zynga\PHPUnit\V2\TestResult;
 
 use \Exception as RawException;
 
@@ -305,7 +306,7 @@ class BaseTest extends ZyngaTestCase {
 
   public function testGetTestResultObject(): void {
     $mock = new TestCaseMock('TestCaseMock');
-    $this->assertEquals(null, $mock->getTestResultObject());
+    $this->assertInstanceOf(TestResult::class, $mock->getResult());
   }
 
   public function testAssertNotNull(): void {

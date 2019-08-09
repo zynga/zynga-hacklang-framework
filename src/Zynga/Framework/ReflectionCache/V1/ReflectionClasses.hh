@@ -30,7 +30,8 @@ class ReflectionClasses {
       // attempt to find the class in the interpreter, allow the autoloader to
       // pick up the class if needed.
       // --
-      if (class_exists($className, true) !== true) {
+      if (class_exists($className, true) !== true &&
+          interface_exists($className, true) !== true) {
         return null;
       }
 

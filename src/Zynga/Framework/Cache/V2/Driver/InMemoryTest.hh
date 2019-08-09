@@ -42,17 +42,9 @@ class InMemoryTest extends TestCase {
 
   }
 
-  public static function invalidKeyConditionProvider(
-  ): array<mixed, array<mixed>> {
+  public static function invalidKeyConditionProvider(): array<array<mixed>> {
 
-    $storable = new ValidStorableObject();
-
-    $ret = array(
-      'invalid-key-data-blank-object' => array(
-        self::driverProvider(),
-        new ValidStorableObject(),
-      ),
-    );
+    $ret = array(array(self::driverProvider(), new ValidStorableObject()));
 
     return $ret;
 

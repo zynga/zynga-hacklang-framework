@@ -71,6 +71,28 @@ class Cache implements CacheInterface {
     }
 
   }
+  
+  public function clearResultSetCache<TModelClass as PgRowInterface>(
+    classname<TModelClass> $model,
+    PgWhereClauseInterface $where,
+  ): bool {
+    try {
+      $pgModel = $this->pgModel();
+
+      // Create a cachedRs out of the result set that was given.
+      $cachedRs = $pgModel->reader()->createCachedResultSet($model, $where);
+
+      $cache = $this->getResultSetCache();
+
+      if($cache->lock($cachedRs)) {
+        return $cache->delete($cachedRs, true);
+      }
+
+      return false;
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
 
   public function lockResultSetCache<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,

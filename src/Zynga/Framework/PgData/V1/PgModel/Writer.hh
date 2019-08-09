@@ -69,9 +69,7 @@ class Writer implements WriterInterface {
     } catch (Exception $e) {
       throw $e;
     } finally {
-      if ($shouldUnlock === true &&
-          $pgCache !== null &&
-          $pgCache->getDataCache()->isLocked($row) === true) {
+      if ($shouldUnlock === true && $pgCache !== null) {
         $pgCache->unlockRowCache($row);
       }
     }
@@ -100,7 +98,7 @@ class Writer implements WriterInterface {
       $pgCache = $pgModel->cache();
       $dataCache = $pgCache->getDataCache();
 
-      if ($dataCache->isLocked($obj) === false) {
+      if ($dataCache->isLockedByMyThread($obj) === false) {
         throw new Exception(
           'No lock acquired before calling save on obj='.
           $obj->export()->asJSON(),
@@ -125,9 +123,7 @@ class Writer implements WriterInterface {
     } catch (Exception $e) {
       throw $e;
     } finally {
-      if ($shouldUnlock === true &&
-          $pgCache !== null &&
-          $pgCache->getDataCache()->isLocked($obj) === true) {
+      if ($shouldUnlock === true && $pgCache !== null) {
         $pgCache->unlockRowCache($obj);
       }
     }
@@ -154,7 +150,7 @@ class Writer implements WriterInterface {
       $pgCache = $pgModel->cache();
       $dataCache = $pgCache->getDataCache();
 
-      if ($dataCache->isLocked($obj) === false) {
+      if ($dataCache->isLockedByMyThread($obj) === false) {
         throw new Exception(
           'No lock acquired before calling save on obj='.
           $obj->export()->asJSON(),
@@ -183,9 +179,7 @@ class Writer implements WriterInterface {
     } catch (Exception $e) {
       throw $e;
     } finally {
-      if ($shouldUnlock === true &&
-          $pgCache !== null &&
-          $pgCache->getDataCache()->isLocked($obj) === true) {
+      if ($shouldUnlock === true && $pgCache !== null) {
         $pgCache->unlockRowCache($obj);
       }
     }

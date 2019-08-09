@@ -21,46 +21,49 @@ use
 ;
 
 class InventoryLockTest extends BaseInventoryTest {
-  
+
   public function testLockInGetByPk(): void {
     $inventory = new InventoryModel();
-  
+
     // --
     // Read a simple item off the db.
     // --
     $id = 12387451;
     $name = 'this-is-a-test-valueset-1';
-  
+
     // As a cleanup step, we need to purge LMC from reading this item again.
     $this->removeCachedItem($id);
-  
+
     // This trip should hit the database and take the lock
     $firstTrip = $inventory->getByPk(ItemType::class, $id, true);
     if ($firstTrip instanceof ItemType) {
-  
+
       $this->assertEquals($id, $firstTrip->id->get());
       $this->assertEquals($name, $firstTrip->name->get());
       $this->validateModelStats($inventory, 0, 1, 1);
-      
+
       // Should already be locked now
-      $this->assertTrue($inventory->cache()->getDataCache()->isLocked($firstTrip));
-      
+      $this->assertTrue(
+        $inventory->cache()->getDataCache()->isLockedByMyThread($firstTrip),
+      );
+
     } else {
       $this->fail('type returned should of been ItemType');
     }
-  
+
     // unlock your obj
     if ($firstTrip instanceof ItemType) {
       $this->assertTrue($inventory->unlockRowCache($firstTrip));
-      
+
       // Should not be locked now
-      $this->assertFalse($inventory->cache()->getDataCache()->isLocked($firstTrip));
+      $this->assertFalse(
+        $inventory->cache()->getDataCache()->isLockedByMyThread($firstTrip),
+      );
     }
-    
+
     $this->removeCachedItem($id);
   }
-  
-  
+
   public function testLockInPgModel(): void {
     $inventory = new InventoryModel();
 
@@ -72,15 +75,14 @@ class InventoryLockTest extends BaseInventoryTest {
     $item = new ItemType($inventory);
     $item->id->set($id);
     $item->name->set($name);
-    
+
     $this->assertTrue($inventory->lockRowCache($item));
-    
+
     sleep(10);
     // Lock will work again as we dont solve single threaded locks. But if you run this test in two threads, one will fail.
     $this->assertTrue($inventory->lockRowCache($item));
-    
+
     $this->assertTrue($inventory->unlockRowCache($item));
   }
-
 
 }

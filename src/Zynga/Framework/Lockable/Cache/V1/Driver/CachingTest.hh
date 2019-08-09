@@ -123,8 +123,8 @@ class CachingTest extends TestCase {
 
     // Unlock the object
     $this->assertTrue($mockCache->unlock($mockObj));
-    // We should be unlocked
-    $this->assertTrue($mockCache->unlock($mockObj));
+    // We shouldn't be unlocked, because it's already been removed from local cache map by current thread.
+    $this->assertFalse($mockCache->unlock($mockObj));
 
   }
 

@@ -59,6 +59,26 @@ class Caching extends FactoryDriverBase implements DriverInterface {
     }
   }
 
+  public function isLockedByMyThread(StorableObjectInterface $obj): bool {
+    try {
+      $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
+      $alreadyLocked = $this->_locks->get($lockKey);
+
+      // Check my thead already has a lock
+      if ($alreadyLocked instanceof LockPayloadInterface) {
+        // Check if the lock is still valid, if so we are done.
+        if ($alreadyLocked->isLockStillValid(
+              $this->getConfig()->getLockTTL(),
+            )) {
+          return true;
+        }
+      }
+      return false;
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
   /**
    *
    * Locking a existing object if possible, exception if not capable.
@@ -269,12 +289,12 @@ class Caching extends FactoryDriverBase implements DriverInterface {
       if ($deleteState != true) {
         return false;
       }
-      
-      if($releaseLockOnDelete === true) {
+
+      if ($releaseLockOnDelete === true) {
         // Purge the lock as the object is now removed also.
         return $this->unlock($obj);
       }
-       
+
       return true;
     } catch (Exception $e) {
       throw $e;

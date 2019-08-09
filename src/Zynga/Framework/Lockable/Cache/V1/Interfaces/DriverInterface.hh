@@ -20,6 +20,16 @@ interface DriverInterface extends BaseDriverInterface {
 
   /**
    *
+   * checks whether current/my thread holds the lock or not
+   *
+   * @param StorableObjectInterface $obj
+   * @return bool success if current thread hold valid lock
+   *
+   */
+  public function isLockedByMyThread(StorableObjectInterface $obj): bool;
+
+  /**
+   *
    * Locking a existing object if possible, exception if not capable.
    *
    * @param StorableObjectInterface $obj

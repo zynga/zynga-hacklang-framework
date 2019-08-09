@@ -98,12 +98,12 @@ class Writer implements WriterInterface {
       $pgCache = $pgModel->cache();
       $dataCache = $pgCache->getDataCache();
 
-      /*if ($dataCache->isLocked($obj) === false) {
-       throw new Exception(
-       'No lock acquired before calling save on obj='.
-       $obj->export()->asJSON(),
-       );
-       }*/
+      if ($dataCache->isLockedByMyThread($obj) === false) {
+        throw new Exception(
+          'No lock acquired before calling save on obj='.
+          $obj->export()->asJSON(),
+        );
+      }
 
       $dbh = $pgModel->db()->getWriteDatabase();
 
@@ -150,12 +150,12 @@ class Writer implements WriterInterface {
       $pgCache = $pgModel->cache();
       $dataCache = $pgCache->getDataCache();
 
-      /*if ($dataCache->isLocked($obj) === false) {
-       throw new Exception(
-       'No lock acquired before calling save on obj='.
-       $obj->export()->asJSON(),
-       );
-       }*/
+      if ($dataCache->isLockedByMyThread($obj) === false) {
+        throw new Exception(
+          'No lock acquired before calling save on obj='.
+          $obj->export()->asJSON(),
+        );
+      }
 
       // Delete from cache first
       if ($dataCache->delete($obj) === true) {

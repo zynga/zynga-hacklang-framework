@@ -49,6 +49,28 @@ class CachingTest extends TestCase {
 
   }
 
+  public function testIsLockedByMyThread(): void {
+    $pgDataCache = LockableCacheFactory::factory(
+      LockableCacheDriverInterface::class,
+      'PgDataTest',
+    );
+
+    $mockId = '123456';
+    $mockTextValue = 'this-is-a-pgdata-text-value-'.mt_rand();
+
+    $inv = new InventoryModel();
+
+    $pgMock = new PgDataExample($inv);
+    $pgMock->id->set($mockId);
+    $pgMock->name->set($mockTextValue);
+
+    $this->assertTrue($pgDataCache->lock($pgMock));
+    $this->assertTrue($pgDataCache->isLockedByMyThread($pgMock));
+    // This will succeed on the same thread but fail on separate thead.
+    $this->assertTrue($pgDataCache->lock($pgMock));
+
+  }
+
   public function testDrivers_Load(): void {
 
     foreach ($this->_cacheNames as $cacheName) {

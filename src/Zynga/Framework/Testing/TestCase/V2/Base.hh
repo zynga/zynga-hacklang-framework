@@ -9,7 +9,6 @@ use Zynga\Framework\Testing\TestCase\V2\Config\Manager as TestManager;
 use Zynga\Framework\Testing\MockState\V2\MockState;
 use Zynga\Framework\Database\V2\Factory as DatabaseFactory;
 use Zynga\Framework\Performance\V1\XHProfiler as PerformanceProfiler;
-use Zynga\Framework\Testing\TestCase\V2\TestCaseShim;
 use Zynga\PHPUnit\V2\TestCase;
 use Zynga\PHPUnit\V2\Environment\OutputBuffering;
 
@@ -290,5 +289,5 @@ abstract class Base extends TestCase
     $this->assertEquals(9223372036854775807, $memory_limit);
     return true;
   }
-  
+
 }

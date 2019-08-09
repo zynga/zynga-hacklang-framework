@@ -36,14 +36,17 @@ class Reader implements ReaderInterface {
   public function getByPk<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     mixed $id,
-    bool $getLocked
+    bool $getLocked,
   ): ?PgRowInterface {
 
+    $pgModel = null;
+    $resultSet = null;
+    $isException = false;
     try {
 
       // Snag a reference to the model.
       $pgModel = $this->pgModel();
-    
+
       // --
       // 0) This is a hard performance optimization where we force the fetch from
       //    mc to allow us to skip any work, because we prefer the 'data' segment
@@ -65,17 +68,12 @@ class Reader implements ReaderInterface {
       // 1) grab a copy of our object to work with.
       $pgModel->stats()->incrementCacheMisses();
       $obj = $pgModel->data()->createRowObjectFromClassName($model);
-      $pk = $obj->getPrimaryKeyTyped();
-      $pk->set($id);
 
-      // 2) Lock the row for update from the db data.
-      $pgModel->cache()->lockRowCache($obj);
-      
-      // 3) Stand up the where statement to get the response we want.
+      // 2) Stand up the where statement to get the response we want.
       $where = new PgWhereClause($pgModel);
       $where->and($obj->getPrimaryKey(), PgWhereOperand::EQUALS, $id);
 
-      // 4) Run the query against the database and dont release any of the lock yet
+      // 3) Run the query against the database and dont release any of the lock yet
       $resultSet = $this->fetchResultSetFromDatabase($model, $where, false);
 
       // 4) We expect a result set of 1 for return.
@@ -83,34 +81,37 @@ class Reader implements ReaderInterface {
         $row = $resultSet->get(0);
         if ($row instanceof PgRowInterface) {
           // fetchResultSetFromDatabase already writes the row to cache.
-          if($getLocked === false) {
-            $pgModel->cache()->unlockRowCache($row);
-          }
-          
           return $row;
         }
       }
-      
-      // 5) If we got more than 1 result,
-      // then release lock for all of them acquired by fetchResultSetFromDatabase
-      if($resultSet->count() > 1) {
-        foreach ($resultSet->toArray() as $resultObj) {
-          if (!$resultObj instanceof PgRowInterface) {
-            continue;
-          }
-          
-          $pgModel->cache()->unlockRowCache($resultObj);
-        }
-        
-        return null;
-      }
 
-      // 6) row not found by pk. Always unlock in this case
-      $pgModel->cache()->unlockRowCache($obj);
       return null;
 
     } catch (Exception $e) {
+      // 5) unlock the result set obj when an exception happens even asked for not to unlock
+      $isException = true;
       throw $e;
+    } finally {
+      // release all the possible locks
+      if ($pgModel !== null && $resultSet !== null) {
+        $cache = $pgModel->cache();
+
+        //6) getByPk operation successfull and just release the lock on single row if not asked to hold
+        if ($resultSet->count() === 1 && $isException === false) {
+          if ($getLocked === false) {
+            $pgModel->cache()->unlockRowCache($resultSet->get(0));
+          }
+        } else {
+          //7) either exception case or db retured more rows
+          // then release lock for all of them acquired by fetchResultSetFromDatabase
+          foreach ($resultSet->toArray() as $resultObj) {
+            if (!$resultObj instanceof PgRowInterface) {
+              continue;
+            }
+            $cache->unlockRowCache($resultObj);
+          }
+        }
+      }
     }
   }
 
@@ -120,7 +121,7 @@ class Reader implements ReaderInterface {
     classname<TModelClass> $model,
     ?PgWhereClauseInterface $where = null,
   ): PgResultSetInterface<PgRowInterface> {
-
+    $pgModel = null;
     try {
 
       // 0) Snag a reference to our pgModel
@@ -151,15 +152,16 @@ class Reader implements ReaderInterface {
       // 5) Save the result set back to cache
       $this->setResultSetToResultSetCache($model, $where, $resultSet);
 
-      // 6) Unlock the dataset
-      $pgModel->cache()->unlockResultSetCache($model, $where);
-
       return $resultSet;
 
     } catch (Exception $e) {
       throw $e;
+    } finally {
+      // 6) Unlock the dataset
+      if ($pgModel !== null && $where !== null) {
+        $pgModel->cache()->unlockResultSetCache($model, $where);
+      }
     }
-
   }
 
   public function createCachedResultSet<TModelClass as PgRowInterface>(
@@ -203,7 +205,7 @@ class Reader implements ReaderInterface {
   private function fetchResultSetFromDatabase<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     PgWhereClauseInterface $where,
-    bool $releaseLockOnSet
+    bool $releaseLockOnSet,
   ): PgResultSetInterface<PgRowInterface> {
 
     try {
@@ -256,7 +258,8 @@ class Reader implements ReaderInterface {
 
         // X) Fetch cached data to allow for delayed sync back from mc -> db
         // We dont lock on entire data sets
-        $cachedRow = $this->fetchSingleRowFromDataCache($model, $pkValue, false);
+        $cachedRow =
+          $this->fetchSingleRowFromDataCache($model, $pkValue, false);
 
         if ($cachedRow instanceof PgRowInterface) {
           $resultSet->add($cachedRow);
@@ -280,7 +283,8 @@ class Reader implements ReaderInterface {
     classname<TModelClass> $model,
     PgWhereClauseInterface $where,
   ): ?PgResultSetInterface<PgRowInterface> {
-
+    $cache = null;
+    $obj = null;
     try {
 
       $pgModel = $this->pgModel();
@@ -296,6 +300,10 @@ class Reader implements ReaderInterface {
 
       return null;
     } catch (Exception $e) {
+      //unlock the obj if any exception occurs, get & getByPK will take care of happy path & other scenario's
+      if ($cache !== null && $obj !== null) {
+        $cache->unlock($obj);
+      }
       throw $e;
     }
 
@@ -304,7 +312,7 @@ class Reader implements ReaderInterface {
   private function fetchSingleRowFromDataCache<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     mixed $id,
-    bool $shouldLock
+    bool $shouldLock,
   ): ?PgRowInterface {
     try {
 
@@ -329,9 +337,10 @@ class Reader implements ReaderInterface {
     }
   }
 
-  
-
-  private function setSingleRowToDataCache(PgRowInterface $row, bool $releaseLockOnSet): bool {
+  private function setSingleRowToDataCache(
+    PgRowInterface $row,
+    bool $releaseLockOnSet,
+  ): bool {
     try {
 
       $pgModel = $this->pgModel();

@@ -17,9 +17,17 @@ interface DriverInterface extends BaseDriverInterface {
    * @return DriverConfigInterface
    */
   public function getConfig(): DriverConfigInterface;
-  
-  public function isLocked(StorableObjectInterface $obj): bool;
-  
+
+  /**
+   *
+   * checks whether current/my thread holds the lock or not
+   *
+   * @param StorableObjectInterface $obj
+   * @return bool success if current thread hold valid lock
+   *
+   */
+  public function isLockedByMyThread(StorableObjectInterface $obj): bool;
+
   /**
    *
    * Locking a existing object if possible, exception if not capable.

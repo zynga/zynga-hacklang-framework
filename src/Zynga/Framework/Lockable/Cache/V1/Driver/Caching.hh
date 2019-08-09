@@ -58,37 +58,27 @@ class Caching extends FactoryDriverBase implements DriverInterface {
       throw $e;
     }
   }
-  
-  public function isLocked(StorableObjectInterface $obj): bool {
+
+  public function isLockedByMyThread(StorableObjectInterface $obj): bool {
 
     try {
       $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
       $alreadyLocked = $this->_locks->get($lockKey);
-    
+
       // Check my thead already has a lock
       if ($alreadyLocked instanceof LockPayloadInterface) {
         // Check if the lock is still valid, if so we are done.
-        if ($alreadyLocked->isLockStillValid($this->getConfig()->getLockTTL())) {
+        if ($alreadyLocked->isLockStillValid(
+              $this->getConfig()->getLockTTL(),
+            )) {
           return true;
         }
       }
-      
-      // Check if any other thread has a lock
-      $lockCache = $this->getConfig()->getLockCache();
-      
-      $lockPayload = new LockPayload();
-
-      $lockPayload = $lockCache->get($lockPayload, $lockKey);
-      if($lockPayload === null) {
-        return false;
-      }
-      
-      return $lockPayload->isDefaultValue()[0];
-      
+      return true;
     } catch (Exception $e) {
       throw $e;
     }
-  
+
   }
 
   /**
@@ -105,7 +95,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
       $lockKey = $this->getLockCacheKeyFromStorableObject($obj);
       $alreadyLocked = $this->_locks->get($lockKey);
-      
+
       // if our own lock has expired through neglect then its time to re-add it.
       if ($alreadyLocked instanceof LockPayloadInterface) {
         // Check if the lock is still valid, if so we are done.
@@ -158,7 +148,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
       // if we are not the owner of a lock, we cannot do a unlock op, so shortcut the unlock if needed.
       if (!$alreadyLocked instanceof LockPayloadInterface) {
-        return true;
+        return false;
       }
 
       $lockCache = $this->getConfig()->getLockCache();
@@ -255,10 +245,10 @@ class Caching extends FactoryDriverBase implements DriverInterface {
 
       // Release the lock as we are done here.
       $unlockSuccess = true;
-      if($releaseLockOnSet === true) {
+      if ($releaseLockOnSet === true) {
         $unlockSuccess = $this->unlock($obj);
       }
-      
+
       return $setSuccess || $unlockSuccess;
 
     } catch (Exception $e) {
@@ -301,12 +291,12 @@ class Caching extends FactoryDriverBase implements DriverInterface {
       if ($deleteState != true) {
         return false;
       }
-      
-      if($releaseLockOnDelete === true) {
+
+      if ($releaseLockOnDelete === true) {
         // Purge the lock as the object is now removed also.
         return $this->unlock($obj);
       }
-       
+
       return true;
     } catch (Exception $e) {
       throw $e;

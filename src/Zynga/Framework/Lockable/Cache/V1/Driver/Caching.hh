@@ -74,7 +74,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
           return true;
         }
       }
-      return true;
+      return false;
     } catch (Exception $e) {
       throw $e;
     }

@@ -147,8 +147,8 @@ class CachingTest extends TestCase {
     // Unlock the object
     $this->assertTrue($pgDataCache->unlock($pgMock));
 
-    // Should be unlocked
-    $this->assertTrue($pgDataCache->unlock($pgMock));
+    // We shouldn't be unlocked, because it's already been removed from local cache map by current thread.
+    $this->assertFalse($pgDataCache->unlock($pgMock));
 
   }
 

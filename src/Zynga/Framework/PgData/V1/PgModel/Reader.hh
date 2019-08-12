@@ -93,24 +93,31 @@ class Reader implements ReaderInterface {
       throw $e;
     } finally {
       // release all the possible locks
-      if ($pgModel !== null && $resultSet !== null) {
+      if ($pgModel !== null) {
         $cache = $pgModel->cache();
-
-        //6) getByPk operation successfull and just release the lock on single row if not asked to hold
-        if ($resultSet->count() === 1 && $isException === false) {
-          if ($getLocked === false) {
-            $pgModel->cache()->unlockRowCache($resultSet->get(0));
-          }
-        } else {
-          //7) either exception case or db retured more rows
-          // then release lock for all of them acquired by fetchResultSetFromDatabase
-          foreach ($resultSet->toArray() as $resultObj) {
-            if (!$resultObj instanceof PgRowInterface) {
-              continue;
+        // Exception when getting the result set from DB. The lock was still acquired
+        if($resultSet === null && $isException === true) {
+          $obj = $pgModel->data()->createRowObjectFromClassName($model);
+          $pk = $obj->getPrimaryKeyTyped();
+          $pk->set($id);
+          $cache->unlockRowCache($obj);
+        } else if($resultSet !== null) {
+          //6) getByPk operation successfull and just release the lock on single row if not asked to hold
+          if ($resultSet->count() === 1 && $isException === false) {
+            if ($getLocked === false) {
+              $pgModel->cache()->unlockRowCache($resultSet->get(0));
             }
-            $cache->unlockRowCache($resultObj);
+          } else {
+            //7) either exception case or db retured more rows
+            // then release lock for all of them acquired by fetchResultSetFromDatabase
+            foreach ($resultSet->toArray() as $resultObj) {
+              if (!$resultObj instanceof PgRowInterface) {
+                continue;
+              }
+              $cache->unlockRowCache($resultObj);
+            }
           }
-        }
+        }  
       }
     }
   }

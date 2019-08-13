@@ -42,7 +42,7 @@ class PgWhereClause implements PgWhereClauseInterface {
     PgWhereOperand $operand,
     mixed $value,
   ): bool {
-    $pragma = new PgPragma($field, $operand, $value, PgPragmaType::AND);
+    $pragma = new PgPragma($field, $operand, $value, PgPragmaType::OR);
     $this->_pragmas->add($pragma);
     return false;
   }
@@ -82,7 +82,7 @@ class PgWhereClause implements PgWhereClauseInterface {
   }
 
   private function convertPragmaTypeToSql(PgPragmaType $type): string {
-    if (PgPragmaType::OR) {
+    if ($type === PgPragmaType::OR) {
       return ' OR ';
     }
     return ' AND ';

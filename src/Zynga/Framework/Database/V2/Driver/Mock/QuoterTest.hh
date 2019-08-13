@@ -18,6 +18,8 @@ class QuoterTest extends TestCase {
 
     $this->assertEquals('0.000000', $quoter->floatValue(0.00));
     $this->assertEquals('123456', $quoter->intValue(123456));
+    $this->assertEquals('1', $quoter->boolValue(true));
+    $this->assertEquals('0', $quoter->boolValue(false));
     $this->assertEquals('i am teapot', $quoter->textValue('i am teapot'));
 
     $vec = Vector {};

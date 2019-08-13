@@ -67,6 +67,8 @@ class Db implements DbInterface {
       return $dbh->quote()->floatValue($value);
     } else if (is_int($value)) {
       return $dbh->quote()->intValue($value);
+    } else if (is_bool($value)) {
+      return $dbh->quote()->boolValue($value);
     }
 
     throw new UnsupportedValueTypeException('value='.gettype($value));

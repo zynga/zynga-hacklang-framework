@@ -745,6 +745,24 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   }
 
+  public function testBoolValues(): void {
+
+    $driver = DatabaseFactory::factory(
+      DriverInterface::class,
+      $this->getConfigName(),
+    );
+
+    $quoter = $driver->getQuoter();
+
+    $testShard = new UInt64Box(1);
+    $driver->setShardType($testShard);
+
+    $this->assertEquals('1', $quoter->boolValue(true));
+    $this->assertEquals('0', $quoter->boolValue(false));
+
+    $this->cleanDriverFromFactory();
+  }
+
   public function testTextValues(): void {
 
     $driver = DatabaseFactory::factory(

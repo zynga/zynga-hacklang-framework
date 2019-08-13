@@ -17,6 +17,10 @@ class Quoter<TType as TypeInterface> implements QuoteInterface {
     return sprintf('%d', $value);
   }
 
+  public function boolValue(bool $value): string {
+    return sprintf('%d', (int) $value);
+  }
+
   public function floatValue(float $value): string {
     return sprintf('%f', $value);
   }

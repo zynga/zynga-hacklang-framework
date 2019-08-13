@@ -63,6 +63,16 @@ class QuoterTest extends TestCase {
 
   }
 
+  public function testBoolValues(): void {
+
+    $driver =
+      DatabaseFactory::factory(DriverInterface::class, 'Test_Vertica');
+    $quoter = $driver->getQuoter();
+    $this->assertEquals('1', $quoter->boolValue(true));
+    $this->assertEquals('0', $quoter->boolValue(false));
+    DatabaseFactory::clear();
+  }
+
   public function testTextValues(): void {
 
     $driver =

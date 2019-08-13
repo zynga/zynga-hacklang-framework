@@ -21,6 +21,13 @@ interface QuoteInterface {
   public function intValue(int $value): string;
 
   /**
+   * Creates a sql query safe value out of a boolean.
+   * @param bool $value
+   * @return string
+   */
+  public function boolValue(bool $value): string;
+
+  /**
    * Creates a sql query safe value out of a float
    * @param  float $value
    * @return string

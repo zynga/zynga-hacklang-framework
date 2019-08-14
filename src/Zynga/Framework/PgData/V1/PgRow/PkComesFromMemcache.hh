@@ -40,7 +40,7 @@ abstract class PkComesFromMemcache extends PgRow {
         // 2) Pull the write database in
         $writeDatabase = $this->pgModel()->db()->getWriteDatabase();
 
-        // 3) Make a md5(connection string)|table:pk
+        // 3) Make a sha256(connection string)|table:pk
         $pkKey = $this->createPkKeyForMC();
 
         // 4) Attempt to increment via the memcache driver.
@@ -67,7 +67,7 @@ abstract class PkComesFromMemcache extends PgRow {
         if ($cache->directAdd($pkKey, $value) != true) {
           // Unlock the lock if there was some exception here.
           $cache->directDelete($pkKeyLock);
-          
+
           throw new Exception(
             'Failed to save pkKey='.$pkKey.' to memcache value='.$value,
           );
@@ -82,7 +82,6 @@ abstract class PkComesFromMemcache extends PgRow {
         return $id;
       }
 
-    
       throw new Exception(
         'We only support memcache as a driver for PkgComesFromMemcache',
       );
@@ -114,7 +113,7 @@ abstract class PkComesFromMemcache extends PgRow {
     $connectionString = '';
 
     $tableName = $this->getTableName();
-    $pkKey = 'pgd:'.md5($connectionString).'|'.$tableName.':pk';
+    $pkKey = 'pgd:'.hash("sha256", $connectionString).'|'.$tableName.':pk';
     return $pkKey;
   }
 

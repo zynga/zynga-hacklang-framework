@@ -20,7 +20,7 @@ class PgCachedResultSet<Tv as TypeInterface> extends Base<Tv> {
   public function __construct(
     classname<Tv> $rawType,
     PgWhereClauseInterface $where,
-    classname<PgRowInterface> $model
+    classname<PgRowInterface> $model,
   ) {
 
     parent::__construct($rawType);
@@ -40,7 +40,7 @@ class PgCachedResultSet<Tv as TypeInterface> extends Base<Tv> {
 
     $whereChecksum = $this->_where->createWhereChecksum();
     $this->_checksum =
-      md5($this->_rawType.'|'.$whereChecksum.'|'.$this->_model);
+      hash("sha256", $this->_rawType.'|'.$whereChecksum.'|'.$this->_model);
 
     return $this->_checksum;
 

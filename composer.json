@@ -9,7 +9,8 @@
   ],
   "require": {
     "hhvm": "^3.12",
-    "zynga/phpunit": "^2.0"
+    "zynga/phpunit": "v2.0.9",
+    "zynga/phpunit-hhi": "v1.0.2"
   },
   "bin": [
     "bin/curl-upload-file.sh"

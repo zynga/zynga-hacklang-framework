@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d7881faaa09bf8f5496d31d45c91509",
+    "content-hash": "f3bb3d706ece2b95a828abd2be0caa1b",
     "packages": [
         {
             "name": "zynga/phpunit",
@@ -91,7 +91,7 @@
                 "testing"
             ],
             "support": {
-                "source": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/tree/master",
+                "source": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/tree/v1.0.2",
                 "issues": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/issues"
             },
             "time": "2018-07-28T04:06:10+00:00"

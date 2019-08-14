@@ -25,7 +25,7 @@ class Dev extends LocalMemcacheBase {
       }
 
       $pk = strval($obj->getPrimaryKeyTyped()->get());
-      $key = 'pg:'.md5(get_class($obj)).':'.$pk;
+      $key = 'pg:'.hash("sha256", get_class($obj)).':'.$pk;
 
       return $key;
 

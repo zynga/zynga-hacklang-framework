@@ -143,7 +143,7 @@ class PgWhereClause implements PgWhereClauseInterface {
 
     }
 
-    $checksum = md5($params);
+    $checksum = hash("sha256", $params);
 
     return $checksum;
   }

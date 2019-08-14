@@ -18,7 +18,7 @@ class Dev extends PgDataBase {
     if ($obj instanceof PgRowInterface) {
 
       $pk = strval($obj->getPrimaryKeyTyped()->get());
-      $key = 'pg:'.md5(get_class($obj)).':'.$pk.':lock';
+      $key = 'pg:'.hash("sha256", get_class($obj)).':'.$pk.':lock';
       return $key;
 
     }

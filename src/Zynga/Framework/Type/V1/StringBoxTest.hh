@@ -97,6 +97,47 @@ class StringBoxTest extends TestCase {
     $this->assertEquals(0, $foo->getLength("UTF-8"));
   }
 
+  public function testSetToRandomEmptyCharSet(): void {
+    $stringBox = new StringBox();
+    $result = $stringBox->setToRandom(1, 10, '');
+    $this->assertTrue($result);
+    $this->assertEquals('', $stringBox->get());
+  }
+
+  public function testSetToRandomNegativeMinLength(): void {
+    $stringBox = new StringBox();
+    $result = $stringBox->setToRandom(-100, 1, 'abcd');
+    $this->assertTrue($result);
+    $this->assertEquals('', $stringBox->get());
+  }
+
+  public function testSetToRandomNegativeaxLength(): void {
+    $stringBox = new StringBox();
+    $result = $stringBox->setToRandom(1, -100, 'abcd');
+    $this->assertTrue($result);
+    $this->assertEquals('', $stringBox->get());
+  }
+
+  public function testSetToRandomMinLengthGreaterThanMax(): void {
+    $stringBox = new StringBox();
+    $result = $stringBox->setToRandom(100, 1, 'abcd');
+    $this->assertTrue($result);
+    $this->assertEquals('', $stringBox->get());
+  }
+
+  public function testSetToRandomSuccessful(): void {
+    $stringBox = new StringBox();
+    $result = $stringBox->setToRandom(5, 15, 'abcd');
+    $this->assertTrue($result);
+    $string = $stringBox->get();
+    $stringLength = strlen($string);
+    $this->assertTrue($stringLength <= 15);
+    $this->assertTrue($stringLength >= 5);
+    for($i = 0; $i < $stringLength; ++$i) {
+      $this->assertTrue(strpos('abcd', $string[$i]) !== false);
+    }
+  }
+
 }
 
 class StringAndLengthData {

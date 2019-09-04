@@ -26,6 +26,10 @@ class PgWhereClause implements PgWhereClauseInterface {
   private function pgModel(): PgModelInterface {
     return $this->_pgModel;
   }
+  
+  public function getPragmas(): Vector<PgPragma> {
+    return $this->_pragmas;
+  }
 
   public function and(
     string $field,

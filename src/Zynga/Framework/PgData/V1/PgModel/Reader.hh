@@ -3,6 +3,7 @@
 namespace Zynga\Framework\PgData\V1\PgModel;
 
 use Zynga\Framework\Exception\V1\Exception;
+use Zynga\Framework\Database\V2\Interfaces\QueryableInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModelInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\ReaderInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgResultSetInterface;
@@ -74,7 +75,8 @@ class Reader implements ReaderInterface {
       $where->and($obj->getPrimaryKey(), PgWhereOperand::EQUALS, $id);
 
       // 3) Run the query against the database and dont release any of the lock yet
-      $resultSet = $this->fetchResultSetFromDatabase($model, $where, false);
+      $resultSet =
+        $this->fetchResultSetFromDatabase($model, $where, false, false);
 
       // 4) We expect a result set of 1 for return.
       if ($resultSet->count() == 1) {
@@ -96,12 +98,12 @@ class Reader implements ReaderInterface {
       if ($pgModel !== null) {
         $cache = $pgModel->cache();
         // Exception when getting the result set from DB. The lock was still acquired
-        if($resultSet === null && $isException === true) {
+        if ($resultSet === null && $isException === true) {
           $obj = $pgModel->data()->createRowObjectFromClassName($model);
           $pk = $obj->getPrimaryKeyTyped();
           $pk->set($id);
           $cache->unlockRowCache($obj);
-        } else if($resultSet !== null) {
+        } else if ($resultSet !== null) {
           //6) getByPk operation successfull and just release the lock on single row if not asked to hold
           if ($resultSet->count() === 1 && $isException === false) {
             if ($getLocked === false) {
@@ -117,7 +119,7 @@ class Reader implements ReaderInterface {
               $cache->unlockRowCache($resultObj);
             }
           }
-        }  
+        }
       }
     }
   }
@@ -154,7 +156,8 @@ class Reader implements ReaderInterface {
       $pgModel->cache()->lockResultSetCache($model, $where);
 
       // 4) Fetch the result set from the database + mc (if needed)
-      $resultSet = $this->fetchResultSetFromDatabase($model, $where, true);
+      $resultSet =
+        $this->fetchResultSetFromDatabase($model, $where, true, true);
 
       // 5) Save the result set back to cache
       $this->setResultSetToResultSetCache($model, $where, $resultSet);
@@ -213,6 +216,7 @@ class Reader implements ReaderInterface {
     classname<TModelClass> $model,
     PgWhereClauseInterface $where,
     bool $releaseLockOnSet,
+    bool $allowWriterOverride,
   ): PgResultSetInterface<PgRowInterface> {
 
     try {
@@ -230,7 +234,12 @@ class Reader implements ReaderInterface {
       $sql = $this->createSql($tobj, $where);
 
       // X) Get a database handle.
-      $dbh = $pgModel->db()->getReadDatabase();
+      $dbh = $this->getReaderOrWriterDatabase(
+        $allowWriterOverride,
+        $pgModel,
+        $model,
+        $where,
+      );
 
       // X) Run the query against the database.
       $sth = $dbh->query($sql);
@@ -284,6 +293,22 @@ class Reader implements ReaderInterface {
       throw $e;
     }
 
+  }
+
+  private function getReaderOrWriterDatabase<TModelClass as PgRowInterface>(
+    bool $allowWriterOverride,
+    PgModelInterface $pgModel,
+    classname<TModelClass> $model,
+    PgWhereClauseInterface $where,
+  ): QueryableInterface {
+
+    if ($allowWriterOverride) {
+      $cache = $this->pgModel()->cache();
+      if ($cache->doesWriterOverrideKeyExist($model, $where)) {
+        return $pgModel->db()->getWriteDatabase();
+      }
+    }
+    return $pgModel->db()->getReadDatabase();
   }
 
   private function fetchResultSetFromResultSetCache<TModelClass as PgRowInterface>(

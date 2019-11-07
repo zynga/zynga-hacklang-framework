@@ -13,17 +13,22 @@ interface CacheInterface {
   public function getResultSetCache(): LockableDriverInterface;
   public function lockRowCache(PgRowInterface $row): bool;
   public function unlockRowCache(PgRowInterface $row): bool;
-  
+
   public function clearResultSetCache<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     PgWhereClauseInterface $where,
   ): bool;
-  
+
+  public function doesWriterOverrideKeyExist<TModelClass as PgRowInterface>(
+    classname<TModelClass> $model,
+    PgWhereClauseInterface $where,
+  ): bool;
+
   public function lockResultSetCache<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     PgWhereClauseInterface $where,
   ): bool;
-  
+
   public function unlockResultSetCache<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     PgWhereClauseInterface $where,

@@ -31,4 +31,7 @@ class Dev extends PgDataBase {
 
   }
 
+  public function cacheAllowsTTLOverride(): bool {
+    return true;
+  }
 }

@@ -91,7 +91,7 @@ class Cache implements CacheInterface {
 
       if ($cache->lock($cachedRs)) {
         $result = $cache->delete($cachedRs, false);
-        if ($result) {
+        if ($result && $pgModel->allowWriterOverride()) {
           $this->setWriterOverrideForWhereClause($model, $where);
         }
         $cache->unlock($cachedRs);
@@ -110,6 +110,9 @@ class Cache implements CacheInterface {
   ): bool {
     try {
       $pgModel = $this->pgModel();
+      if (!$pgModel->allowWriterOverride()) {
+        return false;
+      }
 
       $cachedRs = $pgModel->reader()->createCachedResultSet($model, $where);
 

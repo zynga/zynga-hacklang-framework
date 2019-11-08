@@ -13,6 +13,7 @@ use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 interface PgModelInterface {
 
   public function add(PgRowInterface $row, bool $shouldUnlock = true): bool;
+  public function allowWriterOverride(): bool;
   public function cache(): CacheInterface;
   public function data(): DataInterface;
   public function db(): DbInterface;
@@ -26,7 +27,7 @@ interface PgModelInterface {
   public function getByPk<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     mixed $id,
-    bool $shouldLock
+    bool $shouldLock,
   ): ?PgRowInterface;
   public function get<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,

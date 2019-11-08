@@ -35,12 +35,18 @@ use Zynga\Framework\PgData\V1\SqlGenerator;
 use \Exception;
 
 abstract class PgModel implements PgModelInterface {
+
+  protected bool $_allowWriterOverride = true;
   private ?CacheInterface $_cache = null;
   private ?DataInterface $_data = null;
   private ?DbInterface $_db = null;
   private ?StatsInterface $_stats = null;
   private ?ReaderInterface $_reader = null;
   private ?WriterInterface $_writer = null;
+
+  public function allowWriterOverride(): bool {
+    return $this->_allowWriterOverride;
+  }
 
   public function createCacheObject(): CacheInterface {
     return $cache = new Cache($this);
@@ -101,7 +107,7 @@ abstract class PgModel implements PgModelInterface {
     return $db;
 
   }
-  
+
   public function createReaderObject(): ReaderInterface {
     return new Reader($this);
   }
@@ -164,7 +170,7 @@ abstract class PgModel implements PgModelInterface {
       throw $e;
     }
   }
-  
+
   public function lockRowCache(PgRowInterface $row): bool {
     try {
       return $this->cache()->lockRowCache($row);
@@ -172,7 +178,7 @@ abstract class PgModel implements PgModelInterface {
       throw $e;
     }
   }
-  
+
   public function unlockRowCache(PgRowInterface $row): bool {
     try {
       return $this->cache()->unlockRowCache($row);
@@ -180,11 +186,11 @@ abstract class PgModel implements PgModelInterface {
       throw $e;
     }
   }
-  
+
   public function getByPk<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     mixed $id,
-    bool $shouldLock
+    bool $shouldLock,
   ): ?PgRowInterface {
 
     try {

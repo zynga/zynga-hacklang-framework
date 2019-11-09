@@ -16,6 +16,7 @@ use Zynga\Framework\PgData\V1\PgWriterOverride;
 
 class Cache implements CacheInterface {
   const string WRITER_OVERRIDE_SUFFIX = ':useWriter';
+  const int WRITER_OVERRIDE_TTL = 1;
 
   private PgModelInterface $_pgModel;
 
@@ -92,7 +93,12 @@ class Cache implements CacheInterface {
       if ($cache->lock($cachedRs)) {
         $result = $cache->delete($cachedRs, false);
         if ($result && $pgModel->allowWriterOnClearingResultSetCache()) {
-          $this->setWriterOverrideForWhereClause($model, $where);
+          if (!$this->setWriterOverrideForWhereClause($model, $where)) {
+            StaticLogger::error(
+              "PGData: Failed to save the Writer Overide Key.",
+              Map {},
+            );
+          }
         }
         $cache->unlock($cachedRs);
         return $result;
@@ -181,7 +187,7 @@ class Cache implements CacheInterface {
       $cache = $this->getResultSetCache()->getConfig()->getCache();
       $key = $cachedRs->createChecksum().self::WRITER_OVERRIDE_SUFFIX;
 
-      return $cache->set(new PgWriterOverride(), $key, 1);
+      return $cache->set(new PgWriterOverride(), $key, self::WRITER_OVERRIDE_TTL);
     } catch (Exception $e) {
       StaticLogger::exception(
         "PGData: Exception raise when creating a Writer Override key.",

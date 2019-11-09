@@ -126,7 +126,7 @@ class Cache implements CacheInterface {
 
       $key = $cachedRs->createChecksum().self::WRITER_OVERRIDE_SUFFIX;
       $writerOverride = $cache->get(new PgWriterOverride(), $key);
-      return $writerOverride !== null;
+      return $writerOverride instanceof PgWriterOverride && $writerOverride->override->get() === true;
     } catch (Exception $e) {
       StaticLogger::exception(
         "PGData: Exception raise when determining if Writer Override key exists.",

@@ -36,7 +36,12 @@ use \Exception;
 
 abstract class PgModel implements PgModelInterface {
 
-  protected bool $_allowWriterOverride = true;
+  // When we manually clear results sets, we can add a stale resultSet
+  // Back into the cache caused by replication lag. By enabling this flag
+  // We will override the normal reader flow to use the writer if we have
+  // recently cleared the ResultSetCache.
+  protected bool $_allowWriterOnClearingResultSetCache = false;
+
   private ?CacheInterface $_cache = null;
   private ?DataInterface $_data = null;
   private ?DbInterface $_db = null;
@@ -44,8 +49,8 @@ abstract class PgModel implements PgModelInterface {
   private ?ReaderInterface $_reader = null;
   private ?WriterInterface $_writer = null;
 
-  public function allowWriterOverride(): bool {
-    return $this->_allowWriterOverride;
+  public function allowWriterOnClearingResultSetCache(): bool {
+    return $this->_allowWriterOnClearingResultSetCache;
   }
 
   public function createCacheObject(): CacheInterface {

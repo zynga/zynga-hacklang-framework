@@ -13,7 +13,7 @@ use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 interface PgModelInterface {
 
   public function add(PgRowInterface $row, bool $shouldUnlock = true): bool;
-  public function allowWriterOverride(): bool;
+  public function allowWriterOnClearingResultSetCache(): bool;
   public function cache(): CacheInterface;
   public function data(): DataInterface;
   public function db(): DbInterface;

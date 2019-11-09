@@ -292,6 +292,7 @@ class InventoryModelTest extends BaseInventoryTest {
 
   public function testInventory_WhereOverrideIsSet(): void {
     $model = new InventoryModel();
+    $model->setAllowWriterOnClearingResultSetCache(true);
 
     $where = new PgWhereClause($model);
     $where->and('id', PgWhereOperand::EQUALS, 0);
@@ -317,6 +318,7 @@ class InventoryModelTest extends BaseInventoryTest {
   public function testInventory_WhereOverrideNotSet_WhenReaderModelFlagSetToFalse(
   ): void {
     $model = new InventoryModel();
+    $model->setAllowWriterOnClearingResultSetCache(true);
 
     $where = new PgWhereClause($model);
     $where->and('id', PgWhereOperand::EQUALS, 0);
@@ -336,7 +338,7 @@ class InventoryModelTest extends BaseInventoryTest {
     $model->cache()->clearResultSetCache(ItemType::class, $where);
 
     $model2 = new InventoryModel();
-    $model2->setAllowWriterOverride(false);
+    $model2->setAllowWriterOnClearingResultSetCache(false);
     $this->assertFalse(
       $model2->cache()->doesWriterOverrideKeyExist(ItemType::class, $where),
     );
@@ -345,7 +347,7 @@ class InventoryModelTest extends BaseInventoryTest {
   public function testInventory_WhereOverrideNotSet_ModelDoesNotSupportWriterOverride(
   ): void {
     $model = new InventoryModel();
-    $model->setAllowWriterOverride(false);
+    $model->setAllowWriterOnClearingResultSetCache(false);
     $where = new PgWhereClause($model);
     $where->and('id', PgWhereOperand::EQUALS, 0);
 
@@ -364,6 +366,8 @@ class InventoryModelTest extends BaseInventoryTest {
     $model->cache()->clearResultSetCache(ItemType::class, $where);
 
     $model2 = new InventoryModel();
+    $model2->setAllowWriterOnClearingResultSetCache(true);
+
     $this->assertFalse(
       $model2->cache()->doesWriterOverrideKeyExist(ItemType::class, $where),
     );

@@ -20,6 +20,7 @@ use Zynga\Framework\Factory\V2\Interfaces\DriverInterface;
 abstract class Base implements FactoryInterface {
 
   private static Map<string, FactoryTemplateInterface> $_template = Map {};
+  private static Map<string, string> $_mockOverrides = Map {};
 
   abstract public static function getClassRoot(): string;
 
@@ -87,8 +88,14 @@ abstract class Base implements FactoryInterface {
         // --
         $driver = $template->factory($name);
 
-        $name = 'Mock';
-
+        if (self::$_mockOverrides->containsKey($name)) {
+          $name = self::$_mockOverrides[$name];
+        } else if (strpos($name, 'Mock\\') !== false ||
+                   strpos($name, 'Mock_') !== false) {
+          // No-op since Factory is pointing to a Mock Namespace
+        } else {
+          $name = 'Mock';
+        }
       }
 
       $driver = $template->factory($name);
@@ -168,7 +175,18 @@ abstract class Base implements FactoryInterface {
 
   public static function disableMockDrivers(): bool {
     $template = self::getFactoryTemplate();
+    self::clearOverridenMockDrivers();
     return $template->disableMockDrivers();
   }
 
+  public static function overrideMockDriver(
+    string $actualClass,
+    string $mockClass,
+  ): void {
+    self::$_mockOverrides[$actualClass] = $mockClass;
+  }
+
+  public static function clearOverridenMockDrivers(): void {
+    self::$_mockOverrides = Map {};
+  }
 }

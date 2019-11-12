@@ -22,4 +22,9 @@ class InventoryModel extends PgModel {
     return 'Test_Mysql';
   }
 
+  public function setAllowWriterOnClearingResultSetCache(
+    bool $allowWriterOnClearingResultSetCache,
+  ): void {
+    $this->_allowWriterOnClearingResultSetCache = $allowWriterOnClearingResultSetCache;
+  }
 }

@@ -35,12 +35,23 @@ use Zynga\Framework\PgData\V1\SqlGenerator;
 use \Exception;
 
 abstract class PgModel implements PgModelInterface {
+
+  // When we manually clear results sets, we can add a stale resultSet
+  // Back into the cache caused by replication lag. By enabling this flag
+  // We will override the normal reader flow to use the writer if we have
+  // recently cleared the ResultSetCache.
+  protected bool $_allowWriterOnClearingResultSetCache = false;
+
   private ?CacheInterface $_cache = null;
   private ?DataInterface $_data = null;
   private ?DbInterface $_db = null;
   private ?StatsInterface $_stats = null;
   private ?ReaderInterface $_reader = null;
   private ?WriterInterface $_writer = null;
+
+  public function allowWriterOnClearingResultSetCache(): bool {
+    return $this->_allowWriterOnClearingResultSetCache;
+  }
 
   public function createCacheObject(): CacheInterface {
     return $cache = new Cache($this);
@@ -101,7 +112,7 @@ abstract class PgModel implements PgModelInterface {
     return $db;
 
   }
-  
+
   public function createReaderObject(): ReaderInterface {
     return new Reader($this);
   }
@@ -164,7 +175,7 @@ abstract class PgModel implements PgModelInterface {
       throw $e;
     }
   }
-  
+
   public function lockRowCache(PgRowInterface $row): bool {
     try {
       return $this->cache()->lockRowCache($row);
@@ -172,7 +183,7 @@ abstract class PgModel implements PgModelInterface {
       throw $e;
     }
   }
-  
+
   public function unlockRowCache(PgRowInterface $row): bool {
     try {
       return $this->cache()->unlockRowCache($row);
@@ -180,11 +191,11 @@ abstract class PgModel implements PgModelInterface {
       throw $e;
     }
   }
-  
+
   public function getByPk<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     mixed $id,
-    bool $shouldLock
+    bool $shouldLock,
   ): ?PgRowInterface {
 
     try {

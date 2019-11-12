@@ -16,6 +16,7 @@ use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\InventoryModel;
 use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\Inventory\ItemType;
 use Zynga\Framework\PgData\V1\PgWhereClause;
 use Zynga\Framework\PgData\V1\PgWhereOperand;
+use Zynga\Framework\PgData\V1\PgWriterOverride;
 
 class InventoryModelTest extends BaseInventoryTest {
 
@@ -209,7 +210,7 @@ class InventoryModelTest extends BaseInventoryTest {
     $this->assertGreaterThan($firstId->get(), $secondId->get());
 
   }
-  
+
   public function testInventory_DeleteSucceeds(): void {
     $testName = 'this-is-a-phpunit-test-'.time().'-'.mt_rand(200);
     $model = new InventoryModel();
@@ -217,22 +218,22 @@ class InventoryModelTest extends BaseInventoryTest {
 
     $item->name->set($testName);
     $this->assertTrue($model->add($item, true));
-    
+
     $where = new PgWhereClause($model);
     $where->and('name', PgWhereOperand::EQUALS, $testName);
-    
+
     $resultSet = $model->get(ItemType::class, $where);
     $this->assertTrue($resultSet->count() === 1);
     $newItem = $resultSet->at(0);
-    
+
     // Get a lock
     $this->assertTrue($model->lockRowCache($newItem));
-    
-    if($newItem instanceof ItemType) {
+
+    if ($newItem instanceof ItemType) {
       $lastItemId = $newItem->id->get();
       $this->assertTrue($newItem->delete(true));
     }
-    
+
     $resultSet = $model->get(ItemType::class, $where);
     $this->assertTrue($resultSet->count() === 0);
   }
@@ -282,11 +283,94 @@ class InventoryModelTest extends BaseInventoryTest {
     // Now we have a target to do a update against.
     $testName2 = 'this-is-another-phpunit-test-'.time().'-'.mt_rand(200);
     $item->name->set($testName2);
-    
+
     // Get a lock
     $this->assertTrue($model->lockRowCache($item));
     $this->assertTrue($item->save(true));
 
+  }
+
+  public function testInventory_WhereOverrideIsSet(): void {
+    $model = new InventoryModel();
+    $model->setAllowWriterOnClearingResultSetCache(true);
+
+    $where = new PgWhereClause($model);
+    $where->and('id', PgWhereOperand::EQUALS, 0);
+
+    // clear out old override keys
+    $cachedRs = $model->reader()->createCachedResultSet(ItemType::class, $where);
+    $key = $cachedRs->createChecksum().':useWriter';
+    $cache = $model->cache()->getResultSetCache()->getConfig()->getCache();
+    $cache->delete(new PgWriterOverride(), $key);
+
+    $this->assertFalse(
+      $model->cache()->doesWriterOverrideKeyExist(ItemType::class, $where),
+    );
+
+    $result = $model->get(ItemType::class, $where);
+
+    $model->cache()->clearResultSetCache(ItemType::class, $where);
+    $this->assertTrue(
+      $model->cache()->doesWriterOverrideKeyExist(ItemType::class, $where),
+    );
+  }
+
+  public function testInventory_WhereOverrideNotSet_WhenReaderModelFlagSetToFalse(
+  ): void {
+    $model = new InventoryModel();
+    $model->setAllowWriterOnClearingResultSetCache(true);
+
+    $where = new PgWhereClause($model);
+    $where->and('id', PgWhereOperand::EQUALS, 0);
+
+    // clear out old override keys
+    $cachedRs = $model->reader()->createCachedResultSet(ItemType::class, $where);
+    $key = $cachedRs->createChecksum().':useWriter';
+    $cache = $model->cache()->getResultSetCache()->getConfig()->getCache();
+    $cache->delete(new PgWriterOverride(), $key);
+
+    $this->assertFalse(
+      $model->cache()->doesWriterOverrideKeyExist(ItemType::class, $where),
+    );
+
+    $result = $model->get(ItemType::class, $where);
+
+    $model->cache()->clearResultSetCache(ItemType::class, $where);
+
+    $model2 = new InventoryModel();
+    $model2->setAllowWriterOnClearingResultSetCache(false);
+    $this->assertFalse(
+      $model2->cache()->doesWriterOverrideKeyExist(ItemType::class, $where),
+    );
+  }
+
+  public function testInventory_WhereOverrideNotSet_ModelDoesNotSupportWriterOverride(
+  ): void {
+    $model = new InventoryModel();
+    $model->setAllowWriterOnClearingResultSetCache(false);
+    $where = new PgWhereClause($model);
+    $where->and('id', PgWhereOperand::EQUALS, 0);
+
+    // clear out old override keys
+    $cachedRs = $model->reader()->createCachedResultSet(ItemType::class, $where);
+    $key = $cachedRs->createChecksum().':useWriter';
+    $cache = $model->cache()->getResultSetCache()->getConfig()->getCache();
+    $cache->delete(new PgWriterOverride(), $key);
+
+    $this->assertFalse(
+      $model->cache()->doesWriterOverrideKeyExist(ItemType::class, $where),
+    );
+
+    $result = $model->get(ItemType::class, $where);
+
+    $model->cache()->clearResultSetCache(ItemType::class, $where);
+
+    $model2 = new InventoryModel();
+    $model2->setAllowWriterOnClearingResultSetCache(true);
+
+    $this->assertFalse(
+      $model2->cache()->doesWriterOverrideKeyExist(ItemType::class, $where),
+    );
   }
 
   private function doesQueryReturnExpectedValues(

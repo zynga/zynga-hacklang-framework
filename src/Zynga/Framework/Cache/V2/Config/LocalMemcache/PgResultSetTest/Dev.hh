@@ -31,4 +31,8 @@ class Dev extends LocalMemcacheBase {
 
   }
 
+  public function cacheAllowsTTLOverride(): bool {
+    return true;
+  }
+
 }

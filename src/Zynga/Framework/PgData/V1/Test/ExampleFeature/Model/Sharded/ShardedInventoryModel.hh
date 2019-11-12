@@ -1,6 +1,6 @@
 <?hh // strict
 
-namespace Zynga\Framework\PgData\V1\Test\ExampleFeature\ModelSharded;
+namespace Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\Sharded;
 
 use Zynga\Framework\PgData\V1\Sharded\PgModel;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;

@@ -21,8 +21,10 @@ interface PgModelInterface {
   public function getResultSetCacheName(): string;
   public function getReadDatabaseName(): string;
   public function getWriteDatabaseName(): string;
+  public function lockRowCache(PgRowInterface $row): bool;
   public function reader(): ReaderInterface;
   public function stats(): StatsInterface;
+  public function unlockRowCache(PgRowInterface $row): bool;
   public function writer(): WriterInterface;
   public function getByPk<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,

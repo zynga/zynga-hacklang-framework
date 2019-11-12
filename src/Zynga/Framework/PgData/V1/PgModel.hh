@@ -40,7 +40,7 @@ abstract class PgModel implements PgModelInterface {
   // Back into the cache caused by replication lag. By enabling this flag
   // We will override the normal reader flow to use the writer if we have
   // recently cleared the ResultSetCache.
-  protected bool $_allowWriterOnClearingResultSetCache = false;
+  protected bool $_allowWriterOnClearingResultSetCache = true;
 
   private ?CacheInterface $_cache = null;
   private ?DataInterface $_data = null;

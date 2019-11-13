@@ -13,8 +13,12 @@ use
   Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\InventoryModelFactory
 ;
 use Zynga\Framework\PgData\V1\Testing\Mock\PgModel as MockPgModel;
+use
+  Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\Sharded\ShardedInventoryModel as MockPgShardedModel
+;
+
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-use Zynga\Framework\Type\V1\UInt32Box;
+use Zynga\Framework\Type\V1\UInt64Box;
 
 class FactoryTest extends TestCase {
 
@@ -31,28 +35,31 @@ class FactoryTest extends TestCase {
   }
 
   public function testSettingMockReturnsSameInstanceAsTheSetMock(): void {
-    $mockShardedModel = new MockPgModel();
+    $mockShardedModel = new MockPgShardedModel(new UInt64Box());
     $mockModel = new MockPgModel();
     ShardedInventoryFactory::enableMock($mockShardedModel);
     InventoryModelFactory::enableMock($mockModel);
 
-    $this->assertSame(
-      $mockShardedModel,
-      ShardedInventoryFactory::getModel(new UInt32Box()),
-    );
+    $sharedFactory = new ShardedInventoryFactory(new UInt64Box());
 
-    $this->assertSame($mockModel, InventoryModelFactory::getModel());
+    $this->assertSame($mockShardedModel, $sharedFactory->getModel());
+
+    $nonShardedFactory = new InventoryModelFactory();
+    $this->assertSame($mockModel, $nonShardedFactory->getModel());
   }
 
   public function testGettingModelsWithoutMockReturnsActaulInstancesOfTheModels(
   ): void {
+    $sharedFactory = new ShardedInventoryFactory(new UInt64Box());
+    $nonShardedFactory = new InventoryModelFactory();
+
     $this->assertInstanceOf(
       ShardedInventoryModel::class,
-      ShardedInventoryFactory::getModel(new UInt32Box()),
+      $sharedFactory->getModel(),
     );
     $this->assertInstanceOf(
       InventoryModel::class,
-      InventoryModelFactory::getModel(),
+      $nonShardedFactory->getModel(),
     );
   }
 }

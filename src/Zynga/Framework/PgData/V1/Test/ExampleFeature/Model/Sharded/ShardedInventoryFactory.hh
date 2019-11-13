@@ -7,12 +7,13 @@ use Zynga\Framework\PgData\V1\PgShardedModelFactory;
 use
   Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\Sharded\ShardedInventoryModel
 ;
-use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
+use Zynga\Framework\Type\V1\UInt64Box;
 
 class ShardedInventoryFactory extends PgShardedModelFactory {
-  protected static function getRealModel(
-    TypeInterface $shardKey,
-  ): PgModelInterface {
-    return new ShardedInventoryModel($shardKey);
+
+  public function __construct(private UInt64Box $_shardKey) {}
+
+  protected function getRealModel(): ShardedInventoryModel {
+    return new ShardedInventoryModel($this->_shardKey);
   }
 }

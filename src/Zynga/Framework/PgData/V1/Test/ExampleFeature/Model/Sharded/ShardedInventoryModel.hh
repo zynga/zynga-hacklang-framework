@@ -2,6 +2,7 @@
 
 namespace Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\Sharded;
 
+use Zynga\Framework\PgData\V1\Interfaces\Sharded\PgModelInterface;
 use Zynga\Framework\PgData\V1\Sharded\PgModel;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\v1\UInt64Box;

@@ -14,14 +14,6 @@ use Zynga\Framework\Type\V1\UInt64Box;
 
 class PgUnitTestReaderWriterTest extends TestCase {
 
-  public function testPgModelMocksDriverNames(): void {
-    $model = new MockPgModel();
-    $this->assertEquals('Mock\PgData', $model->getDataCacheName());
-    $this->assertEquals('Mock\PgResultSet', $model->getResultSetCacheName());
-    $this->assertEquals('Mock', $model->getReadDatabaseName());
-    $this->assertEquals('Mock', $model->getWriteDatabaseName());
-  }
-
   public function testAddDelete(): void {
     $model = new MockPgModel();
     $reader = $model->reader();

@@ -58,6 +58,11 @@ interface FactoryTemplateInterface {
    * @return DriverInterface
    */
   public function factory(string $name): DriverInterface;
+  
+  public function getDriverByClassname<TDriver as DriverInterface>(
+    classname<TDriver> $driverName,
+    string $configName,
+  ): DriverInterface;
 
   /**
    * Clears all drivers from the factory.

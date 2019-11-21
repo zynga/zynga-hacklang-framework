@@ -131,6 +131,69 @@ abstract class Base implements FactoryInterface {
     }
 
   }
+  
+  public static function getDriverByClassname<TDriver as DriverInterface>(
+    classname<TDriver> $driverName,
+    string $configName,
+  ): TDriver {
+
+    try {
+
+      $template = self::getFactoryTemplate();
+
+      if ($template->getUseMockDrivers() === true) {
+
+        // --
+        // First we run the driver as is to prevent people from using
+        // non-existant configs and invalid configs. Then we discard the driver
+        // and override it with the mock one.
+        // --
+        $driver = $template->getDriverByClassname($driverName, $configName);
+
+        $name = 'Mock';
+
+      }
+
+      $driver = $template->getDriverByClassname($driverName, $configName);
+      
+      // --
+      // JEO: And a word from our sponsor, so what we are doing here is refining
+      // the generic type that is stored within the template to the actual
+      // driver that user is wanting to have.
+      // --
+      /* HH_FIXME[4162]: Instanceof on a generic classname is now an error.
+       * Consider using different logic to avoid use of classname<Trepo>.
+       */
+      if ($driver instanceof $driverName) {
+        return $driver;
+      }
+
+      $classImplements = '';
+
+      if (is_object($driver)) {
+
+        $raw = class_implements($driver);
+        if ($raw !== false && is_array($raw)) {
+          $classImplements = implode(', ', $raw);
+        }
+      }
+
+      throw new FailedToLoadDriverException(
+        'Failed to load driver for driver name='.
+        $driverName.
+        ' classType='.
+        get_class($driver).
+        ' classImplements='.
+        $classImplements.
+        ' configName='.
+        $configName,
+      );
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
 
   public static function clear(): bool {
 

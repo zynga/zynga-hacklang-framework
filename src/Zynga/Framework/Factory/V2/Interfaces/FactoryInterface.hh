@@ -21,6 +21,11 @@ interface FactoryInterface {
     classname<TDriver> $driverName,
     string $name,
   ): TDriver;
+  
+  public static function getDriverByClassname<TDriver as DriverInterface>(
+    classname<TDriver> $driverName,
+    string $configName,
+  ): TDriver;
 
   public static function clear(): bool;
 

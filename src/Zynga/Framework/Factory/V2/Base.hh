@@ -183,6 +183,7 @@ abstract class Base implements FactoryInterface {
     string $actualClass,
     string $mockClass,
   ): void {
+    self::enableMockDrivers();
     self::$_mockOverrides[$actualClass] = $mockClass;
   }
 

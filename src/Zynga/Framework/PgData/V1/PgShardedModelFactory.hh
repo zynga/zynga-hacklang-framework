@@ -8,6 +8,8 @@ use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 abstract class PgShardedModelFactory {
   private static ?PgModelInterface $_mock;
 
+  public function __construct(private TypeInterface $_shardKey) {}
+
   public function getModel(): PgModelInterface {
     if (self::$_mock !== null) {
       return self::$_mock;

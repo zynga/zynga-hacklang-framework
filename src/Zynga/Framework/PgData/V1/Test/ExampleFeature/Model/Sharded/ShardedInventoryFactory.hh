@@ -11,7 +11,9 @@ use Zynga\Framework\Type\V1\UInt64Box;
 
 class ShardedInventoryFactory extends PgShardedModelFactory {
 
-  public function __construct(private UInt64Box $_shardKey) {}
+  public function __construct(private UInt64Box $_shardKey) {
+    parent::__construct($_shardKey);
+  }
 
   protected function getRealModel(): ShardedInventoryModel {
     return new ShardedInventoryModel($this->_shardKey);

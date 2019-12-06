@@ -1,16 +1,14 @@
 <?hh //strict
 
-namespace Zynga\Framework\Cache\V2\Config\Mock\NoCacheKeyOverride;
+namespace Zynga\Framework\Cache\V2\Config\Mock\NoNonExpiringKeys;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 use
-  Zynga\Framework\Cache\V2\Config\Mock\NoCacheKeyOverride\Dev as ConfigUnderTest
+  Zynga\Framework\Cache\V2\Config\Mock\NoNonExpiringKeys\Dev as ConfigUnderTest
 ;
 use Zynga\Framework\Cache\V2\Driver\InMemory as InMemoryDriver;
-use
-  Zynga\Framework\Cache\V2\Exceptions\CacheDoesNotSupportKeyOverrideException
-;
+use Zynga\Framework\Cache\V2\Exceptions\CacheRequiresTTLException;
 use Zynga\Framework\Cache\V2\Exceptions\InvalidObjectForKeyCreationException;
 use Zynga\Framework\Cache\V2\Factory as CacheFactory;
 use Zynga\Framework\StorableObject\V1\Test\Mock\Valid as ValidStorableObject;
@@ -30,7 +28,7 @@ class DevTest extends TestCase {
 
     $this->assertFalse($config->cacheAllowsKeyOverride());
     $this->assertFalse($config->cacheAllowsNonExpiringKeys());
-    $this->assertFalse($config->cacheAllowsTTLOverride());
+    $this->assertTrue($config->cacheAllowsTTLOverride());
 
   }
 
@@ -71,19 +69,14 @@ class DevTest extends TestCase {
 
   }
 
-  public function testCacheAllowsKeyOverride_Fail(): void {
+  public function testNoNonExpiringKeys_Fail(): void {
 
-    // Live fire test..
     CacheFactory::disableMockDrivers();
 
     $cache =
-      CacheFactory::factory(InMemoryDriver::class, 'Mock_NoCacheKeyOverride');
-    $obj = new ValidStorableObject();
-    $obj->example_uint64->set(12989745);
-    $someOtherKey = 'cas-some-other-key-'.mt_rand();
-    $this->assertFalse($cache->getConfig()->cacheAllowsKeyOverride());
-    $this->expectException(CacheDoesNotSupportKeyOverrideException::class);
-    $cache->getKeySupportingOverride($obj, $someOtherKey);
+      CacheFactory::factory(InMemoryDriver::class, 'Mock_NoNonExpiringKeys');
+    $this->expectException(CacheRequiresTTLException::class);
+    $cache->getTTLSupportingOverride(0);
 
     CacheFactory::enableMockDrivers();
 

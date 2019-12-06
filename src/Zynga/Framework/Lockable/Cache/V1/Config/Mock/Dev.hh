@@ -20,7 +20,10 @@ use Zynga\Framework\Exception\V1\Exception;
 class Dev extends Base {
 
   public function getCache(): CacheDriverInterface {
-    return CacheFactory::factory(CacheDriverInterface::class, 'Mock');
+    return CacheFactory::factory(
+      CacheDriverInterface::class,
+      'Mock_NoRequiredFields',
+    );
   }
 
   public function getLockCache(): CacheDriverInterface {

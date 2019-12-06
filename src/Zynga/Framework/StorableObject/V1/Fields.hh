@@ -32,6 +32,42 @@ class Fields implements FieldsInterface {
     return FieldsGeneric::getFieldsAndTypesForObject($this->_object);
   }
 
+  public function getRequiredFields(): Vector<string> {
+
+    try {
+
+      $fields = $this->getForObject();
+
+      $requiredFields = Vector {};
+
+      if ($fields->count() == 0) {
+        return $requiredFields;
+      }
+
+      foreach ($fields as $fieldName => $field) {
+
+        // is it a type?
+        if (!$field instanceof TypeInterface) {
+          continue;
+        }
+
+        // do we require this field?
+        if ($field->getIsRequired() !== true) {
+          continue;
+        }
+
+        $requiredFields->add($fieldName);
+
+      }
+
+      return $requiredFields;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
+
   public function getRequiredFieldsWithDefaultValues(
     string $context = '',
   ): Vector<string> {

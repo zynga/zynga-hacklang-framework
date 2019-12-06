@@ -23,6 +23,10 @@ class Fields implements FieldsInterface {
     throw new Exception('broken-get-fields-and-types-for-object');
   }
 
+  public function getRequiredFields(): Vector<string> {
+    throw new Exception('broken-get-required-fields');
+  }
+
   public function getRequiredFieldsWithDefaultValues(
     string $context = '',
   ): Vector<string> {

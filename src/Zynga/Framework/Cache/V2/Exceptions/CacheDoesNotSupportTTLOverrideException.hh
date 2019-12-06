@@ -4,4 +4,4 @@ namespace Zynga\Framework\Cache\V2\Exceptions;
 
 use Zynga\Framework\Exception\V1\Exception;
 
-class CacheDoesNotSupportKeyOverride extends Exception {}
+class CacheDoesNotSupportTTLOverrideException extends Exception {}

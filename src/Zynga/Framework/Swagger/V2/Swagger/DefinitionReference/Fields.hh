@@ -18,6 +18,11 @@ class Fields implements FieldsInterface {
     return $map;
   }
 
+  public function getRequiredFields(): Vector<string> {
+    $vec = Vector {};
+    return $vec;
+  }
+
   public function getRequiredFieldsWithDefaultValues(
     string $context = '',
   ): Vector<string> {

@@ -1,10 +1,10 @@
 <?hh //strict
 
-namespace Zynga\Framework\Cache\V2\Config\Mock\NoServersConfigured;
+namespace Zynga\Framework\Cache\V2\Config\LocalMemcache\Mock\NoServersConfigured;
 
 use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 use
-  Zynga\Framework\Cache\V2\Config\Mock\NoServersConfigured\Production as ConfigUnderTest
+  Zynga\Framework\Cache\V2\Config\LocalMemcache\Mock\NoServersConfigured\Production as ConfigUnderTest
 ;
 use Zynga\Framework\Cache\V2\Exceptions\InvalidObjectForKeyCreationException;
 use
@@ -20,16 +20,25 @@ class ProductionTest extends TestCase {
     return new ConfigUnderTest();
   }
 
+  public function testConfig_Settings(): void {
+
+    $config = $this->createConfigUnderTest();
+
+    $this->assertTrue($config->cacheAllowsKeyOverride());
+    $this->assertTrue($config->cacheAllowsNonExpiringKeys());
+    $this->assertTrue($config->cacheAllowsTTLOverride());
+
+    $this->assertEquals('Memcache', $config->getDriver());
+    $this->assertEquals(3600, $config->getTTL());
+
+  }
+
   public function testGetServerPairings(): void {
 
     $config = $this->createConfigUnderTest();
     $servers = $config->getServerPairings();
     $this->assertEquals(0, $servers->keys()->count());
-    $this->assertEquals('Memcache', $config->getDriver());
-    $this->assertEquals(3600, $config->getTTL());
-    $this->assertFalse($config->cacheAllowsKeyOverride());
-    $this->assertFalse($config->cacheAllowsNonExpiringKeys());
-    $this->assertFalse($config->cacheAllowsTTLOverride());
+  
   }
 
   public function testCreateKeyFromStorableObject_ExceptionWired(): void {

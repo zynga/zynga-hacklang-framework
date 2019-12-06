@@ -3,8 +3,12 @@
 namespace Zynga\Framework\Cache\V2\Driver;
 
 use Zynga\Framework\Cache\V2\Interfaces\DriverInterface;
-use Zynga\Framework\Cache\V2\Exceptions\CacheDoesNotSupportKeyOverride;
-use Zynga\Framework\Cache\V2\Exceptions\CacheDoesNotSupportTTLOverride;
+use
+  Zynga\Framework\Cache\V2\Exceptions\CacheDoesNotSupportKeyOverrideException
+;
+use
+  Zynga\Framework\Cache\V2\Exceptions\CacheDoesNotSupportTTLOverrideException
+;
 use Zynga\Framework\Cache\V2\Exceptions\CacheRequiresTTLException;
 use Zynga\Framework\Cache\V2\Exceptions\CacheTTLExceededException;
 use Zynga\Framework\Factory\V2\Driver\Base as FactoryDriverBase;
@@ -18,8 +22,9 @@ abstract class Base extends FactoryDriverBase implements DriverInterface {
   ): string {
 
     $cacheAllowsKeyOverride = $this->getConfig()->cacheAllowsKeyOverride();
+
     if ($cacheAllowsKeyOverride === false && $keyOverride != '') {
-      throw new CacheDoesNotSupportKeyOverride(
+      throw new CacheDoesNotSupportKeyOverrideException(
         'cache='.get_class($this->getConfig()).' key='.$keyOverride,
       );
     }
@@ -38,8 +43,8 @@ abstract class Base extends FactoryDriverBase implements DriverInterface {
 
     if ($this->getConfig()->cacheAllowsTTLOverride() === false &&
         $ttlOverride != -1) {
-      throw new CacheDoesNotSupportTTLOverride(
-        'cache='.get_class($this->getConfig()).' key='.$ttlOverride,
+      throw new CacheDoesNotSupportTTLOverrideException(
+        'cache='.get_class($this->getConfig()).' ttl='.$ttlOverride,
       );
     }
 

@@ -48,7 +48,33 @@ class CachingTest extends TestCase {
     return true;
 
   }
+  
+  public function testLockRetryLogic(): void {
+    $pgDataCache = LockableCacheFactory::factory(
+      LockableCacheDriverInterface::class,
+      'PgDataTest',
+    );
 
+    $mockId = '123456';
+    $mockTextValue = 'this-is-a-pgdata-text-value-'.mt_rand();
+
+    $inv = new InventoryModel();
+
+    $pgMock = new PgDataExample($inv);
+    $pgMock->id->set($mockId);
+    $pgMock->name->set($mockTextValue);
+
+    $this->assertTrue($pgDataCache->lock($pgMock));
+  
+    $this->assertTrue($pgDataCache->isLockedByMyThread($pgMock));
+    
+    // Uncomment this line and run this test in another thread to test the lock retry logic
+    // sleep(2);
+    
+    $pgDataCache->unlock($pgMock);
+
+  }
+  
   public function testIsLockedByMyThread(): void {
     $pgDataCache = LockableCacheFactory::factory(
       LockableCacheDriverInterface::class,

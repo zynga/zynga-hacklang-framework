@@ -9,6 +9,10 @@ use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\Testing\Mock\PgReaderWriter;
 use Zynga\Framework\PgData\V1\PgModel as Base;
 
+/**
+ * A Mock PGModel which uses the PGReaderWriter instead of direct interactions with
+ *  the database.
+ */
 class PgModel extends Base {
   private PgReaderWriter $_readerWriter;
 
@@ -20,18 +24,22 @@ class PgModel extends Base {
     return $this->_readerWriter;
   }
 
+  // Driver is not used, since class using PgReaderWriter
   public function getDataCacheName(): string {
     return 'Mock\PgData';
   }
 
+  // Driver is not used, since class using PgReaderWriter
   public function getResultSetCacheName(): string {
     return 'Mock\PgResultSet';
   }
 
+  // Driver is not used, since class using PgReaderWriter
   public function getReadDatabaseName(): string {
     return 'Mock';
   }
 
+  // Driver is not used, since class using PgReaderWriter
   public function getWriteDatabaseName(): string {
     return 'Mock';
   }

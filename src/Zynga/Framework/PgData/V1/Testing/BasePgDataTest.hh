@@ -12,6 +12,11 @@ use Zynga\Framework\Lockable\Cache\V1\Factory as LockableCacheFactory;
 use Zynga\Framework\ShardedDatabase\V3\Driver\Mock as MockShardedDriver;
 use Zynga\Framework\ShardedDatabase\V3\Factory as ShardedDatabaseFactory;
 
+/**
+ * Base Test class for tests that have to interact with PGData and mock databases.
+ * This test file will configure the Factories to override the default PGData drivers
+ * to use their mock counterparts.
+ */
 abstract class BasePgDataTest extends TestCase {
 
   <<__Override>>

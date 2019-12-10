@@ -17,7 +17,10 @@ use \Exception;
 class Caching extends FactoryDriverBase implements DriverInterface {
   private DriverConfigInterface $_config;
   private Map<string, LockPayloadInterface> $_locks;
-  const int LOCK_TIMEOUT_SEC = 2;
+  
+  // Lock operation would try a max of 200 times and sleep for 10000 in between
+  const int LOCK_ATTEMPTS_MAX = 200; // 200 * 10000 = 2s max wait time.
+  const int LOCK_TIMEOUT_AMOUNT_MICRO_SECONDS = 10000;
   
   public function __construct(DriverConfigInterface $config) {
     $this->_config = $config;
@@ -117,11 +120,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
       $startTime = microtime(true);
       $lockRetryCount = 0;
       
-      while (
-        ($lockRetryCount === 0) ||
-        ($startTime > microtime(true) - self::LOCK_TIMEOUT_SEC)
-      ) {
-        
+      for ( $lockRetryCount = 0; $lockRetryCount < self::LOCK_ATTEMPTS_MAX; $lockRetryCount++ ) {
         $lockPayload->setLockEstablishment(time());
         $lockPayload->setLockRetryCount($lockRetryCount);
         $addResult = $lockCache->add($lockPayload, $lockKey);
@@ -132,7 +131,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
         
         $lockRetryCount++;
         // if failed to get a lock, sleep and try again
-        usleep(10000);
+        usleep(self::LOCK_TIMEOUT_AMOUNT_MICRO_SECONDS);
       }
       
       return false;

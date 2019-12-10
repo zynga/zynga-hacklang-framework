@@ -7,4 +7,7 @@ use
 ;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 
-interface PgModelInterface extends PgModelInterfaceBase {}
+interface PgModelInterface extends PgModelInterfaceBase {
+  public function getShardId(): TypeInterface;
+
+}

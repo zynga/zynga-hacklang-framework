@@ -32,6 +32,11 @@ class BaseTest extends TestCase {
     return true;
   }
 
+  public function tearDown(): void {
+    TestFactory::clearOverridenMockDrivers();
+    parent::tearDown();
+  }
+
   public function test_construct(): void {
     $foo = new FactoryTemplate("Zynga\Factory\Test");
     $this->assertTrue($foo instanceof FactoryTemplate);
@@ -129,6 +134,44 @@ class BaseTest extends TestCase {
 
   public function testAddClassRoot(): void {
     $this->assertTrue(TestFactory::addClassRoot('\\SomeOther\ClassRoot'));
+  }
+
+  public function testOverridingMockDrivers(): void {
+    TestFactory::enableMockDrivers();
+    TestFactory::clearOverridenMockDrivers();
+
+    TestFactory::overrideMockDriver('Mock', 'MockOverride');
+    $driver = TestFactory::factory(TestDriverInterface::class, 'Mock');
+    $config = $driver->getConfig();
+
+    $expected = 'This-is-overridden-'.DevelopmentMode::getModeAsString();
+    if ($config instanceof TestDriverConfigInterface) {
+      $this->assertEquals($expected, $config->getExampleConfigValue());
+    } else {
+      $this->fail('config should be TestDriverConfigInterface');
+    }
+  }
+
+  public function testMockDriversClassPathsAreNotOverriden(): void {
+    TestFactory::enableMockDrivers();
+    TestFactory::clearOverridenMockDrivers();
+
+    $driver = TestFactory::factory(TestDriverInterface::class, 'Mock\Reader');
+    $driver2 =
+      TestFactory::factory(TestDriverInterface::class, 'Mock_Reader');
+
+    $expected = 'This-is-'.DevelopmentMode::getModeAsString().'-Reader';
+
+    $config = $driver->getConfig();
+    $config2 = $driver2->getConfig();
+
+    if ($config instanceof TestDriverConfigInterface &&
+        $config2 instanceof TestDriverConfigInterface) {
+      $this->assertEquals($expected, $config->getExampleConfigValue());
+      $this->assertEquals($expected, $config2->getExampleConfigValue());
+    } else {
+      $this->fail('config should be TestDriverConfigInterface');
+    }
   }
 
   public function testFactoryLoadWithWrongInterface(): void {

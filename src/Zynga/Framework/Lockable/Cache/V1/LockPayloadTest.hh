@@ -10,7 +10,9 @@ class LockPayloadTest extends TestCase {
   public function testIsLockStillValid_Success(): void {
     $obj = new LockPayload();
     $obj->setLockEstablishment(time());
+    $obj->setLockRetryCount(0);
     $this->assertTrue($obj->isLockStillValid(300));
+    $this->assertTrue($obj->getLockRetryCount() === 0);
   }
 
   public function testIsLockStillValid_Failure(): void {

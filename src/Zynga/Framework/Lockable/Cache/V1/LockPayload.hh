@@ -9,12 +9,16 @@ use Zynga\Framework\Lockable\Cache\V1\Interfaces\LockPayloadInterface;
 
 class LockPayload extends Base implements LockPayloadInterface {
   public UInt64Box $lockEstablishment;
+  public UInt64Box $lockRetryCount;
   public StringBox $backtrace;
 
   public function __construct() {
 
     $this->lockEstablishment = new UInt64Box();
     $this->lockEstablishment->setIsRequired(true);
+    
+    $this->lockRetryCount = new UInt64Box();
+    $this->lockRetryCount->setDefaultValue(0);
 
     $this->backtrace = new StringBox();
     $this->backtrace->setIsRequired(true);
@@ -29,6 +33,13 @@ class LockPayload extends Base implements LockPayloadInterface {
 
   public function getLockEstablishment(): int {
     return $this->lockEstablishment->get();
+  }
+  
+  public function setLockRetryCount(int $count): bool {
+    return $this->lockRetryCount->set($count);
+  }
+  public function getLockRetryCount(): int {
+    return $this->lockRetryCount->get();
   }
 
   public function setBacktrace(string $backtrace): bool {

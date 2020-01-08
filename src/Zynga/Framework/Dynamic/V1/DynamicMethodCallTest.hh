@@ -7,6 +7,7 @@ use Zynga\Framework\Dynamic\V1\DynamicMethodCall;
 use Zynga\Framework\Dynamic\V1\Exceptions\UnableToFindClassException;
 use Zynga\Framework\Dynamic\V1\Exceptions\UnableToFindMethodException;
 use Zynga\Framework\Dynamic\V1\Exceptions\MissingRequiredParametersException;
+use Zynga\Framework\Dynamic\V1\Exceptions\UnableToReflectClassException;
 
 class DynamicMethodCallTest extends TestCase {
 
@@ -20,7 +21,7 @@ class DynamicMethodCallTest extends TestCase {
   }
 
   public function test_InvalidClass(): void {
-    $this->expectException(UnableToFindClassException::class);
+    $this->expectException(UnableToReflectClassException::class);
     $ret = DynamicMethodCall::callMethod(
       'Not_Real_Class',
       'not_real_function',

@@ -77,6 +77,11 @@ interface StorableCollection<Tv> extends StorableObjectInterface {
   public function at(int $key): Tv;
 
   /**
+   * @throws OutOfBoundsException
+   */
+  public function get(int $key): Tv;
+
+  /**
    * Converts collection to raw array
    * Similar to @see https://docs.hhvm.com/hack/reference/class/HH.Vector/toArray/
    */

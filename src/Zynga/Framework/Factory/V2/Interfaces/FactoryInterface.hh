@@ -17,7 +17,7 @@ interface FactoryInterface {
 
   public static function addClassRoot(string $root): bool;
 
-  public static function factory<TDriver>(
+  public static function factory<TDriver as DriverInterface>(
     classname<TDriver> $driverName,
     string $name,
   ): TDriver;

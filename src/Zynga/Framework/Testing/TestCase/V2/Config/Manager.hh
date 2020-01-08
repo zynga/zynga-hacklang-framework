@@ -52,12 +52,8 @@ class Manager {
 
   public static function isTestEnabled(string $className): bool {
 
-    // --
-    // error_log('className=' . $className);
-    // --
     foreach (self::$_disabledTestPatterns as $pattern => $reason) {
       if (preg_match($pattern, $className)) {
-        // error_log('className=' . $className . ' patternMatch=' . $pattern);
         return false;
       }
     }
@@ -75,7 +71,6 @@ class Manager {
 
     foreach (self::$_disabledTestPatterns as $pattern => $reason) {
       if (preg_match($pattern, $className)) {
-        // error_log('className=' . $className . ' patternMatch=' . $pattern);
         return self::$_disabledTestPatterns[$pattern];
       }
     }

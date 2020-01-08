@@ -4,8 +4,6 @@ namespace Zynga\Framework\Database\V2\Driver\Mock;
 
 use Zynga\Framework\Database\V2\Interfaces\DriverInterface;
 use Zynga\Framework\Database\V2\Interfaces\QuoteInterface;
-use Zynga\Type\V1\SnidBox;
-use Zynga\Type\V1\UidBox;
 
 class Quoter implements QuoteInterface {
   private DriverInterface $_dbh;
@@ -16,6 +14,10 @@ class Quoter implements QuoteInterface {
 
   public function intValue(int $value): string {
     return sprintf('%d', $value);
+  }
+
+  public function boolValue(bool $value): string {
+    return sprintf('%d', (int) $value);
   }
 
   public function floatValue(float $value): string {

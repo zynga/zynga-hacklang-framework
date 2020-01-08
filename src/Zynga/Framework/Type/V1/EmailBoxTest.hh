@@ -8,25 +8,37 @@ use Zynga\Framework\Type\V1\Exceptions\FailedToImportFromStringException;
 
 class EmailBoxTest extends StringBoxTest {
 
-  /**
-   * @expectedException Zynga\Framework\Type\V1\Exceptions\FailedToImportFromIntegerException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Type\V1\Exceptions\FailedToImportFromIntegerException",
+  )
+  >>
   public function testCannotImportFromInt(): void {
     $emailBox = new EmailBox();
     $emailBox->set(1234);
   }
 
-  /**
-   * @expectedException Zynga\Framework\Type\V1\Exceptions\FailedToImportFromBoolException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Type\V1\Exceptions\FailedToImportFromBoolException",
+  )
+  >>
   public function testCannotImportFromBool(): void {
     $emailBox = new EmailBox();
     $emailBox->set(true);
   }
 
-  /**
-   * @expectedException Zynga\Framework\Type\V1\Exceptions\FailedToImportFromFloatException
-   */
+  public function testIsStringValid(): void {
+    $emailBox = new EmailBox();
+    $this->assertTrue($emailBox->isStringValid('jsimmer@zynga.com'));
+    $this->assertFalse($emailBox->isStringValid('198.161.0.0'));
+  }
+
+  <<
+  expectedException(
+    "Zynga\Framework\Type\V1\Exceptions\FailedToImportFromFloatException",
+  )
+  >>
   public function testCannotImportFromFloat(): void {
     $emailBox = new EmailBox();
     $emailBox->set(1.1234);

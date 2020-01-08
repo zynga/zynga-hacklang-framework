@@ -2,32 +2,153 @@
 
 namespace Zynga\Framework\Cache\V2\Driver;
 
-use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
-
-use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
-
 use Zynga\Framework\Cache\V2\Driver\Base as DriverBase;
-use Zynga\Framework\Cache\V2\Interfaces\DriverConfigInterface;
-use Zynga\Framework\Cache\V2\Interfaces\DriverInterface;
+use Zynga\Framework\Cache\V2\Exceptions\InvalidIncrementStepException;
 use Zynga\Framework\Cache\V2\Exceptions\NoServerPairsProvidedException;
 use Zynga\Framework\Cache\V2\Exceptions\NoConnectionException;
 use Zynga\Framework\Cache\V2\Exceptions\StorableObjectRequiredException;
-
+use Zynga\Framework\Cache\V2\Interfaces\DriverConfigInterface;
+use Zynga\Framework\Cache\V2\Interfaces\MemcacheDriverInterface;
+use Zynga\Framework\Cache\V2\Interfaces\DriverInterface;
+use Zynga\Framework\Dynamic\V1\DynamicClassCreation;
 use Zynga\Framework\Exception\V1\Exception;
+use Zynga\Framework\StorableObject\V1\Interfaces\StorableObjectInterface;
 
 use \Memcache as NativeMemcacheDriver;
 
-class Memcache extends DriverBase {
+class Memcache extends DriverBase implements MemcacheDriverInterface {
   private NativeMemcacheDriver $_memcache;
   private DriverConfigInterface $_config;
+  // Map used to keep track of hosts that have been registered to avoid duplicates
+  private Map<string, int> $_registeredHosts;
+  
+  // Operations like set and delete will retry their operation
+  const int OPERATION_ATTEMPTS_MAX = 100; // 100 * 10000 = 1s max wait time.
+  const int OPERATION_TIMEOUT_AMOUNT_MICRO_SECONDS = 10000;
 
   public function __construct(DriverConfigInterface $config) {
     $this->_config = $config;
     $this->_memcache = new NativeMemcacheDriver();
+    $this->_registeredHosts = Map {};
   }
 
   public function getConfig(): DriverConfigInterface {
     return $this->_config;
+  }
+
+  public function directIncrement(string $key, int $incrementValue = 1): int {
+
+    try {
+
+      $this->connect();
+
+      if ($incrementValue < 0 || $incrementValue == 0) {
+        throw new InvalidIncrementStepException(
+          'Increment value must be greater than 0',
+        );
+      }
+
+      $value = $this->_memcache->increment($key, $incrementValue);
+
+      if ($value === false) {
+        return 0;
+      }
+
+      return $value;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
+
+  public function directAdd(
+    string $key,
+    mixed $value,
+    int $flags = 0,
+    int $ttl = 0,
+  ): bool {
+
+    try {
+
+      $this->connect();
+
+      $value = $this->_memcache->add($key, $value, $flags, $ttl);
+
+      if ($value == true) {
+        return true;
+      }
+
+      return false;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
+
+  public function directSet(
+    string $key,
+    mixed $value,
+    int $flags = 0,
+    int $ttl = 0,
+  ): bool {
+
+    try {
+
+      $this->connect();
+
+      for ($retryCount = 0; $retryCount < self::OPERATION_ATTEMPTS_MAX; $retryCount++) {
+        $success = $this->_memcache->set($key, $value, $flags, $ttl);
+        if ($success == true) {
+          return true;
+        }
+        
+        usleep(self::OPERATION_TIMEOUT_AMOUNT_MICRO_SECONDS);
+      }
+      
+      return false;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
+
+  public function directGet(string $key): mixed {
+    try {
+      $this->connect();
+
+      $item = $this->_memcache->get($key);
+
+      return $item;
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+  public function directDelete(string $key): bool {
+
+    try {
+
+      $this->connect();
+      
+      for ($retryCount = 0; $retryCount < self::OPERATION_ATTEMPTS_MAX; $retryCount++) {
+        $success = $this->_memcache->delete($key);
+        if ($success == true) {
+          return true;
+        }
+        
+        usleep(self::OPERATION_TIMEOUT_AMOUNT_MICRO_SECONDS);
+      }
+      
+
+      return false;
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
   }
 
   public function connect(): bool {
@@ -56,9 +177,14 @@ class Memcache extends DriverBase {
       }
 
       // add the host / port combinations to the memcache object, addserver
-      //   always returns true as it lazy connects at use time.
+      // always returns true as it lazy connects at use time.
       foreach ($serverPairs as $host => $port) {
-        $memcache->addserver($host, $port);
+
+        // addserver does not check for duplicates
+        if ($this->_registeredHosts->containsKey($host) === false) {
+          $memcache->addserver($host, $port);
+          $this->_registeredHosts[$host] = $port;
+        }
       }
 
       $this->_memcache = $memcache;
@@ -71,23 +197,27 @@ class Memcache extends DriverBase {
 
   }
 
-  public function getByMap(
-    Map<string, mixed> $data,
-  ): ?StorableObjectInterface {
+  public function add(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+    int $ttlOverride = -1,
+  ): bool {
 
     try {
 
-      $className = $this->getConfig()->getStorableObjectName();
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
+      $ttl = $this->getTTLSupportingOverride($ttlOverride);
 
-      $obj = DynamicClassCreation::createClassByName($className, Vector {});
+      $jsonValue = $obj->export()->asJSON();
 
-      if (!$obj instanceof StorableObjectInterface) {
-        throw new StorableObjectRequiredException('className='.$className);
+      $flags = 0;
+      $return = $this->directAdd($key, $jsonValue, $flags, $ttl);
+
+      if ($return == true) {
+        return true;
       }
 
-      $obj->import()->fromMap($data);
-
-      return $this->get($obj);
+      return false;
 
     } catch (Exception $e) {
       throw $e;
@@ -95,22 +225,25 @@ class Memcache extends DriverBase {
 
   }
 
-  public function get(StorableObjectInterface $obj): ?StorableObjectInterface {
+  public function get(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): ?StorableObjectInterface {
 
     try {
 
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
       $this->connect();
 
-      $data = $this->_memcache->get($key);
+      $data = $this->directGet($key);
 
       // no data to work with.
       if ($data === false) {
         return null;
       }
 
-      $obj->import()->fromJSON($data);
+      $obj->import()->fromJSON(strval($data));
 
       return $obj;
 
@@ -120,20 +253,23 @@ class Memcache extends DriverBase {
 
   }
 
-  public function set(StorableObjectInterface $obj): bool {
+  public function set(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+    int $ttlOverride = -1,
+  ): bool {
 
     try {
 
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
+      $ttl = $this->getTTLSupportingOverride($ttlOverride);
 
       $this->connect();
 
+      $jsonValue = $obj->export()->asJSON();
+
       $flags = 0;
-
-      $ttl = time() + $this->getConfig()->getTTL();
-
-      $success =
-        $this->_memcache->set($key, $obj->export()->asJSON(), $flags, $ttl);
+      $success = $this->directSet($key, $jsonValue, $flags, $ttl);
 
       return $success;
 
@@ -143,39 +279,24 @@ class Memcache extends DriverBase {
 
   }
 
-  public function deleteByMap(Map<string, mixed> $data): bool {
+  public function delete(
+    StorableObjectInterface $obj,
+    string $keyOverride = '',
+  ): bool {
 
     try {
 
-      $className = $this->getConfig()->getStorableObjectName();
-
-      $obj = DynamicClassCreation::createClassByName($className, Vector {});
-
-      if (!$obj instanceof StorableObjectInterface) {
-        throw new StorableObjectRequiredException('className='.$className);
-      }
-
-      $obj->import()->fromMap($data);
-
-      return $this->delete($obj);
-
-    } catch (Exception $e) {
-      throw $e;
-    }
-
-  }
-
-  public function delete(StorableObjectInterface $obj): bool {
-
-    try {
-
-      $key = $this->getConfig()->createKeyFromStorableObject($obj);
+      $key = $this->getKeySupportingOverride($obj, $keyOverride);
 
       $this->connect();
 
       $success = $this->_memcache->delete($key);
 
-      return $success;
+      if ($success == 1) {
+        return true;
+      }
+
+      return false;
 
     } catch (Exception $e) {
       throw $e;

@@ -31,6 +31,13 @@ class Quoter implements QuoteInterface {
   /**
    * See @QuoteInterface
    */
+  public function boolValue(bool $value): string {
+    return sprintf('%d', (int) $value);
+  }
+
+  /**
+   * See @QuoteInterface
+   */
   public function floatValue(float $value): string {
     return sprintf('%f', $value);
   }

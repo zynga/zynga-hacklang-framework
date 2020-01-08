@@ -11,7 +11,7 @@ interface QuoteInterface {
    * @param DriverInterface $driver
    * @return QuoteInterface
    */
-  public function __construct(DriverInterface $driver);
+  //public function __construct(DriverInterface $driver);
 
   /**
    * Creates a sql query safe value out of a integer.
@@ -19,6 +19,13 @@ interface QuoteInterface {
    * @return string
    */
   public function intValue(int $value): string;
+
+  /**
+   * Creates a sql query safe value out of a boolean.
+   * @param bool $value
+   * @return string
+   */
+  public function boolValue(bool $value): string;
 
   /**
    * Creates a sql query safe value out of a float

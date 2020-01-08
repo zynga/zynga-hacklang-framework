@@ -103,9 +103,11 @@ class ResultSetTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Database\V2\Exceptions\Mock\ResultSetConfiguredWithNonMapException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Database\V2\Exceptions\Mock\ResultSetConfiguredWithNonMapException",
+  )
+  >>
   public function testFetchMapInvalidDataType(): void {
 
     $data = Vector {};
@@ -119,9 +121,11 @@ class ResultSetTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Database\V2\Exceptions\OutOfBoundsForCursorException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Database\V2\Exceptions\OutOfBoundsForCursorException",
+  )
+  >>
   public function testFetchMapOOB(): void {
 
     $data = Vector {};
@@ -145,9 +149,11 @@ class ResultSetTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Database\V2\Exceptions\Mock\ResultSetConfiguredWithNonVectorException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Database\V2\Exceptions\Mock\ResultSetConfiguredWithNonVectorException",
+  )
+  >>
   public function testFetchVectorInvalidDataType(): void {
 
     $data = Vector {};
@@ -162,9 +168,11 @@ class ResultSetTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Database\V2\Exceptions\OutOfBoundsForCursorException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Database\V2\Exceptions\OutOfBoundsForCursorException",
+  )
+  >>
   public function testFetchVectorOOB(): void {
 
     $data = Vector {};

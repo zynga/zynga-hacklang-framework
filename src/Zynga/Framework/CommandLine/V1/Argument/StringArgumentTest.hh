@@ -51,9 +51,11 @@ class StringArgumentTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Type\V1\Exceptions\FailedToImportFromStringException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Type\V1\Exceptions\FailedToImportFromStringException",
+  )
+  >>
   public function testInvalidArg(): void {
     $argName = 'testing';
     $argDescription = 'this is a test of the emergency broadcast system';
@@ -65,9 +67,11 @@ class StringArgumentTest extends TestCase {
     $arg->set('<img');
   }
 
-  /**
-   * @expectedException Zynga\Framework\Type\V1\Exceptions\FailedToImportFromStringException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Type\V1\Exceptions\FailedToImportFromStringException",
+  )
+  >>
   public function testInvalidArg_BadArgValue(): void {
     $argName = 'testing';
     $argDescription = 'this is a test of the emergency broadcast system';

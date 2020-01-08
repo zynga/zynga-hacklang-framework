@@ -13,6 +13,12 @@ class StringBoxTest extends TestCase {
     return new StringBox();
   }
 
+  public function testIsStringValid(): void {
+    $stringBox = new StringBox();
+    $this->assertFalse($stringBox->isStringValid('script:'));
+    $this->assertTrue($stringBox->isStringValid('198.161.0.0'));
+  }
+
   public function testNativeValue(): void {
     $obj = $this->getTypeObject();
     $obj->set('some-value');
@@ -89,6 +95,47 @@ class StringBoxTest extends TestCase {
     $foo = new StringBox();
     $foo->set("");
     $this->assertEquals(0, $foo->getLength("UTF-8"));
+  }
+
+  public function testSetToRandomEmptyCharSet(): void {
+    $stringBox = new StringBox();
+    $result = $stringBox->setToRandom(1, 10, '');
+    $this->assertTrue($result);
+    $this->assertEquals('', $stringBox->get());
+  }
+
+  public function testSetToRandomNegativeMinLength(): void {
+    $stringBox = new StringBox();
+    $result = $stringBox->setToRandom(-100, 1, 'abcd');
+    $this->assertTrue($result);
+    $this->assertEquals('', $stringBox->get());
+  }
+
+  public function testSetToRandomNegativeaxLength(): void {
+    $stringBox = new StringBox();
+    $result = $stringBox->setToRandom(1, -100, 'abcd');
+    $this->assertTrue($result);
+    $this->assertEquals('', $stringBox->get());
+  }
+
+  public function testSetToRandomMinLengthGreaterThanMax(): void {
+    $stringBox = new StringBox();
+    $result = $stringBox->setToRandom(100, 1, 'abcd');
+    $this->assertTrue($result);
+    $this->assertEquals('', $stringBox->get());
+  }
+
+  public function testSetToRandomSuccessful(): void {
+    $stringBox = new StringBox();
+    $result = $stringBox->setToRandom(5, 15, 'abcd');
+    $this->assertTrue($result);
+    $string = $stringBox->get();
+    $stringLength = strlen($string);
+    $this->assertTrue($stringLength <= 15);
+    $this->assertTrue($stringLength >= 5);
+    for($i = 0; $i < $stringLength; ++$i) {
+      $this->assertTrue(strpos('abcd', $string[$i]) !== false);
+    }
   }
 
 }

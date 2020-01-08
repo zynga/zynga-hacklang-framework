@@ -9,18 +9,23 @@ use Zynga\Framework\Environment\TemporaryDirectory\V1\TemporaryDirectory;
 use Zynga\Framework\Performance\V1\Tracker as PerformanceTracker;
 
 use Zynga\Framework\Exception\V1\Exception;
+use
+  Zynga\Framework\Testing\TestCase\V2\Test\Mock\BrokenDatabaseFactoryResultSetReset
+;
+use Zynga\Framework\Testing\TestCase\V2\Test\Mock\BrokenDoHideLogs;
+use Zynga\Framework\Testing\TestCase\V2\Test\Mock\BrokenEnableMocks;
+use Zynga\Framework\Testing\TestCase\V2\Test\Mock\NotEnabled;
+use Zynga\Framework\Testing\TestCase\V2\Test\Mock\RiggedGetStatus;
+use Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseTestExample;
+use Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseTestNoImplement;
+use Zynga\PHPUnit\V2\Exceptions\AssertionFailedException;
+use Zynga\PHPUnit\V2\Exceptions\TestError\SkippedException;
+use Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseMock;
+use Zynga\PHPUnit\V2\TestResult;
 
-// mock interface for testing
-interface TestCaseTest_Interface {}
+use \Exception as RawException;
 
-// mock class for testing
-class TestCaseTest_Example implements TestCaseTest_Interface {}
-
-class TestCaseTestNoImplement {}
-
-class TestCaseMock extends ZyngaTestCase {}
-
-class TestCaseTest extends ZyngaTestCase {
+class BaseTest extends ZyngaTestCase {
 
   public function test_perfFunction(): void {
 
@@ -49,7 +54,7 @@ class TestCaseTest extends ZyngaTestCase {
 
   public function test_expectOutputPregMatch(): void {
     echo "some-content";
-    $this->expectOutputPregMatch('/some/', ob_get_contents());
+    $this->expectOutputPregMatch('/some/');
   }
 
   /**
@@ -74,23 +79,14 @@ class TestCaseTest extends ZyngaTestCase {
   }
 
   /**
-   * Testing the noop built in test.
-   */
-  public function testBaseNoop(): bool {
-    $rv = $this->testNoop();
-    $this->assertTrue($rv);
-    return true;
-  }
-
-  /**
    * testValidAssertClassImplements
    */
   public function testValidAssertClassImplements(): void {
 
-    $obj = new TestCaseTest_Example();
+    $obj = new TestCaseTestExample();
 
     $this->assertClassImplements(
-      'Zynga\\Framework\Testing\TestCase\V2\TestCaseTest_Interface',
+      'Zynga\\Framework\Testing\TestCase\V2\Test\Mock\TestCaseTestInterface',
       $obj,
     );
 
@@ -98,12 +94,16 @@ class TestCaseTest extends ZyngaTestCase {
 
   }
 
+  public function testAssertNotSameReturnsTrueOnDifferentValues(): void {
+    $this->assertNotSame(1, 2);
+  }
+
   /**
    * testInvalidAssertClassImplements
    */
   public function testInvalidAssertClassImplements(): void {
 
-    $obj = new TestCaseTest_Example();
+    $obj = new TestCaseTestExample();
     $this->assertionFailureExpected();
     $this->assertClassImplements('Presedente', $obj);
 
@@ -127,17 +127,17 @@ class TestCaseTest extends ZyngaTestCase {
     $obj = new TestCaseTestNoImplement();
     $this->assertionFailureExpected();
     $this->assertClassImplements(
-      'Zynga\Framework\Testing\TestCase\V2\TestCaseTest_Interface',
+      'Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseTestInterface',
       $obj,
     );
   }
 
   public function testDisabledTest(): void {
 
-    $obj = new TestCaseTest_Example();
+    $obj = new TestCaseTestExample();
 
     $this->assertClassImplements(
-      'Zynga\Framework\Testing\TestCase\V2\TestCaseTest_Interface',
+      'Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseTestInterface',
       $obj,
     );
     $this->assertEquals(0, $this->getNumAssertions());
@@ -163,6 +163,195 @@ class TestCaseTest extends ZyngaTestCase {
 
     $this->assertTrue($mock->isEnabled());
 
+  }
+
+  public function testBrokenDoHideLogs(): void {
+    $test = new BrokenDoHideLogs('BrokenDoHideLogs');
+    $this->assertTrue($test->doSetUpBeforeClass());
+    $this->assertTrue($test->doTearDownAfterClass());
+  }
+
+  public function testBrokenEnableMocks(): void {
+    $test = new BrokenEnableMocks('BrokenEnableMocks');
+    $this->assertTrue($test->doSetUpBeforeClass());
+    $this->assertTrue($test->doTearDownAfterClass());
+  }
+
+  public function testBrokenDatabaseFactoryResultSetReset(): void {
+    $test = new BrokenDatabaseFactoryResultSetReset('BrokenEnableMocks');
+    $this->assertTrue($test->doSetUpBeforeClass());
+    $this->assertTrue($test->doTearDownAfterClass());
+  }
+
+  public function testNotEnabled(): void {
+    $test = new NotEnabled('NotEnabled');
+
+    $this->assertFalse($test->isEnabled());
+
+    $this->expectException(SkippedException::class);
+
+    $test->setUp();
+
+  }
+
+  public function testPerformanceProfiler(): void {
+    $mock = new TestCaseMock('TestCaseMock');
+    $mock->startProfiling();
+    $foo = 0;
+    for ($i = 0; $i < 100; $i++) {
+      $this->assertEquals($i, $i);
+      $foo++;
+    }
+    $mock->stopProfiling();
+  }
+
+  public function testAssertCount(): void {
+    $mock = new TestCaseMock('TestCaseMock');
+
+    $this->expectException(AssertionFailedException::class);
+    $mock->assertCount(3, array(1, 3));
+
+  }
+
+  public function testToString(): void {
+
+    $mock = new TestCaseMock('TestCaseMock');
+    $mock->assertEquals(
+      'Zynga\Framework\Testing\TestCase\V2\Test\Mock\TestCaseMock::TestCaseMock',
+      $mock->toString(),
+    );
+
+  }
+
+  public function testCount(): void {
+
+    $mock = new TestCaseMock('TestCaseMock');
+    $mock->assertEquals(1, $mock->count());
+
+  }
+
+  public function testFail(): void {
+
+    $mock = new TestCaseMock('TestCaseMock');
+    $this->expectException(AssertionFailedException::class);
+    $mock->fail();
+
+  }
+
+  public function testAssertNotFalse(): void {
+
+    $mock = new TestCaseMock('TestCaseMock');
+    $this->expectException(AssertionFailedException::class);
+    $mock->assertNotFalse(false);
+
+  }
+
+  public function testSetGroups(): void {
+
+    $testGroups = Vector {'how', 'now'};
+
+    $mock = new TestCaseMock('TestCaseMock');
+    $mock->setGroups($testGroups);
+    $mock->assertEquals($testGroups, $mock->getGroups());
+
+  }
+
+  public function testSetName(): void {
+
+    $testName = 'MsPeel';
+
+    $mock = new TestCaseMock('TestCaseMock');
+    $mock->setName($testName);
+    $mock->assertEquals($testName, $mock->getName());
+
+  }
+
+  public function testDependencies(): void {
+
+    $deps = Vector {'dep1', 'dep2'};
+
+    $mock = new TestCaseMock('TestCaseMock');
+    $mock->setDependencies($deps);
+    $this->assertTrue($mock->hasDependencies());
+
+  }
+
+  public function testOutput(): void {
+    $mock = new TestCaseMock('TestCaseMock');
+    $this->assertFalse($mock->hasOutput());
+    $this->assertEquals('', $mock->getActualOutput());
+  }
+
+  public function testGetStatus(): void {
+    $mock = new TestCaseMock('TestCaseMock');
+    $this->assertEquals(-1, $mock->getStatus());
+  }
+
+  // --
+  // TODO: There is a ob close issue with this as phpunit is being a jerk and closing for us.
+  // --
+  public function testGetStatusRigged(): void {
+    $mock = new RiggedGetStatus('testOk');
+    $this->assertFalse($mock->hideLogs());
+    $mock->runBare();
+    $this->assertEquals(0, $mock->getStatus());
+
+  }
+
+  public function testAssertStringStartsWith(): void {
+    $mock = new TestCaseMock('TestCaseMock');
+    $this->expectException(AssertionFailedException::class);
+    $mock->assertStringStartsWith('boo', 'foo');
+  }
+
+  public function testGetTestResultObject(): void {
+    $mock = new TestCaseMock('TestCaseMock');
+    $this->assertInstanceOf(TestResult::class, $mock->getResult());
+  }
+
+  public function testAssertNotNull(): void {
+    $mock = new TestCaseMock('TestCaseMock');
+    $this->expectException(AssertionFailedException::class);
+    $mock->assertNotNull(null);
+  }
+
+  public function testAssertNotEmpty(): void {
+    $foo = null;
+    $mock = new TestCaseMock('TestCaseMock');
+    $this->expectException(AssertionFailedException::class);
+    $mock->assertNotEmpty($foo);
+  }
+
+  public function testAssertEmpty(): void {
+    $mock = new TestCaseMock('TestCaseMock');
+    $this->expectException(AssertionFailedException::class);
+    $mock->assertEmpty('i am not empty');
+  }
+
+  public function testAssertGreaterThan(): void {
+    $mock = new TestCaseMock('TestCaseMock');
+    $this->expectException(AssertionFailedException::class);
+    $mock->assertGreaterThan(2, 1);
+  }
+
+  public function testAssertNull(): void {
+    $mock = new TestCaseMock('TestCaseMock');
+    $this->expectException(AssertionFailedException::class);
+    $mock->assertNull('i am not null');
+  }
+
+  public function testAssertSame(): void {
+    $mock = new TestCaseMock('TestCaseMock');
+    $this->expectException(AssertionFailedException::class);
+    $mock->assertSame(1, 2);
+  }
+
+  public function testAssertFileExists(): void {
+    $mock = new TestCaseMock('TestCaseMock');
+    $this->expectException(AssertionFailedException::class);
+    $mock->assertFileExists(
+      '/tmp/jeo-'.mt_rand().'-file-does-not-exist-'.mt_rand(),
+    );
   }
 
 }

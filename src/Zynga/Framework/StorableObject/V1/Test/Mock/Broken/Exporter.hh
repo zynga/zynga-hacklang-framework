@@ -17,7 +17,10 @@ class Exporter implements ExportInterface {
     ?string $parentFieldName = null,
     bool $sorted = false,
   ): string {
-    throw new Exception('broken-as-map');
+    throw new Exception('broken-as-json');
+  }
+  public function asArray(): array<string, mixed> {
+    throw new Exception('broken-as-array');
   }
   public function asMap(): Map<string, mixed> {
     throw new Exception('broken-as-map');

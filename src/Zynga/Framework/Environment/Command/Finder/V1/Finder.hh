@@ -5,6 +5,7 @@ namespace Zynga\Framework\Environment\Command\Finder\V1;
 use
   Zynga\Framework\Environment\Command\Finder\V1\Exceptions\CommandNotFoundException
 ;
+use Zynga\Framework\Environment\CodePath\V1\CodePath;
 
 class Finder {
 
@@ -13,6 +14,8 @@ class Finder {
     $paths[] = '/usr/local/bin';
     $paths[] = '/usr/bin';
     $paths[] = '/bin';
+    $paths[] = CodePath::getRoot().'/bin';
+    $paths[] = CodePath::getRoot().'/vendor/bin';
     return $paths;
   }
 

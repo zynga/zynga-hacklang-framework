@@ -16,6 +16,7 @@ use Zynga\Framework\StorableObject\V1\Interfaces\ImportInterface;
 use
   Zynga\Framework\StorableObject\Collections\V1\Interfaces\StorableCollection
 ;
+use Zynga\Framework\StorableObject\Collections\V2\Traits\TypeEnforcement;
 use
   Zynga\Framework\StorableObject\Collections\Vector\V1\Exporter\Base as Exporter
 ;
@@ -36,25 +37,22 @@ use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
  * @see Zynga\Framework\StorableObject\Collections\V1\Interfaces\StorableCollection for more info
  */
 class Base<Tv> implements StorableCollection<Tv> {
+  use TypeEnforcement;
+
   private Vector<Tv> $vector;
   private bool $isRequired;
   private ?bool $isDefaultValue;
 
   public function __construct(private classname<Tv> $rawType) {
-    $interfaces = class_implements($rawType);
-    if (array_key_exists(StorableObjectInterface::class, $interfaces) === false &&
-        array_key_exists(TypeInterface::class, $interfaces) === false) {
-      throw new OperationNotSupportedException(
-        'Collection only support the following types:'.
-        StorableObjectInterface::class.
-        ', '.
-        TypeInterface::class,
-      );
-    }
-
     $this->isRequired = false;
     $this->isDefaultValue = null;
     $this->vector = Vector {};
+
+    /**
+     * Can throw UnsupportedTypeException if valueType is not of expected type
+     * @see Zynga\Framework\StorableObject\Collections\V2\Traits\TypeEnforcement
+     */
+    $this->validateTypeImplementsRequiredInterface($rawType);
   }
 
   public function isEmpty(): bool {
@@ -97,6 +95,13 @@ class Base<Tv> implements StorableCollection<Tv> {
    * @throws OutOfBoundsException
    */
   public function at(int $key): Tv {
+    return $this->vector->at($key);
+  }
+
+  /**
+   * @throws OutOfBoundsException
+   */
+  public function get(int $key): Tv {
     return $this->vector->at($key);
   }
 

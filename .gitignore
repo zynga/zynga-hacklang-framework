@@ -1,7 +1,9 @@
-vendor
 tmp
+vendor
 Makefile
 composer.lock
 bootstrap.hh
 phpunit.xml
 .hhconfig
+.DS_Store
+www.pid

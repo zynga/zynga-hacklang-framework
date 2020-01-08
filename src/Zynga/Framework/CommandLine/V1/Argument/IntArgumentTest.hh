@@ -24,9 +24,11 @@ class IntArgumentTest extends TestCase {
     $this->assertEquals('--'.$argName.'=\d+', $arg->getArgumentUsage());
   }
 
-  /**
-   * @expectedException Zynga\Framework\Type\V1\Exceptions\FailedToImportFromFloatException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Type\V1\Exceptions\FailedToImportFromFloatException",
+  )
+  >>
   public function testInvalidArg(): void {
     $argName = 'testing';
     $argDescription = 'this is a test of the emergency broadcast system';
@@ -38,9 +40,11 @@ class IntArgumentTest extends TestCase {
     $arg->set(1234.34);
   }
 
-  /**
-   * @expectedException Zynga\Framework\Type\V1\Exceptions\FailedToImportFromStringException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Type\V1\Exceptions\FailedToImportFromStringException",
+  )
+  >>
   public function testInvalidArgValue(): void {
     $argName = 'testing';
     $argDescription = 'this is a test of the emergency broadcast system';

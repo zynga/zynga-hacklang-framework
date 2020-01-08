@@ -20,4 +20,16 @@ abstract class Base extends ConfigBase {
     return 3600;
   }
 
+  public function cacheAllowsKeyOverride(): bool {
+    return true;
+  }
+
+  public function cacheAllowsNonExpiringKeys(): bool {
+    return false;
+  }
+
+  public function cacheAllowsTTLOverride(): bool {
+    return false;
+  }
+
 }

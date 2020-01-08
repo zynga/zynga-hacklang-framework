@@ -15,6 +15,14 @@ class QuoterTest extends TestCase {
     $this->assertEquals("3", $quoter->intValue(3));
   }
 
+  public function testBoolValue(): void {
+    $driver =
+      DatabaseFactory::factory(DriverInterface::class, 'Mock_Cluster');
+    $quoter = new Quoter($driver);
+    $this->assertEquals('1', $quoter->boolValue(true));
+    $this->assertEquals('0', $quoter->boolValue(false));
+  }
+
   public function testFloatValue(): void {
     $driver =
       DatabaseFactory::factory(DriverInterface::class, 'Mock_Cluster');

@@ -45,9 +45,7 @@ class FieldsTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Exception\V1\Exception
-   */
+  <<expectedException("Zynga\Framework\Exception\V1\Exception")>>
   public function test_brokenFieldFetch(): void {
     $obj = new ValidButBrokenFieldsGetForObject();
     $obj->fields()->getRequiredFieldsWithDefaultValues('no-real-context');

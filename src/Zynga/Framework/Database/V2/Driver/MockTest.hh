@@ -48,7 +48,7 @@ class MockTest extends TestCase {
 
     if ($mock instanceof Mock) {
 
-      $this->assertTrue($mock->resetResultsSets());
+      $this->assertTrue($mock->resetResultSets());
       $this->assertTrue($mock->addEmptyResultSet());
 
       $resultSet = $mock->query('SELECT * FROM DUAL');
@@ -65,15 +65,17 @@ class MockTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\Database\V2\Exceptions\QueryFailedException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Database\V2\Exceptions\QueryFailedException",
+  )
+  >>
   public function testBrokenQuery(): void {
     $mock =
       DatabaseFactory::factory(DriverInterface::class, self::TEST_DRIVER);
 
     if ($mock instanceof Mock) {
-      $this->assertTrue($mock->resetResultsSets());
+      $this->assertTrue($mock->resetResultSets());
       $this->assertTrue($mock->addFailingResultSet());
       $mock->query('SELECT * FROM DUAL');
     }
@@ -88,9 +90,11 @@ class MockTest extends TestCase {
     }
   }
 
-  /**
-   * @expectedException Zynga\Framework\Database\V2\Exceptions\Mock\LoadTestDataNoFileFoundException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Database\V2\Exceptions\Mock\LoadTestDataNoFileFoundException",
+  )
+  >>
   public function testLoadResultsForTestNoFileFound(): void {
     $mock =
       DatabaseFactory::factory(DriverInterface::class, self::TEST_DRIVER);
@@ -107,9 +111,11 @@ class MockTest extends TestCase {
     }
   }
 
-  /**
-   * @expectedException Zynga\Framework\Database\V2\Exceptions\Mock\BadResultOffsetException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\Database\V2\Exceptions\Mock\BadResultOffsetException",
+  )
+  >>
   public function testGetResultSetsPastSet(): void {
     $mock =
       DatabaseFactory::factory(DriverInterface::class, self::TEST_DRIVER);

@@ -27,6 +27,27 @@ class StringBox extends BaseBox {
     return true;
   }
 
+  public function setToRandom(int $minLength, int $maxLength, string $charSet): bool {
+    $inputLength = strlen($charSet);
+
+    if ($inputLength === 0 ||
+        $minLength > $maxLength ||
+        $maxLength < 0 ||
+        $minLength < 0) {
+      return $this->set('');
+    }
+
+    $value = '';
+    $resultLength = rand($minLength, $maxLength);
+    for ($i = 0; $i < $resultLength; ++$i) {
+      $newCharacterIndex = rand(0, $inputLength - 1);
+      $newCharacter = $charSet[$newCharacterIndex];
+      $value .= $newCharacter;
+    }
+
+    return $this->set($value);
+  }
+
   public function isExploitDetectionEnabled(): bool {
     return $this->_doExploitDetection;
   }
@@ -44,6 +65,16 @@ class StringBox extends BaseBox {
   <<__Override>>
   public function get(): string {
     return $this->_value;
+  }
+
+  public function isStringValid(string $value): bool {
+    $string = new self();
+    try {
+      $string->set($value);
+      return true;
+    } catch (FailedToImportFromStringException $e) {
+      return false;
+    }
   }
 
   <<__Override>>

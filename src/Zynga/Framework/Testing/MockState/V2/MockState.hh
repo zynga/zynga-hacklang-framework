@@ -18,7 +18,7 @@ class MockState {
       'Zynga\Framework\Datadog\V2\Factory',
       'Zynga\Framework\Queue\V2\Factory',
       'Zynga\Framework\Cache\V2\Factory',
-      'Zynga\Framework\Database\V2\UserSharded\Factory',
+      'Zynga\Framework\ShardedDatabase\V3\Factory',
       'Zynga\Legacy\V1\SexyShards',
       'Zynga\Legacy\V1\UnifiedSexyShards',
     };

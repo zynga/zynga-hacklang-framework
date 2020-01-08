@@ -22,13 +22,28 @@ class IPBox extends StringBox {
   }
 
   <<__Override>>
+  public function isStringValid(string $value): bool {
+    $ip = new self();
+    try {
+      $ip->set($value);
+      return true;
+    } catch (FailedToImportFromStringException $e) {
+      return false;
+    }
+  }
+
+  <<__Override>>
   protected function importFromString(string $value): bool {
+    if (ctype_digit($value)) {
+      $value = long2ip((int)$value);
+    }
+
     if ($this->isValidIpV4Address($value)) {
       $this->ipVersion = IPVersion::V4;
     } else if ($this->isValidIpV6Address($value)) {
       $this->ipVersion = IPVersion::V6;
     } else {
-      throw new FailedToImportFromStringException();
+      throw new FailedToImportFromStringException($value);
     }
 
     return parent::importFromString($value);

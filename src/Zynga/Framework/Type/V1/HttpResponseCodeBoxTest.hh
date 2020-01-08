@@ -17,15 +17,15 @@ class HttpResponseCodeBoxTest extends TestCase {
 
     $values->add(
       new ValidValue(
-        HttpResponseCodeBox::HTTP_OK,
-        HttpResponseCodeBox::HTTP_OK,
+        HttpResponseCodeBox::OK,
+        HttpResponseCodeBox::OK,
       ),
     );
 
     $values->add(
       new ValidValue(
-        HttpResponseCodeBox::HTTP_FAILURE,
-        HttpResponseCodeBox::HTTP_FAILURE,
+        HttpResponseCodeBox::FAILURE_BAD_REQUEST,
+        HttpResponseCodeBox::FAILURE_BAD_REQUEST,
       ),
     );
 
@@ -48,7 +48,7 @@ class HttpResponseCodeBoxTest extends TestCase {
   public function test_OK(): void {
 
     $okBox = HttpResponseCodeBox::ok();
-    $this->assertEquals(HttpResponseCodeBox::HTTP_OK, $okBox->get());
+    $this->assertEquals(HttpResponseCodeBox::OK, $okBox->get());
 
   }
 

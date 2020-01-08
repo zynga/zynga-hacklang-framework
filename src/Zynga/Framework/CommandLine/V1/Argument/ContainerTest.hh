@@ -112,26 +112,32 @@ class ContainerTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\CommandLine\V1\Exceptions\UnableToFindArgumentException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\CommandLine\V1\Exceptions\UnableToFindArgumentException",
+  )
+  >>
   public function testInvalidArgument(): void {
     $obj = new ArgumentContainer();
     $obj->getArgument('unknownArg');
   }
 
-  /**
-   * @expectedException Zynga\Framework\CommandLine\V1\Exceptions\UnableToReadScriptArgumentsException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\CommandLine\V1\Exceptions\UnableToReadScriptArgumentsException",
+  )
+  >>
   public function testArgvInvalid(): void {
     SuperGlobals::clearScriptCommandLineArguments();
     $obj = new ArgumentContainer();
     $obj->parse();
   }
 
-  /**
-   * @expectedException Zynga\Framework\CommandLine\V1\Exceptions\MissingArgumentsException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\CommandLine\V1\Exceptions\MissingArgumentsException",
+  )
+  >>
   public function testRequiredArgumentFailure(): void {
     $obj = new ArgumentContainer();
 
@@ -148,9 +154,11 @@ class ContainerTest extends TestCase {
     $this->assertTrue($obj->parse());
   }
 
-  /**
-   * @expectedException Zynga\Framework\CommandLine\V1\Exceptions\MissingArgumentsException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\CommandLine\V1\Exceptions\MissingArgumentsException",
+  )
+  >>
   public function testWrongArgType(): void {
     $obj = new ArgumentContainer();
 

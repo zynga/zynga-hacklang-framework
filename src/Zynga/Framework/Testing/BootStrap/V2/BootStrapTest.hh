@@ -37,6 +37,7 @@ class BootStrapTest extends ZyngaTestCase {
       unlink($file);
     }
 
+    BootStrap::init();
     BootStrap::initTestErrorLog();
 
     $this->assertFileExists($file);

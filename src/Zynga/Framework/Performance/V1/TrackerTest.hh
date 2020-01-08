@@ -40,11 +40,7 @@ class PerformanceTest extends TestCase {
 
     $timeMap = $perf->getAllElapsedValues();
 
-    //var_dump($timer);
-    //var_dump($timeMap[$timerName]);
-    //var_dump($sleepTime / 1000000);
     $biggerInTime = $timeMap[$timerName] >= ($sleepTime / 1000000);
-    //var_dump($biggerInTime);
 
     $this->assertTrue(is_float($timeMap[$timerName]));
     $this->assertTrue($biggerInTime);

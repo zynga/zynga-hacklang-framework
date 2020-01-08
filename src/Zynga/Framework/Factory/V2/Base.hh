@@ -8,6 +8,7 @@ use Zynga\Framework\Factory\V2\Template as FactoryTemplate;
 use Zynga\Framework\Factory\V2\Exceptions\FailedToLoadDriverException;
 use Zynga\Framework\Factory\V2\Interfaces\FactoryInterface;
 use Zynga\Framework\Factory\V2\Interfaces\FactoryTemplateInterface;
+use Zynga\Framework\Factory\V2\Interfaces\DriverInterface;
 
 /**
  * Base level factory class for the generic factory framework we have in
@@ -19,6 +20,7 @@ use Zynga\Framework\Factory\V2\Interfaces\FactoryTemplateInterface;
 abstract class Base implements FactoryInterface {
 
   private static Map<string, FactoryTemplateInterface> $_template = Map {};
+  private static Map<string, string> $_mockOverrides = Map {};
 
   abstract public static function getClassRoot(): string;
 
@@ -27,6 +29,24 @@ abstract class Base implements FactoryInterface {
     $template = self::getFactoryTemplate();
 
     return $template->addClassRoot($root);
+
+  }
+
+  public static function clearFactoryTemplates(): bool {
+    self::$_template->clear();
+    return true;
+  }
+
+  public static function setFactoryTemplate(
+    string $classRoot,
+    FactoryTemplateInterface $fti,
+  ): bool {
+
+    $templateMap = self::$_template;
+
+    $templateMap->set($classRoot, $fti);
+
+    return true;
 
   }
 
@@ -44,15 +64,13 @@ abstract class Base implements FactoryInterface {
     // if not cached create a factory for this context
     $template = new FactoryTemplate(static::getClassRoot());
 
-    $templateMap->set($classRoot, $template);
-
-    self::$_template = $templateMap;
+    self::setFactoryTemplate($classRoot, $template);
 
     return $templateMap[$classRoot];
 
   }
 
-  public static function factory<TDriver>(
+  public static function factory<TDriver as DriverInterface>(
     classname<TDriver> $driverName,
     string $name,
   ): TDriver {
@@ -70,8 +88,14 @@ abstract class Base implements FactoryInterface {
         // --
         $driver = $template->factory($name);
 
-        $name = 'Mock';
-
+        if (self::$_mockOverrides->containsKey($name)) {
+          $name = self::$_mockOverrides[$name];
+        } else if (strpos($name, 'Mock\\') !== false ||
+                   strpos($name, 'Mock_') !== false) {
+          // No-op since Factory is pointing to a Mock Namespace
+        } else {
+          $name = 'Mock';
+        }
       }
 
       $driver = $template->factory($name);
@@ -151,7 +175,19 @@ abstract class Base implements FactoryInterface {
 
   public static function disableMockDrivers(): bool {
     $template = self::getFactoryTemplate();
+    self::clearOverridenMockDrivers();
     return $template->disableMockDrivers();
   }
 
+  public static function overrideMockDriver(
+    string $actualClass,
+    string $mockClass,
+  ): void {
+    self::enableMockDrivers();
+    self::$_mockOverrides[$actualClass] = $mockClass;
+  }
+
+  public static function clearOverridenMockDrivers(): void {
+    self::$_mockOverrides = Map {};
+  }
 }

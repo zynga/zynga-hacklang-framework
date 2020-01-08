@@ -97,9 +97,6 @@ class Importer implements ImportInterface {
           );
         }
 
-        //var_dump($field);
-        //var_dump($value);
-
         if ($field instanceof TypeInterface) {
           $field->set($value);
         } else if ($field instanceof StorableObjectInterface) {

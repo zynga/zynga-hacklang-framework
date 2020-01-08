@@ -38,9 +38,11 @@ class ImporterTest extends TestCase {
     $this->assertFalse($obj->import()->fromBinary(''));
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException",
+  )
+  >>
   public function testVectorOfObjects(): void {
 
     $data = Vector {};
@@ -54,9 +56,11 @@ class ImporterTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\UnsupportedTypeException",
+  )
+  >>
   public function testMapOfObjects(): void {
 
     $data = Map {};
@@ -70,18 +74,22 @@ class ImporterTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\ExpectedFieldCountMismatchException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\ExpectedFieldCountMismatchException",
+  )
+  >>
   public function testInvalidVectorImport(): void {
     $data = Vector {};
     $obj = new Valid();
     $obj->import()->fromVector($data);
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException",
+  )
+  >>
   public function testInvalidUnsupportedType_VectorImport(): void {
     $data = Vector {};
     $data[] = null;
@@ -93,18 +101,22 @@ class ImporterTest extends TestCase {
     $obj->import()->fromVector($data);
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\MissingKeyFromImportDataException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\MissingKeyFromImportDataException",
+  )
+  >>
   public function testInvalidMapImport(): void {
     $data = Map {};
     $obj = new Valid();
     $obj->import()->fromMap($data);
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException",
+  )
+  >>
   public function testInvalidUnsupportedType_MapImport(): void {
     $data = Map {};
     $data['example_nonsupported'] = null;
@@ -128,9 +140,11 @@ class ImporterTest extends TestCase {
 
   }
 
-  /**
-   * @expectedException Zynga\Framework\StorableObject\V1\Exceptions\MissingKeyFromImportDataException
-   */
+  <<
+  expectedException(
+    "Zynga\Framework\StorableObject\V1\Exceptions\MissingKeyFromImportDataException",
+  )
+  >>
   public function test_JSON_badimport(): void {
     $json = '{"example_uint64":897234,"example_float":78575.334}';
     $obj = new Valid();

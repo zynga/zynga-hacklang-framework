@@ -25,7 +25,7 @@ class DateTimeBox extends BaseBox {
 
   public function __toString(): string {
     $stringValue = $this->get()->format('Y-m-d H:i:s');
-    if ($stringValue === false || $this->isDefaultValue()) {
+    if ($stringValue === false || $this->isDefaultValue()[0]) {
       $stringValue = "Unknown DateTime";
     }
 
@@ -42,6 +42,27 @@ class DateTimeBox extends BaseBox {
   <<__Override>>
   public function get(): DateTime {
     return $this->value;
+  }
+
+  public function isStringValid(string $value): bool {
+    $dateTime = new self();
+    try {
+      $dateTime->set($value);
+      return true;
+    } catch (FailedToImportFromStringException $e) {
+      return false;
+    }
+  }
+
+  <<__Override>>
+  public function set(mixed $value): bool {
+    if ($value instanceof DateTime) {
+      $this->value = $value;
+      $this->setIsDefaultValue(false);
+      return true;
+    } else {
+      return parent::set($value);
+    }
   }
 
   <<__Override>>

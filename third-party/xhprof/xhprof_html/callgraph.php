@@ -35,7 +35,7 @@ $GLOBALS['XHPROF_LIB_ROOT'] = dirname(__FILE__) . '/../xhprof_lib';
 
 require_once $GLOBALS['XHPROF_LIB_ROOT'].'/display/xhprof.php';
 
-ini_set('max_execution_time', 100);
+// ini_set('max_execution_time', 100);
 
 $params = array(// run id param
                 'run' => array(XHPROF_STRING_PARAM, ''),
@@ -78,7 +78,11 @@ if (!array_key_exists($type, $xhprof_legal_image_types)) {
   $type = $params['type'][1]; // default image type.
 }
 
-$xhprof_runs_impl = new XHProfRuns_Default();
+$frameworkRoot = dirname(dirname(dirname(dirname(__FILE__))));
+
+$profileDir = $frameworkRoot . '/tmp/phpunit-xhprof';
+
+$xhprof_runs_impl = new XHProfRuns_Default($profileDir);
 
 if (!empty($run)) {
   // single run call graph image generation

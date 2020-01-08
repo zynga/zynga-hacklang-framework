@@ -26,7 +26,11 @@ class Factory extends FactoryBase {
     } catch (Exception $e) {
       throw $e;
     }
+  }
 
+  public static function resetResultSets(): bool {
+    $dbh = self::factory(MockDatabaseDriver::class, 'Mock');
+    return $dbh->resetResultSets();
   }
 
 }

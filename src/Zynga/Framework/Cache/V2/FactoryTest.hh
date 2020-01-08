@@ -35,9 +35,7 @@ class FactoryTest extends TestCase {
     $this->assertEquals(0, CacheFactory::getDriverCount());
   }
 
-  /**
-   * @expectedException Zynga\Framework\Factory\V2\Exceptions\FailedToLoadDriverException
-   */
+  <<expectedException("Zynga\Framework\Factory\V2\Exceptions\FailedToLoadDriverException")>>
   public function testFactory_BadRequested(): void {
     CacheFactory::disableMockDrivers();
     CacheFactory::factory(DriverInterface::class, 'NotReal');

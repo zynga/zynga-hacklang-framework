@@ -1,0 +1,63 @@
+digraph {
+    graph [pad="0.5", nodesep="0.5", ranksep="2"];
+    node [shape=plain]
+    rankdir=LR;
+
+
+pgModel [
+shape=none
+label=<
+<table border="0" cellborder="1" cellspacing="0">
+ <tr><td bgcolor="lightblue2"><font face="Times-bold" point-size="20">pgModel</font></td></tr>
+ <tr><td bgcolor="grey96" align="left" port="getByPk">getByPk(): pgRowInterface</td></tr>
+ <tr><td bgcolor="grey96" align="left" port="get">get(WhereClause ...): pgRowInterface</td></tr>
+</table>>];
+
+
+pgRow [
+shape=none
+label=<
+<table border="0" cellborder="1" cellspacing="0">
+ <tr><td bgcolor="lightblue2"><font face="Times-bold" point-size="20">pgRow</font></td></tr>
+ <tr><td bgcolor="grey96" align="left" port="lock">lock(): bool</td></tr>
+ <tr><td bgcolor="grey96" align="left" port="unlock">unlock(): bool</td></tr>
+ <tr><td bgcolor="grey96" align="left" port="save">save(): bool</td></tr>
+ <tr><td bgcolor="grey96" align="left" port="delete">delete(): bool</td></tr>
+</table>>];
+
+pgResultSet [
+shape=none
+label=<
+<table border="0" cellborder="1" cellspacing="0">
+ <tr><td bgcolor="lightblue2"><font face="Times-bold" point-size="20">pgResultSet</font></td></tr>
+ <tr><td bgcolor="grey96" align="left" port="vector">Vector [ pgRow ]</td></tr>
+</table>>];
+
+cachedPgRow [
+shape=none
+label=<
+<table border="0" cellborder="1" cellspacing="0">
+ <tr><td bgcolor="green"><font face="Times-bold" point-size="20">Cached: pgRow</font></td></tr>
+ <tr><td bgcolor="grey96" align="left" port="key">Key: pg: sha256($modelClassname, $rowClass):pkId</td></tr>
+ <tr><td bgcolor="grey96" align="left" port="value">Value: pgModel.export.asJSON</td></tr>
+</table>>];
+
+
+cachedPgResultSet [
+shape=none
+label=<
+<table border="0" cellborder="1" cellspacing="0">
+ <tr><td bgcolor="green"><font face="Times-bold" point-size="20">Cached: pgResultSet</font></td></tr>
+ <tr><td bgcolor="grey96" align="left" port="delete">Key: pgrs:sha256($modelClassname)|$whereClauseSha256</td></tr>
+ <tr><td bgcolor="grey96" align="left" port="delete">Value: Vector [ pkId, ... ]</td></tr>
+</table>>];
+
+pgModel:getByPk -> cachedPgRow;
+cachedPgRow -> pgRow;
+
+pgModel:get -> cachedPgResultSet;
+cachedPgResultSet -> pgResultSet;
+pgResultSet -> pgRow;
+
+
+}

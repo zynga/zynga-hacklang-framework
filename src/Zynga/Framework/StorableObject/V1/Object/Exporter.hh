@@ -58,10 +58,6 @@ class Exporter implements ExportInterface {
       foreach ($fields as $fieldName => $field) {
         list($isRequired, $isDefaultValue) =
           FieldsGeneric::getIsRequiredAndIsDefaultValue($field);
-        //echo "fieldName=$fieldName\n";
-        //var_dump($isRequired);
-        //var_dump($isDefaultValue);
-        //var_dump($field);
 
         // --
         // We don't dump non-changed values into our JSON
@@ -116,6 +112,43 @@ class Exporter implements ExportInterface {
     } catch (Exception $e) {
       throw $e;
     }
+  }
+
+  public function asArray(): array<string, mixed> {
+
+    $fields = $this->_object->fields()->getForObject();
+
+    if ($fields->count() == 0) {
+      throw new NoFieldsFoundException('class='.get_class($this->_object));
+    }
+
+    $payload = array();
+
+    foreach ($fields as $fieldName => $field) {
+      $value = null;
+
+      if ($field instanceof TypeInterface) {
+        $value = $field->get();
+      } else if ($field instanceof StorableObjectInterface) {
+        try {
+          $value = $field->export()->asArray();
+        } catch (Exception $e) {
+          throw new Exception(
+            'fieldName='.
+            $fieldName.
+            ' e='.
+            get_class($e).
+            ' message='.
+            $e->getMessage(),
+          );
+        }
+      }
+
+      $payload[$fieldName] = $value;
+
+    }
+
+    return $payload;
   }
 
   public function asMap(): Map<string, mixed> {

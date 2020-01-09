@@ -28,13 +28,11 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
   private int $_unitTestStamp = 0;
   private string $_tableName = '';
 
-  abstract public function getConfigName(): string;
-
-  abstract public function getEnvironment(): int;
-
   abstract public function getTestShardTypes(): Vector<TType>;
 
   abstract public function getTableNameForTests(): string;
+
+  abstract public function getDriverToTest(): DriverInterface<UInt64Box>;
 
   public function getRandomShardType(): TType {
     $vec = $this->getTestShardTypes();
@@ -46,20 +44,9 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
     parent::doSetUpBeforeClass();
 
-    $this->switchEnvironment();
-
     DatabaseFactory::clear();
 
     return true;
-  }
-
-  public function switchEnvironment(): void {
-    DevelopmentMode::reset();
-    DevelopmentMode::setMode($this->getEnvironment());
-  }
-
-  public function resetEnvironment(): void {
-    DevelopmentMode::reset();
   }
 
   public function getUnitTestStamp(): int {
@@ -75,10 +62,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
     // Use an id of 1 to test if all the sns are okay [0 isn't allowed]
     $testShard = new UInt64Box(1);
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $dbh->setShardType($testShard);
 
@@ -91,10 +75,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testValidQuery(): void {
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $shardTypes = $this->getTestShardTypes();
 
@@ -122,10 +103,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testValidQueryFetchMap(): void {
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $expectedValue = time();
     $shardTypes = $this->getTestShardTypes();
@@ -161,10 +139,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testValidQueryFetchVector(): void {
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $expectedValue = time();
 
@@ -203,10 +178,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testValidQueryFetchMapCursorGone(): void {
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
     $expectedValue = time();
 
     $shardTypes = $this->getTestShardTypes();
@@ -224,10 +196,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testValidQueryFetchVectorCursorGone(): void {
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
     $expectedValue = time();
 
     $shardTypes = $this->getTestShardTypes();
@@ -245,10 +214,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testValidQueryRewind(): void {
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $expectedValues = array();
 
@@ -316,10 +282,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testValidQueryWasSqlDML(): void {
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
     $expectedValue = time();
 
     $dbh->setShardType($this->getRandomShardType());
@@ -348,10 +311,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
   }
 
   public function testValidQueryHasCursor(): void {
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
     $expectedValue = time();
 
     $dbh->setShardType($this->getRandomShardType());
@@ -362,19 +322,13 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
   }
 
   public function testValidHadError(): void {
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
     $this->assertFalse($dbh->hadError());
     $this->assertEquals('', $dbh->getLastError());
   }
 
   public function testInvalidateCursor(): void {
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
     $expectedValue = time();
 
     $dbh->setShardType($this->getRandomShardType());
@@ -391,10 +345,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
     $expectedValue = time();
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $dbh->setShardType($this->getRandomShardType());
 
@@ -408,10 +359,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
     $expectedValue = time();
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $schema = $dbh->getConfig()->getCurrentDatabase();
 
@@ -437,10 +385,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
   }
 
   public function testInvaildQueryErrorMessage(): void {
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
     $expectedValue = time();
 
     $dbh->setShardType($this->getRandomShardType());
@@ -465,10 +410,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
     $expectedValue = time();
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $dbh->setShardType($this->getRandomShardType());
 
@@ -487,10 +429,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
     $expectedValue = time();
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $dbh->setShardType($this->getRandomShardType());
 
@@ -508,10 +447,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
     $expectedValue = time();
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $dbh->setShardType($this->getRandomShardType());
 
@@ -527,10 +463,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testInvalidQueryRewindPos(): void {
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
     $expectedValue = time();
 
     $dbh->setShardType($this->getRandomShardType());
@@ -546,10 +479,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
     $expectedValue = time();
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $dbh->setShardType($this->getRandomShardType());
 
@@ -562,10 +492,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testQueryRewindNoCursor(): void {
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
     $expectedValue = time();
 
     $dbh->setShardType($this->getRandomShardType());
@@ -581,10 +508,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testQueryConnectionGone(): void {
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
     $dbh->setShardType(new UInt64Box(1));
     $dbh->disconnect();
     $expectedValue = time();
@@ -612,10 +536,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
     $shardTypes->shuffle();
 
     // squidge the database connection by changing the password to invalid one.
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
     $dbh->setShardType($shardTypes[0]);
 
     //update with wrong password
@@ -632,10 +553,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
   public function testConnectRequiredBadUserid(): void {
     // remove the valid driver (if it exsists)
     $this->cleanDriverFromFactory();
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
     $this->expectException(MissingUserIdException::class);
     $dbh->connect();
   }
@@ -644,10 +562,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
     $this->cleanDriverFromFactory();
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
     $testValue = "don't";
     $expectedValue = "'don\\'t'";
 
@@ -667,10 +582,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
     $this->cleanDriverFromFactory();
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     // 1,1
     $testValue = "don't";
@@ -691,10 +603,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testFloatValues(): void {
 
-    $driver = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $driver = $this->getDriverToTest();
 
     $quoter = $driver->getQuoter();
 
@@ -718,10 +627,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testIntValues(): void {
 
-    $driver = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $driver = $this->getDriverToTest();
 
     $quoter = $driver->getQuoter();
 
@@ -747,10 +653,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testBoolValues(): void {
 
-    $driver = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $driver = $this->getDriverToTest();
 
     $quoter = $driver->getQuoter();
 
@@ -765,10 +668,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testTextValues(): void {
 
-    $driver = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $driver = $this->getDriverToTest();
 
     $quoter = $driver->getQuoter();
 
@@ -796,10 +696,7 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
 
   public function testTransactionObject(): void {
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $testShard = new UInt64Box(1);
 
@@ -814,40 +711,31 @@ abstract class ConnectionBaseTest<TType as UInt64Box> extends TestCase {
   }
 
   public function testBadNativeQuoteString(): void {
-    $driver = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $driver = $this->getDriverToTest();
+
     $mock = new BadPDO_Mock($driver->getConfig());
     $this->expectException(Exception::class);
     $mock->nativeQuoteString('a-string');
   }
 
   public function testBadBegin(): void {
-    $driver = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $driver = $this->getDriverToTest();
+
     $mock = new BadPDO_Mock($driver->getConfig());
     $this->expectException(Exception::class);
     $mock->getTransaction()->begin();
   }
 
   public function testBadCommit(): void {
-    $driver = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $driver = $this->getDriverToTest();
+
     $mock = new BadPDO_Mock($driver->getConfig());
     $this->expectException(Exception::class);
     $mock->getTransaction()->commit();
   }
 
   public function testBadRollback(): void {
-    $driver = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $driver = $this->getDriverToTest();
     $mock = new BadPDO_Mock($driver->getConfig());
     $this->expectException(Exception::class);
     $mock->getTransaction()->rollback();

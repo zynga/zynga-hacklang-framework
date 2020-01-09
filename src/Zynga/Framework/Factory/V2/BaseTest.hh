@@ -17,6 +17,15 @@ use
 use Zynga\Framework\Factory\V2\Exceptions\FailedToLoadDriverException;
 use Zynga\Framework\Database\V2\Factory as DatabaseFactory;
 use Zynga\Framework\Factory\V2\Test\Mock\TemplateReturningWrongDriver;
+use
+  Zynga\Framework\Factory\V2\Test\Config\Mock\InvalidDriverConfig\Dev as MockDriverConfigDev
+;
+use
+  Zynga\Framework\Factory\V2\Test\Config\Mock\InvalidDriverConfig\Staging as MockDriverConfigStg
+;
+use
+  Zynga\Framework\Factory\V2\Test\Config\Mock\InvalidDriverConfig\Production as MockDriverConfigProd
+;
 
 class BaseTest extends TestCase {
 
@@ -94,42 +103,11 @@ class BaseTest extends TestCase {
   }
 
   public function test_loadEnvironmentalConfigs(): void {
-
-    $currentMode = DevelopmentMode::getMode();
-
-    $devModes = array();
-    $devModes[] = DevelopmentMode::DEV;
-    $devModes[] = DevelopmentMode::STAGING;
-    $devModes[] = DevelopmentMode::PRODUCTION;
-
-    foreach ($devModes as $devMode) {
-
-      DevelopmentMode::setMode($devMode);
-
-      $driver = TestFactory::factory(TestDriverInterface::class, 'Mock');
-
-      $this->assertTrue($driver instanceof TestDriverInterface);
-
-      $config = $driver->getConfig();
-
-      $this->assertTrue($config instanceof TestDriverConfigInterface);
-
-      $expected = 'This-is-'.DevelopmentMode::getModeAsString();
-
-      if ($config instanceof TestDriverConfigInterface) {
-        $this->assertEquals($expected, $config->getExampleConfigValue());
-      } else {
-        $this->fail('config should be TestDriverConfigInterface');
-      }
-
-      $this->assertTrue(TestFactory::clear());
-
-      DevelopmentMode::setMode($currentMode);
-
-    }
-
-    DevelopmentMode::setMode($currentMode);
-
+    $driverConfigs = Map {
+      "Dev" => new MockDriverConfigDev(),
+      "Staging" => new MockDriverConfigStg(),
+      "Production" => new MockDriverConfigProd(),
+    };
   }
 
   public function testAddClassRoot(): void {

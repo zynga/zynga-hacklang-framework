@@ -41,20 +41,6 @@ class DevelopmentMode {
     return self::$_mode;
   }
 
-  public static function setMode(int $mode): bool {
-
-    if ($mode === self::DEV ||
-        $mode === self::STAGING ||
-        $mode === self::PRODUCTION ||
-        $mode === self::UNKNOWN) {
-      self::$_mode = $mode;
-      return true;
-    }
-
-    return false;
-
-  }
-
   public static function setDetector(DetectorInterface $obj): bool {
     self::$_detector = $obj;
     return true;
@@ -75,21 +61,24 @@ class DevelopmentMode {
 
     // is a dev env?
     if ($detector->isDevelopment() === true) {
-      return self::setMode(self::DEV);
+      self::$_mode = self::DEV;
+      return true;
     }
 
     // is it a staging environment?
     if ($detector->isStaging() === true) {
-      return self::setMode(self::STAGING);
+      self::$_mode = self::STAGING;
+      return true;
     }
 
     // is it a production environment?
     if ($detector->isProduction() === true) {
-      return self::setMode(self::PRODUCTION);
+      self::$_mode = self::PRODUCTION;
+      return true;
     }
 
     // we don't know whats going on.
-    self::setMode(self::UNKNOWN);
+    self::$_mode = self::UNKNOWN;
     return false;
 
   }

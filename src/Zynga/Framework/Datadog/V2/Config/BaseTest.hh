@@ -2,13 +2,14 @@
 
 namespace Zynga\Framework\Datadog\V2\Config;
 
-use Zynga\Framework\Environment\DevelopmentMode\V1\DevelopmentMode;
-use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
-
 use Zynga\Framework\Datadog\V2\Factory as DatadogFactory;
+use
+  Zynga\Framework\Datadog\V2\Interfaces\DriverConfigInterface as DatadogDriverConfigInterface
+;
 use
   Zynga\Framework\Datadog\V2\Interfaces\DriverInterface as DatadogDriverInterface
 ;
+use Zynga\Framework\Testing\TestCase\V2\Base as TestCase;
 
 abstract class BaseTest extends TestCase {
 
@@ -28,30 +29,17 @@ abstract class BaseTest extends TestCase {
     return true;
   }
 
-  // get the driver name that is under test.
-  abstract public function getDriverName(): string;
+  abstract public function getDriverConfigToTest(
+  ): DatadogDriverConfigInterface;
 
-  // get the development mode we need to be in to do our testing.
-  abstract public function getDevelopmentMode(): int;
-
-  public function testLoadConfig(): void {
-
-    $testDevMode = $this->getDevelopmentMode();
-
-    DevelopmentMode::setMode($testDevMode);
-
+  public function testConfigContainsValidInfo(): void {
     DatadogFactory::disableMockDrivers();
     DatadogFactory::clear();
 
-    $driverName = $this->getDriverName();
+    $driverConfig = $this->getDriverConfigToTest();
 
-    $driver =
-      DatadogFactory::factory(DatadogDriverInterface::class, $driverName);
-
-    $this->assertNotEmpty($driver->getConfig()->getDriver());
-    $this->assertNotEmpty($driver->getConfig()->getServerHostname());
-    $this->assertNotEmpty($driver->getConfig()->getServerPort());
-
+    $this->assertNotEmpty($driverConfig->getDriver());
+    $this->assertNotEmpty($driverConfig->getServerHostname());
+    $this->assertNotEmpty($driverConfig->getServerPort());
   }
-
 }

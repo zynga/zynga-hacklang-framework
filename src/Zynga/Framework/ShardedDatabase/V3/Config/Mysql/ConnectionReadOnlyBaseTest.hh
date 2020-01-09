@@ -10,7 +10,8 @@ use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
 use Zynga\Framework\ShardedDatabase\V3\Config\Mysql\ConnectionBaseTest;
 use Zynga\Framework\Type\V1\UInt64Box;
 
-abstract class ConnectionReadOnlyBaseTest extends ConnectionBaseTest<UInt64Box> {
+abstract class ConnectionReadOnlyBaseTest
+  extends ConnectionBaseTest<UInt64Box> {
 
   public function doSetUpBeforeClass(): bool {
 
@@ -29,8 +30,7 @@ abstract class ConnectionReadOnlyBaseTest extends ConnectionBaseTest<UInt64Box> 
 
   public function testValidInsertQuery(): void {
 
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
-
+    $dbh = $this->getDriverToTest();
     $ts = $this->getUnitTestStamp();
 
     $expectedValue = time();
@@ -58,22 +58,22 @@ abstract class ConnectionReadOnlyBaseTest extends ConnectionBaseTest<UInt64Box> 
 
     $this->cleanDriverFromFactory();
 
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
+    $dbh = $this->getDriverToTest();
 
     if ($dbh->getConfig()->isDatabaseReadOnly() === false) {
-      $this->markTestSkipped($this->getConfigName().'::isReadWrite');
+      $this->markTestSkipped(
+        $dbh->getConfig()->getDatabaseName().'::isReadWrite',
+      );
       return;
     }
 
     $this->expectException(ConnectionIsReadOnly::class);
-    $dbh->query(
-      'INSERT INTO dual VALUES (1,1);'
-    );
+    $dbh->query('INSERT INTO dual VALUES (1,1);');
 
   }
 
   public function testGetShardCount(): void {
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
+    $dbh = $this->getDriverToTest();
     $this->assertTrue($dbh->getConfig()->getShardCount() > 0);
   }
 

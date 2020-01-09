@@ -102,12 +102,54 @@ class BaseTest extends TestCase {
     $this->assertFalse(TestFactory::getUseMockDrivers());
   }
 
-  public function test_loadEnvironmentalConfigs(): void {
+  public function test_devDriverLoadsSuccessfullyInDev(): void {
+    if (DevelopmentMode::isDevelopment() === false) {
+      $this->assertTrue(true);
+      return;
+    }
+
+    $driver = TestFactory::factory(TestDriverInterface::class, 'Mock');
+    $this->assertTrue($driver instanceof TestDriverInterface);
+  }
+
+  public function test_stgDriverLoadsSuccessfullyOnStg(): void {
+    if (DevelopmentMode::isStaging() === false) {
+      $this->assertTrue(true);
+      return;
+    }
+    $driver = TestFactory::factory(TestDriverInterface::class, 'Mock');
+    $this->assertTrue($driver instanceof TestDriverInterface);
+  }
+
+  public function test_prodDriverLoadsSuccessfullyOnProd(): void {
+    if (DevelopmentMode::isProduction() === false) {
+      $this->assertTrue(true);
+      return;
+    }
+
+    $driver = TestFactory::factory(TestDriverInterface::class, 'Mock');
+    $this->assertTrue($driver instanceof TestDriverInterface);
+  }
+
+  public function test_environmentSpecificConfigsAreValid(): void {
     $driverConfigs = Map {
       "Dev" => new MockDriverConfigDev(),
       "Staging" => new MockDriverConfigStg(),
       "Production" => new MockDriverConfigProd(),
     };
+
+    foreach ($driverConfigs as $environment => $config) {
+      $this->assertTrue($config instanceof TestDriverConfigInterface);
+      $expected = 'This-is-'.$environment;
+
+      if ($config instanceof TestDriverConfigInterface) {
+        $this->assertEquals($expected, $config->getExampleConfigValue());
+      } else {
+        $this->fail('config should be TestDriverConfigInterface');
+      }
+
+      $this->assertTrue(TestFactory::clear());
+    }
   }
 
   public function testAddClassRoot(): void {

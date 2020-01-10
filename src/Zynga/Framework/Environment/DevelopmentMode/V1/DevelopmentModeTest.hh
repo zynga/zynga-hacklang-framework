@@ -59,10 +59,6 @@ class Mock_UnknownDetector implements DetectorInterface {
 
 class DevelopmentModeTest extends TestCase {
 
-  public function testInvalidSet(): void {
-    $this->assertFalse(DevelopmentMode::setMode(12345));
-  }
-
   public function testNormalStandup(): void {
 
     // reset to initial state
@@ -106,7 +102,6 @@ class DevelopmentModeTest extends TestCase {
     $this->assertTrue(DevelopmentMode::detect());
 
     // dev mode test.
-    $this->assertTrue(DevelopmentMode::setMode(DevelopmentMode::DEV));
     $this->assertEquals(DevelopmentMode::DEV, DevelopmentMode::getMode());
     $this->assertTrue(DevelopmentMode::isDevelopment());
     $this->assertFalse(DevelopmentMode::isStaging());
@@ -120,7 +115,7 @@ class DevelopmentModeTest extends TestCase {
 
   }
 
-  public function testStaqeDetect(): void {
+  public function testStageDetect(): void {
 
     $detector = new Mock_StageDetector();
 
@@ -140,7 +135,6 @@ class DevelopmentModeTest extends TestCase {
     $this->assertTrue(DevelopmentMode::detect());
 
     // dev mode test.
-    $this->assertTrue(DevelopmentMode::setMode(DevelopmentMode::STAGING));
     $this->assertEquals(DevelopmentMode::STAGING, DevelopmentMode::getMode());
     $this->assertFalse(DevelopmentMode::isDevelopment());
     $this->assertTrue(DevelopmentMode::isStaging());
@@ -171,7 +165,6 @@ class DevelopmentModeTest extends TestCase {
     $this->assertTrue(DevelopmentMode::detect());
 
     // dev mode test.
-    $this->assertTrue(DevelopmentMode::setMode(DevelopmentMode::PRODUCTION));
     $this->assertEquals(
       DevelopmentMode::PRODUCTION,
       DevelopmentMode::getMode(),

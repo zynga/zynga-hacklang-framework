@@ -7,7 +7,8 @@ use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
 use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
 use Zynga\Framework\Factory\V2\Test\MockState as FactoryMockState;
 use Zynga\Framework\Type\V1\UInt64Box;
-abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest<UInt64Box> {
+abstract class ConnectionReadWriteBaseTest
+  extends ConnectionBaseTest<UInt64Box> {
 
   public function doSetUpBeforeClass(): bool {
 
@@ -21,10 +22,10 @@ abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest<UInt64Box>
 
   public function testValidInsertCommitSelectQuery(): void {
 
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
+    $dbh = $this->getDriverToTest();
 
     $randShard = $this->getRandomShardType();
-    
+
     $ts = $this->getUnitTestStamp();
 
     $expectedValue = time() - mt_rand(1, 100000);
@@ -57,14 +58,17 @@ abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest<UInt64Box>
 
     $selSth = $dbh->query($sql);
 
-    $this->assertEquals(1, $selSth->getNumRows(), 'selSth: ' . var_export($selSth->fetchMap(), true));
+    $this->assertEquals(
+      1,
+      $selSth->getNumRows(),
+      'selSth: '.var_export($selSth->fetchMap(), true),
+    );
 
   }
 
   public function testValidInsertQuery(): void {
 
-
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
+    $dbh = $this->getDriverToTest();
 
     $randShard = $this->getRandomShardType();
 
@@ -93,10 +97,12 @@ abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest<UInt64Box>
 
   public function testValidInsertCommitQuery(): void {
 
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
+    $dbh = $this->getDriverToTest();
 
     if ($dbh->getConfig()->isDatabaseReadOnly() === true) {
-      $this->markTestSkipped($this->getConfigName().'::isReadonly');
+      $this->markTestSkipped(
+        $dbh->getConfig()->getDatabaseName().'::isReadonly',
+      );
       return;
     }
 
@@ -129,7 +135,7 @@ abstract class ConnectionReadWriteBaseTest extends ConnectionBaseTest<UInt64Box>
   }
 
   public function testGetShardCount(): void {
-    $dbh = DatabaseFactory::factory(DriverInterface::class, $this->getConfigName());
+    $dbh = $this->getDriverToTest();
     $this->assertTrue($dbh->getConfig()->getShardCount() > 0);
   }
 

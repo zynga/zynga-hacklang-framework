@@ -7,12 +7,11 @@ use Zynga\Framework\Factory\V2\Test\MockState as FactoryMockState;
 
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverInterface;
 use Zynga\Framework\ShardedDatabase\V3\Factory as DatabaseFactory;
-use
-  Zynga\Framework\ShardedDatabase\V3\Config\Mysql\ConnectionBaseTest
-;
+use Zynga\Framework\ShardedDatabase\V3\Config\Mysql\ConnectionBaseTest;
 use Zynga\Framework\Type\V1\UInt64Box;
 
-abstract class ConnectionReadDeleteBaseTest extends ConnectionBaseTest<UInt64Box> {
+abstract class ConnectionReadDeleteBaseTest
+  extends ConnectionBaseTest<UInt64Box> {
 
   public function doSetUpBeforeClass(): bool {
     parent::doSetUpBeforeClass();
@@ -36,10 +35,7 @@ abstract class ConnectionReadDeleteBaseTest extends ConnectionBaseTest<UInt64Box
   }
 
   public function testValidDeleteQuery(): void {
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $randShard = $this->getRandomShardType();
     $dbh->setShardType($randShard);
@@ -57,10 +53,7 @@ abstract class ConnectionReadDeleteBaseTest extends ConnectionBaseTest<UInt64Box
 
   public function testValidDeleteCommitQuery(): void {
 
-    $dbh = DatabaseFactory::factory(
-      DriverInterface::class,
-      $this->getConfigName(),
-    );
+    $dbh = $this->getDriverToTest();
 
     $sql =
       'DELETE FROM '.

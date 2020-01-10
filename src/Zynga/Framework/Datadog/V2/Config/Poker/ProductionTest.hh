@@ -3,13 +3,11 @@
 namespace Zynga\Framework\Datadog\V2\Config\Poker;
 
 use Zynga\Framework\Datadog\V2\Config\BaseTest;
-use Zynga\Framework\Environment\DevelopmentMode\V1\DevelopmentMode;
+use Zynga\Framework\Datadog\V2\Interfaces\DriverConfigInterface;
 
 class ProductionTest extends BaseTest {
-  public function getDriverName(): string {
-    return 'Poker';
-  }
-  public function getDevelopmentMode(): int {
-    return DevelopmentMode::PRODUCTION;
+
+  public function getDriverConfigToTest(): DriverConfigInterface {
+    return new Production();
   }
 }

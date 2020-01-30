@@ -25,6 +25,9 @@ class Memcache extends DriverBase implements MemcacheDriverInterface {
   // Operations like set and delete will retry their operation
   const int OPERATION_ATTEMPTS_MAX = 100; // 100 * 10000 = 1s max wait time.
   const int OPERATION_TIMEOUT_AMOUNT_MICRO_SECONDS = 10000;
+  
+  // Max lock timeout is 1 seconds
+  const int MAX_TIMEOUT_AMOUNT_SECONDS = 1;
 
   public function __construct(DriverConfigInterface $config) {
     $this->_config = $config;
@@ -98,10 +101,16 @@ class Memcache extends DriverBase implements MemcacheDriverInterface {
 
       $this->connect();
 
+      $startTime = microtime(true);
       for ($retryCount = 0; $retryCount < self::OPERATION_ATTEMPTS_MAX; $retryCount++) {
         $success = $this->_memcache->set($key, $value, $flags, $ttl);
         if ($success == true) {
           return true;
+        }
+        
+        // We crossed max timeout, break early.
+        if( (microtime(true) - $startTime) > self::MAX_TIMEOUT_AMOUNT_SECONDS) {
+          return false;
         }
         
         usleep(self::OPERATION_TIMEOUT_AMOUNT_MICRO_SECONDS);
@@ -133,10 +142,16 @@ class Memcache extends DriverBase implements MemcacheDriverInterface {
 
       $this->connect();
       
+      $startTime = microtime(true);
       for ($retryCount = 0; $retryCount < self::OPERATION_ATTEMPTS_MAX; $retryCount++) {
         $success = $this->_memcache->delete($key);
         if ($success == true) {
           return true;
+        }
+        
+        // We crossed max timeout, break early.
+        if( (microtime(true) - $startTime) > self::MAX_TIMEOUT_AMOUNT_SECONDS) {
+          return false;
         }
         
         usleep(self::OPERATION_TIMEOUT_AMOUNT_MICRO_SECONDS);

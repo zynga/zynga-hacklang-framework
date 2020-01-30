@@ -139,7 +139,7 @@ class Caching extends FactoryDriverBase implements DriverInterface {
         }
         
         // Don't care about the first lock try. Only log an error for subsequent ones.
-        error_log('JEO pgData::lock storable=' . get_class($obj) . ' key=' . $lockKey . ' lockRetryCount=' . $lockRetryCount . ' obj=' . $obj->export()->asJSON());
+        error_log('JEO pgData::lock storable=' . get_class($obj) . ' key=' . $lockKey . ' lockRetryCount=' . $lockRetryCount . ' obj=' . $obj->export()->asJSON() . ' backtrace=' . json_encode(debug_backtrace()));
         // if failed to get a lock, sleep and try again
         usleep(self::LOCK_TIMEOUT_AMOUNT_MICRO_SECONDS);
       }

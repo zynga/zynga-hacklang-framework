@@ -18,9 +18,11 @@ class Caching extends FactoryDriverBase implements DriverInterface {
   private DriverConfigInterface $_config;
   private Map<string, LockPayloadInterface> $_locks;
   
-  // Lock operation would try a max of 200 times and sleep for 10000 in between
-  const int LOCK_ATTEMPTS_MAX = 200; // 200 * 10000 = 2s max wait time.
+  // Lock operation would try a max of 100 times and sleep for 10000 in between
+  const int LOCK_ATTEMPTS_MAX = 100;
   const int LOCK_TIMEOUT_AMOUNT_MICRO_SECONDS = 10000;
+  // Max lock timeout is 1 seconds
+  const int MAX_TIMEOUT_AMOUNT_SECONDS = 1;
   
   public function __construct(DriverConfigInterface $config) {
     $this->_config = $config;
@@ -130,6 +132,14 @@ class Caching extends FactoryDriverBase implements DriverInterface {
         }
         
         $lockRetryCount++;
+        
+        // We crossed max timeout, break early.
+        if( (microtime(true) - $startTime) > self::MAX_TIMEOUT_AMOUNT_SECONDS) {
+          return false;
+        }
+        
+        // Don't care about the first lock try. Only log an error for subsequent ones.
+        error_log('JEO pgData::lock storable=' . get_class($obj) . ' key=' . $lockKey . ' lockRetryCount=' . $lockRetryCount . ' obj=' . $obj->export()->asJSON());
         // if failed to get a lock, sleep and try again
         usleep(self::LOCK_TIMEOUT_AMOUNT_MICRO_SECONDS);
       }

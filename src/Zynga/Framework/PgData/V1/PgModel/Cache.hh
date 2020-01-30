@@ -55,8 +55,12 @@ class Cache implements CacheInterface {
   public function lockRowCache(PgRowInterface $row): bool {
 
     try {
+      if($row->getPrimaryKeyTyped()->isDefaultValue()[0] === true) {
+        throw new Exception("Trying to lock a pg row without primary key! Row=" . $row->export()->asJSON());
+      }
+      
       $cache = $this->getDataCache();
-
+      
       return $cache->lock($row);
 
     } catch (Exception $e) {
@@ -77,6 +81,10 @@ class Cache implements CacheInterface {
 
   }
 
+  /**
+   * API to force clear the result set cache so it can refetched.
+   * Used by external systems to manage result set caches
+   */
   public function clearResultSetCache<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     PgWhereClauseInterface $where,
@@ -137,6 +145,10 @@ class Cache implements CacheInterface {
     return false;
   }
 
+  /**
+   * Used internally by the system to lock result set cache before populating data.
+   * Should not be used by external systems.
+   */
   public function lockResultSetCache<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     PgWhereClauseInterface $where,
@@ -156,6 +168,10 @@ class Cache implements CacheInterface {
     }
   }
 
+  /**
+   * Used internally by the system to unlock result set cache after populating data.
+   * Should not be used by external systems.
+   */
   public function unlockResultSetCache<TModelClass as PgRowInterface>(
     classname<TModelClass> $model,
     PgWhereClauseInterface $where,

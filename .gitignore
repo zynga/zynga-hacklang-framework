@@ -1,5 +1,4 @@
 tmp
-vendor
 Makefile
 composer.lock
 bootstrap.hh

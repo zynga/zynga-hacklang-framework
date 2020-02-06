@@ -1,6 +1,6 @@
 [submodule "vendor/zynga/phpunit-hhi"]
-	path = vendor/zynga/phpunit-hhi
+  path = vendor/zynga/phpunit-hhi
   url = https://github.com/zynga/zynga-hhvm-phpunit-hhi.git
 [submodule "vendor/zynga/phpunit"]
-	path = vendor/zynga/phpunit
+  path = vendor/zynga/phpunit
   url = https://github.com/zynga/zynga-hhvm-phpunit.git

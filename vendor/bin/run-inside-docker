@@ -1,0 +1,145 @@
+#!/bin/bash
+
+# Snag the root directory for the codebase.
+CODEBASE_ROOT_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )/../.." >/dev/null && pwd)"
+
+# Where we want the virtual mount to exist for our code from the framework.
+MOUNT_CODEBASE_DIR="/var/source"
+
+# Our container we will reuse for any tests etc.
+IMAGE_NAME="${USER}_zynga_hacklang_image"
+CONTAINER_NAME="${USER}_zynga_hacklang_framework"
+
+# JEO: we need to run the runtime within an container as the outward executing user.
+#GID=`id -g $UID`
+GID=`id -g $UID`
+GNAME=`id -g -n $UID`
+
+echo "user=${USER} uid={$UID} gname=${GNAME} gid=${GID}"
+
+# -u $UID:$GID \
+#echo "uid=$UID"
+#echo "gid=$GID"
+
+echo "- containerName=${CONTAINER_NAME}"
+echo "- codebaseRoot=${CODEBASE_ROOT_DIR}"
+
+IMAGE_DOES_EXIST="$(docker images | grep ${IMAGE_NAME})"
+
+if [ "$IMAGE_DOES_EXIST" == "" ]; then
+  echo "- creating docker image imageName=${IMAGE_NAME}"
+  cd $CODEBASE_ROOT_DIR && docker build \
+    -t ${IMAGE_NAME} \
+    --build-arg USER_ID=$UID \
+    --build-arg USER_NAME=$USER \
+    --build-arg USER_GROUP_ID=$GID .
+  echo "- created image imageName=${IMAGE_NAME}"
+fi
+
+CONTAINER_DOES_EXIST="$(docker ps -a | grep ${CONTAINER_NAME})"
+if [ "$CONTAINER_DOES_EXIST" == "" ]; then
+  echo "- creating docker container containerName=${CONTAINTER_NAME}"
+  docker create \
+    -it \
+    -e ZYNGA_DOCKER=1 \
+    -v "${CODEBASE_ROOT_DIR}:/var/source" \
+    -v "/opt/zynga:/opt/zynga" \
+    --name "${CONTAINER_NAME}" \
+    -w "${MOUNT_CODEBASE_DIR}" \
+    ${IMAGE_NAME}
+
+  #docker start "${CONTAINER_NAME}" >/dev/null 2>/dev/null
+    
+  # add the execution group to the group file. 
+  #docker exec \
+  # -w "${MOUNT_CODEBASE_DIR}" \
+  # -it \
+  # "${CONTAINER_NAME}" \
+  # addgroup --gid $GID $GNAME 
+  
+  # add the user to the passwd file.
+  #docker exec \
+  # -w "${MOUNT_CODEBASE_DIR}" \
+  # -it \
+  # "${CONTAINER_NAME}" \
+  # useradd --gid $GID --uid $UID -r -s /bin/bash -m $USER
+
+  # stand up and init mysql database for testing.
+  #docker exec \
+  # -w "${MOUNT_CODEBASE_DIR}" \
+  # -it \
+  # "${CONTAINER_NAME}" \
+  # /var/source/bin/service/mysql.sh
+
+  #docker exec \
+  # -w "${MOUNT_CODEBASE_DIR}" \
+  # -it \
+  # "${CONTAINER_NAME}" \
+  # /var/source/bin/service/init/mysql.sh
+
+  # stand up and init postgres database for testing.
+  #docker exec \
+  # -w "${MOUNT_CODEBASE_DIR}" \
+  # -it \
+  # "${CONTAINER_NAME}" \
+  # /var/source/bin/service/postgres.sh
+
+  #docker exec \
+  # -w "${MOUNT_CODEBASE_DIR}" \
+  # -it \
+  # "${CONTAINER_NAME}" \
+  # /var/source/bin/service/init/postgres.sh
+
+  ##
+  # now shut down the container so the normal startup including services 
+  # happens.
+  ##
+  #docker stop "${CONTAINER_NAME}" > /dev/null 2>/dev/null
+
+else
+  echo "- container exists containerName=${CONTAINER_NAME}"
+fi
+
+##
+# Create the container if it doesn't exist.
+##
+IS_RUNNING="$(docker ps -a | grep ${CONTAINER_NAME} | grep Up)"
+
+echo "IS_RUNNING=${IS_RUNNING}*"
+
+if [ "${IS_RUNNING}" == "" ]; then 
+
+  # spin up the docker service
+  echo "- starting docker container containerName=${CONTAINER_NAME}";
+  docker start "${CONTAINER_NAME}" >/dev/null 2>/dev/null
+
+  # spin up the child services we depend upon for testing, etc.
+  docker exec \
+   -w "${MOUNT_CODEBASE_DIR}" \
+   -it \
+   "${CONTAINER_NAME}" \
+   sudo /var/source/bin/service/memcached.sh
+  
+  docker exec \
+   -w "${MOUNT_CODEBASE_DIR}" \
+   -it \
+   "${CONTAINER_NAME}" \
+   sudo /var/source/bin/service/mysql.sh
+
+  docker exec \
+   -w "${MOUNT_CODEBASE_DIR}" \
+   -it \
+   "${CONTAINER_NAME}" \
+   sudo /var/source/bin/service/postgres.sh
+
+else 
+  echo "- container is running containerName=${CONTAINER_NAME}"
+fi
+
+# run the command within docker.
+docker exec \
+   -w "${MOUNT_CODEBASE_DIR}" \
+   -it \
+   -u $UID:$GID \
+   "${CONTAINER_NAME}" \
+   $@

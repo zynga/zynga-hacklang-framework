@@ -1,0 +1,98 @@
+[
+    {
+        "name": "zynga/phpunit-hhi",
+        "version": "v2.0.0",
+        "version_normalized": "2.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zynga/zynga-hhvm-phpunit-hhi.git",
+            "reference": "11edcffd48cc20885f7b2fab2a0fc50d1e6ce2aa"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit-hhi/zipball/11edcffd48cc20885f7b2fab2a0fc50d1e6ce2aa",
+            "reference": "11edcffd48cc20885f7b2fab2a0fc50d1e6ce2aa",
+            "shasum": ""
+        },
+        "require": {
+            "hhvm": ">=3.12.0"
+        },
+        "conflict": {
+            "91carriage/phpunit-hhi": "> 0",
+            "phpunit/phpunit": "<5.7.15"
+        },
+        "time": "2019-07-18T20:30:34+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "license": [
+            "MIT"
+        ],
+        "description": "HHI definitions for PHPUnit",
+        "keywords": [
+            "hack",
+            "hhvm",
+            "phpunit",
+            "testing"
+        ],
+        "support": {
+            "source": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/tree/v2.0.0",
+            "issues": "https://github.com/zynga/zynga-hhvm-phpunit-hhi/issues"
+        }
+    },
+    {
+        "name": "zynga/phpunit",
+        "version": "v2.1.3",
+        "version_normalized": "2.1.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zynga/zynga-hhvm-phpunit.git",
+            "reference": "fdd51197c26036a0428e227a8647390f3ab52bf9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zynga/zynga-hhvm-phpunit/zipball/fdd51197c26036a0428e227a8647390f3ab52bf9",
+            "reference": "fdd51197c26036a0428e227a8647390f3ab52bf9",
+            "shasum": ""
+        },
+        "require": {
+            "hhvm": "^3.18",
+            "zynga/phpunit-hhi": "^2.0"
+        },
+        "time": "2019-08-09T06:37:29+00:00",
+        "bin": [
+            "bin/phpunit",
+            "bin/phpunit-xhprof",
+            "bin/phpunit.hh",
+            "bin/run-single-test",
+            "bin/run-single-test-xhprof",
+            "bin/run-single-test.hh",
+            "bin/hhvm-restart-wrapper"
+        ],
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "PHPUnit\\Tests\\": "tests/phpunit/PHPUnit/Tests/",
+                "SebastianBergmann\\CodeCoverage\\": "src/SebastianBergmann/CodeCoverage/",
+                "SebastianBergmann\\Environment\\": "src/SebastianBergmann/Environment/",
+                "SebastianBergmann\\Exporter\\": "src/SebastianBergmann/Exporter/",
+                "SebastianBergmann\\PHPUnit\\": "src/SebastianBergmann/PHPUnit/",
+                "SebastianBergmann\\TextTemplate\\": "src/SebastianBergmann/TextTemplate/",
+                "SebastianBergmann\\TokenStream\\": "src/SebastianBergmann/TokenStream/",
+                "SebastianBergmann\\TokenStream\\Tests\\": "tests/token-stream/SebastianBergmann/TokenStream/Tests/",
+                "Zynga\\CodeBase\\V1\\": "src/Zynga/CodeBase/V1/",
+                "Zynga\\PHPUnit\\V2\\": "src/Zynga/PHPUnit/V2/"
+            }
+        },
+        "description": "Zynga modifications to the PHPUNIT framework.",
+        "keywords": [
+            "phpunit",
+            "testing",
+            "xunit"
+        ],
+        "support": {
+            "source": "https://github.com/zynga/zynga-hhvm-phpunit/tree/v2.1.3",
+            "issues": "https://github.com/zynga/zynga-hhvm-phpunit/issues"
+        }
+    }
+]

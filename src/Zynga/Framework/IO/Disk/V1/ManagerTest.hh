@@ -586,9 +586,28 @@ class ManagerTest extends TestCase {
     $currentUser = get_current_user();
 
     if ($currentUser == 'root') {
-      // error_log('JEO - markingSkipped='.$currentUser);
+      //error_log('JEO - markingSkipped='.$currentUser);
       $this->markTestSkipped(
         'This test will not fail for a root user, please run tests as a normal user and not root.',
+      );
+    }
+
+    $manager = DiskIOManager::instance();
+
+    // Test if this is a broken unix environment, ex docker on mac will let you chown even if you aren't root
+    $brokenFile = $this->getTempTestDir().'/brokenChownEnvironment.testfile';
+    touch($brokenFile);
+
+    $manager->chown($brokenFile, "root");
+
+    $currentUser = posix_getpwuid(fileowner($brokenFile))['name'];
+
+    unlink($brokenFile);
+
+    // this is nutso, as the chown should be failing
+    if ($currentUser == 'root') {
+      $this->markTestSkipped(
+        'This test will not work on a environment where chown does not work properly.',
       );
     }
 
@@ -600,8 +619,9 @@ class ManagerTest extends TestCase {
     // --
     $testFile = $this->getTempTestDir().'/30.testfile';
     touch($testFile);
-    $manager = DiskIOManager::instance();
+
     $this->assertFalse($manager->chown($testFile, "root"));
+
     unlink($testFile);
   }
 

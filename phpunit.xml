@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/5.2/phpunit.xsd"
+  bootstrap="./bootstrap.hh"
+  backupGlobals="false"
+  backupStaticAttributes="false"
+  beStrictAboutTestsThatDoNotTestAnything="true"
+  beStrictAboutOutputDuringTests="true"
+  colors="true"
+  verbose="true"
+  cacheTokens="false"
+  processIsolation="false">
+  <testsuites>
+    <testsuite name="framework-tests">
+      <directory suffix="Test.hh">./src/*</directory>
+    </testsuite>
+    <testsuite name="phpunit-tests">
+      <directory suffix="Test.hh">./vendor/zynga/phpunit/src/Zynga/PHPUnit/V2/Tests/System</directory>
+    </testsuite>
+  </testsuites>
+  <filter>
+    <whitelist addUncoveredFilesFromWhitelist="true">
+      <directory suffix=".hh">./src/*</directory>
+      <exclude>
+        <file>./bootstrap.hh</file>
+        <file>./vendor/zynga/zynga-hhvm-moduledev/src/skeleton/bootstrap.hh</file>
+        <directory suffix="Test.hh">./src/*</directory>
+      </exclude>
+    </whitelist>
+  </filter>
+  <listeners>
+    <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener">
+      <arguments>
+        <array>
+          <element key="slowThreshold">
+            <integer>100</integer>
+          </element>
+          <element key="reportLength">
+            <integer>20</integer>
+          </element>
+        </array>
+      </arguments>
+    </listener>
+  </listeners>
+</phpunit>

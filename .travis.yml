@@ -5,8 +5,7 @@ services:
 env:
   global:
   - HHVM_VERSION=latest
-  - secure: S/LgpT46gu0bbczZJXrdirUwuXA6uPPYpKyvbYsQPGnB8BY3PJX9AxAqiYO1G1s84mQGBNxKdL4riIwn1Hc7mIxh86d+2IdhCrfu8LLJLyugYUeAMLYfobILhdN4hY6QQ7N3dhfef5U8b67ldN3kyzmy73NWS5FEMsbEhhv4N29ZDJT/Gv6/tNcuMg55nmgB/9ZmYJDd2L14NP+vUnsW2941/PJsolOpo4Zou+EDkRyqi+4h+CsUTyei79KHWyWChnZXG/AGXbvZ1dM/WRoJ+HeG7tfMCSges51my7EXGps/95vPsAwDbHgRElEXh36wnbVDPZSgcVP6VvU5HUtX5yQ3sJt4+8o4mv3PS5DHBtjaOy6wO+G+emvRwOqG+3wOsbZjiToyhC57OCb609gKugkszYPpX0zP26EFgX5ffoP/dGdyHJCPDNoQ2sPrrF+am9e3k8sC/sMCCLFE5g4WJ3ifiKt6N/bkZWHuZKWeS/OOcwEe/FDQeF/J729opeVq207KjI0XdZ3xjHfh3GEiQ8EMhfrtjK3iscqpXh3YHBxh9HaXZ1jI4+aevYV2feHb/3xTBlqAZm0Vvhdp/XQ1ksQqlKFdxwgkeeLAxEJwm7+XNSf15l9IEixvovaYsnxcGS0d437/1SFonCBxFkgR11WWs8p8MIrKuObl34iJLqY=
 before_install:
 - docker pull zerodiv/hhvm:$HHVM_VERSION
 script:
-- docker run -it -e GITHUB_TOKEN=$GITHUB_TOKEN -v $(pwd):/var/source zerodiv/hhvm:$HHVM_VERSION "/var/source/.build.sh"
+  make test

@@ -156,7 +156,10 @@ class Base extends BaseDriver {
       // if not connected attempt to connect.
       if ($this->_dbh === null) {
         throw new ConnectionGoneAwayException(
-          'NO_CONNECTION host='.$this->getConfig()->getConnectionString(),
+          'NO_CONNECTION host='.
+          $this->getConfig()->getCurrentServer().
+          ' schema='.
+          $this->getConfig()->getCurrentDatabase(),
         );
       }
 
@@ -187,7 +190,10 @@ class Base extends BaseDriver {
 
       if ($this->_dbh === null) {
         throw new ConnectionGoneAwayException(
-          'NO_CONNECTION host='.$this->getConfig()->getConnectionString(),
+          'NO_CONNECTION host='.
+          $this->getConfig()->getCurrentServer().
+          ' schema='.
+          $this->getConfig()->getCurrentDatabase(),
         );
       }
 

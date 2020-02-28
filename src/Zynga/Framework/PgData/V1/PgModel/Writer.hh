@@ -22,58 +22,42 @@ class Writer implements WriterInterface {
   }
 
   /**
-   * Add a new item. Will always try to take a look but will only unlock if the api dev asks it
+   * Add a new item. $shouldUnlock is an unused parameter.
    */
   public function add(PgRowInterface $row, bool $shouldUnlock): bool {
 
-    $pgCache = null;
-    try {
+    $pk = $row->getPrimaryKeyTyped();
 
-      $pk = $row->getPrimaryKeyTyped();
+    list($isDefaultValue, $isDefaultError) = $pk->isDefaultValue();
 
-      list($isDefaultValue, $isDefaultError) = $pk->isDefaultValue();
+    if ($isDefaultValue === true) {
 
-      if ($isDefaultValue === true) {
-
-        if ($row->getPrimaryKeyIsFromDatabase() === false) {
-          $pk->set($row->getPrimaryKeyNextValue()->get());
-        } else {
-          throw new Exception(
-            'Primary key is default value still. value='.strval($pk->get()),
-          );
-        }
-
+      if ($row->getPrimaryKeyIsFromDatabase() === false) {
+        $pk->set($row->getPrimaryKeyNextValue()->get());
+      } else {
+        throw new Exception(
+          'Primary key is default value still. value='.strval($pk->get()),
+        );
       }
 
-      $pgModel = $this->pgModel();
-      $pgCache = $pgModel->cache();
-
-      $locked = $pgCache->lockRowCache($row);
-      if ($locked === true) {
-        $dataCache = $pgCache->getDataCache();
-        $dbh = $pgModel->db()->getWriteDatabase();
-
-        $insertSql = SqlGenerator::getInsertSql($dbh, $pgModel, $row);
-
-        $result = $dbh->query($insertSql);
-
-        if ($result->wasSuccessful() === true) {
-          $dataCache->set($row);
-
-          return true;
-        }
-      }
-
-      return false;
-
-    } catch (Exception $e) {
-      throw $e;
-    } finally {
-      if ($shouldUnlock === true && $pgCache !== null) {
-        $pgCache->unlockRowCache($row);
-      }
     }
 
+    $pgModel = $this->pgModel();
+    $pgCache = $pgModel->cache();
+
+    $dataCache = $pgCache->getDataCache();
+    $dbh = $pgModel->db()->getWriteDatabase();
+
+    $insertSql = SqlGenerator::getInsertSql($dbh, $pgModel, $row);
+
+    $result = $dbh->query($insertSql);
+
+    if ($result->wasSuccessful() === true) {
+      $dataCache->set($row);
+      return true;
+    }
+
+    return false;
   }
 
   /**

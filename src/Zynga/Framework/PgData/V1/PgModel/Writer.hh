@@ -26,12 +26,23 @@ class Writer implements WriterInterface {
    */
   public function add(PgRowInterface $row, bool $shouldUnlock): bool {
 
+    $wasSuccessful = $this->addToDbOnly($row);
+    if ($wasSuccessful) {
+      $pgModel = $this->pgModel();
+      $pgCache = $pgModel->cache();
+      $dataCache = $pgCache->getDataCache();
+      $dataCache->set($row);
+
+    }
+    return $wasSuccessful;
+  }
+
+  public function addToDbOnly(PgRowInterface $row): bool {
     $pk = $row->getPrimaryKeyTyped();
 
     list($isDefaultValue, $isDefaultError) = $pk->isDefaultValue();
 
     if ($isDefaultValue === true) {
-
       if ($row->getPrimaryKeyIsFromDatabase() === false) {
         $pk->set($row->getPrimaryKeyNextValue()->get());
       } else {
@@ -39,27 +50,17 @@ class Writer implements WriterInterface {
           'Primary key is default value still. value='.strval($pk->get()),
         );
       }
-
     }
 
     $pgModel = $this->pgModel();
-    $pgCache = $pgModel->cache();
-
-    $dataCache = $pgCache->getDataCache();
     $dbh = $pgModel->db()->getWriteDatabase();
 
     $insertSql = SqlGenerator::getInsertSql($dbh, $pgModel, $row);
 
     $result = $dbh->query($insertSql);
 
-    if ($result->wasSuccessful() === true) {
-      $dataCache->set($row);
-      return true;
-    }
-
-    return false;
+    return $result->wasSuccessful();
   }
-
   /**
    * Saves an item.
    * Expects the api dev to have a lock already.

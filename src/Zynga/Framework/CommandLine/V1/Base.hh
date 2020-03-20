@@ -58,7 +58,7 @@ abstract class Base {
     MissingArgumentsException $e,
   ): int {
 
-    $this->error($e->getMessage());
+    $this->error('CommandLine missing args message=' . $e->getMessage());
 
     // dump out the usage
     $usageObj = new Usage();
@@ -69,7 +69,7 @@ abstract class Base {
 
   public function runHandleCaughtException(Exception $e): int {
     $this->error(
-      'Caught exception='.get_class($e).' message='.$e->getMessage(),
+      'CommandLine framework caught untrapped exception='.get_class($e).' message='.$e->getMessage(),
     );
     $this->error('STACKTRACE: ');
     $this->error($e->getTraceAsString());
@@ -97,6 +97,7 @@ abstract class Base {
 
   public function error(string $message): void {
     $this->message('[ERROR] - '.$message);
+    error_log('[ERROR] - '.$message);
   }
 
   public function info(string $message): void {

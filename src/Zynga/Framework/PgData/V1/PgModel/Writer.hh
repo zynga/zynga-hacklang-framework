@@ -22,60 +22,45 @@ class Writer implements WriterInterface {
   }
 
   /**
-   * Add a new item. Will always try to take a look but will only unlock if the api dev asks it
+   * Add a new item.
    */
-  public function add(PgRowInterface $row, bool $shouldUnlock): bool {
+  public function add(PgRowInterface $row): bool {
 
-    $pgCache = null;
-    try {
-
-      $pk = $row->getPrimaryKeyTyped();
-
-      list($isDefaultValue, $isDefaultError) = $pk->isDefaultValue();
-
-      if ($isDefaultValue === true) {
-
-        if ($row->getPrimaryKeyIsFromDatabase() === false) {
-          $pk->set($row->getPrimaryKeyNextValue()->get());
-        } else {
-          throw new Exception(
-            'Primary key is default value still. value='.strval($pk->get()),
-          );
-        }
-
-      }
-
+    $wasSuccessful = $this->addToDbOnly($row);
+    if ($wasSuccessful) {
       $pgModel = $this->pgModel();
       $pgCache = $pgModel->cache();
+      $dataCache = $pgCache->getDataCache();
+      $dataCache->set($row);
 
-      $locked = $pgCache->lockRowCache($row);
-      if ($locked === true) {
-        $dataCache = $pgCache->getDataCache();
-        $dbh = $pgModel->db()->getWriteDatabase();
+    }
+    return $wasSuccessful;
+  }
 
-        $insertSql = SqlGenerator::getInsertSql($dbh, $pgModel, $row);
+  public function addToDbOnly(PgRowInterface $row): bool {
+    $pk = $row->getPrimaryKeyTyped();
 
-        $result = $dbh->query($insertSql);
+    list($isDefaultValue, $isDefaultError) = $pk->isDefaultValue();
 
-        if ($result->wasSuccessful() === true) {
-          $dataCache->set($row);
-
-          return true;
-        }
-      }
-
-      return false;
-
-    } catch (Exception $e) {
-      throw $e;
-    } finally {
-      if ($shouldUnlock === true && $pgCache !== null) {
-        $pgCache->unlockRowCache($row);
+    if ($isDefaultValue === true) {
+      if ($row->getPrimaryKeyIsFromDatabase() === false) {
+        $pk->set($row->getPrimaryKeyNextValue()->get());
+      } else {
+        throw new Exception(
+          'Primary key is default value still. value='.strval($pk->get()),
+        );
       }
     }
 
-  }
+    $pgModel = $this->pgModel();
+    $dbh = $pgModel->db()->getWriteDatabase();
 
+    $insertSql = SqlGenerator::getInsertSql($dbh, $pgModel, $row);
+
+    $result = $dbh->query($insertSql);
+
+    return $result->wasSuccessful();
+  }
   /**
    * Saves an item.
    * Expects the api dev to have a lock already.

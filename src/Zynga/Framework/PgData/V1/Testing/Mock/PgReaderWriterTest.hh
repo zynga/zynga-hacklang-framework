@@ -30,7 +30,7 @@ class PgUnitTestReaderWriterTest extends TestCase {
     );
 
     // Add an item.
-    $writer->add($item, false);
+    $writer->add($item);
 
     // Ensure the item is present.
     $this->assertNotNull(

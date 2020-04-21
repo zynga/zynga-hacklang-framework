@@ -22,9 +22,9 @@ class Writer implements WriterInterface {
   }
 
   /**
-   * Add a new item. $shouldUnlock is an unused parameter.
+   * Add a new item.
    */
-  public function add(PgRowInterface $row, bool $shouldUnlock): bool {
+  public function add(PgRowInterface $row): bool {
 
     $wasSuccessful = $this->addToDbOnly($row);
     if ($wasSuccessful) {

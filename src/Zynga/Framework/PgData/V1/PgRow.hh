@@ -7,13 +7,18 @@ use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\Exceptions\InvalidPrimaryKeyException;
 use Zynga\Framework\StorableObject\V1\Base as StorableObject;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
+use Zynga\Framework\Type\V1\BoolBox;
 
 abstract class PgRow extends StorableObject implements PgRowInterface {
   private PgModelInterface $_pgModel;
+  public BoolBox $_ignore_tombstoned;
 
   public function __construct(PgModelInterface $pgModel) {
 
     parent::__construct();
+
+    $this->_ignore_tombstoned = new BoolBox();
+    $this->_ignore_tombstoned->setIsRequired(false);
 
     $this->_pgModel = $pgModel;
 
@@ -50,6 +55,15 @@ abstract class PgRow extends StorableObject implements PgRowInterface {
   
   public function delete(bool $shouldUnlock = true): bool {
     return $this->pgModel()->writer()->delete($this, $shouldUnlock);
+  }
+
+  public function isTombstoned(): bool {
+    return $this->_ignore_tombstoned->get();
+  }
+
+  public function setTombstone(): bool {
+    $this->_ignore_tombstoned->set(true);
+    return $this->_ignore_tombstoned->get();
   }
 
 }

@@ -14,4 +14,6 @@ interface PgRowInterface extends StorableObjectInterface {
   public function getTableName(): string;
   public function save(bool $shouldUnlock = true): bool;
   public function delete(bool $shouldUnlock = true): bool;
+  public function setTombstone(): bool;
+  public function isTombstoned(): bool;
 }

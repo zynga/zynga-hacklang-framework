@@ -90,6 +90,10 @@ class PgReaderWriter implements ReaderInterface, WriterInterface {
     }
   }
 
+  public function addToDbOnly(PgRowInterface $row): bool {
+    return $this->add($row, false);
+  }
+
   public function save(PgRowInterface $row, bool $shouldUnlock = true): bool {
     if ($this->saveSucceeds) {
       $table = $this->getTable(get_class($row));

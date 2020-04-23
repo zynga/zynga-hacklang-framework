@@ -143,7 +143,7 @@ class Writer implements WriterInterface {
       }
 
       // Tombstone from cache first
-      if ($obj->setTombstone() === true && $dataCache->set($obj) === true) {
+      if ($obj->tombstoneRow() === true && $dataCache->set($obj) === true) {
         $dbh = $pgModel->db()->getWriteDatabase();
 
         $where = new PgWhereClause($pgModel);

@@ -87,7 +87,7 @@ class SqlGenerator {
         if (SqlGenerator::skipField($fieldName)) {
           continue;
         }
-        
+
         // push the field name onto the stack.
         $fields->add($fieldName);
 
@@ -174,7 +174,7 @@ class SqlGenerator {
       throw $e;
     }
   }
-  
+
   public static function getDeleteSql(
     QueryableInterface $dbh,
     PgModelInterface $model,
@@ -202,7 +202,9 @@ class SqlGenerator {
   }
 
   private static function skipField(string $fieldName): bool {
-    return substr($fieldName, 0, strlen(SqlGenerator::SKIP_FIELD_PREFIX)) === SqlGenerator::SKIP_FIELD_PREFIX;
+    return
+      substr($fieldName, 0, strlen(SqlGenerator::SKIP_FIELD_PREFIX)) ===
+      SqlGenerator::SKIP_FIELD_PREFIX;
   }
 
 }

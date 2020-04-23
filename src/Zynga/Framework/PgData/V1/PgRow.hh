@@ -18,6 +18,7 @@ abstract class PgRow extends StorableObject implements PgRowInterface {
     parent::__construct();
 
     $this->_ignore_tombstoned = new BoolBox();
+    $this->_ignore_tombstoned->set(false);
     $this->_ignore_tombstoned->setIsRequired(false);
 
     $this->_pgModel = $pgModel;
@@ -52,7 +53,7 @@ abstract class PgRow extends StorableObject implements PgRowInterface {
   public function save(bool $shouldUnlock = true): bool {
     return $this->pgModel()->writer()->save($this, $shouldUnlock);
   }
-  
+
   public function delete(bool $shouldUnlock = true): bool {
     return $this->pgModel()->writer()->delete($this, $shouldUnlock);
   }
@@ -61,7 +62,7 @@ abstract class PgRow extends StorableObject implements PgRowInterface {
     return $this->_ignore_tombstoned->get();
   }
 
-  public function setTombstone(): bool {
+  public function tombstoneRow(): bool {
     $this->_ignore_tombstoned->set(true);
     return $this->_ignore_tombstoned->get();
   }

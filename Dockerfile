@@ -7,7 +7,7 @@ ARG USER_ID
 ARG USER_GROUP_ID
 
 # remove any existing groups with the users group id, allowing us to add one for them
-RUN getent group $USER_GROUP_ID | cut -d: -f1 | xargs -n 1 delgroup
+RUN getent group $USER_GROUP_ID | cut -d: -f1 | xargs -r -n 1 delgroup
 
 # add a group for the user 
 RUN addgroup --gid $USER_GROUP_ID $USER_NAME

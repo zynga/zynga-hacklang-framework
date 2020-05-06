@@ -32,6 +32,8 @@ abstract class Base implements LoggerInterface, LoggerAdapterInterface {
     Map<string, mixed> $data,
     Exception $exception,
     bool $includeBacktrace = true,
+    float $sampleRate = 100.0,
+    ?int $valueToSampleBy = null
   ): bool {
 
     // Capture exception related information
@@ -44,6 +46,8 @@ abstract class Base implements LoggerInterface, LoggerAdapterInterface {
       $message,
       $data,
       $includeBacktrace,
+      $sampleRate,
+      $valueToSampleBy
     );
 
   }
@@ -66,6 +70,7 @@ abstract class Base implements LoggerInterface, LoggerAdapterInterface {
     Map<string, mixed> $data,
     bool $includeBacktrace = true,
     float $sampleRate = 100.0,
+    ?int $valueToSampleBy = null
   ): bool {
     return $this->_recordLogEntry(
       Level::ERROR,
@@ -73,6 +78,7 @@ abstract class Base implements LoggerInterface, LoggerAdapterInterface {
       $data,
       $includeBacktrace,
       $sampleRate,
+      $valueToSampleBy
     );
   }
 
@@ -134,9 +140,13 @@ abstract class Base implements LoggerInterface, LoggerAdapterInterface {
     Map<string, mixed> $data,
     bool $includeBacktrace,
     float $sampleRate = 100.0,
+    ?int $valueToSambleBy = null
   ): bool {
-
-    if ((mt_rand() / mt_getrandmax()) * 100.0 > $sampleRate) {
+    if ($valueToSambleBy === null) {
+      if ((mt_rand() / mt_getrandmax()) * 100.0 > $sampleRate) {
+        return false;
+      }
+    } else if ($valueToSambleBy % 100 >= $sampleRate) {
       return false;
     }
 

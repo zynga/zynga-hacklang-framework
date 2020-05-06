@@ -13,9 +13,9 @@ class StaticLogger {
     return $logger->setHideAllLogs($logState);
   }
 
-  public static function exception(string $message, Map<string, mixed> $data, Exception $exception, bool $includeBacktrace = true, string $context = 'default'): bool {
+  public static function exception(string $message, Map<string, mixed> $data, Exception $exception, bool $includeBacktrace = true, string $context = 'default', float $sampleRate = 100.0, ?int $valueToSampleBy = null): bool {
     $logger = LogFactory::factory(LoggerInterface::class, $context);
-    return $logger->exception($message, $data, $exception, $includeBacktrace);
+    return $logger->exception($message, $data, $exception, $includeBacktrace, $sampleRate, $valueToSampleBy);
   }
 
   public static function critical(string $message, Map<string, mixed> $data, bool $includeBacktrace = true, string $context = 'default'): bool {
@@ -23,9 +23,9 @@ class StaticLogger {
     return $logger->critical($message, $data, $includeBacktrace);
   }
 
-  public static function error(string $message, Map<string, mixed> $data, bool $includeBacktrace = true, string $context = 'default', float $sampleRate = 100.0): bool {
+  public static function error(string $message, Map<string, mixed> $data, bool $includeBacktrace = true, string $context = 'default', float $sampleRate = 100.0, ?int $valueToSampleBy = null): bool {
     $logger = LogFactory::factory(LoggerInterface::class, $context);
-    return $logger->error($message, $data, $includeBacktrace, $sampleRate);
+    return $logger->error($message, $data, $includeBacktrace, $sampleRate, $valueToSampleBy);
   }
 
   public static function warning(string $message, Map<string, mixed> $data, bool $includeBacktrace = false, string $context = 'default'): bool {

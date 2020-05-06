@@ -142,8 +142,8 @@ class Writer implements WriterInterface {
         );
       }
 
-      // Delete from cache first
-      if ($dataCache->delete($obj) === true) {
+      // Tombstone from cache first
+      if ($obj->tombstoneRow() === true && $dataCache->set($obj) === true) {
         $dbh = $pgModel->db()->getWriteDatabase();
 
         $where = new PgWhereClause($pgModel);

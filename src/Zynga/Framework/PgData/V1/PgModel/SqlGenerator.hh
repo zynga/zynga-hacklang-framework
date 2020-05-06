@@ -15,6 +15,8 @@ use \Exception;
 
 class SqlGenerator {
 
+  const string SKIP_FIELD_PREFIX = '_ignore_';
+
   public static function getSelectSql(
     QueryableInterface $dbh,
     PgModelInterface $model,
@@ -35,6 +37,11 @@ class SqlGenerator {
       // 2) Build a list of fields to include on the select
       $selectFields = Vector {};
       foreach ($fieldMap as $fieldName => $fieldType) {
+
+        if (SqlGenerator::skipField($fieldName)) {
+          continue;
+        }
+
         $selectFields->add($fieldName);
       }
 
@@ -76,6 +83,10 @@ class SqlGenerator {
       $quotedValues = Vector {};
 
       foreach ($fieldMap as $fieldName => $fieldType) {
+
+        if (SqlGenerator::skipField($fieldName)) {
+          continue;
+        }
 
         // push the field name onto the stack.
         $fields->add($fieldName);
@@ -133,6 +144,10 @@ class SqlGenerator {
           continue;
         }
 
+        if (SqlGenerator::skipField($fieldName)) {
+          continue;
+        }
+
         $fieldObj = $obj->fields()->getTypedField($fieldName);
         $fieldValue = $fieldObj->get();
 
@@ -159,7 +174,7 @@ class SqlGenerator {
       throw $e;
     }
   }
-  
+
   public static function getDeleteSql(
     QueryableInterface $dbh,
     PgModelInterface $model,
@@ -184,6 +199,12 @@ class SqlGenerator {
     } catch (Exception $e) {
       throw $e;
     }
+  }
+
+  private static function skipField(string $fieldName): bool {
+    return
+      substr($fieldName, 0, strlen(SqlGenerator::SKIP_FIELD_PREFIX)) ===
+      SqlGenerator::SKIP_FIELD_PREFIX;
   }
 
 }

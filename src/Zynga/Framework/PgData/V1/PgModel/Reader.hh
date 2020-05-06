@@ -58,6 +58,12 @@ class Reader implements ReaderInterface {
 
       if ($cached instanceof PgRowInterface) {
         $pgModel->stats()->incrementCacheHits();
+
+        // if the cached row is tombstoned immediately return a null
+        if ($cached->isTombstoned() === true) {
+          return null;
+        }
+
         return $cached;
       }
 

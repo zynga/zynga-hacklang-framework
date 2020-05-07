@@ -160,7 +160,8 @@ abstract class Base extends TestCase
   public function setUp(): void {
 
     if ($this->hideLogs() === true) {
-      $this->startOutputBuffering();
+      // when hideLogs is enabled allow all output to happen.
+      $this->expectOutputRegex('/.*/');
       $this->doHideLogs();
     }
 
@@ -174,7 +175,6 @@ abstract class Base extends TestCase
 
   public function tearDown(): void {
     if ($this->hideLogs() === true) {
-      $this->stopOutputBuffering();
       DynamicMethodCall::callMethod(
         'Zynga\Legacy\V1\Log',
         'setHideAllLogs',

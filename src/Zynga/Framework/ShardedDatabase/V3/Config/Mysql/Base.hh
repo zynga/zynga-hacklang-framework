@@ -17,7 +17,7 @@ abstract class Base<TType as TypeInterface> extends ConfigShardedBase<TType> {
   }
 
   public function getConnectionStringForServer(
-    TType $intShardType,
+    TType $shardType,
     ConnectionDetails $server,
   ): string {
 

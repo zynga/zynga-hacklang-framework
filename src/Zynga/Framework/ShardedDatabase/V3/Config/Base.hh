@@ -146,8 +146,8 @@ abstract class Base<TType as TypeInterface> extends FactoryBaseConfig
       $shardId = $shardType->get() % $shardCount;
       return $shardId;
     } else if($shardType instanceof StringBox) {
-      $crcString = crc32($shardType->get());
-      $shardId = $crcString % $shardCount;
+      $crcValue = crc32($shardType->get());
+      $shardId = $crcValue % $shardCount;
       return $shardId;
     }
 

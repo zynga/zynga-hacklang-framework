@@ -15,6 +15,7 @@ use
 use Zynga\Framework\ShardedDatabase\V3\Interfaces\DriverConfigInterface;
 use Zynga\Framework\ShardedDatabase\V3\ConnectionDetails;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
+use Zynga\Framework\Type\V1\StringBox;
 use Zynga\Framework\Type\V1\UInt64Box;
 use Zynga\Framework\ShardedDatabase\V3\Exceptions\UnknownShardTypeException;
 
@@ -139,10 +140,14 @@ abstract class Base<TType as TypeInterface> extends FactoryBaseConfig
     throw new InvalidShardIdException('offset='.$offset);
   }
 
-  public function getShardId(TType $intShardType): int {
-    if ($intShardType instanceof UInt64Box) {
-      $shardCount = $this->getServerCount();
-      $shardId = $intShardType->get() % $shardCount;
+  public function getShardId(TType $shardType): int {
+    $shardCount = $this->getServerCount();
+    if ($shardType instanceof UInt64Box) {
+      $shardId = $shardType->get() % $shardCount;
+      return $shardId;
+    } else if($shardType instanceof StringBox) {
+      $crcValue = crc32($shardType->get());
+      $shardId = $crcValue % $shardCount;
       return $shardId;
     }
 

@@ -19,18 +19,6 @@ use Zynga\Framework\StorableObject\Collections\Map\V2\Base as StorableMap;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\UInt64Box;
 
-enum AddBehavior: int {
-  Succeeds = 0;
-  Fails = 1;
-  ThrowsException = 2;
-}
-
-enum SaveBehavior: int {
-  Succeeds = 0;
-  Fails = 1;
-  ThrowsException = 2;
-}
-
 /**
  * A implementation of PgData's Reader & Writer interfaces that keeps everything in memory for unit testing.
  */

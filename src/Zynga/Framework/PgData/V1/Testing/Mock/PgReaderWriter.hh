@@ -2,6 +2,7 @@
 
 namespace Zynga\Framework\PgData\V1\Testing\Mock;
 
+use \Exception;
 use Zynga\Framework\PgData\V1\Exceptions\UnsupportedOperandException;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\ReaderInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\WriterInterface;
@@ -18,13 +19,25 @@ use Zynga\Framework\StorableObject\Collections\Map\V2\Base as StorableMap;
 use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 use Zynga\Framework\Type\V1\UInt64Box;
 
+enum AddBehavior: int {
+  Succeeds = 0;
+  Fails = 1;
+  ThrowsException = 2;
+}
+
+enum SaveBehavior: int {
+  Succeeds = 0;
+  Fails = 1;
+  ThrowsException = 2;
+}
+
 /**
  * A implementation of PgData's Reader & Writer interfaces that keeps everything in memory for unit testing.
  */
 class PgReaderWriter implements ReaderInterface, WriterInterface {
 
-  public bool $addSucceeds = true;
-  public bool $saveSucceeds = true;
+  public AddBehavior $addBehavior = AddBehavior::Succeeds;
+  public SaveBehavior $saveBehavior = SaveBehavior::Succeeds;
 
   private StorableMap<StorableMap<PgRowInterface>> $tables;
 
@@ -73,20 +86,25 @@ class PgReaderWriter implements ReaderInterface, WriterInterface {
   }
 
   public function add(PgRowInterface $row, bool $shouldUnlock = true): bool {
-    if ($this->addSucceeds) {
-      $table = $this->getTable(get_class($row));
-      $key = $row->getPrimaryKeyTyped();
+    switch($this->addBehavior) {
+      case AddBehavior::Succeeds:
+        $table = $this->getTable(get_class($row));
+        $key = $row->getPrimaryKeyTyped();
 
-      // Set PK on new rows
-      if ($key->get() === 0) {
-        $key->set($table->count() + 1);
-      }
+        // Set PK on new rows
+        if ($key->get() === 0) {
+          $key->set($table->count() + 1);
+        }
 
-      $key = (string) $key;
-      $table->set($key, $row);
-      return true;
-    } else {
-      return false;
+        $key = (string) $key;
+        $table->set($key, $row);
+        return true;
+
+      case AddBehavior::Fails:
+        return false;
+
+      case AddBehavior::ThrowsException:
+        throw new Exception("Add Failed");
     }
   }
 
@@ -95,13 +113,18 @@ class PgReaderWriter implements ReaderInterface, WriterInterface {
   }
 
   public function save(PgRowInterface $row, bool $shouldUnlock = true): bool {
-    if ($this->saveSucceeds) {
-      $table = $this->getTable(get_class($row));
-      $key = (string) $row->getPrimaryKeyTyped();
-      $table->set($key, $row);
-      return true;
-    } else {
-      return false;
+    switch($this->saveBehavior) {
+      case SaveBehavior::Succeeds:
+        $table = $this->getTable(get_class($row));
+        $key = (string) $row->getPrimaryKeyTyped();
+        $table->set($key, $row);
+        return true;
+
+      case SaveBehavior::Fails:
+        return false;
+
+      case SaveBehavior::ThrowsException:
+        throw new Exception("Save failed");
     }
   }
 

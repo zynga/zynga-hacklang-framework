@@ -126,7 +126,7 @@ class PgUnitTestReaderWriterTest extends TestCase {
     $item2->id->set(2);
     $item2->name->set("cool_name_2");
 
-    $rw->saveSucceeds = false;
+    $rw->saveBehavior = SaveBehavior::Fails;
     $this->assertFalse($rw->save($item2));
     $this->assertNull($rw->getByPk(ItemType::class, $item2->id, false));
   }
@@ -149,7 +149,7 @@ class PgUnitTestReaderWriterTest extends TestCase {
     $item2 = new ItemType($model);
     $item2->name->set("cool_name");
 
-    $rw->addSucceeds = false;
+    $rw->addBehavior = AddBehavior::Fails;
     $this->assertFalse($rw->add($item2));
     $this->assertNull($rw->getByPk(ItemType::class, new UInt64Box(2), false));
   }

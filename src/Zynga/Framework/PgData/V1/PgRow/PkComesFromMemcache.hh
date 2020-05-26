@@ -110,9 +110,14 @@ abstract class PkComesFromMemcache extends PgRow {
   }
 
   public function createPkKeyForMC(): string {
-    $connectionString = $this->getConnectionStringFromWriteDatabase();
+    $writeDatabase = $this->pgModel()->db()->getWriteDatabase();
+    $shardId = 0;
+    if($writeDatabase instanceof ShardedDriverInterface) {
+      $shardId = $writeDatabase->getConfig()->getShardId($writeDatabase->getShardType());
+    }
+
     $tableName = $this->getTableName();
-    $pkKey = 'pgd:'.hash("sha256", $connectionString).'|'.$tableName.':pk';
+    $pkKey = 'pgd:'.$shardId.'|'.$tableName.':pk';
     return $pkKey;
   }
 

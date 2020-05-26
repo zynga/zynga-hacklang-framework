@@ -25,7 +25,7 @@ abstract class PkComesFromMemcache extends PgRow {
   // In our use case we pull the id off memcache after reading the pk
   // value from the db.
   // --
-  public function getPrimaryKeyNextValue(): TypeInterface {
+  public function getPrimaryKeyNextValue(bool $shouldLoadFromDatabase): TypeInterface {
 
     try {
 
@@ -43,16 +43,18 @@ abstract class PkComesFromMemcache extends PgRow {
         // 3) Make a sha256(connection string)|table:pk
         $pkKey = $this->createPkKeyForMC();
 
-        // 4) Attempt to increment via the memcache driver.
-        $value = $cache->directIncrement($pkKey);
+        if($shouldLoadFromDatabase == false) {
+          // 4) Attempt to increment via the memcache driver.
+          $value = $cache->directIncrement($pkKey);
 
-        // 5) All is well if the value is bigger than 0
-        if ($value > 0) {
-          $id->set($value);
-          return $id;
+          // 5) All is well if the value is bigger than 0
+          if ($value > 0) {
+            $id->set($value);
+            return $id;
+          }
         }
 
-        // 6) If the value is not bigger than 0, attempt to load it from the db.
+        // 6) If the value is not bigger than 0 or $shouldLoadFromDatabase = true, attempt to load it from the db.
         $pkKeyLock = $pkKey.':lock';
         $pkLock = $cache->directAdd($pkKeyLock, 0, 0, 30);
 
@@ -108,10 +110,7 @@ abstract class PkComesFromMemcache extends PgRow {
   }
 
   public function createPkKeyForMC(): string {
-    $writeDatabase = $this->pgModel()->db()->getWriteDatabase();
-
-    $connectionString = '';
-
+    $connectionString = $this->getConnectionStringFromWriteDatabase();
     $tableName = $this->getTableName();
     $pkKey = 'pgd:'.hash("sha256", $connectionString).'|'.$tableName.':pk';
     return $pkKey;

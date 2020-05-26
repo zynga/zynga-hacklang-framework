@@ -43,15 +43,32 @@ class Writer implements WriterInterface {
     list($isDefaultValue, $isDefaultError) = $pk->isDefaultValue();
 
     if ($isDefaultValue === true) {
+      $retryOnFailure = true;
       if ($row->getPrimaryKeyIsFromDatabase() === false) {
-        $pk->set($row->getPrimaryKeyNextValue()->get());
+        $pk->set($row->getPrimaryKeyNextValue(false)->get());
       } else {
         throw new Exception(
           'Primary key is default value still. value='.strval($pk->get()),
         );
       }
+    } else {
+      $retryOnFailure = false;
     }
 
+    try {
+      return $this->addNewRowToDB($row);
+    } catch (Exception $e) {
+      if($retryOnFailure == true) {
+        // Fetch the pk value from DB and update memcache;
+        $pk->set($row->getPrimaryKeyNextValue(true)->get());
+        return $this->addNewRowToDB($row);
+      }
+    }
+
+    return false;
+  }
+
+  private function addNewRowToDB(PgRowInterface $row): bool {
     $pgModel = $this->pgModel();
     $dbh = $pgModel->db()->getWriteDatabase();
 
@@ -61,6 +78,7 @@ class Writer implements WriterInterface {
 
     return $result->wasSuccessful();
   }
+
   /**
    * Saves an item.
    * Expects the api dev to have a lock already.

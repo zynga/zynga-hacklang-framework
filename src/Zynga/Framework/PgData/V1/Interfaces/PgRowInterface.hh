@@ -8,7 +8,7 @@ use Zynga\Framework\Type\V1\Interfaces\TypeInterface;
 interface PgRowInterface extends StorableObjectInterface {
   public function pgModel(): PgModelInterface;
   public function getPrimaryKeyIsFromDatabase(): bool;
-  public function getPrimaryKeyNextValue(): TypeInterface;
+  public function getPrimaryKeyNextValue(bool $shouldLoadFromDatabase): TypeInterface;
   public function getPrimaryKey(): string;
   public function getPrimaryKeyTyped(): TypeInterface;
   public function getTableName(): string;

@@ -43,7 +43,7 @@ class Writer implements WriterInterface {
     list($isDefaultValue, $isDefaultError) = $pk->isDefaultValue();
 
     if ($isDefaultValue === true) {
-      $retryOnFailure = true;
+      $retryOnException = true;
       if ($row->getPrimaryKeyIsFromDatabase() === false) {
         $pk->set($row->getPrimaryKeyNextValue(false)->get());
       } else {
@@ -52,13 +52,13 @@ class Writer implements WriterInterface {
         );
       }
     } else {
-      $retryOnFailure = false;
+      $retryOnException = false;
     }
 
     try {
       return $this->addNewRowToDB($row);
     } catch (Exception $e) {
-      if($retryOnFailure == true) {
+      if($retryOnException == true) {
         // Fetch the pk value from DB and update memcache;
         $pk->set($row->getPrimaryKeyNextValue(true)->get());
         return $this->addNewRowToDB($row);

@@ -116,14 +116,14 @@ abstract class PkComesFromMemcache extends PgRow {
       $shardId = $writeDatabase->getConfig()->getShardId($writeDatabase->getShardType());
       $databaseName = $writeDatabase->getConfig()->getDatabaseName();
     } else if($writeDatabase instanceof DatabaseDriverInterface) {
-      $shardId = 0;
+      $shardId = -1;
       $databaseName = $writeDatabase->getConfig()->getCurrentDatabase();
     } else {
       throw new Exception("Unsupported database driver");
     }
 
     $tableName = $this->getTableName();
-    $pkKey = 'pgd:'.$shardId.'|'.$databaseName.":".$tableName.':pk';
+    $pkKey = 'pgd:' . hash("sha256", $shardId.':'.$databaseName.":".$tableName) . ':pk';
     return $pkKey;
   }
 

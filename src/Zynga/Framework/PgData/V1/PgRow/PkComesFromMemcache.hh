@@ -111,13 +111,19 @@ abstract class PkComesFromMemcache extends PgRow {
 
   public function createPkKeyForMC(): string {
     $writeDatabase = $this->pgModel()->db()->getWriteDatabase();
-    $shardId = 0;
+
     if($writeDatabase instanceof ShardedDriverInterface) {
       $shardId = $writeDatabase->getConfig()->getShardId($writeDatabase->getShardType());
+      $databaseName = $writeDatabase->getConfig()->getDatabaseName();
+    } else if($writeDatabase instanceof DatabaseDriverInterface) {
+      $shardId = 0;
+      $databaseName = $writeDatabase->getConfig()->getCurrentDatabase();
+    } else {
+      throw new Exception("Unsupported database driver");
     }
 
     $tableName = $this->getTableName();
-    $pkKey = 'pgd:'.$shardId.'|'.$tableName.':pk';
+    $pkKey = 'pgd:'.$shardId.'|'.$databaseName.":".$tableName.':pk';
     return $pkKey;
   }
 

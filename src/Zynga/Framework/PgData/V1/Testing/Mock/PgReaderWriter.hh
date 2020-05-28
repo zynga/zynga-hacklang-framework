@@ -24,8 +24,10 @@ use Zynga\Framework\Type\V1\UInt64Box;
  */
 class PgReaderWriter implements ReaderInterface, WriterInterface {
 
-  public AddBehavior $addBehavior = AddBehavior::Succeeds;
-  public SaveBehavior $saveBehavior = SaveBehavior::Succeeds;
+  public PgReaderWriterBehavior $getBehavior = PgReaderWriterBehavior::Default;
+  public PgReaderWriterBehavior $addBehavior = PgReaderWriterBehavior::Default;
+  public PgReaderWriterBehavior $saveBehavior = PgReaderWriterBehavior::Default;
+  public PgReaderWriterBehavior $deleteBehavior = PgReaderWriterBehavior::Default;
 
   private StorableMap<StorableMap<PgRowInterface>> $tables;
 
@@ -47,14 +49,21 @@ class PgReaderWriter implements ReaderInterface, WriterInterface {
     classname<TModelClass> $model,
     ?PgWhereClauseInterface $where = null,
   ): PgResultSetInterface<PgRowInterface> {
-    $table = $this->getTable($model);
     $resultSet = new PgResultSet($model);
-    foreach ($table->toArray() as $row) {
-      if (self::matchesWhere($row, $where)) {
-        $resultSet->add($row);
-      }
+    switch($this->getBehavior) {
+      case PgReaderWriterBehavior::Default:
+        $table = $this->getTable($model);
+        foreach ($table->toArray() as $row) {
+          if (self::matchesWhere($row, $where)) {
+            $resultSet->add($row);
+          }
+        }
+        return $resultSet;
+      case PgReaderWriterBehavior::Fails:
+        return $resultSet;
+      case PgReaderWriterBehavior::ThrowsException:
+        throw new Exception("Get Failed");
     }
-    return $resultSet;
   }
 
   public function createCachedResultSet<TModelClass as PgRowInterface>(
@@ -75,7 +84,7 @@ class PgReaderWriter implements ReaderInterface, WriterInterface {
 
   public function add(PgRowInterface $row, bool $shouldUnlock = true): bool {
     switch($this->addBehavior) {
-      case AddBehavior::Succeeds:
+      case PgReaderWriterBehavior::Default:
         $table = $this->getTable(get_class($row));
         $key = $row->getPrimaryKeyTyped();
 
@@ -88,10 +97,10 @@ class PgReaderWriter implements ReaderInterface, WriterInterface {
         $table->set($key, $row);
         return true;
 
-      case AddBehavior::Fails:
+      case PgReaderWriterBehavior::Fails:
         return false;
 
-      case AddBehavior::ThrowsException:
+      case PgReaderWriterBehavior::ThrowsException:
         throw new Exception("Add Failed");
     }
   }
@@ -102,16 +111,16 @@ class PgReaderWriter implements ReaderInterface, WriterInterface {
 
   public function save(PgRowInterface $row, bool $shouldUnlock = true): bool {
     switch($this->saveBehavior) {
-      case SaveBehavior::Succeeds:
+      case PgReaderWriterBehavior::Default:
         $table = $this->getTable(get_class($row));
         $key = (string) $row->getPrimaryKeyTyped();
         $table->set($key, $row);
         return true;
 
-      case SaveBehavior::Fails:
+      case PgReaderWriterBehavior::Fails:
         return false;
 
-      case SaveBehavior::ThrowsException:
+      case PgReaderWriterBehavior::ThrowsException:
         throw new Exception("Save failed");
     }
   }
@@ -120,10 +129,18 @@ class PgReaderWriter implements ReaderInterface, WriterInterface {
     PgRowInterface $row,
     bool $shouldUnlock = true,
   ): bool {
-    $table = $this->getTable(get_class($row));
-    $key = (string) $row->getPrimaryKeyTyped();
-    $table->remove($key);
-    return true;
+    switch ($this->deleteBehavior) {
+      case PgReaderWriterBehavior::Default:
+        $table = $this->getTable(get_class($row));
+        $key = (string) $row->getPrimaryKeyTyped();
+        $table->remove($key);
+        return true;
+      case PgReaderWriterBehavior::Fails:
+        return false;
+      case PgReaderWriterBehavior::ThrowsException:
+        throw new Exception("Delete failed");
+    }
+
   }
 
   protected static function matchesWhere(

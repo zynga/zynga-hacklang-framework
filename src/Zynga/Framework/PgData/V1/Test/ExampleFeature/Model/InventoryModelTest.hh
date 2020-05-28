@@ -201,11 +201,11 @@ class InventoryModelTest extends BaseInventoryTest {
     // stand up the row you'd like to add
     $item = new ItemType($model);
 
-    $firstId = $item->getPrimaryKeyNextValue(false);
+    $firstId = $item->getPrimaryKeyNextValue();
 
     $this->assertGreaterThan(0, $firstId->get());
 
-    $secondId = $item->getPrimaryKeyNextValue(false);
+    $secondId = $item->getPrimaryKeyNextValue();
 
     $this->assertGreaterThan($firstId->get(), $secondId->get());
 

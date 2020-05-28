@@ -45,7 +45,7 @@ class Writer implements WriterInterface {
     if ($isDefaultValue === true) {
       $retryOnException = true;
       if ($row->getPrimaryKeyIsFromDatabase() === false) {
-        $pk->set($row->getPrimaryKeyNextValue(false)->get());
+        $pk->set($row->getPrimaryKeyNextValue()->get());
       } else {
         throw new Exception(
           'Primary key is default value still. value='.strval($pk->get()),
@@ -59,9 +59,11 @@ class Writer implements WriterInterface {
       return $this->addNewRowToDB($row);
     } catch (Exception $e) {
       if($retryOnException == true) {
-        // Fetch the pk value from DB and update memcache;
-        $pk->set($row->getPrimaryKeyNextValue(true)->get());
-        return $this->addNewRowToDB($row);
+        if($row->deletePrimaryKeyValueFromCache()) {
+          // Fetch the pk value from DB and update memcache;
+          $pk->set($row->getPrimaryKeyNextValue()->get());
+          return $this->addNewRowToDB($row);
+        }
       }
     }
 

@@ -58,12 +58,12 @@ class Writer implements WriterInterface {
     try {
       return $this->addNewRowToDB($row);
     } catch (Exception $e) {
-      if($retryOnException == true) {
-        if($row->deletePrimaryKeyValueFromCache()) {
-          // Fetch the pk value from DB and update memcache;
-          $pk->set($row->getPrimaryKeyNextValue()->get());
-          return $this->addNewRowToDB($row);
-        }
+      if($retryOnException == true && $row->deletePrimaryKeyValueFromCache()) {
+        // Fetch the pk value from DB and update memcache;
+        $pk->set($row->getPrimaryKeyNextValue()->get());
+        return $this->addNewRowToDB($row);
+      } else {
+        throw $e;
       }
     }
 

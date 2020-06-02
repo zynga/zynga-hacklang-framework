@@ -136,20 +136,24 @@ abstract class PkComesFromMemcache extends PgRow {
   }
 
   public function createPkKeyForMC(): string {
-    $writeDatabase = $this->pgModel()->db()->getWriteDatabase();
-
-    if($writeDatabase instanceof ShardedDriverInterface) {
-      $shardId = $writeDatabase->getConfig()->getShardId($writeDatabase->getShardType());
-      $databaseName = $writeDatabase->getConfig()->getDatabaseName();
-    } else if($writeDatabase instanceof DatabaseDriverInterface) {
-      $shardId = -1;
-      $databaseName = $writeDatabase->getConfig()->getCurrentDatabase();
-    } else {
-      throw new Exception("Unsupported database driver");
-    }
+    // $writeDatabase = $this->pgModel()->db()->getWriteDatabase();
+    //
+    // if($writeDatabase instanceof ShardedDriverInterface) {
+    //   $shardId = $writeDatabase->getConfig()->getShardId($writeDatabase->getShardType());
+    //   $databaseName = $writeDatabase->getConfig()->getDatabaseName();
+    // } else if($writeDatabase instanceof DatabaseDriverInterface) {
+    //   $shardId = -1;
+    //   $databaseName = $writeDatabase->getConfig()->getCurrentDatabase();
+    // } else {
+    //   throw new Exception("Unsupported database driver");
+    // }
 
     $tableName = $this->getTableName();
-    $pkKey = 'pgd:' . hash("sha256", $shardId.':'.$databaseName.":".$tableName) . ':pk';
+    $connectionString = '';
+    $pkKey = 'pgd:'.hash("sha256", $connectionString).'|'.$tableName.':pk';
+
+    // $pkKey = 'pgd:' . hash("sha256", $shardId.':'.$databaseName.":".$tableName) . ':pk';
+
     return $pkKey;
   }
 

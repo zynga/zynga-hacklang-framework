@@ -148,9 +148,6 @@ abstract class PkComesFromMemcache extends PgRow {
     }
 
     $tableName = $this->getTableName();
-    $connectionString = '';
-    // $pkKey = 'pgd:'.hash("sha256", $connectionString).'|'.$tableName.':pk';
-
     $pkKey = 'pgd:' . hash("sha256", $shardId.':'.$databaseName.":".$tableName) . ':pk';
 
     return $pkKey;

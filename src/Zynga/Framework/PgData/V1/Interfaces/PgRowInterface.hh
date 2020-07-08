@@ -17,4 +17,5 @@ interface PgRowInterface extends StorableObjectInterface {
   public function delete(bool $shouldUnlock = true): bool;
   public function tombstoneRow(): bool;
   public function isTombstoned(): bool;
+  public function getCacheKeyPrefix(): string;
 }

@@ -67,4 +67,8 @@ abstract class PgRow extends StorableObject implements PgRowInterface {
     return $this->_ignore_tombstoned->get();
   }
 
+  public function getCacheKeyPrefix(): string {
+    return "";
+  }
+
 }

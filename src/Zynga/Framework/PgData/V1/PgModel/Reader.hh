@@ -192,7 +192,7 @@ class Reader implements ReaderInterface {
       $pkTyped = $tobj->getPrimaryKeyTyped();
       $pkType = get_class($pkTyped);
 
-      $cache = new PgCachedResultSet(UInt64Box::class, $pgWhere, $model);
+      $cache = new PgCachedResultSet($pkType, $pgWhere, $model);
 
       return $cache;
 

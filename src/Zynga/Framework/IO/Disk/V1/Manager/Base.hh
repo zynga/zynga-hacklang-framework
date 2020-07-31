@@ -158,6 +158,8 @@ abstract class Base implements ManagerInterface {
     if ($closeResult === false) {
       throw new FailedToCloseFileException($fileName);
     }
+
+    chmod($fileName, $permissions);
   }
 
   /**

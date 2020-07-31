@@ -33,7 +33,7 @@ interface ManagerInterface {
    *
    * @param $fileName Absolute path of file to create/write to
    * @param $dataToWrite Data to write to file
-   * @param $permissions Integer flag rpresenting file permissions
+   * @param $permissions Integer flag representing file permissions
    * @param $appendIfExists If true, appends to the file if it already exists.
    *        Otherwise, overwrites the existing file.
    * @throws Zynga\Framework\IO\Disk\V1\Exception\FailedToCreateDirectoryException

@@ -5,14 +5,16 @@ namespace Zynga\Framework\PgData\V1;
 use Zynga\Framework\PgData\V1\Interfaces\PgModelInterface;
 
 abstract class PgModelFactory {
+
   private static ?PgModelInterface $_mock;
 
-  public function getModel(): PgModelInterface {
+  public static function getModel(): PgModelInterface {
     if (self::$_mock !== null) {
       return self::$_mock;
     }
-    return $this->getRealModel();
+    return static::getRealModel();
   }
+
   public static function enableMock(PgModelInterface $mock): void {
     self::$_mock = $mock;
   }
@@ -21,6 +23,6 @@ abstract class PgModelFactory {
     self::$_mock = null;
   }
 
-  protected abstract function getRealModel(): PgModelInterface;
+  protected abstract static function getRealModel(): PgModelInterface;
 
 }

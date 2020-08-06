@@ -44,14 +44,12 @@ class FactoryTest extends TestCase {
 
     $this->assertSame($mockShardedModel, $sharedFactory->getModel());
 
-    $nonShardedFactory = new InventoryModelFactory();
-    $this->assertSame($mockModel, $nonShardedFactory->getModel());
+    $this->assertSame($mockModel, InventoryModelFactory::getModel());
   }
 
   public function testGettingModelsWithoutMockReturnsActaulInstancesOfTheModels(
   ): void {
     $sharedFactory = new ShardedInventoryFactory(new UInt64Box());
-    $nonShardedFactory = new InventoryModelFactory();
 
     $this->assertInstanceOf(
       ShardedInventoryModel::class,
@@ -59,7 +57,7 @@ class FactoryTest extends TestCase {
     );
     $this->assertInstanceOf(
       InventoryModel::class,
-      $nonShardedFactory->getModel(),
+      InventoryModelFactory::getModel(),
     );
   }
 }

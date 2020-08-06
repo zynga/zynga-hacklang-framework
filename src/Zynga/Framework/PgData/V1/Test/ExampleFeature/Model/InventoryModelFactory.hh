@@ -7,7 +7,7 @@ use Zynga\Framework\PgData\V1\PgModelFactory;
 use Zynga\Framework\PgData\V1\Test\ExampleFeature\Model\InventoryModel;
 
 class InventoryModelFactory extends PgModelFactory {
-  protected function getRealModel(): InventoryModel {
+  protected static function getRealModel(): InventoryModel {
     return new InventoryModel();
   }
 }

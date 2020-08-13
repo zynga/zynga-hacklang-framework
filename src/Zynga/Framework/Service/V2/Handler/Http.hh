@@ -244,10 +244,22 @@ class Http extends BaseHandler {
 
       if ($this->sendingFile()) {
         $headers = $this->getHttpHeaderContainer();
-        $headers->noCaching();
-        $headers->contentIsFile($this->getFilePath());
-        $headers->send();
-        readfile($this->getFilePath());
+        if (!$headers->noCaching()) {
+          return false;
+        }
+
+        if (!$headers->contentIsFile($this->getFilePath())) {
+          return false;
+        }
+
+        if (!$headers->send()) {
+          return false;
+        }
+
+        if (!readfile($this->getFilePath())) {
+          return false;
+        }
+        
         return true;
       }
 

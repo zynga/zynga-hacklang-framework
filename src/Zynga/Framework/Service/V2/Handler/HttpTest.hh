@@ -65,12 +65,20 @@ class HttpTest extends TestCase {
     $this->assertFalse($obj->getSendJson());
   }
 
-  public function test_sendingFile(): void {
+  public function test_sendingFileSucceeds(): void {
     $httpHandler = new MockHttpHandler();
     $httpHandler->setFilePath(__FILE__);
     $httpHandler->setService(new ValidService());
     $httpHandler->setSendHttpCode(false);
     $this->assertTrue($httpHandler->handleResponse());
+  }
+
+  public function test_sendingFileFails(): void {
+    $httpHandler = new MockHttpHandler();
+    $httpHandler->setFilePath('/some made up path/that does not/really/exist.png');
+    $httpHandler->setService(new ValidService());
+    $httpHandler->setSendHttpCode(false);
+    $this->assertFalse($httpHandler->handleResponse());
   }
 
   public function test_createJsonForResponse_withNoHandlerSetup(): void {

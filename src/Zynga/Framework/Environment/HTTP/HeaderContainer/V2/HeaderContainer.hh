@@ -41,6 +41,38 @@ class HeaderContainer implements HeaderContainerInterface {
     return true;
   }
 
+  public function contentIsFile(string $filePath): bool {
+    if (!is_readable($filePath)) {
+      return false;
+    }
+
+    // Get file type
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    if ($finfo === false) {
+      return false;
+    }
+
+    $fileInformation = finfo_file($finfo, $filePath);
+    if ($fileInformation === false) {
+      return false;
+    }
+
+    // and set it as Content Type
+    header("Content-Type: $fileInformation");
+
+    // This can return false, but we ignore it as there's nothing we can do
+    // if this happens anyway
+    finfo_close($finfo);
+
+    //Use Content-Disposition: attachment to specify the filename
+    header('Content-Disposition: attachment; filename='.basename($filePath));
+    
+    //Define file size
+    $fileSize = filesize($filePath);
+    header("Content-Length: $fileSize");
+    return true;
+  }
+
   public function headersSent(): bool {
     return headers_sent();
   }

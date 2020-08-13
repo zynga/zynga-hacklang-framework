@@ -26,6 +26,7 @@ class Http extends BaseHandler {
   private bool $_sendHttpCode;
   private bool $_sendHeaders;
   private bool $_sendJson;
+  private string $_filePath;
 
   public function __construct() {
     parent::__construct();
@@ -33,6 +34,7 @@ class Http extends BaseHandler {
     $this->_sendHttpCode = true;
     $this->_sendHeaders = true;
     $this->_sendJson = true;
+    $this->_filePath = '';
   }
 
   public function getHttpHeaderContainer(): HttpHeaderContainerInterface {
@@ -64,6 +66,15 @@ class Http extends BaseHandler {
   public function setSendJson(bool $send): bool {
     $this->_sendJson = $send;
     return true;
+  }
+
+  public function getFilePath(): string {
+      return $this->_filePath;
+  }
+
+  public function setFilePath(string $filePath): bool {
+      $this->_filePath = $filePath;
+      return true;
   }
 
   public function parseRequest(): bool {
@@ -221,18 +232,23 @@ class Http extends BaseHandler {
     // Stand up the headers needed for the response.
     // --
     try {
-
       $service = $this->getService();
-
       if (!$service instanceof ServiceInterface) {
         return false;
       }
 
-      $json = $this->createJsonForResponse();
-
       // Send out the appropriate http response code.
       if ($this->_sendHttpCode === true) {
         http_response_code($service->response()->code()->get());
+      }
+
+      if ($this->sendingFile()) {
+        $headers = $this->getHttpHeaderContainer();
+        $headers->noCaching();
+        $headers->contentIsFile($this->getFilePath());
+        $headers->send();
+        readfile($this->getFilePath());
+        return true;
       }
 
       // send out the http headers for the request.
@@ -245,7 +261,7 @@ class Http extends BaseHandler {
 
       // Give them back some JSON to consume.
       if ($this->_sendJson === true) {
-        echo $json;
+        echo $this->createJsonForResponse();
       }
 
       return true;
@@ -256,5 +272,9 @@ class Http extends BaseHandler {
       StaticLogger::exception('responseErrorCaught', Map {}, $e, true);
       return false;
     }
+  }
+
+  private function sendingFile(): bool {
+    return strlen($this->getFilePath()) > 0;
   }
 }

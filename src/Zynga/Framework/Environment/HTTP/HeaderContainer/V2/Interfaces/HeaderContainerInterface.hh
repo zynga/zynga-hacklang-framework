@@ -7,5 +7,6 @@ interface HeaderContainerInterface {
   public function setHeader(string $header, string $value): bool;
   public function noCaching(): bool;
   public function contentIsJSON(): bool;
+  public function contentIsFile(string $filePath): bool;
   public function send(): bool;
 }

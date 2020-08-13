@@ -65,6 +65,14 @@ class HttpTest extends TestCase {
     $this->assertFalse($obj->getSendJson());
   }
 
+  public function test_sendingFile(): void {
+    $httpHandler = new MockHttpHandler();
+    $httpHandler->setFilePath(__FILE__);
+    $httpHandler->setService(new ValidService());
+    $httpHandler->setSendHttpCode(false);
+    $this->assertTrue($httpHandler->handleResponse());
+  }
+
   public function test_createJsonForResponse_withNoHandlerSetup(): void {
     $obj = new MockHttpHandler();
     // since this handler isn't wired to a service it should handle it with a error message

@@ -21,6 +21,9 @@ abstract class Base implements ManagerInterface {
    */
   public function checkOrCreatePath(string $path, int $permissions): bool {
     if (!$this->doesFileExist($path)) {
+      // The owner should be able to read and write at the least.
+      // Execute is also required for directories.
+      $permissions |= 0700;
       return $this->makeDirectory($path, $permissions, true);
     }
 

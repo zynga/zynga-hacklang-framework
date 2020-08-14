@@ -12,8 +12,20 @@ use Zynga\Framework\Logging\V1\StaticLogger;
 
 abstract class Base implements HandlerInterface {
   private ?ServiceInterface $_service;
+  private string $_filePath;
 
-  public function __construct() {}
+  public function __construct() {
+    $this->_filePath = '';
+  }
+
+  public function getFilePath(): string {
+      return $this->_filePath;
+  }
+
+  public function setFilePath(string $filePath): bool {
+      $this->_filePath = $filePath;
+      return true;
+  }
 
   public function setService(ServiceInterface $service): bool {
     $this->_service = $service;

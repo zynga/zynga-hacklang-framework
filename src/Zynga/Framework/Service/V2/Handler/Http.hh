@@ -68,15 +68,6 @@ class Http extends BaseHandler {
     return true;
   }
 
-  public function getFilePath(): string {
-      return $this->_filePath;
-  }
-
-  public function setFilePath(string $filePath): bool {
-      $this->_filePath = $filePath;
-      return true;
-  }
-
   public function parseRequest(): bool {
     try {
       $service = $this->getService();
@@ -257,6 +248,10 @@ class Http extends BaseHandler {
         }
 
         if (!readfile($this->getFilePath())) {
+          return false;
+        }
+
+        if (!unlink($this->getFilePath())) {
           return false;
         }
         

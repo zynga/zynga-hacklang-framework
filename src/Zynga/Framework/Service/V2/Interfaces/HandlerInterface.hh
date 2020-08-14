@@ -10,6 +10,10 @@ interface HandlerInterface {
 
   public function getService(): ?ServiceInterface;
 
+  public function getFilePath(): string;
+
+  public function setFilePath(string $filePath): bool;
+
   public function parseRequest(): bool;
 
   public function handleGenericFailure(): bool;

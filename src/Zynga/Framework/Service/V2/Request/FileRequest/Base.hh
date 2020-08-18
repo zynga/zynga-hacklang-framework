@@ -18,6 +18,7 @@ abstract class Base extends BaseRequest {
     public function __construct() {
         parent::__construct();
         $this->fileInfo = new FileInfo();
+        $this->fileInfo->setIsRequired(true);
     }
 
     /*

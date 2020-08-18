@@ -20,6 +20,7 @@ use
 use Zynga\Framework\StorableObject\V1\Exceptions\NoFieldsFoundException;
 use Zynga\Framework\Type\V1\HttpResponseCodeBox;
 use Zynga\Framework\Type\V1\StringBox;
+use Zynga\Framework\Service\V2\Request\FileRequest\Base as FileRequest;
 
 class Http extends BaseHandler {
   private HttpHeaderContainerInterface $_httpHeaders;
@@ -90,6 +91,18 @@ class Http extends BaseHandler {
         $service->serverGlobals()
           ->import()
           ->fromMap(SuperGlobals::getServerAsMap());
+        
+        $request = $service->request();
+        if ($request instanceof FileRequest) {
+          $filesMap = SuperGlobals::getFilesAsMap();
+          $fileInfo = $filesMap->get($request->getExpectedFileName()->get());
+          if (!($fileInfo instanceof KeyedTraversable)) {
+            return false;
+          }
+          $fileInfoMap = new Map($fileInfo);
+          $request->fileInfo->import()->fromMap($fileInfoMap);
+        }
+
         return true;
       }
 

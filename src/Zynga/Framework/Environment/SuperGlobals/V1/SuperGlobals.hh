@@ -108,6 +108,10 @@ class SuperGlobals {
     return new Map($_REQUEST);
   }
 
+  public static function getFilesAsMap(): Map<string, mixed> {
+    return new Map($_FILES);
+  }
+
   public static function getBodyFilePath(): string {
     return self::$_bodyFilePath;
   }

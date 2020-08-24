@@ -13,6 +13,18 @@ class BoolBoxTest extends TestCase {
     return new BoolBox();
   }
 
+  public function testToLowerCaseStringReturnsTrueCorrectly(): void {
+    $box = new BoolBox();
+    $box->set(true);
+    $this->assertEquals('true', $box->toLowerCaseString());
+  }
+
+  public function testToLowerCaseStringReturnsFalseCorrectly(): void {
+    $box = new BoolBox();
+    $box->set(false);
+    $this->assertEquals('false', $box->toLowerCaseString());
+  }
+
   public function testNativeValue(): void {
     $obj = $this->getTypeObject();
     $obj->set(true);

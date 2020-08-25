@@ -25,6 +25,10 @@ class BoolBox extends BaseBox {
     return $this->_value;
   }
 
+  public function toLowerCaseString(): string {
+    return $this->_value ? 'true' : 'false';
+  }
+
   protected function importFromBool(bool $value): bool {
     $this->_value = $value;
     return true;

@@ -86,12 +86,6 @@ class Http extends BaseHandler {
           $data[$k] = $v;
         }
 
-        // Bring the input into the dataset.
-        $service->request()->import()->fromMap($data);
-        $service->serverGlobals()
-          ->import()
-          ->fromMap(SuperGlobals::getServerAsMap());
-        
         $request = $service->request();
         if ($request instanceof FileRequest) {
           $filesMap = SuperGlobals::getFilesAsMap();
@@ -102,6 +96,13 @@ class Http extends BaseHandler {
           $fileInfoMap = new Map($fileInfo);
           $request->fileInfo->import()->fromMap($fileInfoMap);
         }
+
+        // Bring the input into the dataset.
+        $request->import()->fromMap($data);
+
+        $service->serverGlobals()
+          ->import()
+          ->fromMap(SuperGlobals::getServerAsMap());
 
         return true;
       }

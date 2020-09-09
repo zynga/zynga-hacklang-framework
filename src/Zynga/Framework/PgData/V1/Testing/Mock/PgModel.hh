@@ -5,6 +5,7 @@ namespace Zynga\Framework\PgData\V1\Testing\Mock;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\ReaderInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\StatsInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgModel\WriterInterface;
+use Zynga\Framework\PgData\V1\Interfaces\PgModel\CacheInterface;
 use Zynga\Framework\PgData\V1\Interfaces\PgRowInterface;
 use Zynga\Framework\PgData\V1\Testing\Mock\PgReaderWriter;
 use Zynga\Framework\PgData\V1\PgModel as Base;
@@ -15,6 +16,7 @@ use Zynga\Framework\PgData\V1\PgModel as Base;
  */
 class PgModel extends Base {
   private PgReaderWriter $_readerWriter;
+  private ?PgCache $_cache;
 
   public function __construct() {
     $this->_readerWriter = new PgReaderWriter();
@@ -42,6 +44,16 @@ class PgModel extends Base {
   // Driver is not used, since class using PgReaderWriter
   public function getWriteDatabaseName(): string {
     return 'Mock';
+  }
+
+  public function createCacheObject(): CacheInterface {
+    if($this->_cache !== null) {
+      return $this->_cache;
+    }
+
+
+    $this->_cache = new PgCache($this);
+    return $this->_cache;
   }
 
   public function createReaderObject(): ReaderInterface {

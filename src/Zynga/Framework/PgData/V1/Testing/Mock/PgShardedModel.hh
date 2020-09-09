@@ -14,4 +14,9 @@ class PgShardedModel extends PgModel implements PgModelInterface {
   public function getShardId(): TypeInterface {
     return $this->_shardId;
   }
+
+  public function setShardId(TypeInterface $_shardId): void {
+    $this->_shardId = $_shardId;
+  }
+
 }

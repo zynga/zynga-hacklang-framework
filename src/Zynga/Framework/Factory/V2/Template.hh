@@ -258,6 +258,53 @@ class Template implements FactoryTemplateInterface {
     }
 
   }
+  
+  /**
+   * Responsible for creating or returning driver for this factory template.
+   * @return DriverInterface
+   */
+  public function getDriverByClassname<TDriver as DriverInterface>(
+    classname<TDriver> $driverName,
+    string $configName,
+  ): DriverInterface {
+
+    try {
+
+      // if the driver is already stood up, return it.
+      $driverContainer = $this->_drivers;
+
+      $driver = null;
+
+      if ($driverContainer->isDriverCached($driverName) === true) {
+        return $driverContainer->getDriverFromCache($driverName);
+      }
+    
+      $driver = null;
+
+      if (DynamicClassCreation::doesClassExist($driverName) === true) {
+
+        $config = $this->getConfigForName($configName);
+        // Try to stand up the driver shell
+        $driver = DynamicClassCreation::createClassByNameGeneric(
+          $driverName,
+          Vector {$config},
+        );
+        
+        // cache the driver
+        $driverContainer->addDriverToCache($driverName, $driver);
+
+        // return the driver
+        return $driverContainer->getDriverFromCache($driverName);
+        
+      }
+      
+      throw new FailedToLoadDriverException('driverName='.$driverName.' . configName='.$configName);
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+
+  }
 
   /**
    * Clears all drivers from the factory.

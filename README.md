@@ -1,3 +1,7 @@
+**Please note:** This project is deprecated at Zynga and is no longer maintained.
+
+---
+
 # zynga-hacklang-framework
 
 This is a collection of libraries that Zynga uses to enable hacklang strict usage.
